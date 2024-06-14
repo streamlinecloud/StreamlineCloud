@@ -5,7 +5,11 @@ on: [push, pull_request]
 jobs:
   check-formatting:
     runs-on: ubuntu-latest
-    
+
+    strategy:
+      matrix:
+        module: ['module1', 'module2', 'module3']
+
     steps:
     - name: Check out the repository
       uses: actions/checkout@v3
@@ -19,11 +23,11 @@ jobs:
       run: |
         wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-9.3/checkstyle-9.3-all.jar -O checkstyle.jar
 
-    - name: Run Checkstyle
+    - name: Run Checkstyle on ${{ matrix.module }}
       run: |
-        java -jar checkstyle.jar -c /google_checks.xml src/
+        java -jar checkstyle.jar -c /google_checks.xml ${{ matrix.module }}/src/
 
-    - name: Show Checkstyle Report
+    - name: Show Checkstyle Report for ${{ matrix.module }}
       if: failure()
       run: |
-        java -jar checkstyle.jar -c /google_checks.xml src/ || true
+        java -jar checkstyle.jar -c /google_checks.xml ${{ matrix.module }}/src/ || true
