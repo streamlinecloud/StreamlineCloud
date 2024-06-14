@@ -1,0 +1,62 @@
+name: Build and Release Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        module: ['streamlinecloud-api', 'streamlinecloud-main', 'streamlinecloud-mc']
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt' # Or 'zulu', 'amazon', etc.
+        java-version: '17'
+
+    - name: Build with Gradle
+      run: gradle Make All Products
+      
+    - name: Build Docker image
+      run: |
+        docker build -t creperozelot/streamlinecloud:${{ github.sha }} .
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        docker push creperozelot/streamlinecloud:${{ github.sha }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v3
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.sha }}
+        release_name: Release ${{ github.sha }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Docker image digest
+      uses: actions/upload-artifact@v3
+      with:
+        name: docker-image-digest
+        path: image-digest.txt
