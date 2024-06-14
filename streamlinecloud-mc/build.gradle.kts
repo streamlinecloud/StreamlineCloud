@@ -75,7 +75,7 @@ tasks {
     }
 }
 
-tasks.register("Make Project") {
+tasks.register("Make MC Project") {
     group = "StreamlineCloud"
 
     val bdir = project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc")
@@ -104,7 +104,7 @@ tasks.register("Make Project") {
 
 }
 
-tasks.named("Make Project") {
+tasks.named("Make MC Project") {
     dependsOn("shadowJar")
 }
 

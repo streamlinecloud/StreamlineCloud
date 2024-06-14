@@ -21,5 +21,5 @@ tasks.test {
 tasks.register("Make All Products") {
     group = "StreamlineCloud"
 
-    dependsOn(":streamlinecloud-api:Make Project", ":streamlinecloud-main:Make Project", ":streamlinecloud-mc:Make Project")
+    dependsOn(":streamlinecloud-api:Make API Project", ":streamlinecloud-main:Make MAIN Project", ":streamlinecloud-mc:Make MC Project")
 }
