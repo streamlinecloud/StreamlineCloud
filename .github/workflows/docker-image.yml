@@ -23,7 +23,7 @@ jobs:
         java-version: '17'
 
     - name: Build with Gradle
-      run: gradle Make All Products
+      run: gradle Make Main Product
       
     - name: Build Docker image
       run: |
