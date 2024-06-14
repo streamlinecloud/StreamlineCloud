@@ -41,14 +41,18 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v3
 
+    - name: Generate Random String
+      id: random-string
+      run: echo "::set-output name=tag::$(openssl rand -hex 16)"
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.sha }}
-        release_name: Release ${{ github.sha }}
+        tag_name: ${{ steps.random-string.outputs.tag }}
+        release_name: Release ${{ steps.random-string.outputs.tag }}
         draft: false
         prerelease: false
 
