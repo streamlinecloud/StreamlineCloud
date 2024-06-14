@@ -1,0 +1,15 @@
+name: StreamlineCloud
+version: '${project.version}'
+main: io.streamlinemc.mc.SpigotSCP
+api-version: '1.20'
+authors: [ Quinilo, creperozelot ]
+description: Spigot plugin for StreamlineCloud-CommunicationBridge
+website: https://streamlinemc.io
+
+commands:
+  serverinfo:
+    description: StreamlineCloud server info
+  connect:
+    description: Connect command!
+  test:
+    description: Dies ist ein Test Command!

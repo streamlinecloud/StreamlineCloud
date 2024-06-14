@@ -1,0 +1,56 @@
+{
+  "lang.name": "Deutsch",
+  "lang.author": "Quinilo, creperozelot",
+  "lang.welcome": "Die Sprache wurde auf Deutsch geändert",
+
+  "sl.setup.enterJavaPath": "Bitte gebe den Pfad zu deiner Java Installation ein",
+  "sl.setup.generateGroups": "Sollen standart Gruppen erstellt werden?",
+  "sl.setup.groupsGenerated": "Die Stardart-Gruppen (lobby & proxy) wurden erstellt",
+  "sl.setup.downloading": "Die Datein füt Paper und Waterfall für die Minecraft Version 1.20.2 werden heruntergeladen...",
+  "sl.setup.downloadFailed": "§IMPORTANTDer Download ist fehlgeschlagen!",
+  "sl.setup.finished": "Setup fetig. Starte neu...",
+  "sl.streamline-mc-copy.failed": "§REDACHTUNG: Die datei streamlinecloud-mc.jar konnte nicht gefunden werden. Stelle sicher das du streamlinecloud-mc in templates/default/server/plugins und templates/default/proxy/plugins einfügst",
+  "sl.ready": "§RED-> Das Setup ist nun abgeschlossen und §GREENStreamlineCloud kann un benutzt werden. §REDStarte dazu die Cloud einfach neu!",
+
+  "sl.startup.startingServers": "Starte alle Server...",
+  "sl.startup.serversStarting": "Alle Server befinden sich im Startvorgang",
+  "sl.startup.serversStarted": "§GREENAlle Server sind nun online!",
+
+  "sl.backend.starting": "Starte die §AQUACommunicationBridge §REDauf dem Port §AQUA%0§RED...",
+  "sl.backend.started": "§AQUACommunicationBridge §REDOnline!",
+
+  "sl.server.preparing": "Der Server %1 wird vorbereitet",
+  "sl.server.starting": "Der Server %1 wird in %2 gestartet",
+  "sl.server.online": "Der Server %1 ist nun online",
+  "sl.server.screen.enabled": "Der Screen von %1 ist nun aktiv!",
+  "sl.server.screen.disabled": "Der Screen von %1 ist nicht mehr aktiv!",
+  "sl.server.killing": "Der Server %1 wird gelöscht...",
+  "sl.server.deleted": "Der Server %1 wurde gelöscht",
+
+  "sl.command.groups.notFound": "Die Gruppe %1 wurde nicht gefunden :/",
+  "sl.command.groups.enterGroup": "Bitte gebe eine Gruppe an",
+  "sl.command.groups.crate.enterValidRuntime": "Bitte gebe einen gültigen Typ an (server/proxy)",
+  "sl.command.groups.create.cantSave": "Die Gruppe konnte nicht gespeichert werden: %1",
+  "sl.command.groups.create.created": "Die Gruppe %1 wurde erstellt!",
+  "sl.command.groups.delete.deleted": "Die Gruppe %1 wurde gelöscht!",
+  "sl.command.groups.list.title": "Aktive Gruppen:",
+  "sl.command.groups.templateAdded": "Das Template %0 wurde zu der Gruppe %1 hinzugefügt",
+  "sl.command.servers.serverNotFound": "Server nicht gefunden :/",
+  "sl.command.servers.enterServerName": "Bitte gebe einen Server Namen ein",
+  "sl.command.servers.command.enterCommand": "Bitte gebe einen Command ein",
+  "sl.command.multiRoot.generate": "Um eine StreamlineCloud-Instanz mit diesem Cloud System zu verbinden gebe diesen Befehl in die konsole der anderen Instanz ein:",
+
+  "sl.error.title": "§IMPORTANTEin Fehler ist aufgetreten: §RED%0",
+  "sl.error.fixes": "§IMPORTANTDas könnte die Ursache(n) sein:",
+  "sl.error.fix.1": " ->§GREENDer Java Path ist nicht korrekt angegeben",
+  "sl.error.fix.2": " ->§GREENDu hast keine server.jar im template hinterlegt",
+  "sl.error.fix.3": " ->§GREENEs besteht keine Verbindung zum Internet",
+  "sl.error.fix.4": " ->§GREENDie benötigten Datein sind nicht mehr verfügbar",
+  "sl.error.noFixes": " -Keine Vorschlöge gefunden",
+  "sl.error.details": "Siehe für mehr Detais in §GREENdata/error/%0 §REDnach!",
+  "sl.error.again": "§IMPORTANTDer Fehler §RED%0 §IMPORTANTist nochmal aufgetreten",
+
+  "sl.shutdown.shuttingDown": "StreamlineCloud wird gestoppt...",
+
+  "sl.thanksForUsing": "Danke, dass du StreamlineCloud benutzt!"
+}

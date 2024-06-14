@@ -1,0 +1,5 @@
+name: StreamlineCloud
+main: io.streamlinemc.mc.WaterfallSCP
+description: Spigot plugin for StreamlineCloud-CommunicationBridge
+version: 1.0
+author: Quinilo, creperozelot
