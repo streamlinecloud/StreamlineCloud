@@ -12,10 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        module: ['streamlinecloud-api', 'streamlinecloud-main', 'streamlinecloud-mc']
-
     steps:
     - name: Check out the repository
       uses: actions/checkout@v3
