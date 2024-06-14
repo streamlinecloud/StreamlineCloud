@@ -29,23 +29,6 @@ To ensure the security of this project, we follow these practices:
 - **CI/CD Pipelines:** Our continuous integration and continuous deployment pipelines include security checks and tests.
 - **Configuration Management:** We enforce secure default configurations and provide guidelines for secure deployments.
 
-## Security Features
-
-### Authentication and Authorization
-
-- **API Authentication:** Our REST APIs are secured using API keys or OAuth tokens to ensure only authorized users can access the endpoints.
-- **Role-Based Access Control (RBAC):** Different roles and permissions are enforced to ensure users have the minimum required access.
-
-### Data Protection
-
-- **Encryption:** All sensitive data, both at rest and in transit, is encrypted using industry-standard encryption algorithms.
-- **Secure Storage:** Credentials and other sensitive information are stored securely using environment variables and secrets management tools.
-
-### Logging and Monitoring
-
-- **Audit Logs:** Comprehensive logging of all access and changes to the system is enabled to detect and respond to suspicious activities.
-- **Monitoring:** Continuous monitoring is in place to identify and mitigate potential security threats in real time.
-
 ## Contributing to Security
 
 We welcome contributions from the community to enhance the security of this project. If you are interested in contributing, please follow our [contributing guidelines](CONTRIBUTING.md) and ensure that your changes adhere to the security practices outlined above.
