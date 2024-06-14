@@ -1,16 +1,29 @@
-name: Format
+name: Java Code Formatting Check
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
-
-  formatting:
+  check-formatting:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4 # v2 minimum required
-      - uses: axel-op/googlejavaformat-action@v3
-        with:
-          args: "--replace"
-          skip-commit: true
-      - name: Print diffs
-        run: git --no-pager diff --exit-code
+    - name: Check out the repository
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+
+    - name: Install Checkstyle
+      run: |
+        wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-9.3/checkstyle-9.3-all.jar -O checkstyle.jar
+
+    - name: Run Checkstyle
+      run: |
+        java -jar checkstyle.jar -c /google_checks.xml src/
+
+    - name: Show Checkstyle Report
+      if: failure()
+      run: |
+        java -jar checkstyle.jar -c /google_checks.xml src/ || true
