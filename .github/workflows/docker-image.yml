@@ -23,7 +23,7 @@ jobs:
         java-version: '17'
 
     - name: Build with Gradle
-      run: gradle Make Main Product
+      run:  gradle "streamlinecloud-main:Make Main Project"
       
     - name: Build Docker image
       run: |
