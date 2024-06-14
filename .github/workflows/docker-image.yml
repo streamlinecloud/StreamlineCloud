@@ -34,6 +34,7 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    permissions: write-all
     if: github.ref == 'refs/heads/main'
 
     steps:
