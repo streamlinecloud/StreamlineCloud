@@ -25,10 +25,8 @@ jobs:
         wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-9.3/checkstyle-9.3-all.jar -O checkstyle.jar
 
     - name: Run Checkstyle on ${{ matrix.module }}
-      run: |
-        java -jar checkstyle.jar -c /google_checks.xml ${{ matrix.module }}/src/
+      continue-on-error: false
+      run: java -jar checkstyle.jar -c /google_checks.xml ${{ matrix.module }}/src/ > checkstyle-result-${{ matrix.module }}.txt
 
     - name: Show Checkstyle Report for ${{ matrix.module }}
-      if: failure()
-      run: |
-        java -jar checkstyle.jar -c /google_checks.xml ${{ matrix.module }}/src/ || true
+      run: cat checkstyle-result-${{ matrix.module }}.txt
