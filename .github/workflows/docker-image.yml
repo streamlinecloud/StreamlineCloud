@@ -61,6 +61,12 @@ jobs:
         docker build -t creperozelot/streamlinecloud:${{ github.sha }} .
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         docker push creperozelot/streamlinecloud:${{ github.sha }}
+        
+    - name: Sharing Jar file with job
+      uses: actions/upload-artifact@v3
+      with:
+        name: streamlinecloud_streamlinecloud_main_${{ github.sha }}
+        path: finished_builds/streamlinecloud-main/*.jar
 
   release:
     needs: [check, build]
@@ -76,6 +82,10 @@ jobs:
       id: random-string
       run: echo "::set-output name=tag::$(openssl rand -hex 16)"
 
+    - name: Download Jar file for job
+      uses: actions/download-artifact@v3
+      with:
+        name: streamlinecloud_streamlinecloud_main_${{ github.sha }}
 
     - name: Generated Files
       id: list_files
@@ -91,7 +101,7 @@ jobs:
         automatic_release_tag: ${{ steps.random-string.outputs.tag }}
         title: Release ${{ steps.random-string.outputs.tag }}
         prerelease: true
-        files: finished_builds/streamlinecloud-main/*.jar
+        files: /*.jar
 
     - name: Upload Docker image digest
       uses: actions/upload-artifact@v3
