@@ -78,14 +78,15 @@ jobs:
 
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1
+      uses: marvinpinto/action-automatic-releases@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.random-string.outputs.tag }}
-        release_name: Release ${{ steps.random-string.outputs.tag }}
-        draft: false
-        prerelease: false
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        automatic_release_tag: ${{ steps.random-string.outputs.tag }}
+        title: Release ${{ steps.random-string.outputs.tag }}
+        prerelease: true
+        files: finished_builds/streamlinecloud-main/*.jar
 
     - name: Upload Docker image digest
       uses: actions/upload-artifact@v3
