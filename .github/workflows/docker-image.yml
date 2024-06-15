@@ -53,8 +53,14 @@ jobs:
         distribution: 'adopt' # Or 'zulu', 'amazon', etc.
         java-version: '17'
         
-    - name: Build with Gradle
+    - name: Build API with Gradle
+      run:  gradle "streamlinecloud-api:Make API Project"
+
+    - name: Build MAIN with Gradle
       run:  gradle "streamlinecloud-main:Make Main Project"
+
+    - name: Build MC with Gradle
+      run:  gradle "streamlinecloud-mc:Make MC Project"
       
     - name: Build Docker image
       run: |
@@ -62,11 +68,23 @@ jobs:
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         docker push creperozelot/streamlinecloud:${{ github.sha }}
         
-    - name: Sharing Jar file with job
+    - name: Sharing API Jar file with job
+      uses: actions/upload-artifact@v3
+      with:
+        name: streamlinecloud_streamlinecloud_api_${{ github.sha }}
+        path: finished_builds/streamlinecloud-api/*.jar
+
+    - name: Sharing MAIN Jar file with job
       uses: actions/upload-artifact@v3
       with:
         name: streamlinecloud_streamlinecloud_main_${{ github.sha }}
         path: finished_builds/streamlinecloud-main/*.jar
+
+    - name: Sharing MC Jar file with job
+      uses: actions/upload-artifact@v3
+      with:
+        name: streamlinecloud_streamlinecloud_mc_${{ github.sha }}
+        path: finished_builds/streamlinecloud-mc/*.jar
 
   release:
     needs: [check, build]
@@ -82,10 +100,20 @@ jobs:
       id: random-string
       run: echo "::set-output name=tag::$(openssl rand -hex 16)"
 
-    - name: Download Jar file for job
+    - name: Download API Jar file for job
+      uses: actions/download-artifact@v3
+      with:
+        name: streamlinecloud_streamlinecloud_api_${{ github.sha }}
+
+    - name: Download MAIN Jar file for job
       uses: actions/download-artifact@v3
       with:
         name: streamlinecloud_streamlinecloud_main_${{ github.sha }}
+
+    - name: Download MC Jar file for job
+      uses: actions/download-artifact@v3
+      with:
+        name: streamlinecloud_streamlinecloud_mc_${{ github.sha }}
 
     - name: Generated Files
       id: list_files
@@ -101,7 +129,9 @@ jobs:
         automatic_release_tag: ${{ steps.random-string.outputs.tag }}
         title: Release ${{ steps.random-string.outputs.tag }}
         prerelease: true
-        files: /*.jar
+        files: |
+            LICENCE.md
+            *.jar
 
     - name: Upload Docker image digest
       uses: actions/upload-artifact@v3
