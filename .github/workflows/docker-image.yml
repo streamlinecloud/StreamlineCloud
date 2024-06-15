@@ -76,6 +76,11 @@ jobs:
       id: random-string
       run: echo "::set-output name=tag::$(openssl rand -hex 16)"
 
+
+    - name: Generated Files
+      id: list_files
+      run: tree
+      
     - name: Create Release
       id: create_release
       uses: marvinpinto/action-automatic-releases@latest
