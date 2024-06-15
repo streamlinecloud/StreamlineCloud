@@ -3,6 +3,10 @@
 
 StreamlineCloud is a powerful Minecraft cloud management system designed for scalability, ease of use, and plugin extensibility. It supports multi-node configurations, allowing you to efficiently manage multiple Minecraft servers from a centralized interface.
 
+## Tags
+
+[![Check, Build and Release](https://github.com/streamlinecloud/StreamlineCloud/actions/workflows/docker-image.yml/badge.svg)](https://github.com/streamlinecloud/StreamlineCloud/actions/workflows/docker-image.yml)
+
 ## Features
 
 - **Multi-node Support:** Manage multiple Minecraft servers across different nodes from a single dashboard.
