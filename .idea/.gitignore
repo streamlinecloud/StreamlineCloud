@@ -8,3 +8,6 @@
 /dataSources.local.xml
 # GitHub Copilot persisted chat sessions
 /copilot/chatSessions
+
+#Add discord.xml
+/discord.xml
