@@ -40,3 +40,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/streamlinecloud-main/src/test/

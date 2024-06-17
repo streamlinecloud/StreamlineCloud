@@ -1,6 +1,12 @@
 package io.streamlinemc.api.plmanager;
 
+
+import io.streamlinemc.api.plmanager.event.EventManager;
+
+import java.util.List;
+
 public interface StreamlinePlugin {
-    void start();
+    void start(EventManager eventManager);
     void shutdown();
+
 }

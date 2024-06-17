@@ -290,6 +290,8 @@ public class StreamlineCloud {
     public static void shutDown() {
         log("sl.shutdown.shuttingDown");
 
+        StaticCache.getPluginManager().executeStop();
+
         if (StaticCache.getWebSocketClient() != null) StaticCache.getWebSocketClient().getClient().close();
 
         BackEndMain.stop();
