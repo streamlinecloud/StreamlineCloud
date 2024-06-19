@@ -1,5 +1,6 @@
 package io.streamlinemc.main.core.backend.remoteLogic;
 
+import io.streamlinemc.api.plmanager.event.predefined.ExecuteCommandEvent;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.terminal.CloudTerminalRunner;
 import io.streamlinemc.main.utils.StaticCache;
@@ -9,6 +10,9 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.Arrays;
+
+import static io.streamlinemc.main.plugin.PluginManager.eventManager;
 
 
 public class WSClient {
@@ -37,6 +41,12 @@ public class WSClient {
                 String name = args[0];
                 String cmd = args[1];
                 log("§YELLOW " + name + ": §RED" + cmd);
+
+                ExecuteCommandEvent executeCommandEvent = eventManager.callEvent(new ExecuteCommandEvent(cmd.split(" ")[0], Arrays.stream(cmd.split(" ")).skip(1).toArray(String[]::new), name));
+
+                if (executeCommandEvent.isCancelled()) {
+                    return;
+                }
 
                 CloudTerminalRunner.executeCommand(cmd.split(" "));
 

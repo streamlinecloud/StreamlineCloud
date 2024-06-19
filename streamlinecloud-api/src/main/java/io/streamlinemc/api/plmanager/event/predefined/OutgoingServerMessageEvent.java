@@ -8,11 +8,14 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @Getter @Setter
-public class ServerStopEvent extends Event {
+public class OutgoingServerMessageEvent extends Event {
+
     String serverName;
     String serverUuid;
     String serverGroup;
     ServerState serverState;
     boolean staticServer;
     int serverPort;
+    String message;
+
 }

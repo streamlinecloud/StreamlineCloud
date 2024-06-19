@@ -1,5 +1,6 @@
 package io.streamlinemc.main.terminal;
 
+import io.streamlinemc.api.plmanager.event.predefined.ExecuteCommandEvent;
 import io.streamlinemc.main.CloudMain;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.terminal.api.CloudCommand;
@@ -7,6 +8,10 @@ import io.streamlinemc.main.terminal.input.ConsoleInput;
 import io.streamlinemc.main.utils.StaticCache;
 import lombok.SneakyThrows;
 import org.jline.reader.UserInterruptException;
+
+import java.util.Arrays;
+
+import static io.streamlinemc.main.plugin.PluginManager.eventManager;
 
 public class CloudTerminalRunner extends Thread {
 
@@ -62,7 +67,13 @@ public class CloudTerminalRunner extends Thread {
                     }
                 }
 
-                if (executeCommands) executeCommand(args);
+
+                if (executeCommands) {
+                    ExecuteCommandEvent executeCommandEvent = eventManager.callEvent(new ExecuteCommandEvent(args[0], Arrays.stream(args).skip(1).toArray(String[]::new), null));
+                    if (!executeCommandEvent.isCancelled()) {
+                        executeCommand(args);
+                    }
+                }
 
             } else {
 

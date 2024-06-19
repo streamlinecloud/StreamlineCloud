@@ -1,6 +1,7 @@
 package io.streamlinemc.main;
 
 import io.streamlinemc.api.StreamlineAPI;
+import io.streamlinemc.api.plmanager.event.predefined.ConsoleMessageEvent;
 import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.lang.ReplacePaket;
 import io.streamlinemc.main.utils.StaticCache;
@@ -20,6 +21,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static io.streamlinemc.main.plugin.PluginManager.eventManager;
 
 @Getter
 public class StreamlineCloud {
@@ -90,10 +93,15 @@ public class StreamlineCloud {
             s = s.replace(p.getTarget(), p.getValue());
         }
 
+        ConsoleMessageEvent consoleMessageEvent = eventManager.callEvent(new ConsoleMessageEvent(Color.remove(s)));
+
+        if (consoleMessageEvent.isCancelled()) return;
+
 
         if (StaticCache.getWebSocketClient() != null && StaticCache.getWebSocketClient().getClient().isOpen()) {
             StaticCache.getWebSocketClient().getClient().send("MESSAGE streamline/output " + Color.translate(s));
         }
+
 
         PrintWriter writer = new PrintWriter(new PrintAboveWriter(lineReader));
         writer.println(Color.translate(s));

@@ -1,9 +1,6 @@
 package io.streamlinemc.main.core.server;
 
-import io.streamlinemc.api.plmanager.event.predefined.ServerDeleteEvent;
-import io.streamlinemc.api.plmanager.event.predefined.ServerPreStartEvent;
-import io.streamlinemc.api.plmanager.event.predefined.ServerStartEvent;
-import io.streamlinemc.api.plmanager.event.predefined.ServerStopEvent;
+import io.streamlinemc.api.plmanager.event.predefined.*;
 import io.streamlinemc.api.server.*;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.group.CloudGroup;
@@ -167,6 +164,10 @@ public class CloudServer extends StreamlineServer {
                             String command = commandQueue.get(0);
                             commandQueue.remove(0);
 
+                            OutgoingServerMessageEvent outgoingServerMessageEvent = eventManager.callEvent(new OutgoingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), command));
+
+                            if (outgoingServerMessageEvent.isCancelled()) return;
+
                             executeCommand(command, process.getOutputStream());
                         }
 
@@ -178,6 +179,11 @@ public class CloudServer extends StreamlineServer {
                         addLog(line);
 
                         if (output) {
+
+                            IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+
+                            if (incommingServerMessageEvent.isCancelled()) continue;
+
                             StreamlineCloud.logSingle(getName() + line);
                         }
                     }

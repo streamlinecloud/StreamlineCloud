@@ -10,11 +10,11 @@ import lombok.Setter;
 @Getter @Setter
 public class ServerStartEvent extends Event {
 
-    String name;
-    String uuid;
-    String group;
+    String serverName;
+    String serverUuid;
+    String serverGroup;
     ServerState serverState;
     boolean staticServer;
-    int port;
+    int serverPort;
 
 }
