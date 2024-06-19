@@ -45,4 +45,12 @@ public enum Color {
         return output;
     }
 
+    public static String remove(String output) {
+        for (Color color : VALUES) {
+            output = output.replace("§" + color.ordinal(),"");
+            output = output.replace("§" + color.name(), "");
+        }
+        return output;
+    }
+
 }

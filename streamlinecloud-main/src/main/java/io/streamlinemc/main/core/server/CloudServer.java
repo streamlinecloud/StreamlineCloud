@@ -1,5 +1,6 @@
 package io.streamlinemc.main.core.server;
 
+import io.streamlinemc.api.plmanager.event.predefined.*;
 import io.streamlinemc.api.server.*;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.group.CloudGroup;
@@ -18,6 +19,8 @@ import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static io.streamlinemc.main.plugin.PluginManager.eventManager;
+
 @Getter @Setter
 public class CloudServer extends StreamlineServer {
 
@@ -34,6 +37,13 @@ public class CloudServer extends StreamlineServer {
         setName(name);
         setRuntime(runtime);
         setUuid(String.valueOf(UUID.randomUUID()));
+
+        ServerPreStartEvent serverPreStartEvent = eventManager.callEvent(new ServerPreStartEvent(name, runtime, getUuid(),ServerState.PREPARING));
+
+        if (serverPreStartEvent.isCancelled()) {
+            return;
+        }
+
         StaticCache.getRunningServers().add(this);
         setServerState(ServerState.PREPARING);
 
@@ -62,6 +72,12 @@ public class CloudServer extends StreamlineServer {
 
         if (group == null) {
             StreamlineCloud.logError("ServerStartError: Group is null!");
+            return;
+        }
+
+        ServerStartEvent serverStartEvent = eventManager.callEvent(new ServerStartEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort()));
+
+        if (serverStartEvent.isCancelled()) {
             return;
         }
 
@@ -148,6 +164,10 @@ public class CloudServer extends StreamlineServer {
                             String command = commandQueue.get(0);
                             commandQueue.remove(0);
 
+                            OutgoingServerMessageEvent outgoingServerMessageEvent = eventManager.callEvent(new OutgoingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), command));
+
+                            if (outgoingServerMessageEvent.isCancelled()) return;
+
                             executeCommand(command, process.getOutputStream());
                         }
 
@@ -159,6 +179,11 @@ public class CloudServer extends StreamlineServer {
                         addLog(line);
 
                         if (output) {
+
+                            IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+
+                            if (incommingServerMessageEvent.isCancelled()) continue;
+
                             StreamlineCloud.logSingle(getName() + line);
                         }
                     }
@@ -201,6 +226,13 @@ public class CloudServer extends StreamlineServer {
     }
 
     public void delete() {
+
+        ServerDeleteEvent serverDeleteEvent = eventManager.callEvent(new ServerDeleteEvent(getName(), getUuid()));
+
+        if (serverDeleteEvent.isCancelled()) {
+            return;
+        }
+
         StaticCache.getRunningServers().remove(this);
         StaticCache.getLinkedServers().remove(this);
 
@@ -208,6 +240,13 @@ public class CloudServer extends StreamlineServer {
     }
 
     public void kill() {
+
+        ServerStopEvent serverStopEvent = eventManager.callEvent(new ServerStopEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort()));
+
+        if (serverStopEvent.isCancelled()) {
+            return;
+        }
+
         if (isOutput()) disableScreen();
 
         if (process != null) {
