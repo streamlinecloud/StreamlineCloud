@@ -2,7 +2,6 @@ package io.streamlinemc.main.plugin;
 
 import io.streamlinemc.api.plmanager.StreamlinePlugin;
 import io.streamlinemc.api.plmanager.event.EventManager;
-import io.streamlinemc.api.plmanager.event.predefined.NewServerEvent;
 import io.streamlinemc.main.StreamlineCloud;
 import org.yaml.snakeyaml.Yaml;
 

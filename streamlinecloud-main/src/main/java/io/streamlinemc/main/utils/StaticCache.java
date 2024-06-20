@@ -2,6 +2,8 @@ package io.streamlinemc.main.utils;
 
 
 import com.google.gson.Gson;
+import io.javalin.Javalin;
+import io.streamlinemc.api.RestUtils.RconData;
 import io.streamlinemc.main.core.backend.remoteLogic.WSClient;
 import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.lang.CloudLanguage;
@@ -82,5 +84,11 @@ public class StaticCache {
 
     @Getter @Setter
     private static boolean disabledColors = false;
+
+    @Getter @Setter
+    private static Javalin backend;
+
+    @Getter
+    private final static HashMap<String, RconData> rconDetails = new HashMap<>();
 
 }

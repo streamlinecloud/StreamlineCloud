@@ -21,6 +21,7 @@ public class StreamlineConfig {
     String multiRootConnection = "";
 
     boolean disableColors = false;
+    boolean enableRconSupport = true;
 
     public static StreamlineConfig fromJson(String json) {
         Gson gson = new Gson();

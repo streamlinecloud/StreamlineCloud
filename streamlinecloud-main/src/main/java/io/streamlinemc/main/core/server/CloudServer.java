@@ -1,5 +1,6 @@
 package io.streamlinemc.main.core.server;
 
+import io.streamlinemc.api.RestUtils.RconData;
 import io.streamlinemc.api.plmanager.event.predefined.*;
 import io.streamlinemc.api.server.*;
 import io.streamlinemc.main.StreamlineCloud;
@@ -29,6 +30,7 @@ public class CloudServer extends StreamlineServer {
     Thread thread;
     Process process;
     List<String> commandQueue = new ArrayList<>();
+    String rconUuid = UUID.randomUUID().toString();
 
     boolean output = false;
     boolean staticServer = false;
@@ -87,30 +89,38 @@ public class CloudServer extends StreamlineServer {
 
             //SetPort
             String filePath = FileSystem.homeFile + "/staticservers/" + getName() + "/server.properties";
-            String searchTerm = "server-port=";
-            String replacement = "server-port=" + getPort();
 
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
-                String line;
-                StringBuilder fileContent = new StringBuilder();
+            //TODO: Add Rcon Port Replacement
 
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.startsWith(searchTerm)) {
-                        line = replacement/* + line.substring(searchTerm.length())*/;
+            String rconpw = StreamlineCloud.generatePassword();
+
+            String[][] replacements = {{"server-port=", "server-port=" + getPort()}, {"enable-rcon=false", "enable-rcon=true"}, {"rcon.port=25575", "rcon.port=" + (getPort() + 1)}, {"rcon.password=", "rcon.password=" + rconpw}};
+
+            StaticCache.getRconDetails().put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
+
+
+            for (String[] replace : replacements) {
+                try {
+                    File file = new File(filePath);
+
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    String line = "", oldtext = "";
+                    while ((line = reader.readLine()) != null) {
+                        oldtext += line + "\r\n";
                     }
-                    fileContent.append(line).append("\n");
+                    reader.close();
+
+                    // replace a word in a file
+                    String newtext = oldtext.replaceAll(replace[0], replace[1]);
+
+                    FileWriter writer = new FileWriter(filePath);
+                    writer.write(newtext);
+                    writer.close();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
                 }
-
-                bufferedReader.close();
-
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filePath));
-                bufferedWriter.write(fileContent.toString());
-                bufferedWriter.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
         } else {
 
             if (getGroup() == null) {
@@ -119,20 +129,31 @@ public class CloudServer extends StreamlineServer {
                 template = FileSystem.createTemporaryServer(group.getTemplates(), getName(), getUuid(), getRuntime(), this);
             }
 
-            //SetPort
+            String rconpw = StreamlineCloud.generatePassword();
+
+            String[][] replacements = {{"server-port=", "server-port=" + getPort()}, {"enable-rcon=false", "enable-rcon=true"}, {"rcon.port=25575", "rcon.port=" + (getPort() + 1)}, {"rcon.password=", "rcon.password=" + rconpw}};
+
+            StaticCache.getRconDetails().put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
+
             try {
+                StringBuilder sb = new StringBuilder();
+
+                for (String[] replace : replacements) {
+                    sb.append(replace[1]).append("\n");
+                }
+
                 File file = new File(template.getPath() + "/server.properties");
 
-                FileWriter fileWriter = new FileWriter(file);
-                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                FileWriter writer = new FileWriter(file);
+                BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
-                bufferedWriter.write("server-port=" + getPort() + "\nonline-mode=false");
-                //bufferedWriter.write("online-mode=false");
+                bufferedWriter.write(sb.toString());
 
                 bufferedWriter.close();
             } catch (IOException e) {
                 System.out.println("error: " + e.getMessage());
             }
+
         }
 
 
