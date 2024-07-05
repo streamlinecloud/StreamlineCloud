@@ -1,5 +1,6 @@
 package io.streamlinemc.main.terminal;
 
+import io.streamlinemc.api.exceptions.CommandException;
 import io.streamlinemc.api.plmanager.event.predefined.ExecuteCommandEvent;
 import io.streamlinemc.main.CloudMain;
 import io.streamlinemc.main.StreamlineCloud;
@@ -11,6 +12,7 @@ import org.jline.reader.UserInterruptException;
 
 import java.util.Arrays;
 
+import static io.streamlinemc.main.plugin.PluginManager.commandManager;
 import static io.streamlinemc.main.plugin.PluginManager.eventManager;
 
 public class CloudTerminalRunner extends Thread {
@@ -135,5 +137,17 @@ public class CloudTerminalRunner extends Thread {
                 }
             }
         }
+
+
+        commandManager.commands.values().forEach(command -> {
+            if (command.getName().equals(args[0])) {
+                try {
+                    commandManager.executeCommand(command.getName(), Arrays.stream(args).skip(1).toArray(String[]::new));
+                } catch (CommandException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
     }
 }

@@ -1,8 +1,8 @@
 package io.streamlinemc.main.plugin;
 
 import io.streamlinemc.api.plmanager.StreamlinePlugin;
+import io.streamlinemc.api.plmanager.command.CommandManager;
 import io.streamlinemc.api.plmanager.event.EventManager;
-import io.streamlinemc.api.plmanager.event.predefined.NewServerEvent;
 import io.streamlinemc.main.StreamlineCloud;
 import org.yaml.snakeyaml.Yaml;
 
@@ -21,6 +21,7 @@ import java.util.jar.JarFile;
 public class PluginManager {
 
     public static final EventManager eventManager = new EventManager();
+    public static final CommandManager commandManager = new CommandManager();
     private List<StreamlinePlugin> pluginList = new ArrayList<>();
     private File pluginsFolder = new File(System.getProperty("user.dir") + "/plugins");
     public void loadPlugins() {
@@ -84,7 +85,7 @@ public class PluginManager {
 
     public void executeStartup() {
         for (StreamlinePlugin streamlinePlugin : pluginList) {
-            streamlinePlugin.start(eventManager);
+            streamlinePlugin.start(eventManager, commandManager);
         }
     }
 

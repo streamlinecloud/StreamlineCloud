@@ -9,6 +9,7 @@ import io.streamlinemc.main.core.backend.BackEndMain;
 import io.streamlinemc.main.core.server.CloudServer;
 import io.streamlinemc.main.terminal.Color;
 import io.streamlinemc.main.utils.InternalSettings;
+import io.streamlinemc.main.utils.StreamlineConfig;
 import io.streamlinemc.main.utils.Utils;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -43,6 +44,8 @@ public class StreamlineCloud {
         } while (generatedPorts.contains(port));
 
         generatedPorts.add(port);
+        if (StaticCache.getConfig().isEnableRconSupport()) generatedPorts.add(port + 1);
+
         return port;
     }
 
@@ -339,6 +342,24 @@ public class StreamlineCloud {
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.:/*+-~^";
         StringBuilder builder = new StringBuilder();
         int length = 120;
+
+        Random random = new Random();
+
+        for (int i = 0; i < length; i++) {
+
+            int zufallsIndex = random.nextInt(letters.length());
+            char zufallsZeichen = letters.charAt(zufallsIndex);
+            builder.append(zufallsZeichen);
+        }
+
+        return builder.toString();
+    }
+
+    public static String generatePassword() {
+
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?*+-";
+        StringBuilder builder = new StringBuilder();
+        int length = 64;
 
         Random random = new Random();
 

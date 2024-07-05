@@ -5,6 +5,8 @@ import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.terminal.api.CloudCommand;
 import io.streamlinemc.main.utils.StaticCache;
 
+import static io.streamlinemc.main.plugin.PluginManager.commandManager;
+
 public class HelpCommand extends CloudCommand {
 
     public HelpCommand() {
@@ -29,8 +31,12 @@ public class HelpCommand extends CloudCommand {
         }
 
         StreamlineCloud.log("Commands:");
-        for (CloudCommand command : CloudMain.getInstance().getCommandMap()) {
-            StreamlineCloud.log("- " + command.name() + ": " + command.description());
-        }
+         CloudMain.getInstance().getCommandMap().forEach(command -> {
+             StreamlineCloud.log("- " + command.name() + ": " + command.description());
+         });
+
+        commandManager.commands.values().forEach(command -> {
+            StreamlineCloud.log("§GOLD- " + command.getName() + ": " + command.getDescription());
+        });
     }
 }
