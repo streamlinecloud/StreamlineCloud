@@ -26,6 +26,11 @@ public class AllServerDatasetsRestController {
                 s.setOnlinePlayers(server.getOnlinePlayers());
                 s.setMaxOnlineCount(server.getMaxOnlineCount());
                 s.setServerState(server.getServerState());
+                s.setRconUuid(server.getRconUuid());
+
+                System.out.println(server.getUuid());
+
+                s.setUuid(server.getUuid());
                 serverList.add(s);
             }
 

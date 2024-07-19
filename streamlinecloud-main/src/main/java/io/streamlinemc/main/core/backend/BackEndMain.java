@@ -50,6 +50,7 @@ public class BackEndMain {
         new ServerHelloWorldRestController();
         new ServerUpdateDataRestController();
         new ServerRconDetailsRestController();
+        new GetVersionInfoRestController();
 
 
         StaticCache.getBackend().start(StaticCache.getConfig().getCommunicationBridgePort());

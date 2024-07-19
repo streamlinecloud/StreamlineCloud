@@ -30,7 +30,6 @@ public class CloudServer extends StreamlineServer {
     Thread thread;
     Process process;
     List<String> commandQueue = new ArrayList<>();
-    String rconUuid = UUID.randomUUID().toString();
 
     boolean output = false;
     boolean staticServer = false;
