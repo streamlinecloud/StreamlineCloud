@@ -1,8 +1,6 @@
 package io.streamlinemc.main.command.completer;
 
-import io.streamlinemc.main.StreamlineCloud;
-import io.streamlinemc.main.utils.StaticCache;
-import io.streamlinemc.main.utils.StreamlineConfig;
+import io.streamlinemc.main.utils.Cache;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
@@ -53,7 +51,7 @@ public class ServersCommandCompleter implements Completer {
                 break;
             case "server":
 
-                StaticCache.getRunningServers().forEach(server -> {
+                Cache.i().getRunningServers().forEach(server -> {
                     list.add(new Candidate(server.getName(), server.getName(), null, null, null, null, true));
                 });
 

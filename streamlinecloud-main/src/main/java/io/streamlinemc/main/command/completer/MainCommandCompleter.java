@@ -1,7 +1,6 @@
 package io.streamlinemc.main.command.completer;
 
 import io.streamlinemc.main.CloudMain;
-import io.streamlinemc.main.utils.StaticCache;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;

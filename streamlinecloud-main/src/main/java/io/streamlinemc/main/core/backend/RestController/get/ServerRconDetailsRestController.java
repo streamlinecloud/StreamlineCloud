@@ -2,8 +2,7 @@ package io.streamlinemc.main.core.backend.RestController.get;
 
 import io.javalin.http.HttpStatus;
 import io.streamlinemc.api.RestUtils.RconData;
-import io.streamlinemc.main.StreamlineCloud;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 import static io.streamlinemc.main.core.backend.BackEndMain.mainPath;
 
@@ -11,7 +10,7 @@ public class ServerRconDetailsRestController {
 
     public ServerRconDetailsRestController() {
 
-        StaticCache.getBackend().get(mainPath + "get/server/rcon-details/{uuid}", ctx -> {
+        Cache.i().getBackend().get(mainPath + "get/server/rcon-details/{uuid}", ctx -> {
 
             System.out.println("GET /get/server/rcon-details/{uuid}");
 
@@ -24,7 +23,7 @@ public class ServerRconDetailsRestController {
                 return;
             }
 
-            if (!StaticCache.getRconDetails().containsKey(uuid)) {
+            if (!Cache.i().getRconDetails().containsKey(uuid)) {
                 System.out.println("UUID not found");
                 ctx.result("UUID not found");
                 ctx.status(201);
@@ -33,7 +32,7 @@ public class ServerRconDetailsRestController {
             System.out.println("UUID found");
 
             ctx.status(HttpStatus.OK);
-            ctx.result(StaticCache.getGson().toJson(StaticCache.getRconDetails().get(uuid), RconData.class));
+            ctx.result(Cache.i().getGson().toJson(Cache.i().getRconDetails().get(uuid), RconData.class));
 
         });
 

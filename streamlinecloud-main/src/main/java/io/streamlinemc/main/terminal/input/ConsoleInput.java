@@ -1,6 +1,6 @@
 package io.streamlinemc.main.terminal.input;
 
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 import lombok.Getter;
 
 @Getter
@@ -13,7 +13,7 @@ public class ConsoleInput {
         this.inputType = inputType;
         this.next = next;
 
-        StaticCache.getConsoleInputs().add(this);
+        Cache.i().getConsoleInputs().add(this);
     }
 
     public enum InputType {

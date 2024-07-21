@@ -1,6 +1,6 @@
 package io.streamlinemc.main;
 
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 public class CloudLauncher {
 
@@ -20,8 +20,8 @@ public class CloudLauncher {
     public static void main(String[] args) throws InterruptedException {
 
         for (String arg : args) {
-            if (StaticCache.getArguments().contains(arg)) continue;
-            StaticCache.getArguments().add(arg);
+            if (Cache.i().getArguments().contains(arg)) continue;
+            Cache.i().getArguments().add(arg);
         }
 
         new CloudMain(args);

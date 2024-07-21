@@ -3,12 +3,14 @@ package io.streamlinemc.main.command;
 import io.streamlinemc.api.server.TemplateEnums;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.terminal.api.CloudCommand;
+import io.streamlinemc.main.utils.Cache;
 import io.streamlinemc.main.utils.Downloader;
-import io.streamlinemc.main.utils.FileSystem;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -67,8 +69,8 @@ public class TemplatesCommand extends CloudCommand {
         } else if (args[1].equals("help")) {
             StreamlineCloud.log("- template create <templatename> <SERVER | PROXY> <SOFTWARE-URL>");
         } else if (args[1].equals("delete")) {
-            if (FileSystem.checkTemplate("/template/" + args[1])) {
-                File template = new File(FileSystem.homeFile.getPath() + "/template/" + args[1]);
+            if (!Files.exists(Paths.get(Cache.i().homeFile + "/template/" + args[1]))) {
+                File template = new File(Cache.i().homeFile + "/templates/" + args[1]);
                 template.delete();
                 StreamlineCloud.log("tmp.delete.success");
              return;

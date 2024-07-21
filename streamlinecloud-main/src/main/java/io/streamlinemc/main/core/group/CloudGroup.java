@@ -4,8 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 import io.streamlinemc.api.group.StreamlineGroup;
 import io.streamlinemc.api.server.ServerRuntime;
-import io.streamlinemc.main.utils.FileSystem;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 import lombok.Getter;
 
 import java.io.*;
@@ -26,7 +25,7 @@ public class CloudGroup extends StreamlineGroup {
 
     public void save() throws IOException {
 
-        File file  = new File(FileSystem.groupsFile.getAbsolutePath() + "/" + getName() + ".json");
+        File file  = new File(Cache.i().homeFile + "/groups/" + getName() + ".json");
 
         file.createNewFile();
 
@@ -38,7 +37,7 @@ public class CloudGroup extends StreamlineGroup {
 
     public void delete() {
 
-        File file  = new File(FileSystem.groupsFile.getAbsolutePath() + "/" + getName() + ".json");
+        File file  = new File(Cache.i().homeFile + "/groups/" + getName() + ".json");
 
         try {
             Files.delete(Paths.get(file.getPath()));
@@ -46,6 +45,6 @@ public class CloudGroup extends StreamlineGroup {
             throw new RuntimeException(e);
         }
 
-        StaticCache.getActiveGroups().remove(this);
+        Cache.i().getActiveGroups().remove(this);
     }
 }

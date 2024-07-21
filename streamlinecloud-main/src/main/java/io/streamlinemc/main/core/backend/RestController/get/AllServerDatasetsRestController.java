@@ -3,7 +3,7 @@ package io.streamlinemc.main.core.backend.RestController.get;
 import com.google.gson.Gson;
 import io.streamlinemc.api.server.StreamlineServer;
 import io.streamlinemc.main.core.server.CloudServer;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,11 @@ public class AllServerDatasetsRestController {
 
     public AllServerDatasetsRestController() {
 
-        StaticCache.getBackend().get(mainPath + "get/dataset/servers", ctx -> {
+        Cache.i().getBackend().get(mainPath + "get/dataset/servers", ctx -> {
 
             List<StreamlineServer> serverList = new ArrayList<>();
 
-            for (CloudServer server : StaticCache.getRunningServers()) {
+            for (CloudServer server : Cache.i().getRunningServers()) {
                 StreamlineServer s = new StreamlineServer();
                 s.setName(server.getName());
                 s.setPort(server.getPort());
