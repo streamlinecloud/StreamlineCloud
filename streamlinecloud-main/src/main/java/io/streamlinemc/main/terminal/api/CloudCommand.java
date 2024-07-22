@@ -3,6 +3,8 @@ package io.streamlinemc.main.terminal.api;
 import lombok.Setter;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CloudCommand implements CloudCommandImpl {
 
@@ -14,6 +16,9 @@ public abstract class CloudCommand implements CloudCommandImpl {
 
     @Setter
     String[] aliases;
+
+    @Setter
+    List<CloudCommandArgument> arguments;
 
     @Override
     public String name() {
@@ -31,6 +36,20 @@ public abstract class CloudCommand implements CloudCommandImpl {
     }
 
     @Override
+    public List<CloudCommandArgument> arguments() {
+        return arguments;
+    }
+
+    @Override
     public void execute(String[] args) throws MalformedURLException {
     }
+
+    public void addArgument(CloudCommandArgument argument) {
+        if (arguments == null) {
+            arguments = new ArrayList<>();
+        }
+
+        arguments.add(argument);
+    }
+
 }
