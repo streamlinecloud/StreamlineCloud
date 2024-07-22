@@ -4,10 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 import io.streamlinemc.api.group.StreamlineGroup;
 import io.streamlinemc.api.server.ServerRuntime;
+import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.utils.Cache;
+import io.streamlinemc.main.utils.Downloader;
 import lombok.Getter;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -46,5 +50,11 @@ public class CloudGroup extends StreamlineGroup {
         }
 
         Cache.i().getActiveGroups().remove(this);
+    }
+
+    public interface DownloadResponse {
+
+        void execute(boolean success);
+
     }
 }

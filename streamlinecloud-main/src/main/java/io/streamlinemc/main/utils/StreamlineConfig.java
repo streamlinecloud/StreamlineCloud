@@ -48,6 +48,8 @@ public class StreamlineConfig {
     @SneakyThrows
     public static void init() {
 
+        new File(Cache.i().homeFile + "/data").mkdirs();
+
         File apiKeyFile = new File(Cache.i().homeFile + "/data/apikey.json");
         File configFile = new File(Cache.i().homeFile + "/data/config.json");
         File groupsFolder = new File(Cache.i().homeFile + "/groups");

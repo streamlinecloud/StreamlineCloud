@@ -9,6 +9,7 @@ import io.streamlinemc.main.core.backend.BackEndMain;
 import io.streamlinemc.main.core.server.CloudServer;
 import io.streamlinemc.main.terminal.Color;
 import io.streamlinemc.main.utils.BuildSettings;
+import io.streamlinemc.main.utils.Downloader;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
@@ -18,6 +19,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -351,6 +353,21 @@ public class StreamlineCloud {
         }
 
         return builder.toString();
+    }
+
+    public static void download(String url, String file, CloudGroup.DownloadResponse response) {
+        File template_dir = new File(System.getProperty("user.dir") + "/templates/" + file);
+        Downloader downloader = new Downloader();
+        try {
+            downloader.download(new URL(url), new File(template_dir.getAbsolutePath() + "/server.jar"), s1 -> {
+
+                StreamlineCloud.log("Server für " + file +"  wurde erfolgreich heruntergeladen!");
+                response.execute(true);
+            });
+        } catch (Exception e) {
+            StreamlineCloud.log("sl.group.downloadFailed");
+            response.execute(false);
+        }
     }
 
     public static String generatePassword() {

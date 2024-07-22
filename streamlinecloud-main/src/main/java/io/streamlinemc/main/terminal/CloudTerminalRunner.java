@@ -5,7 +5,7 @@ import io.streamlinemc.api.plmanager.event.predefined.ExecuteCommandEvent;
 import io.streamlinemc.main.CloudMain;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.terminal.api.CloudCommand;
-import io.streamlinemc.main.terminal.input.ConsoleInput;
+import io.streamlinemc.main.terminal.input.ConsoleQuestion;
 import io.streamlinemc.main.utils.Cache;
 import lombok.SneakyThrows;
 import org.jline.reader.UserInterruptException;
@@ -79,31 +79,8 @@ public class CloudTerminalRunner extends Thread {
 
             } else {
 
-                ConsoleInput input = Cache.i().getConsoleInputs().get(0);
-
-                if (input.getInputType().equals(ConsoleInput.InputType.INT)) {
-
-                    try {
-
-                        int i = Integer.parseInt(line);
-
-                    } catch (NumberFormatException ex) {
-
-                        StreamlineCloud.log("Bitte gebe eine gültige Zahl ein!");
-                        return;
-                    }
-                } else if (input.getInputType().equals(ConsoleInput.InputType.BOOLEAN)) {
-
-                    if (!line.equals("true") && !line.equals("false")) {
-
-                        StreamlineCloud.log("Bitte gebe true oder false ein");
-                        continue;
-                    }
-                }
-
-
-                input.getNext().execute(line);
-                Cache.i().getConsoleInputs().remove(input);
+                ConsoleQuestion question = Cache.i().getConsoleInputs().get(0);
+                question.execute(line);
 
                 if (Cache.i().getConsoleInputs().isEmpty()) StreamlineCloud.releaseSavedLogs();
             }

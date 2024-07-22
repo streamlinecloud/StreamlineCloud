@@ -8,7 +8,7 @@ import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.lang.CloudLanguage;
 import io.streamlinemc.main.lang.ReplacePaket;
 import io.streamlinemc.main.command.*;
-import io.streamlinemc.main.terminal.input.ConsoleInput;
+import io.streamlinemc.main.terminal.input.ConsoleQuestion;
 import io.streamlinemc.main.core.backend.BackEndMain;
 import io.streamlinemc.main.terminal.CloudTerminal;
 import io.streamlinemc.main.terminal.api.CloudCommand;
@@ -164,26 +164,22 @@ public class CloudMain {
 
         Cache.i().setConfig(new StreamlineConfig("", 19132, 5378, "lobby"));
 
-        StreamlineCloud.log("Set up language / Gebe eine Sprache ein");
-        StreamlineCloud.log("[en/de]");
-        new ConsoleInput(ConsoleInput.InputType.STRING, output -> {
+        new ConsoleQuestion(ConsoleQuestion.InputType.STRING, "Set up language / Gebe eine Sprache ein [en/de]", output -> {
 
             if (output.contains("en") || output.contains("de")) {
 
                 Cache.i().getConfig().setLanguage(output + ".json");
                 CloudMain.getInstance().initLang();
                 StreamlineCloud.log("lang.welcome");
-                StreamlineCloud.log("sl.setup.enterJavaPath");
 
-                new ConsoleInput(ConsoleInput.InputType.STRING, output1 -> {
+                new ConsoleQuestion(ConsoleQuestion.InputType.STRING, "sl.setup.enterJavaPath", output1 -> {
                     Cache.i().getConfig().setDefaultJavaPath(output1);
                     StreamlineConfig.saveConfig();
 
                     StreamlineCloud.log("sl.setup.generateGroups");
-                    new ConsoleInput(ConsoleInput.InputType.BOOLEAN, output2 -> {
-                        boolean generate = output2.equals("true");
+                    new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "", output2 -> {
 
-                        if (generate) {
+                        if (output2.equals("yes")) {
 
                             CloudGroup lobby = new CloudGroup(
                                     "lobby",
@@ -207,42 +203,16 @@ public class CloudMain {
                             StreamlineCloud.log("sl.setup.groupsGenerated");
                             StreamlineCloud.log("sl.setup.downloading");
 
-                            try {
-                                File template_dir = new File(System.getProperty("user.dir") + "/templates/default");
-                                Downloader downloader = new Downloader();
-                                downloader.download(new URL("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar"), new File(template_dir.getAbsolutePath() + "/server/server.jar"), s -> {
+                            StreamlineCloud.download("https://api.papermc.io/v2/projects/waterfall/versions/1.20/builds/560/downloads/waterfall-1.20-560.jar", "default/proxy", proxySuccess ->  {
+                                StreamlineCloud.download("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar", "default/server", lobbySuccess -> {
+                                    copyStreamlineMc();
 
-                                    try {
-                                        downloader.download(new URL("https://api.papermc.io/v2/projects/waterfall/versions/1.20/builds/560/downloads/waterfall-1.20-560.jar"), new File(template_dir.getAbsolutePath() + "/proxy/server.jar"), s1 -> {
-
-                                            copyStreamlineMc();
-
-                                            StreamlineCloud.log("sl.setup.finished");
-                                            StreamlineCloud.shutDown();
-                                        });
-                                    } catch (MalformedURLException e) {
-                                        StreamlineCloud.printError("SetupDownloadFailed", new String[]{"3", "4"}, e);
-                                        StreamlineCloud.log("sl.setup.downloadFailed");
-
-                                        copyStreamlineMc();
-
-                                        StreamlineCloud.log("sl.setup.finished");
-                                        Thread.sleep(2000);
-                                        StreamlineCloud.shutDown();
-
-                                    }
-
+                                    StreamlineCloud.log("sl.setup.finished");
+                                    //Thread.sleep(2000);
+                                    StreamlineCloud.shutDown();
                                 });
-                            } catch (MalformedURLException e) {
-                                StreamlineCloud.printError("SetupDownloadFailed", new String[]{"3", "4"}, e);
-                                StreamlineCloud.log("sl.setup.downloadFailed");
+                            });
 
-                                copyStreamlineMc();
-
-                                StreamlineCloud.log("sl.setup.finished");
-                                Thread.sleep(2000);
-                                StreamlineCloud.shutDown();
-                            }
                         }
                     });
                 });
@@ -265,7 +235,6 @@ public class CloudMain {
                     new File(Cache.i().homeFile + "/templates/default/proxy/plugins/streamlinecloud-mc.jar").toPath());
         } catch (Exception e) {
             Cache.i().getDataCache().add("streamlinecloud-mc-copy-failed");
-            e.printStackTrace();
         }
 
     }

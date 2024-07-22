@@ -9,7 +9,7 @@ import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.lang.CloudLanguage;
 import io.streamlinemc.main.plugin.PluginManager;
 import io.streamlinemc.main.core.server.CloudServer;
-import io.streamlinemc.main.terminal.input.ConsoleInput;
+import io.streamlinemc.main.terminal.input.ConsoleQuestion;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,7 +33,7 @@ public class Cache {
     public final List<CloudGroup> activeGroups = new ArrayList<>();
     public final HashMap<CloudServer, CloudGroup> linkedServers = new HashMap<>();
     public final List<CloudServer> serversWaitingForStart = new ArrayList<>();
-    public List<ConsoleInput> consoleInputs = new ArrayList<>();
+    public List<ConsoleQuestion> consoleInputs = new ArrayList<>();
     public CloudGroup defaultGroup;
     public String apiKey;
     public StreamlineConfig config;
