@@ -2,9 +2,10 @@ package io.streamlinemc.main.core.task;
 
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.server.CloudServer;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -21,14 +22,18 @@ public class ServerStarterTask {
 
             StreamlineCloud.checkGroups();
 
-            if (!StaticCache.getServersWaitingForStart().isEmpty()) {
-                CloudServer server = StaticCache.getServersWaitingForStart().get(0);
+            if (!Cache.i().getServersWaitingForStart().isEmpty()) {
+                try {
+                CloudServer server = Cache.i().getServersWaitingForStart().get(0);
                 server.start(new File(server.getGroupDirect().getJavaExec()));
-                StaticCache.getServersWaitingForStart().remove(server);
-                StaticCache.getLinkedServers().put(server, StreamlineCloud.getGroupByName(server.getGroupDirect().getName()));
+                Cache.i().getServersWaitingForStart().remove(server);
+                Cache.i().getLinkedServers().put(server, StreamlineCloud.getGroupByName(server.getGroupDirect().getName()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
-            if (StaticCache.getServersWaitingForStart().isEmpty()) {
+            if (Cache.i().getServersWaitingForStart().isEmpty()) {
 
                 if (firstStartup) {
 

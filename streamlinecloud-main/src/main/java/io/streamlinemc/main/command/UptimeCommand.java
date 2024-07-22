@@ -3,7 +3,7 @@ package io.streamlinemc.main.command;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.server.CloudServer;
 import io.streamlinemc.main.terminal.api.CloudCommand;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 import java.net.MalformedURLException;
 import java.util.Calendar;
@@ -19,7 +19,7 @@ public class UptimeCommand extends CloudCommand {
     public void execute(String[] args) throws MalformedURLException {
 
         if (args.length == 1){
-            long dif_intime = Calendar.getInstance().getTimeInMillis() - StaticCache.getStartuptime();
+            long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartuptime();
             long dif_insec = dif_intime / 1000 % 60;
             long dif_inmin = (dif_intime / (1000 * 60)) % 60;
             long dif_inhour = (dif_intime / (1000 * 60 * 60)) % 24;

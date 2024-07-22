@@ -1,9 +1,13 @@
 package io.streamlinemc.main.terminal;
 
 import io.streamlinemc.main.StreamlineCloud;
+import io.streamlinemc.main.command.completer.MainCommandCompleter;
 import lombok.Getter;
+import org.jline.keymap.KeyMap;
+import org.jline.reader.Binding;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.Reference;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
@@ -42,6 +46,9 @@ public class CloudTerminal {
             this.lineReader = LineReaderBuilder.builder()
                     .terminal(terminal)
                     .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+                    .option(LineReader.Option.AUTO_GROUP, true)
+                    .option(LineReader.Option.AUTO_LIST, true)
+                    .completer(new MainCommandCompleter())
                     .build();
 
             this.runner = new CloudTerminalRunner(this);

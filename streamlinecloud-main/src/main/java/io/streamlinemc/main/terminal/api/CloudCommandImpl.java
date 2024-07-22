@@ -1,6 +1,7 @@
 package io.streamlinemc.main.terminal.api;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 public interface CloudCommandImpl {
 
@@ -9,6 +10,8 @@ public interface CloudCommandImpl {
     String description();
 
     String[] aliases();
+
+    List<CloudCommandArgument> arguments();
 
     void execute(String[] args) throws MalformedURLException;
 }

@@ -1,6 +1,6 @@
 package io.streamlinemc.main.core.backend.RestController.get;
 
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 import java.util.Calendar;
 
@@ -9,9 +9,9 @@ import static io.streamlinemc.main.core.backend.BackEndMain.mainPath;
 public class UptimeRestController {
 
     public UptimeRestController() {
-        StaticCache.getBackend().get(mainPath + "get/uptime", ctx -> {
+        Cache.i().getBackend().get(mainPath + "get/uptime", ctx -> {
 
-            long dif_intime = Calendar.getInstance().getTimeInMillis() - StaticCache.getStartuptime();
+            long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartuptime();
             long dif_inmin = (dif_intime / (1000 * 60)) % 60;
             long dif_inhour = (dif_intime / (1000 * 60 * 60)) % 24;
 

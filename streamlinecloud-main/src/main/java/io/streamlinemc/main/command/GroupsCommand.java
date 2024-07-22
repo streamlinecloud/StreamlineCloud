@@ -5,7 +5,7 @@ import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.lang.ReplacePaket;
 import io.streamlinemc.main.terminal.api.CloudCommand;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public class GroupsCommand extends CloudCommand {
 
                     CloudGroup group = new CloudGroup(
                             name,
-                            StaticCache.getConfig().getDefaultJavaPath(),
+                            Cache.i().getConfig().getDefaultJavaPath(),
                             1,
                             Arrays.asList(new String[]{template}), runtime);
                     group.setStaticGroup(staticGroup);
@@ -64,7 +64,7 @@ public class GroupsCommand extends CloudCommand {
                         return;
                     }
 
-                    StaticCache.getActiveGroups().add(group);
+                    Cache.i().getActiveGroups().add(group);
                     StreamlineCloud.log("sl.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
 
                 } else {
@@ -100,7 +100,7 @@ public class GroupsCommand extends CloudCommand {
 
                 StreamlineCloud.log("sl.command.groups.list.title");
 
-                for (CloudGroup g : StaticCache.getActiveGroups()) {
+                for (CloudGroup g : Cache.i().getActiveGroups()) {
                     StreamlineCloud.log(g.getName() + " - online: " + StreamlineCloud.getGroupOnlineServers(g).size() + " - minOnline: " + g.getMinOnlineCount());
                 }
 
@@ -118,7 +118,7 @@ public class GroupsCommand extends CloudCommand {
 
                     if (group != null) {
 
-                        if (group.getName().equals(StaticCache.getDefaultGroup().getName())) {
+                        if (group.getName().equals(Cache.i().getDefaultGroup().getName())) {
                             StreamlineCloud.log("Nice try!");
                             return;
                         }

@@ -4,9 +4,10 @@ import io.streamlinemc.api.server.ServerRuntime;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.server.CloudServer;
 import io.streamlinemc.main.terminal.api.CloudCommand;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 import java.io.File;
+import java.io.IOException;
 
 public class ServersCommand extends CloudCommand {
 
@@ -23,6 +24,8 @@ public class ServersCommand extends CloudCommand {
             sendHelp();
             return;
         }
+
+
 
         String sub = args[1];
 
@@ -43,8 +46,8 @@ public class ServersCommand extends CloudCommand {
                                 if (server.isOutput()) {
                                     server.disableScreen();
                                 } else {
-                                    if (StaticCache.getCurrentScreenServerName() != null)
-                                        StreamlineCloud.getServerByName(StaticCache.getCurrentScreenServerName()).disableScreen();
+                                    if (Cache.i().getCurrentScreenServerName() != null)
+                                        StreamlineCloud.getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
                                     server.enableScreen();
                                 }
 
@@ -104,8 +107,12 @@ public class ServersCommand extends CloudCommand {
                 if (args.length == 3) {
 
                     CloudServer server = new CloudServer(args[2], ServerRuntime.SERVER);
-                    File javaExec = new File(StaticCache.getConfig().getDefaultJavaPath());
-                    server.start(javaExec);
+                    File javaExec = new File(Cache.i().getConfig().getDefaultJavaPath());
+                    try {
+                        server.start(javaExec);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
 
                 } else {
                     sendHelp();
@@ -114,7 +121,7 @@ public class ServersCommand extends CloudCommand {
             case "list":
 
                 StreamlineCloud.log("Running servers:");
-                for (CloudServer ser : StaticCache.getRunningServers()) {
+                for (CloudServer ser : Cache.i().getRunningServers()) {
                     StreamlineCloud.log(ser.getName() + "-" + ser.getUuid() + " | " + ser.getServerState() + " | PORT: " + ser.getPort() + " | GROUP: " + ser.getGroupDirect().getName());
                 }
 

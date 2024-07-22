@@ -3,7 +3,7 @@ package io.streamlinemc.main.core.backend.remoteLogic;
 import io.streamlinemc.api.plmanager.event.predefined.ExecuteCommandEvent;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.terminal.CloudTerminalRunner;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.java_websocket.client.WebSocketClient;
@@ -22,7 +22,7 @@ public class WSClient {
 
     @SneakyThrows
     public WSClient() {
-        String serverURI = StaticCache.getConfig().getWebsocketUrl();
+        String serverURI = Cache.i().getConfig().getWebsocketUrl();
         client = new WebSocketClient(new URI(serverURI)) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {

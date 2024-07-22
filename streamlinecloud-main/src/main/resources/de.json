@@ -27,6 +27,9 @@
   "sl.server.killing": "Der Server %1 wird gelöscht...",
   "sl.server.deleted": "Der Server %1 wurde gelöscht",
 
+  "sl.group.downloadFinished": "Die Datein wurden erfolgreich heruntergeladen",
+  "sl.group.downloadFailed": "Der Download der Datei ist fehlgeschlagen",
+
   "sl.command.groups.notFound": "Die Gruppe %1 wurde nicht gefunden :/",
   "sl.command.groups.enterGroup": "Bitte gebe eine Gruppe an",
   "sl.command.groups.crate.enterValidRuntime": "Bitte gebe einen gültigen Typ an (server/proxy)",

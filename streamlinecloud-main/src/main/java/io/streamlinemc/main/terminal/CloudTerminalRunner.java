@@ -5,8 +5,8 @@ import io.streamlinemc.api.plmanager.event.predefined.ExecuteCommandEvent;
 import io.streamlinemc.main.CloudMain;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.terminal.api.CloudCommand;
-import io.streamlinemc.main.terminal.input.ConsoleInput;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.terminal.input.ConsoleQuestion;
+import io.streamlinemc.main.utils.Cache;
 import lombok.SneakyThrows;
 import org.jline.reader.UserInterruptException;
 
@@ -39,12 +39,12 @@ public class CloudTerminalRunner extends Thread {
 
             if (line == null) break;
 
-            if (StaticCache.getConsoleInputs().isEmpty()) {
+            if (Cache.i().getConsoleInputs().isEmpty()) {
 
                 String[] args = line.split(" ");
                 boolean executeCommands = true;
 
-                if (StaticCache.getCurrentScreenServerName() != null) {
+                if (Cache.i().getCurrentScreenServerName() != null) {
 
                     if (args[0].equals("cmd") || args[0].equals("c") || args[0].equals("command")) {
 
@@ -59,12 +59,12 @@ public class CloudTerminalRunner extends Thread {
 
                         sb.deleteCharAt(sb.length() - 1);
 
-                        StreamlineCloud.getServerByName(StaticCache.getCurrentScreenServerName()).addCommand(sb.toString());
+                        StreamlineCloud.getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
                         executeCommands = false;
 
                     } else if (args[0].equals("exit")) {
 
-                        StreamlineCloud.getServerByName(StaticCache.getCurrentScreenServerName()).disableScreen();
+                        StreamlineCloud.getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
                         executeCommands = false;
                     }
                 }
@@ -79,33 +79,10 @@ public class CloudTerminalRunner extends Thread {
 
             } else {
 
-                ConsoleInput input = StaticCache.getConsoleInputs().get(0);
+                ConsoleQuestion question = Cache.i().getConsoleInputs().get(0);
+                question.execute(line);
 
-                if (input.getInputType().equals(ConsoleInput.InputType.INT)) {
-
-                    try {
-
-                        int i = Integer.parseInt(line);
-
-                    } catch (NumberFormatException ex) {
-
-                        StreamlineCloud.log("Bitte gebe eine gültige Zahl ein!");
-                        return;
-                    }
-                } else if (input.getInputType().equals(ConsoleInput.InputType.BOOLEAN)) {
-
-                    if (!line.equals("true") && !line.equals("false")) {
-
-                        StreamlineCloud.log("Bitte gebe true oder false ein");
-                        continue;
-                    }
-                }
-
-
-                input.getNext().execute(line);
-                StaticCache.getConsoleInputs().remove(input);
-
-                if (StaticCache.getConsoleInputs().isEmpty()) StreamlineCloud.releaseSavedLogs();
+                if (Cache.i().getConsoleInputs().isEmpty()) StreamlineCloud.releaseSavedLogs();
             }
             } catch (UserInterruptException ignore) {
                 System.exit(130); //<--------- ONLY USE THIS AS A LAST RESORT
