@@ -150,9 +150,20 @@ public class CloudServer extends StreamlineServer {
 
         }
 
+        if (!new File(file.getPath() + "/server.jar").exists()) {
+
+            StreamlineCloud.log("sl.server.jarNotFound", new ReplacePaket[]{
+                    new ReplacePaket("%0", getName()),
+                    new ReplacePaket("%1", getGroup()),
+            });
+
+            Cache.i().getDataCache().add("blacklistGroup:" + getGroup());
+
+            kill();
+            return;
+        }
 
         ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
-
         File finalFile = file;
         Runnable aufgabe = () -> {
 
@@ -189,27 +200,40 @@ public class CloudServer extends StreamlineServer {
 
                     }, 500, 500, TimeUnit.MILLISECONDS);
 
+                    /*if (thread.isInterrupted()) return;
 
-                    while ((line = inputReader.readLine()) != null) {
+                    try {
+                        inputReader.readLine();
+                    } catch (Exception e) {
+                        return;
+                    }*/
 
-                        addLog(line);
 
-                        if (output) {
+                    while (getServerState().equals(ServerState.STOPPING)) {
 
-                            IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+                        if ((line = inputReader.readLine()) != null) {
 
-                            if (incommingServerMessageEvent.isCancelled()) continue;
+                            addLog(line);
 
-                            StreamlineCloud.logSingle(getName() + line);
+                            if (output) {
+
+                                IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+
+                                if (incommingServerMessageEvent.isCancelled()) continue;
+
+                                StreamlineCloud.logSingle(getName() + line);
+                            }
+
                         }
                     }
 
+
                     // Warte auf das Ende des Prozesses
-                    execcode.set(process.waitFor());
+                    //if (getServerState().equals(ServerState.STOPPING)) execcode.set(process.waitFor());
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
+                    //StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
                 }
                 task();
             });
@@ -251,7 +275,6 @@ public class CloudServer extends StreamlineServer {
         }
 
         Cache.i().getRunningServers().remove(this);
-        Cache.i().getLinkedServers().remove(this);
 
         StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
@@ -284,22 +307,26 @@ public class CloudServer extends StreamlineServer {
 
     public void kill() {
 
+        setServerState(ServerState.STOPPING);
+
         ServerStopEvent serverStopEvent = eventManager.callEvent(new ServerStopEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort()));
 
         if (serverStopEvent.isCancelled()) {
             return;
         }
 
+        if (thread != null) thread.interrupt();
+
         if (isOutput()) disableScreen();
 
         if (process != null) {
             process.destroy();
-            thread.interrupt();
         }
         delete();
     }
 
     public void stop() {
+        setServerState(ServerState.STOPPING);
         executeCommand("stop", this.process.getOutputStream());
     }
 

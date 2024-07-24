@@ -25,9 +25,13 @@ public class ServerStarterTask {
             if (!Cache.i().getServersWaitingForStart().isEmpty()) {
                 try {
                 CloudServer server = Cache.i().getServersWaitingForStart().get(0);
+
+                for (String s : Cache.i().getDataCache()) {
+                    if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
+                }
+
                 server.start(new File(server.getGroupDirect().getJavaExec()));
                 Cache.i().getServersWaitingForStart().remove(server);
-                Cache.i().getLinkedServers().put(server, StreamlineCloud.getGroupByName(server.getGroupDirect().getName()));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

@@ -31,7 +31,6 @@ public class Cache {
     public List<String> dataCache = new ArrayList<>();
     public final List<CloudServer> runningServers = new ArrayList<>();
     public final List<CloudGroup> activeGroups = new ArrayList<>();
-    public final HashMap<CloudServer, CloudGroup> linkedServers = new HashMap<>();
     public final List<CloudServer> serversWaitingForStart = new ArrayList<>();
     public List<ConsoleQuestion> consoleInputs = new ArrayList<>();
     public CloudGroup defaultGroup;
