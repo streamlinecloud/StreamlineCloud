@@ -29,6 +29,7 @@ import java.util.List;
 public class CloudMain {
 
     //TODO: Wenn ein Server normal geestoppt wird auch im Main Modul erkännen
+    //Test
 
     @Getter
     private static CloudMain instance;
