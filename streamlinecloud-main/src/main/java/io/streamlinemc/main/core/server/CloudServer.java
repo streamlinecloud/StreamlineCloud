@@ -57,7 +57,7 @@ public class CloudServer extends StreamlineServer {
     public void start(File javaExec) throws IOException {
 
         StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
-                new ReplacePaket("%1", getName() + "-" + getUuid()),
+                new ReplacePaket("%1", getName()),
                 new ReplacePaket("%2", "temp/" + getName())
         });
 
@@ -163,9 +163,13 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
+        StreamlineCloud.log("db1");
+
         ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
         File finalFile = file;
         Runnable aufgabe = () -> {
+
+            StreamlineCloud.log("db2");
 
 
 
@@ -208,8 +212,17 @@ public class CloudServer extends StreamlineServer {
                         return;
                     }*/
 
+                    StreamlineCloud.log("db32");
+                    //execcode.set(process.waitFor());
 
-                    while (getServerState().equals(ServerState.STOPPING)) {
+
+                    while (!getServerState().equals(ServerState.STOPPING)) {
+
+                        try {
+                            inputReader.readLine();
+                        } catch (Exception e) {
+                            return;
+                        }
 
                         if ((line = inputReader.readLine()) != null) {
 
@@ -227,9 +240,11 @@ public class CloudServer extends StreamlineServer {
                         }
                     }
 
+                    StreamlineCloud.log("db3");
+
 
                     // Warte auf das Ende des Prozesses
-                    //if (getServerState().equals(ServerState.STOPPING)) execcode.set(process.waitFor());
+                    //
 
                 } catch (Exception e) {
                     e.printStackTrace();
