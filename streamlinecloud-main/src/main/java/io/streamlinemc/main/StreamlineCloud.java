@@ -269,18 +269,31 @@ public class StreamlineCloud {
     }
 
     public static void startServerByGroup(CloudGroup cloudGroup) {
-        List<CloudServer> alLServers = new ArrayList<>(getGroupOnlineServers(cloudGroup));
-        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(cloudGroup)) alLServers.add(s);
+        List<CloudServer> allServers = new ArrayList<>(getGroupOnlineServers(cloudGroup));
+        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(cloudGroup)) allServers.add(s);
 
-        CloudServer server = new CloudServer(cloudGroup.getName() + "-" + (alLServers.size() + 1), cloudGroup.getRuntime());
+        CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime());
         server.setGroup(cloudGroup.getName());
         Cache.i().getServersWaitingForStart().add(server);
     }
 
+    public static int calculateServerNumber(CloudGroup g) {
+
+        ArrayList<Integer> usedNumbers = new ArrayList<>();
+        for (CloudServer server : getGroupOnlineServers(g)) {
+            usedNumbers.add(Integer.valueOf(server.getName().split("-")[1]));
+        }
+
+        for (int i = 1; true ; i++) {
+            if (!usedNumbers.contains(i)) return i;
+        }
+
+    }
+
     public static List<CloudServer> getGroupOnlineServers(CloudGroup g) {
         List<CloudServer> onlineServers = new ArrayList<>();
-        for (CloudServer s : Cache.i().getLinkedServers().keySet()) {
-            if (s.getGroupDirect().equals(g)) {
+        for (CloudServer s : Cache.i().getRunningServers()) {
+            if (s.getGroup().equals(g.getName())) {
                 onlineServers.add(s);
             }
         }

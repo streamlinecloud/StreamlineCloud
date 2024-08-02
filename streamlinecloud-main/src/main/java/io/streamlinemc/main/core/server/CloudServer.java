@@ -57,7 +57,7 @@ public class CloudServer extends StreamlineServer {
     public void start(File javaExec) throws IOException {
 
         StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
-                new ReplacePaket("%1", getName() + "-" + getUuid()),
+                new ReplacePaket("%1", getName()),
                 new ReplacePaket("%2", "temp/" + getName())
         });
 
@@ -150,11 +150,26 @@ public class CloudServer extends StreamlineServer {
 
         }
 
+        if (!new File(file.getPath() + "/server.jar").exists()) {
+
+            StreamlineCloud.log("sl.server.jarNotFound", new ReplacePaket[]{
+                    new ReplacePaket("%0", getName()),
+                    new ReplacePaket("%1", getGroup()),
+            });
+
+            Cache.i().getDataCache().add("blacklistGroup:" + getGroup());
+
+            kill();
+            return;
+        }
+
+        StreamlineCloud.log("db1");
 
         ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
-
         File finalFile = file;
         Runnable aufgabe = () -> {
+
+            StreamlineCloud.log("db2");
 
 
 
@@ -189,27 +204,51 @@ public class CloudServer extends StreamlineServer {
 
                     }, 500, 500, TimeUnit.MILLISECONDS);
 
+                    /*if (thread.isInterrupted()) return;
 
-                    while ((line = inputReader.readLine()) != null) {
+                    try {
+                        inputReader.readLine();
+                    } catch (Exception e) {
+                        return;
+                    }*/
 
-                        addLog(line);
+                    StreamlineCloud.log("db32");
+                    //execcode.set(process.waitFor());
 
-                        if (output) {
 
-                            IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+                    while (!getServerState().equals(ServerState.STOPPING)) {
 
-                            if (incommingServerMessageEvent.isCancelled()) continue;
+                        try {
+                            inputReader.readLine();
+                        } catch (Exception e) {
+                            return;
+                        }
 
-                            StreamlineCloud.logSingle(getName() + line);
+                        if ((line = inputReader.readLine()) != null) {
+
+                            addLog(line);
+
+                            if (output) {
+
+                                IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+
+                                if (incommingServerMessageEvent.isCancelled()) continue;
+
+                                StreamlineCloud.logSingle(getName() + line);
+                            }
+
                         }
                     }
 
+                    StreamlineCloud.log("db3");
+
+
                     // Warte auf das Ende des Prozesses
-                    execcode.set(process.waitFor());
+                    //
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
+                    //StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
                 }
                 task();
             });
@@ -251,7 +290,6 @@ public class CloudServer extends StreamlineServer {
         }
 
         Cache.i().getRunningServers().remove(this);
-        Cache.i().getLinkedServers().remove(this);
 
         StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
@@ -284,22 +322,26 @@ public class CloudServer extends StreamlineServer {
 
     public void kill() {
 
+        setServerState(ServerState.STOPPING);
+
         ServerStopEvent serverStopEvent = eventManager.callEvent(new ServerStopEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort()));
 
         if (serverStopEvent.isCancelled()) {
             return;
         }
 
+        if (thread != null) thread.interrupt();
+
         if (isOutput()) disableScreen();
 
         if (process != null) {
             process.destroy();
-            thread.interrupt();
         }
         delete();
     }
 
     public void stop() {
+        setServerState(ServerState.STOPPING);
         executeCommand("stop", this.process.getOutputStream());
     }
 

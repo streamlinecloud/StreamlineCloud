@@ -8,6 +8,7 @@ import io.streamlinemc.main.terminal.api.CloudCommand;
 import io.streamlinemc.main.utils.Cache;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GroupsCommand extends CloudCommand {
@@ -31,13 +32,12 @@ public class GroupsCommand extends CloudCommand {
         switch (sub) {
             case "create":
 
-                if (args.length == 5 || args.length == 6) {
+                if (args.length == 4 || args.length == 5) {
 
-                    boolean staticGroup = (args.length == 6) && args[5].equals("--static");
+                    boolean staticGroup = (args.length == 5) && args[4].equals("--static");
 
                     String name = args[2];
-                    String template = args[3];
-                    String runtimeS = args[4];
+                    String runtimeS = args[3];
                     ServerRuntime runtime = null;
 
                     if (runtimeS.equalsIgnoreCase("SERVER")) {
@@ -54,7 +54,7 @@ public class GroupsCommand extends CloudCommand {
                             name,
                             Cache.i().getConfig().getDefaultJavaPath(),
                             1,
-                            Arrays.asList(new String[]{template}), runtime);
+                            new ArrayList<>(), runtime);
                     group.setStaticGroup(staticGroup);
 
                     try {
@@ -166,6 +166,24 @@ public class GroupsCommand extends CloudCommand {
                                 }
 
                             }
+                        } else if (groupSub.equals("list")) {
+
+                            String listSub = args[4];
+
+                            if (listSub.equals("templates")) {
+
+                                if (group.getTemplates().isEmpty()) {
+                                    StreamlineCloud.log("sl.command.groups.list.templates.empty");
+                                } else {
+                                    StreamlineCloud.log("sl.command.groups.list.templates.title",
+                                            new ReplacePaket[]{new ReplacePaket("%0", group.getName())});
+                                }
+
+                                for (String template : group.getTemplates()) {
+                                    StreamlineCloud.log("TEMPLATE: " + template);
+                                }
+
+                            }
                         }
 
                         try {
@@ -189,14 +207,14 @@ public class GroupsCommand extends CloudCommand {
 
         if (args[1].equals("help")) {
             StreamlineCloud.log("Basics");
-            StreamlineCloud.log("- groups create <name> <template> <server/proxy>");
+            StreamlineCloud.log("- groups create <name> <server/proxy>");
             StreamlineCloud.log("Set data:");
-            StreamlineCloud.log("- groups group set minOnlineCount <int>");
-            StreamlineCloud.log("- groups group set minOnlineSoftware <string>");
-            StreamlineCloud.log("- groups group add template <string>");
+            StreamlineCloud.log("- groups group <name> set minOnlineCount <int>");
+            StreamlineCloud.log("- groups group <name> set minOnlineSoftware <string>");
+            StreamlineCloud.log("- groups group <name> add template <string>");
+            StreamlineCloud.log("- groups group <name> list templates");
             StreamlineCloud.log("Utils");
             StreamlineCloud.log("- listAvailableSoftware");
-            StreamlineCloud.log("- downloadSoftware <proxy/server> <link>");
         }
     }
 

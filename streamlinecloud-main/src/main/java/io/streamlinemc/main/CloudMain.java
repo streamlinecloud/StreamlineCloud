@@ -20,8 +20,6 @@ import org.slf4j.simple.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +29,7 @@ import java.util.List;
 public class CloudMain {
 
     //TODO: Wenn ein Server normal geestoppt wird auch im Main Modul erkännen
+    //Test
 
     @Getter
     private static CloudMain instance;
@@ -122,6 +121,7 @@ public class CloudMain {
         registerCommand(new LanguageCommand());
         registerCommand(new UptimeCommand());
         registerCommand(new MultiRootCommand());
+        registerCommand(new DownloadCommand());
 
         if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", Cache.i().getConfig().getDefaultJavaPath(), 0, new ArrayList<>(), ServerRuntime.SERVER));
         Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());
@@ -176,8 +176,7 @@ public class CloudMain {
                     Cache.i().getConfig().setDefaultJavaPath(output1);
                     StreamlineConfig.saveConfig();
 
-                    StreamlineCloud.log("sl.setup.generateGroups");
-                    new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "", output2 -> {
+                    new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.generateGroups", output2 -> {
 
                         if (output2.equals("yes")) {
 
@@ -205,14 +204,12 @@ public class CloudMain {
 
                             StreamlineCloud.download("https://api.papermc.io/v2/projects/waterfall/versions/1.20/builds/560/downloads/waterfall-1.20-560.jar", "default/proxy", proxySuccess ->  {
                                 StreamlineCloud.download("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar", "default/server", lobbySuccess -> {
-                                    copyStreamlineMc();
-
-                                    StreamlineCloud.log("sl.setup.finished");
-                                    //Thread.sleep(2000);
-                                    StreamlineCloud.shutDown();
+                                    finishSetup();
                                 });
                             });
 
+                        } else {
+                            finishSetup();
                         }
                     });
                 });
@@ -220,6 +217,12 @@ public class CloudMain {
                 launchSetup();
             }
         });
+    }
+
+    private void finishSetup() {
+        copyStreamlineMc();
+        StreamlineCloud.log("sl.setup.finished");
+        StreamlineCloud.shutDown();
     }
 
     private void copyStreamlineMc() {
