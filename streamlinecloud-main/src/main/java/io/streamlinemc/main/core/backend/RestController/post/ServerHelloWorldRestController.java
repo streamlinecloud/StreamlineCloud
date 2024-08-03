@@ -4,14 +4,14 @@ import io.streamlinemc.api.server.ServerState;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.server.CloudServer;
 import io.streamlinemc.main.lang.ReplacePaket;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 
 import static io.streamlinemc.main.core.backend.BackEndMain.mainPath;
 
 public class ServerHelloWorldRestController {
 
     public ServerHelloWorldRestController() {
-        StaticCache.getBackend().post(mainPath + "post/server/hello-world", ctx -> {
+        Cache.i().getBackend().post(mainPath + "post/server/hello-world", ctx -> {
 
             CloudServer ser = StreamlineCloud.getServerByUuid(ctx.body().replace('"', ' ').replace(" ", ""));
 

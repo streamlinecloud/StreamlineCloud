@@ -81,6 +81,7 @@ public class Functions {
 
             int responseCode = connection.getResponseCode();
 
+
             try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                 String inputLine;
                 StringBuilder response = new StringBuilder();
@@ -95,6 +96,7 @@ public class Functions {
             }
 
         } catch (Exception e) {
+
             e.printStackTrace();
             return null;
         }

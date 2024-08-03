@@ -1,7 +1,6 @@
 package io.streamlinemc.main.terminal;
 
-import io.streamlinemc.main.CloudMain;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 import org.fusesource.jansi.Ansi;
 
 public enum Color {
@@ -30,7 +29,7 @@ public enum Color {
 
     public static String translate(String output) {
 
-        if (/*StaticCache.getConfig() == null ||*/ StaticCache.getArguments().contains("-runWithoutColor") || StaticCache.isDisabledColors()) {
+        if (/*StaticCache.getConfig() == null ||*/ Cache.i().getArguments().contains("-runWithoutColor") || Cache.i().isDisabledColors()) {
             for (Color color : VALUES) {
                 output = output.replace("§" + color.ordinal(),"");
                 output = output.replace("§" + color.name(), "");

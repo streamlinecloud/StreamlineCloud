@@ -4,13 +4,12 @@ import io.streamlinemc.api.StreamlineAPI;
 import io.streamlinemc.api.plmanager.event.predefined.ConsoleMessageEvent;
 import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.lang.ReplacePaket;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 import io.streamlinemc.main.core.backend.BackEndMain;
 import io.streamlinemc.main.core.server.CloudServer;
 import io.streamlinemc.main.terminal.Color;
-import io.streamlinemc.main.utils.InternalSettings;
-import io.streamlinemc.main.utils.StreamlineConfig;
-import io.streamlinemc.main.utils.Utils;
+import io.streamlinemc.main.utils.BuildSettings;
+import io.streamlinemc.main.utils.Downloader;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
@@ -20,6 +19,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -44,21 +44,21 @@ public class StreamlineCloud {
         } while (generatedPorts.contains(port));
 
         generatedPorts.add(port);
-        if (StaticCache.getConfig().isEnableRconSupport()) generatedPorts.add(port + 1);
+        if (Cache.i().getConfig().isEnableRconSupport()) generatedPorts.add(port + 1);
 
         return port;
     }
 
     public static void log(String msg) { logIntern(msg, new ReplacePaket[]{}, true); }
     public static void log(String msg, ReplacePaket[] packets) { logIntern(msg, packets, true); }
-    public static void logError(String msg) { logIntern(InternalSettings.name + "§DARK_RED" + msg, new ReplacePaket[]{}, true); }
+    public static void logError(String msg) { logIntern(BuildSettings.name + "§DARK_RED" + msg, new ReplacePaket[]{}, true); }
 
 
     public static void logImportant(String msg) {
 
-        logIntern(InternalSettings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
-        logIntern(InternalSettings.name + msg, new ReplacePaket[]{}, true);
-        logIntern(InternalSettings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
+        logIntern(BuildSettings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
+        logIntern(BuildSettings.name + msg, new ReplacePaket[]{}, true);
+        logIntern(BuildSettings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
     }
 
     private static void logIntern(String msg, ReplacePaket[] pakets, boolean prefix) {
@@ -68,9 +68,9 @@ public class StreamlineCloud {
         String formattedDate= format.format(now);
         LineReader lineReader = CloudMain.getInstance().getTerminal().getLineReader();
 
-        if (StaticCache.getCurrentLanguage() != null) {
+        if (Cache.i().getCurrentLanguage() != null) {
 
-            String replace = StaticCache.getCurrentLanguage().getMessages().get(msg);
+            String replace = Cache.i().getCurrentLanguage().getMessages().get(msg);
 
             if (replace != null) {
 
@@ -78,7 +78,7 @@ public class StreamlineCloud {
 
             } else {
 
-                String replaceEn = StaticCache.getLanguages().get(1).getMessages().get(msg);
+                String replaceEn = Cache.i().getLanguages().get(1).getMessages().get(msg);
                 if (replaceEn != null) msg = replaceEn;
             }
         } else {
@@ -89,7 +89,7 @@ public class StreamlineCloud {
         String s = msg + "§RED";
 
         if (prefix) {
-            s = "§RED" + formattedDate + " §8| " + InternalSettings.name + msg + "§RED";
+            s = "§RED" + formattedDate + " §8| " + BuildSettings.name + msg + "§RED";
         }
 
         for (ReplacePaket p : pakets) {
@@ -101,8 +101,8 @@ public class StreamlineCloud {
         if (consoleMessageEvent.isCancelled()) return;
 
 
-        if (StaticCache.getWebSocketClient() != null && StaticCache.getWebSocketClient().getClient().isOpen()) {
-            StaticCache.getWebSocketClient().getClient().send("MESSAGE streamline/output " + Color.translate(s));
+        if (Cache.i().getWebSocketClient() != null && Cache.i().getWebSocketClient().getClient().isOpen()) {
+            Cache.i().getWebSocketClient().getClient().send("MESSAGE streamline/output " + Color.translate(s));
         }
 
 
@@ -141,7 +141,7 @@ public class StreamlineCloud {
 
             //Create error log
 
-            long dif_intime = Calendar.getInstance().getTimeInMillis() - StaticCache.getStartuptime();
+            long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartuptime();
             long dif_insec = dif_intime / 1000 % 60;
             long dif_inmin = (dif_intime / (1000 * 60)) % 60;
             long dif_inhour = (dif_intime / (1000 * 60 * 60)) % 24;
@@ -167,15 +167,15 @@ public class StreamlineCloud {
                 bufferedWriter.newLine();
             }
             bufferedWriter.newLine();
-            bufferedWriter.write("Streamline-Version: " + InternalSettings.version + " (API: " + StreamlineAPI.getApiVersion() + ")");
+            bufferedWriter.write("Streamline-Version: " + BuildSettings.version + " (API: " + StreamlineAPI.getApiVersion() + ")");
             bufferedWriter.newLine();
-            bufferedWriter.write("StreamlineMC-Version: " + StaticCache.getPluginVersion() + " (API: " + StaticCache.getPluginApiVersion() + ")");
+            bufferedWriter.write("StreamlineMC-Version: " + Cache.i().getPluginVersion() + " (API: " + Cache.i().getPluginApiVersion() + ")");
             bufferedWriter.newLine();
             bufferedWriter.write("Uptime: " + dif_inday + "d " + dif_inhour + "h " + dif_inmin + "m " + dif_insec + "s");
 
             bufferedWriter.newLine();
             bufferedWriter.newLine();
-            bufferedWriter.write("StreamlineCloud by " + InternalSettings.authors);
+            bufferedWriter.write("StreamlineCloud by " + BuildSettings.authors);
             bufferedWriter.newLine();
             bufferedWriter.write("Need help? https://streamline.jdev.shop");
 
@@ -214,7 +214,7 @@ public class StreamlineCloud {
 
     public static CloudServer getServerByName(String name) {
 
-        for (CloudServer ser : StaticCache.getRunningServers()) {
+        for (CloudServer ser : Cache.i().getRunningServers()) {
 
             if (ser.getName().equals(name)) {
 
@@ -226,7 +226,7 @@ public class StreamlineCloud {
 
     public static CloudServer getServerByUuid(String uuid) {
 
-        for (CloudServer ser : StaticCache.getRunningServers()) {
+        for (CloudServer ser : Cache.i().getRunningServers()) {
 
             if (ser.getUuid().equals(uuid)) {
 
@@ -238,7 +238,7 @@ public class StreamlineCloud {
 
     public static CloudGroup getGroupByName(String name) {
 
-        for (CloudGroup group : StaticCache.getActiveGroups()) {
+        for (CloudGroup group : Cache.i().getActiveGroups()) {
 
             if (group.getName().equals(name)) {
 
@@ -250,7 +250,7 @@ public class StreamlineCloud {
 
     public static void checkGroups() {
 
-        for (CloudGroup g : StaticCache.getActiveGroups()) {
+        for (CloudGroup g : Cache.i().getActiveGroups()) {
 
             List<CloudServer> servers = getGroupOnlineServers(g);
             startServersIfNeeded(g, servers);
@@ -260,7 +260,7 @@ public class StreamlineCloud {
     private static void startServersIfNeeded(CloudGroup g, List<CloudServer> servers) {
 
         List<CloudServer> alLServers = new ArrayList<>(getGroupOnlineServers(g));
-        for (CloudServer s : StaticCache.getServersWaitingForStart()) if (s.getGroupDirect().equals(g)) alLServers.add(s);
+        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(g)) alLServers.add(s);
 
         if (alLServers.size() < g.getMinOnlineCount()) {
 
@@ -269,18 +269,31 @@ public class StreamlineCloud {
     }
 
     public static void startServerByGroup(CloudGroup cloudGroup) {
-        List<CloudServer> alLServers = new ArrayList<>(getGroupOnlineServers(cloudGroup));
-        for (CloudServer s : StaticCache.getServersWaitingForStart()) if (s.getGroupDirect().equals(cloudGroup)) alLServers.add(s);
+        List<CloudServer> allServers = new ArrayList<>(getGroupOnlineServers(cloudGroup));
+        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(cloudGroup)) allServers.add(s);
 
-        CloudServer server = new CloudServer(cloudGroup.getName() + "-" + (alLServers.size() + 1), cloudGroup.getRuntime());
+        CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime());
         server.setGroup(cloudGroup.getName());
-        StaticCache.getServersWaitingForStart().add(server);
+        Cache.i().getServersWaitingForStart().add(server);
+    }
+
+    public static int calculateServerNumber(CloudGroup g) {
+
+        ArrayList<Integer> usedNumbers = new ArrayList<>();
+        for (CloudServer server : getGroupOnlineServers(g)) {
+            usedNumbers.add(Integer.valueOf(server.getName().split("-")[1]));
+        }
+
+        for (int i = 1; true ; i++) {
+            if (!usedNumbers.contains(i)) return i;
+        }
+
     }
 
     public static List<CloudServer> getGroupOnlineServers(CloudGroup g) {
         List<CloudServer> onlineServers = new ArrayList<>();
-        for (CloudServer s : StaticCache.getLinkedServers().keySet()) {
-            if (s.getGroupDirect().equals(g)) {
+        for (CloudServer s : Cache.i().getRunningServers()) {
+            if (s.getGroup().equals(g.getName())) {
                 onlineServers.add(s);
             }
         }
@@ -301,13 +314,13 @@ public class StreamlineCloud {
     public static void shutDown() {
         log("sl.shutdown.shuttingDown");
 
-        StaticCache.getPluginManager().executeStop();
+        Cache.i().getPluginManager().executeStop();
 
-        if (StaticCache.getWebSocketClient() != null) StaticCache.getWebSocketClient().getClient().close();
+        if (Cache.i().getWebSocketClient() != null) Cache.i().getWebSocketClient().getClient().close();
 
         BackEndMain.stop();
 
-        List<CloudServer> servers = new ArrayList<>(StaticCache.getRunningServers());
+        List<CloudServer> servers = new ArrayList<>(Cache.i().getRunningServers());
 
         for (CloudServer server : servers) {
             if (server.getThread() != null) {
@@ -320,14 +333,14 @@ public class StreamlineCloud {
 
         log("sl.thanksForUsing");
 
-        if (StaticCache.isFirstLaunch()) {
+        if (Cache.i().isFirstLaunch()) {
             logSingle("");
             logSingle(readyBanner());
             logSingle("");
             logIntern("sl.ready", new ReplacePaket[]{}, false);
             logSingle("");
 
-            if (StaticCache.getDataCache().contains("streamlinecloud-mc-copy-failed")) {
+            if (Cache.i().getDataCache().contains("streamlinecloud-mc-copy-failed")) {
                 StreamlineCloud.log("sl.streamline-mc-copy.failed");
             }
         }
@@ -353,6 +366,21 @@ public class StreamlineCloud {
         }
 
         return builder.toString();
+    }
+
+    public static void download(String url, String file, CloudGroup.DownloadResponse response) {
+        File template_dir = new File(System.getProperty("user.dir") + "/templates/" + file);
+        Downloader downloader = new Downloader();
+        try {
+            downloader.download(new URL(url), new File(template_dir.getAbsolutePath() + "/server.jar"), s1 -> {
+
+                StreamlineCloud.log("Server für " + file +"  wurde erfolgreich heruntergeladen!");
+                response.execute(true);
+            });
+        } catch (Exception e) {
+            StreamlineCloud.log("sl.group.downloadFailed");
+            response.execute(false);
+        }
     }
 
     public static String generatePassword() {

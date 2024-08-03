@@ -16,16 +16,20 @@
   "sl.startup.serversStarting": "Alle Server befinden sich im Startvorgang",
   "sl.startup.serversStarted": "§GREENAlle Server sind nun online!",
 
-  "sl.backend.starting": "Starte die §AQUACommunicationBridge §REDauf dem Port §AQUA%0§RED...",
-  "sl.backend.started": "§AQUACommunicationBridge §REDOnline!",
+  "sl.backend.starting": "Das §ABackend §REDwird auf dem Port §AQUA%0§RED gestartet...",
+  "sl.backend.started": "Das §AQUABackend §RED ist Online!",
 
   "sl.server.preparing": "Der Server %1 wird vorbereitet",
   "sl.server.starting": "Der Server %1 wird in %2 gestartet",
+  "sl.server.jarNotFound": "§DARK_RED Der Server %0 hat keine server.jar gefunden. Benutze den 'download' Command oder Kopiere eine Serverdatei in das Template. Die Gruppe %1 startet bis zu einem Neustart von StreamlineCloud keine Server mehr automatisch ",
   "sl.server.online": "Der Server %1 ist nun online",
   "sl.server.screen.enabled": "Der Screen von %1 ist nun aktiv!",
   "sl.server.screen.disabled": "Der Screen von %1 ist nicht mehr aktiv!",
   "sl.server.killing": "Der Server %1 wird gelöscht...",
   "sl.server.deleted": "Der Server %1 wurde gelöscht",
+
+  "sl.group.downloadFinished": "Die Datein wurden erfolgreich heruntergeladen",
+  "sl.group.downloadFailed": "Der Download der Datei ist fehlgeschlagen",
 
   "sl.command.groups.notFound": "Die Gruppe %1 wurde nicht gefunden :/",
   "sl.command.groups.enterGroup": "Bitte gebe eine Gruppe an",
@@ -35,6 +39,8 @@
   "sl.command.groups.delete.deleted": "Die Gruppe %1 wurde gelöscht!",
   "sl.command.groups.list.title": "Aktive Gruppen:",
   "sl.command.groups.templateAdded": "Das Template %0 wurde zu der Gruppe %1 hinzugefügt",
+  "sl.command.groups.list.templates.empty": "Dieser Gruppe wurden keine Templates zugewiesen",
+  "sl.command.groups.list.templates.title": "Templates der Gruppe %0",
   "sl.command.servers.serverNotFound": "Server nicht gefunden :/",
   "sl.command.servers.enterServerName": "Bitte gebe einen Server Namen ein",
   "sl.command.servers.command.enterCommand": "Bitte gebe einen Command ein",

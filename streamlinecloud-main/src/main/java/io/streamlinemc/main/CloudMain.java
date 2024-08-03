@@ -2,27 +2,25 @@ package io.streamlinemc.main;
 
 import io.streamlinemc.api.server.ServerRuntime;
 import io.streamlinemc.main.core.backend.remoteLogic.WSClient;
+import io.streamlinemc.main.lang.LangManager;
 import io.streamlinemc.main.utils.*;
 import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.lang.CloudLanguage;
 import io.streamlinemc.main.lang.ReplacePaket;
 import io.streamlinemc.main.command.*;
-import io.streamlinemc.main.terminal.input.ConsoleInput;
+import io.streamlinemc.main.terminal.input.ConsoleQuestion;
 import io.streamlinemc.main.core.backend.BackEndMain;
 import io.streamlinemc.main.terminal.CloudTerminal;
 import io.streamlinemc.main.terminal.api.CloudCommand;
 import io.streamlinemc.main.core.task.ServerStarterTask;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.simple.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -30,10 +28,13 @@ import java.util.List;
 
 public class CloudMain {
 
-    //TODO: Wenn ein Server normal geestoppt wird auch im Main Modul erkännen
+    //TODO: Wenn ein Server normal gestoppt wird auch im Main Modul erkennen
 
     @Getter
     private static CloudMain instance;
+
+    @Getter
+    private static Cache cache;
 
     @Getter
     List<CloudCommand> commandMap = new ArrayList<>();
@@ -44,7 +45,8 @@ public class CloudMain {
     @SneakyThrows
     public CloudMain(String[] args) throws InterruptedException {
 
-        StaticCache.setStartuptime(Calendar.getInstance().getTimeInMillis());
+        cache = new Cache();
+        cache.setStartuptime(Calendar.getInstance().getTimeInMillis());
 
         System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
@@ -55,37 +57,51 @@ public class CloudMain {
         StreamlineCloud.logSingle("");
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDA powerful Minecraft network");
         StreamlineCloud.logSingle("");
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDVersion: §AQUA" + InternalSettings.version);
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + InternalSettings.authors);
+        StreamlineCloud.logSingle("§DARK_GRAY-> §REDVersion: §AQUA" + BuildSettings.version);
+        StreamlineCloud.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + BuildSettings.authors);
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDWebsite: §AQUAhttps://streamlinemc.cloud");
         StreamlineCloud.logSingle("");
 
 
-        InternalSettings.name = "§REDStreamlineCloud §8-> §RED";
-        StreamlineCloud.log("starting StreamlineCloud");
+        BuildSettings.name = "§REDStreamlineCloud §8-> §RED";
+        StreamlineCloud.log("Starting StreamlineCloud");
 
-        FileSystem.init();
+        //init
+        StreamlineConfig.init();
+        new LangManager();
+
+        if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
+
+        new File(cache.homeFile + "/groups").mkdir();
+        new File(cache.homeFile + "/data").mkdir();
+        new File(cache.homeFile + "/plugins").mkdir();
+        new File(cache.homeFile + "/staticservers").mkdir();
+        new File(cache.homeFile + "/temp").mkdir();
+        new File(cache.homeFile + "/templates").mkdir();
 
 
-        if (StaticCache.isFirstLaunch()) {
+
+        /////
+
+        if (cache.isFirstLaunch()) {
             StreamlineCloud.log("Launching setup...");
             Thread.sleep(1000);
             launchSetup();
             return;
         }
 
-        if (StaticCache.getConfig() != null) initLang();
+        if (Cache.i().getConfig() != null) initLang();
 
         StreamlineCloud.log("lang.welcome");
 
-        if (StaticCache.getConfig().isUseMultiRoot() || StaticCache.getConfig().isUseWebSocket()) {
-            StaticCache.setWebSocketClient(new WSClient());
+        if (Cache.i().getConfig().isUseMultiRoot() || Cache.i().getConfig().isUseWebSocket()) {
+            Cache.i().setWebSocketClient(new WSClient());
         }
 
         BackEndMain.startBE();
 
-        StaticCache.getPluginManager().loadPlugins();
-        StaticCache.getPluginManager().executeStartup();
+        Cache.i().getPluginManager().loadPlugins();
+        Cache.i().getPluginManager().executeStartup();
 
 
         StreamlineCloud.log("sl.startup.startingServers");
@@ -104,20 +120,21 @@ public class CloudMain {
         registerCommand(new LanguageCommand());
         registerCommand(new UptimeCommand());
         registerCommand(new MultiRootCommand());
+        registerCommand(new DownloadCommand());
 
-        if (StaticCache.getConfig() != null) StaticCache.setDefaultGroup(new CloudGroup("WITHOUT", StaticCache.getConfig().getDefaultJavaPath(), 0, new ArrayList<>(), ServerRuntime.SERVER));
-        StaticCache.getActiveGroups().add(StaticCache.getDefaultGroup());
+        if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", Cache.i().getConfig().getDefaultJavaPath(), 0, new ArrayList<>(), ServerRuntime.SERVER));
+        Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());
 
     }
 
     public void initLang() {
-        for (CloudLanguage lang : StaticCache.getLanguages()) {
-            if (lang.getName().equals(StaticCache.getConfig().getLanguage())) StaticCache.setCurrentLanguage(lang);
+        for (CloudLanguage lang : Cache.i().getLanguages()) {
+            if (lang.getName().equals(Cache.i().getConfig().getLanguage())) Cache.i().setCurrentLanguage(lang);
         }
 
-        if (StaticCache.getCurrentLanguage() == null) {
-            StreamlineCloud.log("Lang " + StaticCache.getConfig().getLanguage() + " is invaild. Setting en.json");
-            StaticCache.setCurrentLanguage(StaticCache.getLanguages().get(0));
+        if (Cache.i().getCurrentLanguage() == null) {
+            StreamlineCloud.log("Lang " + Cache.i().getConfig().getLanguage() + " is invaild. Setting en.json");
+            Cache.i().setCurrentLanguage(Cache.i().getLanguages().get(0));
         }
     }
 
@@ -144,37 +161,32 @@ public class CloudMain {
                 " \\______/ \\________|   \\__|    \\______/ \\__|           ");
         StreamlineCloud.logSingle("");
 
-        StaticCache.setConfig(new StreamlineConfig("", 19132, 5378, "lobby"));
+        Cache.i().setConfig(new StreamlineConfig("", 19132, 5378, "lobby"));
 
-        StreamlineCloud.log("Set up language / Gebe eine Sprache ein");
-        StreamlineCloud.log("[en/de]");
-        new ConsoleInput(ConsoleInput.InputType.STRING, output -> {
+        new ConsoleQuestion(ConsoleQuestion.InputType.STRING, "Set up language / Gebe eine Sprache ein [en/de]", output -> {
 
             if (output.contains("en") || output.contains("de")) {
 
-                StaticCache.getConfig().setLanguage(output + ".json");
+                Cache.i().getConfig().setLanguage(output + ".json");
                 CloudMain.getInstance().initLang();
                 StreamlineCloud.log("lang.welcome");
-                StreamlineCloud.log("sl.setup.enterJavaPath");
 
-                new ConsoleInput(ConsoleInput.InputType.STRING, output1 -> {
-                    StaticCache.getConfig().setDefaultJavaPath(output1);
-                    FileSystem.saveConfig();
+                new ConsoleQuestion(ConsoleQuestion.InputType.STRING, "sl.setup.enterJavaPath", output1 -> {
+                    Cache.i().getConfig().setDefaultJavaPath(output1);
+                    StreamlineConfig.saveConfig();
 
-                    StreamlineCloud.log("sl.setup.generateGroups");
-                    new ConsoleInput(ConsoleInput.InputType.BOOLEAN, output2 -> {
-                        boolean generate = output2.equals("true");
+                    new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.generateGroups", output2 -> {
 
-                        if (generate) {
+                        if (output2.equals("yes")) {
 
                             CloudGroup lobby = new CloudGroup(
                                     "lobby",
-                                    StaticCache.getConfig().getDefaultJavaPath(),
+                                    Cache.i().getConfig().getDefaultJavaPath(),
                                     1,
                                     Arrays.asList(new String[]{}), ServerRuntime.SERVER);
                             CloudGroup proxy = new CloudGroup(
                                     "proxy",
-                                    StaticCache.getConfig().getDefaultJavaPath(),
+                                    Cache.i().getConfig().getDefaultJavaPath(),
                                     1,
                                     Arrays.asList(new String[]{}), ServerRuntime.PROXY);
 
@@ -189,42 +201,14 @@ public class CloudMain {
                             StreamlineCloud.log("sl.setup.groupsGenerated");
                             StreamlineCloud.log("sl.setup.downloading");
 
-                            try {
-                                File template_dir = new File(System.getProperty("user.dir") + "/templates/default");
-                                Downloader downloader = new Downloader();
-                                downloader.download(new URL("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar"), new File(template_dir.getAbsolutePath() + "/server/server.jar"), s -> {
-
-                                    try {
-                                        downloader.download(new URL("https://api.papermc.io/v2/projects/waterfall/versions/1.20/builds/560/downloads/waterfall-1.20-560.jar"), new File(template_dir.getAbsolutePath() + "/proxy/server.jar"), s1 -> {
-
-                                            copyStreamlineMc();
-
-                                            StreamlineCloud.log("sl.setup.finished");
-                                            StreamlineCloud.shutDown();
-                                        });
-                                    } catch (MalformedURLException e) {
-                                        StreamlineCloud.printError("SetupDownloadFailed", new String[]{"3", "4"}, e);
-                                        StreamlineCloud.log("sl.setup.downloadFailed");
-
-                                        copyStreamlineMc();
-
-                                        StreamlineCloud.log("sl.setup.finished");
-                                        Thread.sleep(2000);
-                                        StreamlineCloud.shutDown();
-
-                                    }
-
+                            StreamlineCloud.download("https://api.papermc.io/v2/projects/waterfall/versions/1.20/builds/560/downloads/waterfall-1.20-560.jar", "default/proxy", proxySuccess ->  {
+                                StreamlineCloud.download("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar", "default/server", lobbySuccess -> {
+                                    finishSetup();
                                 });
-                            } catch (MalformedURLException e) {
-                                StreamlineCloud.printError("SetupDownloadFailed", new String[]{"3", "4"}, e);
-                                StreamlineCloud.log("sl.setup.downloadFailed");
+                            });
 
-                                copyStreamlineMc();
-
-                                StreamlineCloud.log("sl.setup.finished");
-                                Thread.sleep(2000);
-                                StreamlineCloud.shutDown();
-                            }
+                        } else {
+                            finishSetup();
                         }
                     });
                 });
@@ -234,6 +218,12 @@ public class CloudMain {
         });
     }
 
+    private void finishSetup() {
+        copyStreamlineMc();
+        StreamlineCloud.log("sl.setup.finished");
+        StreamlineCloud.shutDown();
+    }
+
     private void copyStreamlineMc() {
 
         try {
@@ -241,13 +231,12 @@ public class CloudMain {
             new File("templates/default/server/plugins").mkdirs();
             new File("templates/default/proxy/plugins").mkdirs();
 
-            Files.copy(new File(FileSystem.homeFile + "/streamlinecloud-mc.jar").toPath(),
-                    new File(FileSystem.homeFile + "/templates/default/server/plugins/streamlinecloud-mc.jar").toPath());
-            Files.copy(new File(FileSystem.homeFile + "/streamlinecloud-mc.jar").toPath(),
-                    new File(FileSystem.homeFile + "/templates/default/proxy/plugins/streamlinecloud-mc.jar").toPath());
+            Files.copy(new File(Cache.i().homeFile + "/streamlinecloud-mc.jar").toPath(),
+                    new File(Cache.i().homeFile + "/templates/default/server/plugins/streamlinecloud-mc.jar").toPath());
+            Files.copy(new File(Cache.i().homeFile + "/streamlinecloud-mc.jar").toPath(),
+                    new File(Cache.i().homeFile + "/templates/default/proxy/plugins/streamlinecloud-mc.jar").toPath());
         } catch (Exception e) {
-            StaticCache.getDataCache().add("streamlinecloud-mc-copy-failed");
-            e.printStackTrace();
+            Cache.i().getDataCache().add("streamlinecloud-mc-copy-failed");
         }
 
     }

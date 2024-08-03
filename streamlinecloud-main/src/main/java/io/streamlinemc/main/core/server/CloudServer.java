@@ -1,22 +1,27 @@
 package io.streamlinemc.main.core.server;
 
+import com.google.gson.Gson;
 import io.streamlinemc.api.RestUtils.RconData;
+import io.streamlinemc.api.packet.StaticServerDataPacket;
 import io.streamlinemc.api.plmanager.event.predefined.*;
 import io.streamlinemc.api.server.*;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.lang.ReplacePaket;
-import io.streamlinemc.main.utils.FileSystem;
-import io.streamlinemc.main.utils.StaticCache;
+import io.streamlinemc.main.utils.Cache;
 import io.streamlinemc.main.utils.Utils;
+import jdk.jshell.execution.Util;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.io.FileUtils;
+import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,7 +35,6 @@ public class CloudServer extends StreamlineServer {
     Thread thread;
     Process process;
     List<String> commandQueue = new ArrayList<>();
-    String rconUuid = UUID.randomUUID().toString();
 
     boolean output = false;
     boolean staticServer = false;
@@ -46,120 +50,126 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
-        StaticCache.getRunningServers().add(this);
+        Cache.i().getRunningServers().add(this);
         setServerState(ServerState.PREPARING);
-
-        StreamlineCloud.log("sl.server.preparing", new ReplacePaket[]{new ReplacePaket("%1", name)});
     }
 
-    public void start(File javaExec) {
-
-        if (getGroup() == null) {
-            setGroup(StaticCache.getDefaultGroup().getName());
-        }
-
-        setStaticServer(getGroupDirect().isStaticGroup());
-
-        setServerState(ServerState.STARTING);
-        ServerTemplate template;
+    public void start(File javaExec) throws IOException {
 
         StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
-                new ReplacePaket("%1", getName() + "-" + getUuid()),
+                new ReplacePaket("%1", getName()),
                 new ReplacePaket("%2", "temp/" + getName())
         });
 
+        if (getGroup() == null) setGroup(Cache.i().getDefaultGroup().getName());
+
+        setStaticServer(getGroupDirect().isStaticGroup());
+        setServerState(ServerState.STARTING);
         setPort(StreamlineCloud.generateUniquePort());
 
-        CloudGroup group = StreamlineCloud.getGroupByName(getGroup());
+        ServerTemplate template;
+        File file = null;
+        CloudGroup group = getGroupDirect();
+        ServerStartEvent serverStartEvent = eventManager.callEvent(new ServerStartEvent(
+                getName(),
+                getUuid(),
+                getGroup(),
+                getServerState(),
+                isStaticServer(),
+                getPort()));
 
-        if (group == null) {
-            StreamlineCloud.logError("ServerStartError: Group is null!");
-            return;
-        }
+        if (serverStartEvent.isCancelled()) return;
+        if (isStaticServer()) file = new File(Cache.i().homeFile + "/staticservers/" + getName() + "-" + getUuid());
+        if (!isStaticServer()) file = new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
 
-        ServerStartEvent serverStartEvent = eventManager.callEvent(new ServerStartEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort()));
+        file.mkdirs();
 
-        if (serverStartEvent.isCancelled()) {
-            return;
-        }
+        File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
+        if (!propertiesFile.exists()) {
 
-        //CopyFiles
-        if (isStaticServer()) {
-            template = FileSystem.createStaticServer(this);
-
-            //SetPort
-            String filePath = FileSystem.homeFile + "/staticservers/" + getName() + "/server.properties";
-
-            //TODO: Add Rcon Port Replacement
-
-            String rconpw = StreamlineCloud.generatePassword();
-
-            String[][] replacements = {{"server-port=", "server-port=" + getPort()}, {"enable-rcon=false", "enable-rcon=true"}, {"rcon.port=25575", "rcon.port=" + (getPort() + 1)}, {"rcon.password=", "rcon.password=" + rconpw}};
-
-            StaticCache.getRconDetails().put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
-
-
-            for (String[] replace : replacements) {
-                try {
-                    File file = new File(filePath);
-
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
-                    String line = "", oldtext = "";
-                    while ((line = reader.readLine()) != null) {
-                        oldtext += line + "\r\n";
-                    }
-                    reader.close();
-
-                    // replace a word in a file
-                    String newtext = oldtext.replaceAll(replace[0], replace[1]);
-
-                    FileWriter writer = new FileWriter(filePath);
-                    writer.write(newtext);
-                    writer.close();
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                }
-            }
-
-        } else {
-
-            if (getGroup() == null) {
-                template = FileSystem.createTemporaryServer(new ArrayList<>(), getName(), getUuid(), ServerRuntime.SERVER, this);
-            } else {
-                template = FileSystem.createTemporaryServer(group.getTemplates(), getName(), getUuid(), getRuntime(), this);
-            }
-
-            String rconpw = StreamlineCloud.generatePassword();
-
-            String[][] replacements = {{"server-port=", "server-port=" + getPort()}, {"enable-rcon=false", "enable-rcon=true"}, {"rcon.port=25575", "rcon.port=" + (getPort() + 1)}, {"rcon.password=", "rcon.password=" + rconpw}};
-
-            StaticCache.getRconDetails().put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
-
+            //Properties
+            Properties properties = new Properties();
             try {
-                StringBuilder sb = new StringBuilder();
 
-                for (String[] replace : replacements) {
-                    sb.append(replace[1]).append("\n");
-                }
+                propertiesFile.createNewFile();
 
-                File file = new File(template.getPath() + "/server.properties");
+                //String[][] replacements = {{"server-port=", "server-port=" + getPort()}, {"enable-rcon=false", "enable-rcon=true"}, {"rcon.port=25575", "rcon.port=" + (getPort() + 1)}, {"rcon.password=", "rcon.password=" + rconpw}};
 
-                FileWriter writer = new FileWriter(file);
-                BufferedWriter bufferedWriter = new BufferedWriter(writer);
+                properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
 
-                bufferedWriter.write(sb.toString());
+                String rconpw = StreamlineCloud.generatePassword();
+                Cache.i().getRconDetails().put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
 
-                bufferedWriter.close();
+                properties.setProperty("server-port", String.valueOf(getPort()));
+                properties.setProperty("online-mode", String.valueOf(false));
+                properties.setProperty("enable-rcon", "true");
+                properties.setProperty("rcon.port", String.valueOf(getPort() + 1));
+                properties.setProperty("rcon.password", rconpw);
+
+                properties.store(Files.newBufferedWriter(Path.of(propertiesFile.toURI())), null);
+
+                Cache.i().rconDetails.put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
             } catch (IOException e) {
-                System.out.println("error: " + e.getMessage());
+                e.printStackTrace();
+                StreamlineCloud.logError(e.getMessage());
             }
+
+            //Eula
+            try {
+                File eula = new File(file.getAbsolutePath() + "/eula.txt");
+                if (!eula.exists()) eula.createNewFile();
+                FileUtils.writeStringToFile(eula, "eula=true");
+            } catch (IOException e) {
+                e.printStackTrace();
+                StreamlineCloud.logError(e.getMessage());
+            }
+
+            //Copy Templates
+            List<String> t = new ArrayList<>();
+            t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
+            for (String s : StreamlineCloud.getGroupByName(getGroup()).getTemplates()) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
+            copyFolder(t, file.getPath());
+
+            //Template From Resources
+            if (getRuntime().equals(ServerRuntime.SERVER)) {
+                copyResources(Utils.getResourceFile("spigot/spigot.yml", "yml"), new File(file.getAbsolutePath() + "/spigot.yml"));
+            } else {
+                copyResources(Utils.getResourceFile("bungee/config.yml", "yml"), new File(file.getAbsolutePath() + "/config.yml"));
+            }
+
+            //Apikey
+            File f = new File(file.getPath() + "/.apikey.json");
+            FileWriter writer = new FileWriter(f);
+            f.createNewFile();
+            try {
+                writer.write(Cache.i().getApiKey() + ",_," + Cache.i().getGson().toJson(new StaticServerDataPacket(getName(), getPort(), getIp(), getGroup(), getUuid())));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            writer.close();
 
         }
 
+        if (!new File(file.getPath() + "/server.jar").exists()) {
+
+            StreamlineCloud.log("sl.server.jarNotFound", new ReplacePaket[]{
+                    new ReplacePaket("%0", getName()),
+                    new ReplacePaket("%1", getGroup()),
+            });
+
+            Cache.i().getDataCache().add("blacklistGroup:" + getGroup());
+
+            kill();
+            return;
+        }
+
+        StreamlineCloud.log("db1");
 
         ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
-
+        File finalFile = file;
         Runnable aufgabe = () -> {
+
+            StreamlineCloud.log("db2");
 
 
 
@@ -168,8 +178,8 @@ public class CloudServer extends StreamlineServer {
 
             Thread jarThread = new Thread(() -> {
                 try {
-                    ProcessBuilder processBuilder = new ProcessBuilder(javaExec.getAbsolutePath(), "-jar", template.getServerJar().getAbsolutePath());
-                    processBuilder.directory(template.getPath());
+                    ProcessBuilder processBuilder = new ProcessBuilder(javaExec.getAbsolutePath(), "-jar", finalFile + "/server.jar");
+                    processBuilder.directory(finalFile);
                     Process process = processBuilder.start();
 
                     this.process = process;
@@ -194,26 +204,51 @@ public class CloudServer extends StreamlineServer {
 
                     }, 500, 500, TimeUnit.MILLISECONDS);
 
+                    /*if (thread.isInterrupted()) return;
 
-                    while ((line = inputReader.readLine()) != null) {
+                    try {
+                        inputReader.readLine();
+                    } catch (Exception e) {
+                        return;
+                    }*/
 
-                        addLog(line);
+                    StreamlineCloud.log("db32");
+                    //execcode.set(process.waitFor());
 
-                        if (output) {
 
-                            IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+                    while (!getServerState().equals(ServerState.STOPPING)) {
 
-                            if (incommingServerMessageEvent.isCancelled()) continue;
+                        try {
+                            inputReader.readLine();
+                        } catch (Exception e) {
+                            return;
+                        }
 
-                            StreamlineCloud.logSingle(getName() + line);
+                        if ((line = inputReader.readLine()) != null) {
+
+                            addLog(line);
+
+                            if (output) {
+
+                                IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+
+                                if (incommingServerMessageEvent.isCancelled()) continue;
+
+                                StreamlineCloud.logSingle(getName() + line);
+                            }
+
                         }
                     }
 
+                    StreamlineCloud.log("db3");
+
+
                     // Warte auf das Ende des Prozesses
-                    execcode.set(process.waitFor());
+                    //
 
                 } catch (Exception e) {
-                    StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
+                    e.printStackTrace();
+                    //StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
                 }
                 task();
             });
@@ -246,7 +281,7 @@ public class CloudServer extends StreamlineServer {
         scheduler.scheduleWithFixedDelay(aufgabe, 3, 3, TimeUnit.SECONDS);
     }
 
-    public void delete() {
+    private void delete() {
 
         ServerDeleteEvent serverDeleteEvent = eventManager.callEvent(new ServerDeleteEvent(getName(), getUuid()));
 
@@ -254,13 +289,40 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
-        StaticCache.getRunningServers().remove(this);
-        StaticCache.getLinkedServers().remove(this);
+        Cache.i().getRunningServers().remove(this);
 
         StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
+    private void copyResources(File sourceFile, File targetFile) {
+        try {
+            if (!targetFile.exists()) targetFile.createNewFile();
+
+            YamlFile tempYamlFile = new YamlFile(sourceFile);
+            YamlFile serverYamlFile = new YamlFile(targetFile);
+            tempYamlFile.load();
+            serverYamlFile.load();
+
+            for (String key : tempYamlFile.getKeys(true)) {
+                Object value = tempYamlFile.get(key);
+                if (!serverYamlFile.contains(key)) {
+                    serverYamlFile.set(key, value);
+                }
+            }
+
+            serverYamlFile.save();
+            tempYamlFile.deleteFile();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            StreamlineCloud.logError(e.getMessage());
+        }
+    }
+
     public void kill() {
+
+        setServerState(ServerState.STOPPING);
 
         ServerStopEvent serverStopEvent = eventManager.callEvent(new ServerStopEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort()));
 
@@ -268,13 +330,19 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
+        if (thread != null) thread.interrupt();
+
         if (isOutput()) disableScreen();
 
         if (process != null) {
             process.destroy();
-            thread.interrupt();
         }
         delete();
+    }
+
+    public void stop() {
+        setServerState(ServerState.STOPPING);
+        executeCommand("stop", this.process.getOutputStream());
     }
 
     public void enableScreen() {
@@ -282,13 +350,13 @@ public class CloudServer extends StreamlineServer {
             StreamlineCloud.logSingle(log);
         }
         setOutput(true);
-        StaticCache.setCurrentScreenServerName(getName());
+        Cache.i().setCurrentScreenServerName(getName());
         StreamlineCloud.log("sl.server.screen.enabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
     public void disableScreen() {
         setOutput(false);
-        StaticCache.setCurrentScreenServerName(null);
+        Cache.i().setCurrentScreenServerName(null);
         StreamlineCloud.log("sl.server.screen.disabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
@@ -315,6 +383,48 @@ public class CloudServer extends StreamlineServer {
             logs.remove(0);
         }
         logs.add(str);
+
+    }
+
+    private void copyFolder(List<String> folderPaths, String targetFolder) {
+
+        Set<String> copiedFiles = new HashSet<>();
+
+        for (String folderPath : folderPaths) {
+            try {
+                Path source = Paths.get(folderPath);
+                Path destination = Paths.get(targetFolder);
+
+                Files.walk(source)
+                        .forEach(sourcePath -> {
+                            Path relativePath = source.relativize(sourcePath);
+                            Path destinationPath = destination.resolve(relativePath);
+
+                            if (Files.isDirectory(sourcePath)) {
+                                // Copy directory (create if not exists)
+                                try {
+                                    Files.createDirectories(destinationPath);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                // Copy file
+                                if (!copiedFiles.contains(destinationPath.toString())) {
+                                    try {
+                                        Files.createDirectories(destinationPath.getParent());
+                                        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                                        copiedFiles.add(destinationPath.toString());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 

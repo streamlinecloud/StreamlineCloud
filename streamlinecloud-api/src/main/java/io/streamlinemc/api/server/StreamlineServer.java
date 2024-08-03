@@ -24,5 +24,6 @@ public class StreamlineServer implements StreamlineServerDataImpl, StaticStreaml
     ServerState serverState = ServerState.PREPARING;
     String group = "WITHOUT";
     String uuid = "000a0000-a00a-00a0-a000-000000000000";
+    String rconUuid = UUID.randomUUID().toString();
     ServerRuntime runtime = ServerRuntime.SERVER;
 }
