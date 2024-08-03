@@ -56,16 +56,23 @@ public class CloudServer extends StreamlineServer {
 
     public void start(File javaExec) throws IOException {
 
-        StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
-                new ReplacePaket("%1", getName()),
-                new ReplacePaket("%2", "temp/" + getName())
-        });
-
         if (getGroup() == null) setGroup(Cache.i().getDefaultGroup().getName());
 
         setStaticServer(getGroupDirect().isStaticGroup());
         setServerState(ServerState.STARTING);
         setPort(StreamlineCloud.generateUniquePort());
+
+        if (!isStaticServer()) {
+            StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
+                    new ReplacePaket("%1", getName() + "-" + getUuid()),
+                    new ReplacePaket("%2", "temp/" + getName())
+            });
+        } else {
+            StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
+                    new ReplacePaket("%1", getName()),
+                    new ReplacePaket("%2", "staticservers/" + getName())
+            });
+        }
 
         ServerTemplate template;
         File file = null;
@@ -79,9 +86,8 @@ public class CloudServer extends StreamlineServer {
                 getPort()));
 
         if (serverStartEvent.isCancelled()) return;
-        if (isStaticServer()) file = new File(Cache.i().homeFile + "/staticservers/" + getName() + "-" + getUuid());
-        if (!isStaticServer()) file = new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
 
+        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
         file.mkdirs();
 
         File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
@@ -163,13 +169,9 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
-        StreamlineCloud.log("db1");
-
         ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
         File finalFile = file;
-        Runnable aufgabe = () -> {
-
-            StreamlineCloud.log("db2");
+        Runnable runnable = () -> {
 
 
 
@@ -240,15 +242,13 @@ public class CloudServer extends StreamlineServer {
                         }
                     }
 
-                    StreamlineCloud.log("db3");
-
 
                     // Warte auf das Ende des Prozesses
-                    //
+                    //if (getServerState().equals(ServerState.STOPPING)) execcode.set(process.waitFor());
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    //StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
+                    StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
                 }
                 task();
             });
@@ -260,7 +260,7 @@ public class CloudServer extends StreamlineServer {
             scheduler1.shutdown();
         };
 
-        scheduler1.scheduleWithFixedDelay(aufgabe, 3, 3, TimeUnit.SECONDS);
+        scheduler1.scheduleWithFixedDelay(runnable, 3, 3, TimeUnit.SECONDS);
 
     }
 

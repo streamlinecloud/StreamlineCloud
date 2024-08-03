@@ -48,6 +48,12 @@ public class CloudMain {
         cache = new Cache();
         cache.setStartuptime(Calendar.getInstance().getTimeInMillis());
 
+        //get arguments
+        for (String arg : args) {
+            if (Cache.i().getArguments().contains(arg)) continue;
+            Cache.i().getArguments().add(arg);
+        }
+
         System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
         instance = this;
