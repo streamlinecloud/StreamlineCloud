@@ -3,6 +3,7 @@ package io.streamlinemc.main.core.backend;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.backend.RestController.AllGroupsRestController;
 import io.streamlinemc.main.core.backend.RestController.get.*;
+import io.streamlinemc.main.core.backend.RestController.post.ExecuteCommandController;
 import io.streamlinemc.main.core.backend.RestController.post.ProxyVersionRestController;
 import io.streamlinemc.main.core.backend.RestController.post.ServerHelloWorldRestController;
 import io.streamlinemc.main.core.backend.RestController.post.ServerUpdateDataRestController;
@@ -40,6 +41,7 @@ public class BackEndMain {
         new ServerRconDetailsRestController();
         new GetVersionInfoRestController();
         new GetGroupdataRestController();
+        new ExecuteCommandController();
 
 
         Cache.i().getBackend().start(Cache.i().getConfig().getCommunicationBridgePort());

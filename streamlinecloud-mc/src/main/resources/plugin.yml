@@ -13,3 +13,5 @@ commands:
     description: Connect command!
   test:
     description: Dies ist ein Test Command!
+  streamline:
+    description: Streamline your server!

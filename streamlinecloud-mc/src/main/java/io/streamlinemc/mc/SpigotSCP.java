@@ -5,6 +5,7 @@ import io.streamlinemc.api.server.ServerRuntime;
 import io.streamlinemc.mc.api.StreamlineCloud;
 import io.streamlinemc.mc.command.spigot.ConnectCommand;
 import io.streamlinemc.mc.command.spigot.ServerInfoCommand;
+import io.streamlinemc.mc.command.spigot.StreamlineCommand;
 import io.streamlinemc.mc.command.spigot.TestCommand;
 import io.streamlinemc.mc.listener.spigot.ConnectionListener;
 import io.streamlinemc.mc.utils.Functions;
@@ -45,6 +46,7 @@ public final class SpigotSCP extends JavaPlugin {
         getCommand("test").setExecutor(new TestCommand());
         getCommand("serverinfo").setExecutor(new ServerInfoCommand());
         getCommand("connect").setExecutor(new ConnectCommand());
+        getCommand("streamline").setExecutor(new StreamlineCommand());
     }
 
     private void registerEvents() {
