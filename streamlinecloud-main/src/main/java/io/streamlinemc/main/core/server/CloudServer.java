@@ -206,16 +206,7 @@ public class CloudServer extends StreamlineServer {
 
                     }, 500, 500, TimeUnit.MILLISECONDS);
 
-                    /*if (thread.isInterrupted()) return;
-
-                    try {
-                        inputReader.readLine();
-                    } catch (Exception e) {
-                        return;
-                    }*/
-
                     StreamlineCloud.log("db32");
-                    //execcode.set(process.waitFor());
 
 
                     while (!getServerState().equals(ServerState.STOPPING)) {

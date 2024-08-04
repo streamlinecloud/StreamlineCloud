@@ -42,7 +42,6 @@ public class GroupManager {
             }
         }
     }
-
     private void startTask() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -64,6 +63,12 @@ public class GroupManager {
     }
 
     //GetGroup
+
+    /**
+     * Get a group by name
+     * @param name String name of the group
+     * @return StreamlineGroup or null
+     */
     public StreamlineGroup getGroup(String name) {
         for (StreamlineGroup g : groups) if (g.getName().equals(name)) return g;
         return null;

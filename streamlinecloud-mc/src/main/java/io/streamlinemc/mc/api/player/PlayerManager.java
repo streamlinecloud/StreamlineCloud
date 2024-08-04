@@ -27,6 +27,11 @@ public class PlayerManager {
         instance = this;
     }
 
+    /**
+     * Sends a player to a server
+     * @param player CloudPlayer to send
+     * @param server StreamlineServer to send to
+     */
     public void sendPlayer(CloudPlayer player, StreamlineServer server) {
         /*ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
@@ -56,6 +61,12 @@ public class PlayerManager {
     }
 
     //GetPlayer
+
+    /**
+     * Get a player by their name
+     * @param name String name of the player
+     * @return CloudPlayer if found, null if not
+     */
     public CloudPlayer getPlayer(String name) {
         for (CloudPlayer p : onlinePlayers) {
             if (p.getPlayer().getName().equals(name)) {
