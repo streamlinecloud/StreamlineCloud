@@ -1,5 +1,7 @@
 package io.streamlinemc.mc.command.spigot;
 
+import com.google.gson.Gson;
+import io.streamlinemc.api.packet.RemoteCommandPacket;
 import io.streamlinemc.mc.utils.Functions;
 import io.streamlinemc.mc.utils.InternalSettings;
 import io.streamlinemc.mc.utils.StaticCache;
@@ -27,8 +29,10 @@ public class StreamlineCommand implements CommandExecutor {
                 builder.append(" ");
             }
 
-            player.sendMessage(builder.toString());
-            Functions.post(builder.toString(), "post/command");
+            RemoteCommandPacket packet = new RemoteCommandPacket(builder.toString(), StaticCache.serverData.getName(), player.getName());
+            player.sendMessage(packet.getCommand());
+
+            Functions.post(packet, "post/command");
 
         }
 
