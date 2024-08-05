@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -91,9 +92,11 @@ public class CloudServer extends StreamlineServer {
         file.mkdirs();
 
         File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
+
+        //Properties
         if (!propertiesFile.exists()) {
 
-            //Properties
+            //Properties creation
             Properties properties = new Properties();
             try {
 
@@ -143,18 +146,23 @@ public class CloudServer extends StreamlineServer {
                 copyResources(Utils.getResourceFile("bungee/config.yml", "yml"), new File(file.getAbsolutePath() + "/config.yml"));
             }
 
-            //Apikey
-            File f = new File(file.getPath() + "/.apikey.json");
-            FileWriter writer = new FileWriter(f);
-            f.createNewFile();
-            try {
-                writer.write(Cache.i().getApiKey() + ",_," + Cache.i().getGson().toJson(new StaticServerDataPacket(getName(), getPort(), getIp(), getGroup(), getUuid())));
-            } catch (Exception e) {
-                e.printStackTrace();
+        } else {
+            if (isStaticServer()) {
+                Properties properties = new Properties();
+                properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
+                setPort(Integer.parseInt(properties.getProperty("server-port")));
             }
-            writer.close();
-
         }
+
+        //Apikey
+        File f = new File(file.getPath() + "/.apikey.json");
+
+        if (f.exists()) {
+            FileUtils.forceDelete(f);
+        }
+
+        f.createNewFile();
+        FileUtils.writeStringToFile(f, Cache.i().getApiKey() + ",_," + Cache.i().getGson().toJson(new StaticServerDataPacket(getName(), getPort(), getIp(), getGroup(), getUuid())), Charset.defaultCharset());
 
         if (!new File(file.getPath() + "/server.jar").exists()) {
 
