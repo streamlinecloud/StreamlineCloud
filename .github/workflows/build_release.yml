@@ -1,4 +1,4 @@
-name: Build Release
+name: Check, Build, Release, and Docker
 
 on:
   workflow_dispatch: # Dies erlaubt das manuelle Triggern des Workflows
@@ -101,8 +101,6 @@ jobs:
     - name: Create Release
       id: create_release
       uses: marvinpinto/action-automatic-releases@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         automatic_release_tag: ${{ env.VERSION_NUMERIC }}
@@ -114,8 +112,7 @@ jobs:
         release_notes: ${{ env.CHANGELOG }}
 
     - name: Upload Docker image digest
-      run: |
-        echo "${{ github.sha }}" > image-digest.txt
+      run: echo "${{ github.sha }}" > image-digest.txt
       uses: actions/upload-artifact@v3
       with:
         name: docker-image-digest
@@ -131,10 +128,9 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t theflames/streamlinecloud:${{ github.sha }} .
+        docker build -t creperozelot/streamlinecloud:${{ github.sha }} .
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker push theflames/streamlinecloud:${{ github.sha }}
+        docker push creperozelot/streamlinecloud:${{ github.sha }}
 
     - name: Verify Docker image
-      run: |
-        docker images | grep theflames/streamlinecloud
+      run: docker images | grep creperozelot/streamlinecloud
