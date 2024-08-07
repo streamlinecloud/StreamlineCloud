@@ -77,7 +77,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions: write-all
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/production'
 
     steps:
     - name: Check out the repository
