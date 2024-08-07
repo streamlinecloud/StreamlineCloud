@@ -1,9 +1,7 @@
 name: Check, Build and Release
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Dies erlaubt das manuelle Triggern des Workflows
 
 jobs:
 
