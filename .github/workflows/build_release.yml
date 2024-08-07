@@ -113,6 +113,8 @@ jobs:
 
     - name: Upload Docker image digest
       run: echo "${{ github.sha }}" > image-digest.txt
+
+    - name: Upload Docker image digest artifact
       uses: actions/upload-artifact@v3
       with:
         name: docker-image-digest
