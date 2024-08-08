@@ -42,6 +42,7 @@ public class BackEndMain {
         new GetVersionInfoRestController();
         new GetGroupdataRestController();
         new ExecuteCommandController();
+        new GetServersByGroupRestController();
 
 
         Cache.i().getBackend().start(Cache.i().getConfig().getCommunicationBridgePort());
