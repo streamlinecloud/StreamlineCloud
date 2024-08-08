@@ -7,6 +7,7 @@ import io.streamlinemc.main.core.group.CloudGroup;
 import io.streamlinemc.main.core.server.CloudServer;
 import io.streamlinemc.main.utils.Cache;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.streamlinemc.main.core.backend.BackEndMain.mainPath;
@@ -15,17 +16,37 @@ public class GetServersByGroupRestController {
 
     public GetServersByGroupRestController() {
         Cache.i().getBackend().get(mainPath + "get/servers-by-group/{group}", ctx -> {
-            CloudGroup group = StreamlineCloud.getGroupByName(ctx.pathParam("group"));
-            if (group == null) {
-                ctx.result("groupNotFound");
+            try {
+                CloudGroup group = StreamlineCloud.getGroupByName(ctx.pathParam("group"));
+                if (group == null) {
+                    ctx.result("groupNotFound");
+                    ctx.status(200);
+                    return;
+                }
+
+                List<CloudServer> servers = StreamlineCloud.getGroupOnlineServers(group);
+
+                List<StreamlineServer> streamlineServers = new ArrayList<>();
+
+                for (CloudServer server : servers) {
+                    StreamlineServer s = new StreamlineServer();
+                    s.setName(server.getName());
+                    s.setPort(server.getPort());
+                    s.setGroup(server.getGroup());
+                    s.setOnlinePlayers(server.getOnlinePlayers());
+                    s.setMaxOnlineCount(server.getMaxOnlineCount());
+                    s.setServerState(server.getServerState());
+                    s.setRconUuid(server.getRconUuid());
+
+                    s.setUuid(server.getUuid());
+                    streamlineServers.add(s);
+                }
+
+                ctx.result(new Gson().toJson(streamlineServers));
                 ctx.status(200);
-                return;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            List<CloudServer> servers = StreamlineCloud.getGroupOnlineServers(group);
-
-            ctx.result(new Gson().toJson(servers));
-            ctx.status(200);
         });
     }
 }

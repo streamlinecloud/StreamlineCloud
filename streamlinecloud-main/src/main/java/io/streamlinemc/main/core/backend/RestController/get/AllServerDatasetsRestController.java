@@ -28,8 +28,6 @@ public class AllServerDatasetsRestController {
                 s.setServerState(server.getServerState());
                 s.setRconUuid(server.getRconUuid());
 
-                System.out.println(server.getUuid());
-
                 s.setUuid(server.getUuid());
                 serverList.add(s);
             }
