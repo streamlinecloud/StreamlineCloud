@@ -1,7 +1,7 @@
 
 > [!WARNING]
-> This project has reached end of life and is no longer maintained.  
-> We recommend you transition to [Velocity](https://papermc.io/software/velocity). For more information, see the [announcement](https://forums.papermc.io/threads/1088/).
+> This project is in Alpha State.  
+> We do not recommend this Project to use in Production.
 
 # StreamlineCloud
 
