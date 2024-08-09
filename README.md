@@ -1,4 +1,8 @@
 
+> [!WARNING]
+> This project has reached end of life and is no longer maintained.  
+> We recommend you transition to [Velocity](https://papermc.io/software/velocity). For more information, see the [announcement](https://forums.papermc.io/threads/1088/).
+
 # StreamlineCloud
 
 StreamlineCloud is a powerful Minecraft cloud management system designed for scalability, ease of use, and plugin extensibility. It supports multi-node configurations, allowing you to efficiently manage multiple Minecraft servers from a centralized interface.
