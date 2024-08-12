@@ -26,6 +26,8 @@ dependencies {
 
     implementation(kotlin("stdlib"))
 
+    implementation("commons-io:commons-io:2.16.1")
+
     implementation("org.jetbrains:annotations:24.0.0")
     implementation(project(":streamlinecloud-api"))
     compileOnly("org.projectlombok:lombok:1.18.32")

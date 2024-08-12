@@ -19,11 +19,6 @@ public class CloudLauncher {
 
     public static void main(String[] args) throws InterruptedException {
 
-        for (String arg : args) {
-            if (Cache.i().getArguments().contains(arg)) continue;
-            Cache.i().getArguments().add(arg);
-        }
-
         new CloudMain(args);
     }
 

@@ -12,10 +12,20 @@ public class EventManager {
 
     private final List<EventListener> listeners = new ArrayList<>();
 
+    /**
+     * Register a listener
+     *
+     * @param listener Listener to register
+     */
     public void registerListener(EventListener listener) {
         listeners.add(listener);
     }
 
+    /**
+     * Unregister a listener
+     *
+     * @param listener Listener to unregister
+     */
     public void unregisterListener(EventListener listener) {
         listeners.remove(listener);
     }

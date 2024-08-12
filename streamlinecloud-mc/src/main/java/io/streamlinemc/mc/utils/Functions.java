@@ -3,10 +3,13 @@ package io.streamlinemc.mc.utils;
 import com.google.gson.Gson;
 import io.streamlinemc.api.packet.StaticServerDataPacket;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
+import org.bukkit.util.FileUtil;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class Functions {
@@ -102,21 +105,24 @@ public class Functions {
         }
     }
 
-    @SneakyThrows
     public static void startup() {
-        StaticCache.plFolder = new File(System.getProperty("user.dir"));
-        System.out.println(StaticCache.plFolder);
-        File key = new File(StaticCache.plFolder.getAbsolutePath() + "/.apikey.json");
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(key));
-        String line = bufferedReader.readLine();
+        try {
+            StaticCache.plFolder = new File(System.getProperty("user.dir"));
+            System.out.println(StaticCache.plFolder);
+            File key = new File(StaticCache.plFolder.getAbsolutePath() + "/.apikey.json");
 
-        StaticCache.accessKey = line.split(",_,")[0];
-        StaticCache.serverData = new Gson().fromJson(line.split(",_,")[1], StaticServerDataPacket.class);
+            String keyString = FileUtils.readFileToString(key, Charset.defaultCharset());
 
-        bufferedReader.close();
-        key.delete();
+            StaticCache.accessKey = keyString.split(",_,")[0];
+            StaticCache.serverData = new Gson().fromJson(keyString.split(",_,")[1], StaticServerDataPacket.class);
 
-        post(StaticCache.serverData.getUuid(), "post/server/hello-world");
+            FileUtils.forceDelete(key);
+
+            System.out.println("DEBUG PORT: " + StaticCache.serverData.getPort());
+
+            post(StaticCache.serverData.getUuid(), "post/server/hello-world");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
 }

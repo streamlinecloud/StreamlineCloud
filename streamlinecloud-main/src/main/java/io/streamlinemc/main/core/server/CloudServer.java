@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -56,16 +57,23 @@ public class CloudServer extends StreamlineServer {
 
     public void start(File javaExec) throws IOException {
 
-        StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
-                new ReplacePaket("%1", getName()),
-                new ReplacePaket("%2", "temp/" + getName())
-        });
-
         if (getGroup() == null) setGroup(Cache.i().getDefaultGroup().getName());
 
         setStaticServer(getGroupDirect().isStaticGroup());
         setServerState(ServerState.STARTING);
         setPort(StreamlineCloud.generateUniquePort());
+
+        if (!isStaticServer()) {
+            StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
+                    new ReplacePaket("%1", getName() + "-" + getUuid()),
+                    new ReplacePaket("%2", "temp/" + getName())
+            });
+        } else {
+            StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
+                    new ReplacePaket("%1", getName()),
+                    new ReplacePaket("%2", "staticservers/" + getName())
+            });
+        }
 
         ServerTemplate template;
         File file = null;
@@ -79,15 +87,16 @@ public class CloudServer extends StreamlineServer {
                 getPort()));
 
         if (serverStartEvent.isCancelled()) return;
-        if (isStaticServer()) file = new File(Cache.i().homeFile + "/staticservers/" + getName() + "-" + getUuid());
-        if (!isStaticServer()) file = new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
 
+        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
         file.mkdirs();
 
         File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
+
+        //Properties
         if (!propertiesFile.exists()) {
 
-            //Properties
+            //Properties creation
             Properties properties = new Properties();
             try {
 
@@ -137,18 +146,23 @@ public class CloudServer extends StreamlineServer {
                 copyResources(Utils.getResourceFile("bungee/config.yml", "yml"), new File(file.getAbsolutePath() + "/config.yml"));
             }
 
-            //Apikey
-            File f = new File(file.getPath() + "/.apikey.json");
-            FileWriter writer = new FileWriter(f);
-            f.createNewFile();
-            try {
-                writer.write(Cache.i().getApiKey() + ",_," + Cache.i().getGson().toJson(new StaticServerDataPacket(getName(), getPort(), getIp(), getGroup(), getUuid())));
-            } catch (Exception e) {
-                e.printStackTrace();
+        } else {
+            if (isStaticServer()) {
+                Properties properties = new Properties();
+                properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
+                setPort(Integer.parseInt(properties.getProperty("server-port")));
             }
-            writer.close();
-
         }
+
+        //Apikey
+        File f = new File(file.getPath() + "/.apikey.json");
+
+        if (f.exists()) {
+            FileUtils.forceDelete(f);
+        }
+
+        f.createNewFile();
+        FileUtils.writeStringToFile(f, Cache.i().getApiKey() + ",_," + Cache.i().getGson().toJson(new StaticServerDataPacket(getName(), getPort(), getIp(), getGroup(), getUuid())), Charset.defaultCharset());
 
         if (!new File(file.getPath() + "/server.jar").exists()) {
 
@@ -163,13 +177,9 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
-        StreamlineCloud.log("db1");
-
         ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
         File finalFile = file;
-        Runnable aufgabe = () -> {
-
-            StreamlineCloud.log("db2");
+        Runnable runnable = () -> {
 
 
 
@@ -204,16 +214,7 @@ public class CloudServer extends StreamlineServer {
 
                     }, 500, 500, TimeUnit.MILLISECONDS);
 
-                    /*if (thread.isInterrupted()) return;
-
-                    try {
-                        inputReader.readLine();
-                    } catch (Exception e) {
-                        return;
-                    }*/
-
                     StreamlineCloud.log("db32");
-                    //execcode.set(process.waitFor());
 
 
                     while (!getServerState().equals(ServerState.STOPPING)) {
@@ -224,31 +225,33 @@ public class CloudServer extends StreamlineServer {
                             return;
                         }
 
-                        if ((line = inputReader.readLine()) != null) {
+                        try {
+                            if ((line = inputReader.readLine()) != null) {
 
-                            addLog(line);
+                                addLog(line);
 
-                            if (output) {
+                                if (output) {
 
-                                IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+                                    IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
 
-                                if (incommingServerMessageEvent.isCancelled()) continue;
+                                    if (incommingServerMessageEvent.isCancelled()) continue;
 
-                                StreamlineCloud.logSingle(getName() + line);
+                                    StreamlineCloud.logSingle(getName() + line);
+                                }
+
                             }
-
+                        } catch (IOException e) {
+                            StreamlineCloud.log("Input stream closed!");
                         }
                     }
 
-                    StreamlineCloud.log("db3");
-
 
                     // Warte auf das Ende des Prozesses
-                    //
+                    //if (getServerState().equals(ServerState.STOPPING)) execcode.set(process.waitFor());
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    //StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
+                    StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
                 }
                 task();
             });
@@ -260,7 +263,7 @@ public class CloudServer extends StreamlineServer {
             scheduler1.shutdown();
         };
 
-        scheduler1.scheduleWithFixedDelay(aufgabe, 3, 3, TimeUnit.SECONDS);
+        scheduler1.scheduleWithFixedDelay(runnable, 3, 3, TimeUnit.SECONDS);
 
     }
 

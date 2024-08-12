@@ -77,7 +77,7 @@ public final class WaterfallSCP extends Plugin {
                         ServerInfo serverInfo = getProxy().constructServerInfo(
                                 str,
                                 new InetSocketAddress("localhost", Integer.parseInt(String.valueOf(port).split("\\.")[0])),
-                                "Subserver of Streamline - " + str, // You can set a MOTD (message of the day) here
+                                "Subserver of Streamline - " + str,
                                 false
                         );
 

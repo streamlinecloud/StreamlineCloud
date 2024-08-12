@@ -25,8 +25,6 @@ public class ServersCommand extends CloudCommand {
             return;
         }
 
-
-
         String sub = args[1];
 
         switch (sub) {

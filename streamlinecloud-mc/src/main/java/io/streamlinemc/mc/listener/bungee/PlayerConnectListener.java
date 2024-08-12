@@ -20,14 +20,20 @@ public class PlayerConnectListener implements Listener {
             // Set the default server for new players or players connecting to the proxy
             List<String> servers = new Gson().fromJson(Functions.get("get/fallbackservers"), List.class);
 
+            //COMMENT FROM 04.08.2024 - 13:28
+            //Shyguy is watching you :D
             ServerInfo defaultServer = WaterfallSCP.getInstance().getProxy().getServerInfo(servers.get(0));
             if (defaultServer != null) {
+                System.out.println("OLD SERVER TO SEND:" + defaultServer.getSocketAddress());
                 event.setTarget(defaultServer);
+                System.out.println("SERVER TO SEND:" + defaultServer.getSocketAddress());
             }
             System.out.println(servers);
-            System.out.println("SERVER TO: " + defaultServer);
+
             System.out.println("SERVER PLAYER: " + event.getTarget());
+
         }
+
 
         System.out.println("SENDING PLAYER TO: " + event.getTarget());
 

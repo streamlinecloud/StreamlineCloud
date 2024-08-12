@@ -11,7 +11,10 @@ import io.streamlinemc.mc.utils.Functions;
 import io.streamlinemc.mc.utils.StaticCache;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.checkerframework.framework.qual.Unused;
+import org.jetbrains.annotations.ApiStatus;
 
+import javax.annotation.meta.Exclusive;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -63,6 +66,12 @@ public class ServerManager {
         Functions.post(s, "post/server/updatedata");
     }
 
+    /**
+     * Updates a server with newer Information
+     * @param ser - StreamlineServer to update(DO NOT OVERRIDE UUID)
+     * @notused - Internal use only
+     */
+    @ApiStatus.Internal
     public void updateServer(StreamlineServer ser) {
 
         try {
@@ -120,6 +129,12 @@ public class ServerManager {
     }
 
     //GetServer
+
+    /**
+     * Get all servers by group name
+     * @param group String name of the group
+     * @return List of StreamlineServers
+     */
     public List<StreamlineServer> getServersByGroup(String group) {
         return getServersByGroup(GroupManager.getInstance().getGroup(group));
     }
@@ -135,6 +150,12 @@ public class ServerManager {
         for (StreamlineServer server : serversToUpdate) checkServerUpdate(server);
         return servers;
     }
+
+    /**
+     * Get a server by name
+     * @param name String name of the server
+     * @return StreamlineServer or null
+     */
     public StreamlineServer getServer(String name) {
         for (StreamlineServer s : onlineServers) {
             if (s.getName().equals(name)) {
@@ -145,6 +166,11 @@ public class ServerManager {
         return null;
     }
 
+    /**
+     * Get a server by UUID
+     * @param uuid UUID of the server
+     * @return StreamlineServer or null
+     */
     public StreamlineServer getServer(UUID uuid) {
         for (StreamlineServer s : onlineServers) {
             if (s.getUuid().equals(uuid.toString())) {
