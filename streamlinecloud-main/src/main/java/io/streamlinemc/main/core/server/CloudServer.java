@@ -225,19 +225,23 @@ public class CloudServer extends StreamlineServer {
                             return;
                         }
 
-                        if ((line = inputReader.readLine()) != null) {
+                        try {
+                            if ((line = inputReader.readLine()) != null) {
 
-                            addLog(line);
+                                addLog(line);
 
-                            if (output) {
+                                if (output) {
 
-                                IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
+                                    IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
 
-                                if (incommingServerMessageEvent.isCancelled()) continue;
+                                    if (incommingServerMessageEvent.isCancelled()) continue;
 
-                                StreamlineCloud.logSingle(getName() + line);
+                                    StreamlineCloud.logSingle(getName() + line);
+                                }
+
                             }
-
+                        } catch (IOException e) {
+                            StreamlineCloud.log("Input stream closed!");
                         }
                     }
 
