@@ -4,10 +4,7 @@ import io.streamlinemc.api.packet.StartServerPacket;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.backend.RestController.AllGroupsRestController;
 import io.streamlinemc.main.core.backend.RestController.get.*;
-import io.streamlinemc.main.core.backend.RestController.post.ExecuteCommandController;
-import io.streamlinemc.main.core.backend.RestController.post.ProxyVersionRestController;
-import io.streamlinemc.main.core.backend.RestController.post.ServerHelloWorldRestController;
-import io.streamlinemc.main.core.backend.RestController.post.ServerUpdateDataRestController;
+import io.streamlinemc.main.core.backend.RestController.post.*;
 import io.streamlinemc.main.lang.ReplacePaket;
 import io.streamlinemc.main.utils.Cache;
 import io.javalin.Javalin;
@@ -44,12 +41,9 @@ public class BackEndMain {
         new GetGroupdataRestController();
         new ExecuteCommandController();
         new GetServersByGroupRestController();
-        new StartServerPacket();
-
+        new StartServerController();
 
         Cache.i().getBackend().start(Cache.i().getConfig().getCommunicationBridgePort());
-
-
         StreamlineCloud.log("sl.backend.started");
 
     }

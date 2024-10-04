@@ -268,16 +268,17 @@ public class StreamlineCloud {
         }
     }
 
-    public static String startServerByGroup(CloudGroup cloudGroup) { return  startServerByGroup(cloudGroup, new String[]{}); }
-    public static String startServerByGroup(CloudGroup cloudGroup, String[] templates) {
+    public static String startServerByGroup(CloudGroup cloudGroup) {
+        return startServerByGroup(cloudGroup, new ArrayList<>());
+    }
+    public static String startServerByGroup(CloudGroup cloudGroup, List<String> templates) {
         List<CloudServer> allServers = new ArrayList<>(getGroupOnlineServers(cloudGroup));
         for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(cloudGroup)) allServers.add(s);
 
         CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime());
         server.setGroup(cloudGroup.getName());
-        server.setCustomTemplates(Arrays.asList(templates));
+        server.setCustomTemplates(templates);
         Cache.i().getServersWaitingForStart().add(server);
-
         return server.getUuid();
     }
 

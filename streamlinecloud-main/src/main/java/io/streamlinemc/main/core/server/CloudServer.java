@@ -37,7 +37,7 @@ public class CloudServer extends StreamlineServer {
     Process process;
     List<String> commandQueue = new ArrayList<>();
 
-    List<String> customTemplates;
+    List<String> customTemplates = new ArrayList<>();
 
     boolean output = false;
     boolean staticServer = false;
@@ -113,6 +113,7 @@ public class CloudServer extends StreamlineServer {
 
                 properties.setProperty("server-port", String.valueOf(getPort()));
                 properties.setProperty("online-mode", String.valueOf(false));
+                properties.setProperty("enforce-secure-profile", String.valueOf(false));
                 properties.setProperty("enable-rcon", "true");
                 properties.setProperty("rcon.port", String.valueOf(getPort() + 1));
                 properties.setProperty("rcon.password", rconpw);
@@ -139,7 +140,7 @@ public class CloudServer extends StreamlineServer {
             List<String> t = new ArrayList<>();
             CloudGroup g = StreamlineCloud.getGroupByName(getGroup());
 
-            customTemplates.addAll(g.getTemplates());
+            for (String te : g.getTemplates()) customTemplates.add(te);
 
             t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
             for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
