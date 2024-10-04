@@ -1,5 +1,6 @@
 package io.streamlinemc.main.core.backend;
 
+import io.streamlinemc.api.packet.StartServerPacket;
 import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.core.backend.RestController.AllGroupsRestController;
 import io.streamlinemc.main.core.backend.RestController.get.*;
@@ -43,6 +44,7 @@ public class BackEndMain {
         new GetGroupdataRestController();
         new ExecuteCommandController();
         new GetServersByGroupRestController();
+        new StartServerPacket();
 
 
         Cache.i().getBackend().start(Cache.i().getConfig().getCommunicationBridgePort());
