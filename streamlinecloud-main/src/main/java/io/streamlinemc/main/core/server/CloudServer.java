@@ -37,6 +37,8 @@ public class CloudServer extends StreamlineServer {
     Process process;
     List<String> commandQueue = new ArrayList<>();
 
+    List<String> customTemplates;
+
     boolean output = false;
     boolean staticServer = false;
 
@@ -135,8 +137,12 @@ public class CloudServer extends StreamlineServer {
 
             //Copy Templates
             List<String> t = new ArrayList<>();
+            CloudGroup g = StreamlineCloud.getGroupByName(getGroup());
+
+            customTemplates.addAll(g.getTemplates());
+
             t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
-            for (String s : StreamlineCloud.getGroupByName(getGroup()).getTemplates()) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
+            for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
             copyFolder(t, file.getPath());
 
             //Template From Resources
