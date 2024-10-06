@@ -1,32 +1,8 @@
 package io.streamlinemc.mc;
 
+public final class WaterfallSCP {
 
-import com.google.gson.Gson;
-import io.streamlinemc.api.StreamlineAPI;
-import io.streamlinemc.api.packet.VersionPacket;
-import io.streamlinemc.api.server.ServerRuntime;
-import io.streamlinemc.mc.api.StreamlineCloud;
-import io.streamlinemc.mc.listener.bungee.PlayerConnectListener;
-import io.streamlinemc.mc.utils.Functions;
-import io.streamlinemc.mc.utils.InternalSettings;
-import io.streamlinemc.mc.utils.StaticCache;
-import io.streamlinemc.mc.utils.Utils;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.plugin.Plugin;
-
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-public final class WaterfallSCP extends Plugin {
-
-    StreamlineCloud streamlineCloud;
+    /*StreamlineCloud streamlineCloud;
 
     @Getter
     public static WaterfallSCP instance;
@@ -105,5 +81,5 @@ public final class WaterfallSCP extends Plugin {
 
     private void registerListener() {
         getProxy().getPluginManager().registerListener(this, new PlayerConnectListener());
-    }
+    }*/
 }
