@@ -92,6 +92,16 @@ public class VelocitySCP {
         HashMap<String, Double> servers = new HashMap<>();
         List<String> allServers = new ArrayList<>();
 
+        //Fetch whitelist
+        String w = Functions.get("get/whitelist");
+
+        assert w != null;
+        if (w.equals("false")) {
+            StaticCache.whitelistEnabled = false;
+        } else {
+            StaticCache.whitelist = new Gson().fromJson(w, List.class);
+        }
+
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
 
@@ -142,6 +152,13 @@ public class VelocitySCP {
     @Subscribe
     public void onPlayerChooseInitialServer(PlayerChooseInitialServerEvent event) {
         Player player = event.getPlayer();
+
+        if (StaticCache.whitelistEnabled) {
+            if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
+                player.disconnect(Component.text("§cYou are not whitelisted :/ \n§8»§l§cStreamlineCloud whitelist"));
+                return;
+            }
+        }
 
         if (event.getPlayer().getCurrentServer().isEmpty()) event.setInitialServer(proxy.getServer("lobby-1").get());
 

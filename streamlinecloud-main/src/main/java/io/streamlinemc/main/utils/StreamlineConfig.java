@@ -12,6 +12,8 @@ import org.eclipse.jetty.util.IO;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 public class StreamlineConfig {
@@ -31,6 +33,9 @@ public class StreamlineConfig {
 
     boolean disableColors = false;
     boolean enableRconSupport = true;
+
+    boolean whitelistEnabled = false;
+    List<String> whitelist = new ArrayList<>();
 
     public static StreamlineConfig fromJson(String json) {
         Gson gson = new Gson();

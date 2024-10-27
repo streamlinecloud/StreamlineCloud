@@ -42,6 +42,7 @@ public class BackEndMain {
         new ExecuteCommandController();
         new GetServersByGroupRestController();
         new StartServerController();
+        new WhitelistRestController();
 
         Cache.i().getBackend().start(Cache.i().getConfig().getCommunicationBridgePort());
         StreamlineCloud.log("sl.backend.started");

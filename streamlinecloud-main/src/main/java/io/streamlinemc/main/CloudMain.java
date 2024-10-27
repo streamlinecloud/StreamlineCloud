@@ -127,6 +127,7 @@ public class CloudMain {
         registerCommand(new UptimeCommand());
         registerCommand(new MultiRootCommand());
         registerCommand(new DownloadCommand());
+        registerCommand(new WhitelistCommand());
 
         if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", Cache.i().getConfig().getDefaultJavaPath(), 0, new ArrayList<>(), ServerRuntime.SERVER));
         Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());
