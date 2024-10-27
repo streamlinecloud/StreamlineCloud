@@ -5,6 +5,7 @@ import io.streamlinemc.main.StreamlineCloud;
 import io.streamlinemc.main.terminal.api.CloudCommand;
 import io.streamlinemc.main.utils.BuildSettings;
 import io.streamlinemc.main.utils.Cache;
+import io.streamlinemc.main.utils.StreamlineConfig;
 
 public class WhitelistCommand extends CloudCommand {
 
@@ -24,24 +25,27 @@ public class WhitelistCommand extends CloudCommand {
             return;
         }
 
-        if (args.length == 1) {
+        if (args.length == 3) {
 
-            Cache.i().getConfig().getWhitelist().add(args[0]);
-            StreamlineCloud.log("Added " + args[0] + " to the whitelist");
+            Cache.i().getConfig().getWhitelist().add(args[2]);
+            StreamlineCloud.log("Added " + args[2] + " to the whitelist");
+            StreamlineConfig.saveConfig();
 
         }
 
-        if (args[0].equals("enable")) {
+        if (args[1].equals("enable")) {
             if (!Cache.i().getConfig().isWhitelistEnabled()) {
                 Cache.i().getConfig().setWhitelistEnabled(true);
                 StreamlineCloud.log("Whitelist enabled");
+                StreamlineConfig.saveConfig();
             }
         }
 
-        if (args[0].equals("disable")) {
+        if (args[1].equals("disable")) {
             if (Cache.i().getConfig().isWhitelistEnabled()) {
                 Cache.i().getConfig().setWhitelistEnabled(false);
                 StreamlineCloud.log("Whitelist disabled");
+                StreamlineConfig.saveConfig();
             }
         }
 
