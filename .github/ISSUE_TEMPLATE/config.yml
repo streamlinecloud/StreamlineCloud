@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: StreamlineCloud Forum
+    url: https://community.streamlinemc.cloud
+    about: You can ask our community.
+  - name: StreamlineCloud Wiki
+    url: https://streamlinemc.cloud/wiki
+    about: You can search our wiki for additional help.

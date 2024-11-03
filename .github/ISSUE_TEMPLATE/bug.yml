@@ -1,0 +1,50 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We appreciate your bug report 👍
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: Which version of StreamlineCloud are you running?
+      options:
+        - BETA_QC_0.2 (Default)
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: On which OS is StreamlineCloud running?
+      options:
+        - Linux
+        - Windows
+        - MacOS
+  - type: textarea
+    id: logs
+    attributes:
+      label: Attach some Stacktraces if any provided.
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks. You can find more detailed information in ./logs/error of you StreamlineCloud instance.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com). 
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
