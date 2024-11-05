@@ -225,12 +225,11 @@ public class CloudServer extends StreamlineServer {
                                     new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line)
                             );
                             if (!incommingEvent.isCancelled()) {
-                                StreamlineCloud.logSingle(getName() + line);
+                                StreamlineCloud.logSingle(getName() + " " + line);
                             }
                         }
                     }
 
-                    // Wait for process to finish if in STOPPING state
                     if (getServerState().equals(ServerState.STOPPING)) process.waitFor();
 
                 } catch (Exception e) {
