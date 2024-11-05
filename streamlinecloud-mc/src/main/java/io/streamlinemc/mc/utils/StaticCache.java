@@ -16,8 +16,9 @@ public class StaticCache {
     public static boolean whitelistEnabled = false;
     public static List<String> whitelist = new ArrayList<>();
 
-    @Getter  @Setter
+    @Getter @Setter
     private static ServerRuntime runtime;
 
     public static StaticServerDataPacket serverData;
+
 }

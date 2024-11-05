@@ -23,6 +23,7 @@ public final class SpigotSCP extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        this.getLogger().info("streamline enabling");
         StaticCache.setRuntime(ServerRuntime.SERVER);
         instance = this;
         this.getLogger().info("streamline enabled");

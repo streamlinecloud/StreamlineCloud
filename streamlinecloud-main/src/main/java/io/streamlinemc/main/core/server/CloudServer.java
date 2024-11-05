@@ -196,75 +196,55 @@ public class CloudServer extends StreamlineServer {
             Thread jarThread = new Thread(() -> {
                 try {
                     ProcessBuilder processBuilder = new ProcessBuilder(javaExec.getAbsolutePath(), "-jar", finalFile + "/server.jar");
+                    processBuilder.redirectErrorStream(true); // Combine stderr and stdout
                     processBuilder.directory(finalFile);
                     Process process = processBuilder.start();
-
                     this.process = process;
 
                     BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-
                     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+                    // Command scheduler
                     scheduler.scheduleAtFixedRate(() -> {
-
-                        if (commandQueue.size() != 0) {
-
-                            String command = commandQueue.get(0);
-                            commandQueue.remove(0);
-
-                            OutgoingServerMessageEvent outgoingServerMessageEvent = eventManager.callEvent(new OutgoingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), command));
-
-                            if (outgoingServerMessageEvent.isCancelled()) return;
-
-                            executeCommand(command, process.getOutputStream());
+                        if (!commandQueue.isEmpty()) {
+                            String command = commandQueue.remove(0);
+                            OutgoingServerMessageEvent outgoingEvent = eventManager.callEvent(
+                                    new OutgoingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), command)
+                            );
+                            if (!outgoingEvent.isCancelled()) {
+                                executeCommand(command, process.getOutputStream());
+                            }
                         }
-
                     }, 500, 500, TimeUnit.MILLISECONDS);
 
-                    while (!getServerState().equals(ServerState.STOPPING)) {
-
-                        try {
-                            inputReader.readLine();
-                        } catch (Exception e) {
-                            return;
-                        }
-
-                        try {
-                            if ((line = inputReader.readLine()) != null) {
-
-                                addLog(line);
-
-                                if (output) {
-
-                                    IncommingServerMessageEvent incommingServerMessageEvent = eventManager.callEvent(new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line));
-
-                                    if (incommingServerMessageEvent.isCancelled()) continue;
-
-                                    StreamlineCloud.logSingle(getName() + line);
-                                }
-
+                    String line;
+                    while (!getServerState().equals(ServerState.STOPPING) && (line = inputReader.readLine()) != null) {
+                        addLog(line);
+                        if (output) {
+                            IncommingServerMessageEvent incommingEvent = eventManager.callEvent(
+                                    new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line)
+                            );
+                            if (!incommingEvent.isCancelled()) {
+                                StreamlineCloud.logSingle(getName() + line);
                             }
-                        } catch (IOException e) {
-                            StreamlineCloud.log("Input stream closed!");
                         }
                     }
 
-
-                    // Warte auf das Ende des Prozesses
-                    //if (getServerState().equals(ServerState.STOPPING)) execcode.set(process.waitFor());
+                    // Wait for process to finish if in STOPPING state
+                    if (getServerState().equals(ServerState.STOPPING)) process.waitFor();
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
+                } finally {
+                    task();
                 }
-                task();
             });
 
             jarThread.start();
-
             thread = jarThread;
-
             scheduler1.shutdown();
+
         };
 
         scheduler1.scheduleWithFixedDelay(runnable, 3, 3, TimeUnit.SECONDS);
