@@ -20,5 +20,4 @@ public class StaticCache {
     private static ServerRuntime runtime;
 
     public static StaticServerDataPacket serverData;
-
 }

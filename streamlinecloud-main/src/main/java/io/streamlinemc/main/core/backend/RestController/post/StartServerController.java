@@ -15,6 +15,8 @@ public class StartServerController {
 
     public StartServerController() {
         Cache.i().getBackend().post(mainPath + "post/server/start", ctx -> {
+            StreamlineCloud.log("Start server POST");
+
             StartServerPacket packet = new Gson().fromJson(ctx.body(), StartServerPacket.class);
 
             ctx.result(StreamlineCloud.startServerByGroup(StreamlineCloud.getGroupByName(packet.getGroup()), Arrays.asList(packet.getTemplates())));
