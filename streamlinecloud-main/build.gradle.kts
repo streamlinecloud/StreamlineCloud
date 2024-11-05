@@ -19,7 +19,7 @@ dependencies {
 
     implementation("org.slf4j:slf4j-simple:2.0.9")
     implementation("org.slf4j:slf4j-api:2.0.9")
-    implementation("org.jline:jline:3.25.0")
+    implementation("org.jline:jline:3.27.1")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("io.javalin:javalin:6.1.3")
     implementation("org.java-websocket:Java-WebSocket:1.5.6")
