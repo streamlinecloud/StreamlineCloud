@@ -29,6 +29,8 @@ public class CloudTerminal {
 
     public CloudTerminal() {
 
+        System.setProperty("jansi.passthrough", "true");
+
         try {
 
             this.terminal = TerminalBuilder.builder()
@@ -45,11 +47,21 @@ public class CloudTerminal {
 
             this.lineReader = LineReaderBuilder.builder()
                     .terminal(terminal)
+                    .option(LineReader.Option.AUTO_FRESH_LINE, true)
+                    .option(LineReader.Option.AUTO_MENU_LIST, true)
+                    .option(LineReader.Option.EMPTY_WORD_OPTIONS, true)
+                    .option(LineReader.Option.HISTORY_TIMESTAMPED, true)
                     .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
                     .option(LineReader.Option.AUTO_GROUP, true)
                     .option(LineReader.Option.AUTO_LIST, true)
                     .completer(new MainCommandCompleter())
                     .build();
+
+            lineReader.variable(LineReader.BELL_STYLE, "none");
+            lineReader.variable(LineReader.HISTORY_SIZE, 1000);
+            lineReader.variable(LineReader.HISTORY_FILE_SIZE, 2000);
+            lineReader.variable(LineReader.HISTORY_FILE, System.getProperty("user.dir") + "/.cloud_history");
+
 
             this.runner = new CloudTerminalRunner(this);
         } catch (IOException e) {
