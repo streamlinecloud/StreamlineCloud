@@ -18,7 +18,7 @@ public class WhitelistCommand extends CloudCommand {
     @Override
     public void execute(String[] args) {
 
-        if (args.length == 0) {
+        if (args.length == 1) {
             StreamlineCloud.log("whitelist add <name>");
             StreamlineCloud.log("whitelist enable");
             StreamlineCloud.log("whitelist disable");

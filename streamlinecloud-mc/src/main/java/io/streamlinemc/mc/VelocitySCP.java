@@ -85,20 +85,19 @@ public class VelocitySCP {
     }
 
     public void onLoad() {
-        System.out.println("DEBUG: Plugin loaded");
+        System.out.println("DEBUG: Plugin loadedd");
 
         Functions.startup();
 
         HashMap<String, Double> servers = new HashMap<>();
         List<String> allServers = new ArrayList<>();
 
-        //Fetch whitelist
         String w = Functions.get("get/whitelist");
 
-        assert w != null;
         if (w.equals("false")) {
             StaticCache.whitelistEnabled = false;
         } else {
+            StaticCache.whitelistEnabled = true;
             StaticCache.whitelist = new Gson().fromJson(w, List.class);
         }
 
@@ -155,7 +154,7 @@ public class VelocitySCP {
 
         if (StaticCache.whitelistEnabled) {
             if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
-                player.disconnect(Component.text("§cYou are not whitelisted :/ \n§8»§l§cStreamlineCloud whitelist"));
+                player.disconnect(Component.text("§cYou are not whitelisted :/ \n\n§8»§l§cStreamlineCloud whitelist"));
                 return;
             }
         }
