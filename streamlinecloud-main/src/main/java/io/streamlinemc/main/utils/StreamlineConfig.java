@@ -32,6 +32,7 @@ public class StreamlineConfig {
     String multiRootConnection = "";
 
     boolean disableColors = false;
+    boolean useLegacyColor = false;
     boolean enableRconSupport = true;
 
     boolean whitelistEnabled = false;
@@ -92,6 +93,7 @@ public class StreamlineConfig {
         StreamlineCloud.log("ApiKey: " + firstLine);
 
         Cache.i().setDisabledColors(Cache.i().getConfig().disableColors);
+        Cache.i().setUseLgecyColor(Cache.i().getConfig().useLegacyColor);
 
         if (files != null) {
             for (File file : files) {

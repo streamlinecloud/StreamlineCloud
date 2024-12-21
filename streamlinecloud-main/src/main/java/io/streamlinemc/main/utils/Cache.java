@@ -50,6 +50,7 @@ public class Cache {
     public WSClient webSocketClient = null;
     public PluginManager pluginManager = new PluginManager();
     public boolean disabledColors = false;
+    public boolean useLgecyColor = false;
     public Javalin backend;
     public final HashMap<String, RconData> rconDetails = new HashMap<>();
 
