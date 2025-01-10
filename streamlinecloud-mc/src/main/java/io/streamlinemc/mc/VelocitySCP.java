@@ -45,10 +45,8 @@ import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -62,6 +60,8 @@ public class VelocitySCP {
 
     private final ProxyServer proxy;
     private final Logger logger;
+
+    HashMap<UUID, RegisteredServer> kicks = new HashMap<>();
 
     @Inject
     public VelocitySCP(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
@@ -150,17 +150,21 @@ public class VelocitySCP {
 
     @Subscribe
     public void onPlayerChooseInitialServer(PlayerChooseInitialServerEvent event) {
-        Player player = event.getPlayer();
+        try {
+            Player player = event.getPlayer();
 
-        if (StaticCache.whitelistEnabled) {
-            if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
-                player.disconnect(Component.text("§cYou are not whitelisted :/ \n\n§8»§l§cStreamlineCloud whitelist"));
-                return;
+            if (StaticCache.whitelistEnabled) {
+                if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
+                    player.disconnect(Component.text("§cYou are not whitelisted :/ \n\n§8»§l§cStreamlineCloud whitelist"));
+                    return;
+                }
             }
+
+            if (event.getPlayer().getCurrentServer().isEmpty()) event.setInitialServer(proxy.getServer("lobby-1").get());
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        if (event.getPlayer().getCurrentServer().isEmpty()) event.setInitialServer(proxy.getServer("lobby-1").get());
-
     }
 
     @Subscribe
@@ -172,9 +176,20 @@ public class VelocitySCP {
             System.out.println("Player kicked for reason: " + reason);
         }*/
 
-        Optional<RegisteredServer> targetServer = proxy.getServer("lobby-1");
+        if (!kicks.get(player.getUniqueId()).equals(event.getServer())) {kicks.remove(player.getUniqueId());}
 
-        event.setResult(KickedFromServerEvent.RedirectPlayer.create(targetServer.get()));
+        if (!kicks.containsKey(player.getUniqueId())) {
+            kicks.put(event.getPlayer().getUniqueId(), event.getServer());
+
+            String sendTo = "lobby-1";
+
+            Optional<RegisteredServer> targetServer = proxy.getServer(sendTo);
+
+            event.setResult(KickedFromServerEvent.RedirectPlayer.create(targetServer.get()));
+            return;
+        }
+
+        event.getPlayer().disconnect(Component.text(event.getServerKickReason().toString()));
     }
 
     private void format(ProxyPingEvent e) {
