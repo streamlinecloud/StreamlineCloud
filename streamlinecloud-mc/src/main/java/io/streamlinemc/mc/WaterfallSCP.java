@@ -1,3 +1,10 @@
+
+/*
+*
+* OUTDATED (SWITCHED TO VELOCITY)
+*
+*/
+
 package io.streamlinemc.mc;
 
 public final class WaterfallSCP {

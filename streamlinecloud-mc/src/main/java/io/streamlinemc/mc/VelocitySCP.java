@@ -61,7 +61,7 @@ public class VelocitySCP {
     private final ProxyServer proxy;
     private final Logger logger;
 
-    HashMap<UUID, RegisteredServer> kicks = new HashMap<>();
+    List<String> fallbacks = new ArrayList<>();
 
     @Inject
     public VelocitySCP(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
@@ -104,8 +104,6 @@ public class VelocitySCP {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
 
-
-
             servers.putAll(new Gson().fromJson(Functions.get("get/allservers"), servers.getClass()));
 
             for (String s : allServers) getProxy().unregisterServer(proxy.getServer(s).get().getServerInfo());
@@ -129,6 +127,8 @@ public class VelocitySCP {
             });
 
             Utils.servers = servers;
+
+            fallbacks = new Gson().fromJson(Functions.get("get/fallbackservers"), List.class);
 
         }, 0, 3, TimeUnit.SECONDS);
     }
@@ -160,7 +160,7 @@ public class VelocitySCP {
                 }
             }
 
-            if (event.getPlayer().getCurrentServer().isEmpty()) event.setInitialServer(proxy.getServer("lobby-1").get());
+            if (event.getPlayer().getCurrentServer().isEmpty()) event.setInitialServer(searchFallback().get());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,21 +171,9 @@ public class VelocitySCP {
     public void onPlayerKicked(KickedFromServerEvent event) {
         Player player = event.getPlayer();
 
-        /*if (event.getServerKickReason().isPresent()) {
-            String reason = event.getServerKickReason().get().toString();
-            System.out.println("Player kicked for reason: " + reason);
-        }*/
+        if (!fallbacks.contains(event.getServer().getServerInfo().getName())) {
 
-        if (!kicks.get(player.getUniqueId()).equals(event.getServer())) {kicks.remove(player.getUniqueId());}
-
-        if (!kicks.containsKey(player.getUniqueId())) {
-            kicks.put(event.getPlayer().getUniqueId(), event.getServer());
-
-            String sendTo = "lobby-1";
-
-            Optional<RegisteredServer> targetServer = proxy.getServer(sendTo);
-
-            event.setResult(KickedFromServerEvent.RedirectPlayer.create(targetServer.get()));
+            event.setResult(KickedFromServerEvent.RedirectPlayer.create(searchFallback().get()));
             return;
         }
 
@@ -205,6 +193,10 @@ public class VelocitySCP {
 
     private static Component formatted(String str) {
         return MiniMessage.miniMessage().deserialize(str);
+    }
+
+    public Optional<RegisteredServer> searchFallback() {
+        return proxy.getServer(fallbacks.get(new Random().nextInt(fallbacks.size())));
     }
 
 }
