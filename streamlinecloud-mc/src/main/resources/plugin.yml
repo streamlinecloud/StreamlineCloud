@@ -1,6 +1,6 @@
 name: StreamlineCloud
 version: '${project.version}'
-main: io.streamlinemc.mc.SpigotSCP
+main: net.streamlinecloud.mc.SpigotSCP
 api-version: '1.20'
 authors: [ Quinilo, creperozelot ]
 description: Spigot plugin for StreamlineCloud-CommunicationBridge

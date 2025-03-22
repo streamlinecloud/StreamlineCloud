@@ -1,0 +1,19 @@
+package net.streamlinecloud.api.group;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import net.streamlinecloud.api.server.ServerRuntime;
+
+import java.util.List;
+@Getter @Setter
+public class StreamlineGroup implements StreamlineGroupImpl {
+
+    String name;
+    int minOnlineCount;
+    List<String> templates;
+    String javaExec;
+    ServerRuntime runtime;
+    boolean staticGroup = false;
+
+}
