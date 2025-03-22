@@ -53,11 +53,11 @@ public class CloudMain {
 
         StreamlineCloud.logSingle("§RED" + StreamlineCloud.streamlineBanner());
         StreamlineCloud.logSingle("");
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDA powerful Minecraft network");
+        StreamlineCloud.logSingle("§DARK_GRAY-> §REDA Streamlined Minecraft network");
         StreamlineCloud.logSingle("");
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDVersion: §AQUA" + BuildSettings.version);
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + BuildSettings.authors);
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDWebsite: §AQUAhttps://streamlinemc.cloud");
+        StreamlineCloud.logSingle("§DARK_GRAY-> §REDWebsite: §AQUA" + BuildSettings.website);
         StreamlineCloud.logSingle("");
 
 
@@ -126,7 +126,7 @@ public class CloudMain {
         }
 
         if (Cache.i().getCurrentLanguage() == null) {
-            StreamlineCloud.log("Lang " + Cache.i().getConfig().getLanguage() + " is invaild. Setting en.json");
+            StreamlineCloud.log("Lang " + Cache.i().getConfig().getLanguage() + " is invalid. Loading en.json");
             Cache.i().setCurrentLanguage(Cache.i().getLanguages().get(0));
         }
     }

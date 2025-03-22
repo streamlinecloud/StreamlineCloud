@@ -1,3 +1,7 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.random.Random
+
 plugins {
     kotlin("jvm") version "1.8.21"
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -47,6 +51,27 @@ tasks.test {
     useJUnitPlatform()
 }
 
+val currentBuildNumber: Int = Random.nextInt(1000, 100000000)
+val currentBuildTime: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
+tasks.register("generateBuildConfig") {
+    doLast {
+        val outputDir = file("$buildDir/generated-src")
+        outputDir.mkdirs()
+        val buildConfigFile = File(outputDir, "MainBuildConfig.java")
+        buildConfigFile.writeText(
+            """
+            package net.streamlinecloud.main.utils;
+            
+            public final class MainBuildConfig {
+                public static final String BUILD_NUMBER = "SC-$currentBuildNumber";
+                public static final String BUILD_DATE = "$currentBuildTime";
+            }
+            """.trimIndent()
+        )
+    }
+}
+
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveClassifier.set("")
     configurations.forEach { configuration ->
@@ -54,21 +79,28 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     }
 }
 
-val mainClass = "io.streamlinemc.main.CloudLauncher"
+sourceSets {
+    getByName("main").java.srcDir("$buildDir/generated-src")
+}
+
+val mainClass = "net.streamlinecloud.main.CloudLauncher"
 
 tasks.jar {
     manifest {
+        dependsOn("generateBuildConfig")
         attributes["Main-Class"] = mainClass
     }
 }
 
 tasks {
     build {
+        dependsOn("generateBuildConfig")
         dependsOn("shadowJar")
     }
 }
 
 tasks.register("Make Main Project") {
+    dependsOn("generateBuildConfig")
     group = "StreamlineCloud"
 
     val bdir = project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-main")

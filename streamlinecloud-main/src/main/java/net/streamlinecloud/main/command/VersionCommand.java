@@ -5,6 +5,7 @@ import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.BuildSettings;
 import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.utils.MainBuildConfig;
 
 public class VersionCommand extends CloudCommand {
 
@@ -21,17 +22,10 @@ public class VersionCommand extends CloudCommand {
         if (Cache.i().getPluginApiVersion().equals("unknown")) status = "§GRAYNOT_CONECTED";
 
         StreamlineCloud.log("");
-        StreamlineCloud.log("StreamlineCloud-Main");
-        StreamlineCloud.log("-> InternalVersion: §AQUA" + BuildSettings.version);
-        StreamlineCloud.log("-> InternalApiVersion: §AQUA" + StreamlineAPI.getApiVersion());
-        StreamlineCloud.log("-> BuildDate: §AQUA" + BuildSettings.buildDate);
+        StreamlineCloud.log("Build infos about this node:");
+        StreamlineCloud.log("-> Version: §AQUA" + BuildSettings.version + " (API: " + StreamlineAPI.getApiVersion() + ")");
+        StreamlineCloud.log("-> Build: §AQUA" + MainBuildConfig.BUILD_NUMBER + " (" + MainBuildConfig.BUILD_DATE + ")");
         StreamlineCloud.log("");
-        StreamlineCloud.log("StreamlineCloud-MC");
-        StreamlineCloud.log("-> PluginVersion: §AQUA" + Cache.i().getPluginVersion());
-        StreamlineCloud.log("-> PluginApiVersion: §AQUA" + Cache.i().getPluginApiVersion());
-        StreamlineCloud.log("-> PluginBuildDate: §AQUA" + Cache.i().getPluginBuildDate());
-        StreamlineCloud.log("");
-        StreamlineCloud.log("-> API-Status: " + status);
         StreamlineCloud.log("Developed by: §AQUA" + BuildSettings.authors);
         StreamlineCloud.log("");
 
