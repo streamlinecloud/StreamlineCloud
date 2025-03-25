@@ -66,6 +66,7 @@ public class CloudServer extends StreamlineServer {
         setPort(StreamlineCloud.generateUniquePort());
 
         if (!isStaticServer()) {
+
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
                     new ReplacePaket("%1", getName() + "-" + getUuid()),
                     new ReplacePaket("%2", "temp/" + getName())
@@ -184,6 +185,15 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
+        System.out.println("pl");
+
+        if (!deployPlugin()) {
+            StreamlineCloud.logError("Failed to deploy plugin: " + file.getAbsolutePath());
+            return;
+        }
+
+        System.out.println("p2l");
+
         ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
         File finalFile = file;
         Runnable runnable = () -> {
@@ -248,6 +258,18 @@ public class CloudServer extends StreamlineServer {
 
         scheduler1.scheduleWithFixedDelay(runnable, 3, 3, TimeUnit.SECONDS);
 
+    }
+
+    public boolean deployPlugin() {
+        String pluginFileName = "streamlinecloud_MC-alpha-1.0.0";
+        try {
+            new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins").mkdirs();
+            Files.copy(Utils.getResourceFile(pluginFileName, "").toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
     public void addCommand(String command) {

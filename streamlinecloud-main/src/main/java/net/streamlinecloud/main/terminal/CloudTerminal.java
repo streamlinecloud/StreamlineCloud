@@ -16,6 +16,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class CloudTerminal {
 
+    @Getter
     private final Terminal terminal;
     @Getter
     private final LineReader lineReader;

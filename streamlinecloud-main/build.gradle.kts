@@ -101,6 +101,7 @@ tasks {
 
 tasks.register("Make Main Project") {
     dependsOn("generateBuildConfig")
+
     group = "StreamlineCloud"
 
     val bdir = project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-main")

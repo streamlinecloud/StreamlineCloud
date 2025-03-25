@@ -53,6 +53,7 @@ public class Cache {
     public boolean useLgecyColor = false;
     public Javalin backend;
     public final HashMap<String, RconData> rconDetails = new HashMap<>();
+    public static int currentAnimationLine = 1;
 
     public static Cache i() {
         return i;

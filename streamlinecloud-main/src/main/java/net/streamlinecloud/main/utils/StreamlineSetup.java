@@ -85,25 +85,8 @@ public class StreamlineSetup {
     }
 
     private void finishSetup() {
-        copyStreamlineMc();
         StreamlineCloud.log("sl.setup.finished");
         StreamlineCloud.shutDown();
     }
 
-    private void copyStreamlineMc() {
-
-        try {
-
-            new File("templates/default/server/plugins").mkdirs();
-            new File("templates/default/proxy/plugins").mkdirs();
-
-            Files.copy(new File(Cache.i().homeFile + "/streamlinecloud-mc.jar").toPath(),
-                    new File(Cache.i().homeFile + "/templates/default/server/plugins/streamlinecloud-mc.jar").toPath());
-            Files.copy(new File(Cache.i().homeFile + "/streamlinecloud-mc.jar").toPath(),
-                    new File(Cache.i().homeFile + "/templates/default/proxy/plugins/streamlinecloud-mc.jar").toPath());
-        } catch (Exception e) {
-            Cache.i().getDataCache().add("streamlinecloud-mc-copy-failed");
-        }
-
-    }
 }
