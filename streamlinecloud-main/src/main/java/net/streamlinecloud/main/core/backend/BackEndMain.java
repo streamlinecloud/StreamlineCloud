@@ -20,7 +20,6 @@ public class BackEndMain {
         Cache.i().setBackend(Javalin.create());
 
         //Load Rest Classes
-
         new BeforeRestController();
         new PingRestController();
         new ServerCountRestController();
