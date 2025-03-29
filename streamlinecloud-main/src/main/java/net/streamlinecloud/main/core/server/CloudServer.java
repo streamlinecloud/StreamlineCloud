@@ -185,20 +185,14 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
-        System.out.println("pl");
-
         if (!deployPlugin()) {
             StreamlineCloud.logError("Failed to deploy plugin: " + file.getAbsolutePath());
             return;
         }
 
-        System.out.println("p2l");
-
         ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
         File finalFile = file;
         Runnable runnable = () -> {
-
-
 
             //StartServer
             AtomicInteger execcode = new AtomicInteger(-1);

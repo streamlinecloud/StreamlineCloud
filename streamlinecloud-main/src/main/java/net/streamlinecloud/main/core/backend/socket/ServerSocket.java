@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.websocket.WsContext;
 import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.core.server.CloudServerSerializer;
@@ -45,7 +46,7 @@ public class ServerSocket {
 
                 try {
                     Gson gson = new GsonBuilder()
-                            .registerTypeAdapter(CloudServer.class, new CloudServerSerializer())
+                            .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
                             .create();
 
                     ctx.send(gson.toJson(StreamlineCloud.getServerByName(ctx.message())));

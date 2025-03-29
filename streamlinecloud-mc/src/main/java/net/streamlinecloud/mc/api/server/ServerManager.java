@@ -33,14 +33,11 @@ public class ServerManager {
     private static ServerManager instance;
 
     @Getter
-    List<StreamlineServer> onlineServers = new ArrayList<>();
-
-    @Getter
-    HashMap<UUID, Instant> updatedServers = new HashMap<>();
+    private List<StreamlineServer> subscribedServers = new ArrayList<>();
 
     Session session;
 
-    private static class WebSocketListener implements WebSocket.Listener {
+    private class WebSocketListener implements WebSocket.Listener {
 
         @Override
         public void onOpen(WebSocket webSocket) {
@@ -52,6 +49,13 @@ public class ServerManager {
         public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
             System.out.println("Server: " + data);
             webSocket.request(1);
+
+            if (data.toString().equals("heartbeat")) return null;
+
+            StreamlineServer server = new Gson().fromJson(data.toString(), StreamlineServer.class);
+            subscribedServers.removeIf(subscribedServer -> subscribedServer.getUuid().equals(server.getUuid()));
+            subscribedServers.add(server);
+
             return null;
         }
 
@@ -81,7 +85,7 @@ public class ServerManager {
 
     public void subscribe(StreamlineServer server) {
         try {
-            session.getBasicRemote().sendText(server.getUuid());
+            session.getBasicRemote().sendText(server.getName());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -126,6 +130,6 @@ public class ServerManager {
     }
 
     public StreamlineServer getServer(String name) {
-        return null;
+        return new Gson().fromJson(Functions.get("get/serverdata/name/" + name), StreamlineServer.class);
     }
 }

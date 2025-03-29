@@ -24,6 +24,20 @@ public class GetServerdataRestController {
                 ctx.status(601);
             }
         });
+
+        Cache.i().getBackend().get(mainPath + "get/serverdata/name/{name}", ctx -> {
+            String name = ctx.pathParam("name");
+            CloudServer server = StreamlineCloud.getServerByName(name);
+
+            if (server != null) {
+                StreamlineServer streamlineServer = server;
+                ctx.result(new Gson().toJson(streamlineServer, StreamlineServer.class));
+                ctx.status(200);
+            } else {
+                ctx.result("serverNotFound");
+                ctx.status(601);
+            }
+        });
     }
 
 }
