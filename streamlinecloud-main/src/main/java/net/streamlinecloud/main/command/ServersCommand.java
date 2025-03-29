@@ -50,8 +50,11 @@ public class ServersCommand extends CloudCommand {
                                 }
 
                                 break;
-                            case "kill":
+                            case "stop":
+                                server.stop();
 
+                            case "kill":
+                                server.disableScreen();
                                 server.kill();
 
                                 break;

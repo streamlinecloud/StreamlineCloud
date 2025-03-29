@@ -334,21 +334,7 @@ public class StreamlineCloud {
             }
         }
 
-        servers = null;
-
         log("sl.thanksForUsing");
-
-        if (Cache.i().isFirstLaunch()) {
-            logSingle("");
-            logSingle(readyBanner());
-            logSingle("");
-            logIntern("sl.ready", new ReplacePaket[]{}, false);
-            logSingle("");
-
-            if (Cache.i().getDataCache().contains("streamlinecloud-mc-copy-failed")) {
-                StreamlineCloud.log("sl.streamline-mc-copy.failed");
-            }
-        }
 
         CloudMain.getInstance().getTerminal().close();
 
