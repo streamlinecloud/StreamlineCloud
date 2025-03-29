@@ -9,8 +9,6 @@ import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.utils.Cache;
 
-import javax.websocket.Session;
-
 import static net.streamlinecloud.main.core.backend.BackEndMain.mainPath;
 
 public class ServerUpdateDataRestController {

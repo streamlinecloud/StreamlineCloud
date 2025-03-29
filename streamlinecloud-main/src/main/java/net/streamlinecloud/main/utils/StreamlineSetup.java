@@ -10,7 +10,10 @@ import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Random;
 
 public class StreamlineSetup {
 
@@ -67,11 +70,18 @@ public class StreamlineSetup {
                             StreamlineCloud.log("sl.setup.groupsGenerated");
                             StreamlineCloud.log("sl.setup.downloading");
 
-                            StreamlineCloud.download("https://api.papermc.io/v2/projects/waterfall/versions/1.20/builds/560/downloads/waterfall-1.20-560.jar", "default/proxy", proxySuccess ->  {
+                            StreamlineCloud.download("https://api.papermc.io/v2/projects/velocity/versions/3.4.0-SNAPSHOT/builds/483/downloads/velocity-3.4.0-SNAPSHOT-483.jar", "default/proxy", proxySuccess ->  {
                                 StreamlineCloud.download("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar", "default/server", lobbySuccess -> {
                                     finishSetup();
                                 });
                             });
+
+                            try {
+                                Files.copy(Utils.getResourceFile("velocity/velocity.toml", "").toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
+                                Files.writeString(Path.of(Cache.i().homeFile + "/templates/default/proxy/forwarding.secret"), new Random().nextInt(999999999) + "", StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
 
                         } else {
                             finishSetup();

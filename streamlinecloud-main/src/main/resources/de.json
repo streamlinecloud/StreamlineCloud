@@ -6,7 +6,7 @@
   "sl.setup.enterJavaPath": "Bitte gebe den Pfad zu deiner Java Installation ein",
   "sl.setup.generateGroups": "Sollen standart Gruppen erstellt werden?",
   "sl.setup.groupsGenerated": "Die Stardart-Gruppen (lobby & proxy) wurden erstellt",
-  "sl.setup.downloading": "Die Datein füt Paper und Waterfall für die Minecraft Version 1.20.2 werden heruntergeladen...",
+  "sl.setup.downloading": "Die Datein füt Paper und Velocity für die Minecraft Version 1.20.2 werden heruntergeladen...",
   "sl.setup.downloadFailed": "§IMPORTANTDer Download ist fehlgeschlagen!",
   "sl.setup.finished": "Setup fetig. Starte neu...",
   "sl.streamline-mc-copy.failed": "§REDACHTUNG: Die datei streamlinecloud-mc.jar konnte nicht gefunden werden. Stelle sicher das du streamlinecloud-mc in templates/default/server/plugins und templates/default/proxy/plugins einfügst",
