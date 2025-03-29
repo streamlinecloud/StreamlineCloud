@@ -32,6 +32,9 @@ dependencies {
 
     implementation("commons-io:commons-io:2.16.1")
 
+    implementation("javax.websocket:javax.websocket-api:1.1")
+    implementation("org.glassfish.tyrus:tyrus-client:1.17")
+
     implementation("org.jetbrains:annotations:24.0.0")
     implementation(project(":streamlinecloud-api"))
     compileOnly("org.projectlombok:lombok:1.18.32")

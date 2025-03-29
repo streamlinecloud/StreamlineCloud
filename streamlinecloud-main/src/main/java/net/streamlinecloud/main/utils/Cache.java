@@ -3,8 +3,11 @@ package net.streamlinecloud.main.utils;
 
 import com.google.gson.Gson;
 import io.javalin.Javalin;
+import io.javalin.websocket.WsContext;
 import io.streamlinemc.api.RestUtils.RconData;
+import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.main.core.backend.remoteLogic.WSClient;
+import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
 import net.streamlinecloud.main.plugin.PluginManager;
@@ -13,6 +16,7 @@ import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.websocket.Session;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +58,7 @@ public class Cache {
     public Javalin backend;
     public final HashMap<String, RconData> rconDetails = new HashMap<>();
     public static int currentAnimationLine = 1;
+    public static ServerSocket serverSocket;
 
     public static Cache i() {
         return i;
