@@ -29,6 +29,9 @@ public class ServerManager {
     @Getter
     private List<StreamlineServer> subscribedServers = new ArrayList<>();
 
+    @Getter
+    private List<String> subscribedStartingServers = new ArrayList<>();
+
     WebSocket socket;
 
     private class WebSocketListener implements WebSocket.Listener {
@@ -98,6 +101,9 @@ public class ServerManager {
     }
 
     public void subscribeToStartingServers(String groupName) {
+        if (subscribedStartingServers.contains(groupName)) return;
+
+        subscribedStartingServers.add(groupName);
         socket.sendText("subscribe:starting:" + groupName, true);
     }
 
