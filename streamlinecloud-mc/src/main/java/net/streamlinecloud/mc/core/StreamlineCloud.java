@@ -1,9 +1,9 @@
-package net.streamlinecloud.mc.api;
+package net.streamlinecloud.mc.core;
 
 import net.streamlinecloud.api.server.ServerRuntime;
-import net.streamlinecloud.mc.api.group.GroupManager;
-import net.streamlinecloud.mc.api.player.PlayerManager;
-import net.streamlinecloud.mc.api.server.ServerManager;
+import net.streamlinecloud.mc.core.group.GroupManager;
+import net.streamlinecloud.mc.core.player.PlayerManager;
+import net.streamlinecloud.mc.core.server.ServerManager;
 import net.streamlinecloud.mc.utils.StaticCache;
 import lombok.Getter;
 

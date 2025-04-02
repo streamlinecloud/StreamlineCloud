@@ -1,6 +1,11 @@
 package net.streamlinecloud.main.core.backend.RestController.post;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerState;
+import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.lang.ReplacePaket;
@@ -23,6 +28,18 @@ public class ServerHelloWorldRestController {
 
             StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", ser.getName() + "-" + ser.getUuid())});
             ser.setServerState(ServerState.ONLINE);
+
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
+                    .create();
+
+            for (String session : Cache.serverSocket.subscribedStartingServers.keySet()) {
+                for (StreamlineGroup group : Cache.serverSocket.subscribedStartingServers.get(session)) {
+                    if (group.getName().equals(ser.getGroup())) {
+                        Cache.serverSocket.sessionMap.get(session).send(gson.toJson(ser));
+                    }
+                }
+            }
 
             ctx.status(201);
 

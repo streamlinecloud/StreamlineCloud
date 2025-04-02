@@ -1,7 +1,6 @@
 package net.streamlinecloud.mc.command.spigot;
 
-import net.streamlinecloud.api.server.StreamlineServer;
-import net.streamlinecloud.mc.api.server.ServerManager;
+import net.streamlinecloud.mc.core.server.ServerManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

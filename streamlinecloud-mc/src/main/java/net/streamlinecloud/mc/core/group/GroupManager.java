@@ -1,4 +1,4 @@
-package net.streamlinecloud.mc.api.group;
+package net.streamlinecloud.mc.core.group;
 
 import com.google.gson.Gson;
 import net.streamlinecloud.api.group.StreamlineGroup;

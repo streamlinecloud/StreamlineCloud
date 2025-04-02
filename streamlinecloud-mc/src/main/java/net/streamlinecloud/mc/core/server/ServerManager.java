@@ -1,27 +1,21 @@
-package net.streamlinecloud.mc.api.server;
+package net.streamlinecloud.mc.core.server;
 
 import com.google.gson.Gson;
-import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
-import net.streamlinecloud.mc.api.group.GroupManager;
-import net.streamlinecloud.mc.api.player.PlayerManager;
+import net.streamlinecloud.mc.core.event.ServerDataReceivedEvent;
+import net.streamlinecloud.mc.core.event.ServerDataUpdateEvent;
+import net.streamlinecloud.mc.core.player.PlayerManager;
 import net.streamlinecloud.mc.utils.Functions;
 import net.streamlinecloud.mc.utils.StaticCache;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.jetbrains.annotations.ApiStatus;
 
 import javax.websocket.*;
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
@@ -35,7 +29,7 @@ public class ServerManager {
     @Getter
     private List<StreamlineServer> subscribedServers = new ArrayList<>();
 
-    Session session;
+    WebSocket socket;
 
     private class WebSocketListener implements WebSocket.Listener {
 
@@ -51,9 +45,20 @@ public class ServerManager {
             webSocket.request(1);
 
             if (data.toString().equals("heartbeat")) return null;
+            if (data.toString().equals("success")) return null;
 
             StreamlineServer server = new Gson().fromJson(data.toString(), StreamlineServer.class);
-            subscribedServers.removeIf(subscribedServer -> subscribedServer.getUuid().equals(server.getUuid()));
+
+            if (subscribedServers.removeIf(subscribedServer -> subscribedServer.getUuid().equals(server.getUuid()))) {
+                ServerDataUpdateEvent event = new ServerDataUpdateEvent(server);
+                Bukkit.getPluginManager().callEvent(event);
+
+            } else {
+                ServerDataReceivedEvent event = new ServerDataReceivedEvent(server);
+                Bukkit.getPluginManager().callEvent(event);
+
+            }
+
             subscribedServers.add(server);
 
             return null;
@@ -78,17 +83,22 @@ public class ServerManager {
         WebSocket webSocket = client.newWebSocketBuilder()
                 .buildAsync(URI.create("ws://localhost:5378/socket/server"), new WebSocketListener())
                 .join();
-        webSocket.sendText("proxy-1", true);
+        webSocket.sendText("subscribe:server:proxy-1", true);
 
+        this.socket = webSocket;
         uploadServerInfo();
     }
 
     public void subscribe(StreamlineServer server) {
-        try {
-            session.getBasicRemote().sendText(server.getName());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        for (StreamlineServer subscribedServer : subscribedServers) {
+            if (subscribedServer.getUuid().equals(server.getUuid())) return;
         }
+
+        socket.sendText("subscribe:server:" + server.getName(), true);
+    }
+
+    public void subscribeToStartingServers(String groupName) {
+        socket.sendText("subscribe:starting:" + groupName, true);
     }
 
     public void uploadServerInfo() {
@@ -126,10 +136,18 @@ public class ServerManager {
     }*/
 
     public StreamlineServer getServer(UUID uuid) {
+        for (StreamlineServer s : subscribedServers) {
+            if (s != null) if (s.getUuid().equals(uuid.toString())) return s;
+        }
+
         return new Gson().fromJson(Functions.get("get/serverdata/" + uuid.toString()), StreamlineServer.class);
     }
 
     public StreamlineServer getServer(String name) {
+        for (StreamlineServer s : subscribedServers) {
+            if (s.getName().equals(name)) return s;
+        }
+
         return new Gson().fromJson(Functions.get("get/serverdata/name/" + name), StreamlineServer.class);
     }
 }

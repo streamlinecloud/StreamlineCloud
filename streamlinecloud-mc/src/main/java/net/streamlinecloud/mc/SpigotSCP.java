@@ -2,8 +2,7 @@ package net.streamlinecloud.mc;
 
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
-import net.streamlinecloud.mc.api.StreamlineCloud;
-import net.streamlinecloud.mc.api.server.ServerManager;
+import net.streamlinecloud.mc.core.StreamlineCloud;
 import net.streamlinecloud.mc.command.spigot.ConnectCommand;
 import net.streamlinecloud.mc.command.spigot.ServerInfoCommand;
 import net.streamlinecloud.mc.command.spigot.StreamlineCommand;

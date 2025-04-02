@@ -1,8 +1,8 @@
 package net.streamlinecloud.mc.listener.spigot;
 
-import net.streamlinecloud.mc.api.player.CloudPlayer;
-import net.streamlinecloud.mc.api.player.PlayerManager;
-import net.streamlinecloud.mc.api.server.ServerManager;
+import net.streamlinecloud.mc.core.player.CloudPlayer;
+import net.streamlinecloud.mc.core.player.PlayerManager;
+import net.streamlinecloud.mc.core.server.ServerManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

@@ -3,6 +3,7 @@ package net.streamlinecloud.main.core.backend.socket;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.websocket.WsContext;
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerSocket {
 
     public HashMap<String, List<StreamlineServer>> servers = new HashMap<>();
+    public HashMap<String, List<StreamlineGroup>> subscribedStartingServers = new HashMap<>();
     public Map<String, WsContext> sessionMap = new ConcurrentHashMap<>();
 
     public ServerSocket() {
@@ -35,25 +37,39 @@ public class ServerSocket {
                 sessionMap.put(ctx.sessionId(), ctx);
 
                 servers.put(ctx.sessionId(), new ArrayList<>());
+                subscribedStartingServers.put(ctx.sessionId(), new ArrayList<>());
 
             });
             ws.onMessage(ctx -> {
                 System.out.println("Received from " + ctx.sessionId() + ": " + ctx.message());
 
-                List<StreamlineServer> s = servers.get(ctx.sessionId());
-                s.add(StreamlineCloud.getServerByName(ctx.message()));
-                servers.replace(ctx.sessionId(), s);
+                // subscribe:server:{serverName}
+                // subscribe:starting:{groupName}
 
-                try {
-                    Gson gson = new GsonBuilder()
-                            .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
-                            .create();
+                if (ctx.message().startsWith("subscribe")) {
 
-                    ctx.send(gson.toJson(StreamlineCloud.getServerByName(ctx.message())));
-                    return;
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    if (ctx.message().split(":")[1].equals("server")) {
+
+                        List<StreamlineServer> s = servers.get(ctx.sessionId());
+                        s.add(StreamlineCloud.getServerByName(ctx.message().split(":")[2]));
+                        servers.replace(ctx.sessionId(), s);
+
+                        ctx.send("success");
+                        return;
+
+                    } else if (ctx.message().split(":")[1].equals("starting")) {
+
+                        List<StreamlineGroup> s = subscribedStartingServers.get(ctx.sessionId());
+                        s.add(StreamlineCloud.getGroupByName(ctx.message().split(":")[2]));
+                        subscribedStartingServers.replace(ctx.sessionId(), s);
+
+                        ctx.send("success");
+                        return;
+
+                    }
+
                 }
+
 
                 ctx.send("Something went wrong");
 

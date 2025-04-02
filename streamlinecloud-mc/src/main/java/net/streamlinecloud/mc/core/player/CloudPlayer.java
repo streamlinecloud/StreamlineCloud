@@ -1,4 +1,4 @@
-package net.streamlinecloud.mc.api.player;
+package net.streamlinecloud.mc.core.player;
 
 import lombok.Getter;
 import org.bukkit.entity.Player;

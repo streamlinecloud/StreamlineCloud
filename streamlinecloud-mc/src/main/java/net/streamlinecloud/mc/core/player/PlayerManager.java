@@ -1,4 +1,4 @@
-package net.streamlinecloud.mc.api.player;
+package net.streamlinecloud.mc.core.player;
 
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.SpigotSCP;
