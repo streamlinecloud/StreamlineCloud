@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.SpigotSCP;
+import net.streamlinecloud.mc.core.StreamlineCloud;
 import net.streamlinecloud.mc.core.event.ServerDataReceivedEvent;
 import net.streamlinecloud.mc.core.event.ServerDataUpdateEvent;
 import net.streamlinecloud.mc.core.player.PlayerManager;
@@ -91,7 +92,7 @@ public class ServerManager {
 
         HttpClient client = HttpClient.newHttpClient();
         WebSocket webSocket = client.newWebSocketBuilder()
-                .buildAsync(URI.create("ws://localhost:5378/socket/server"), new WebSocketListener())
+                .buildAsync(URI.create("ws://localhost:5378/socket/server?key=" + StaticCache.accessKey), new WebSocketListener())
                 .join();
         webSocket.sendText("subscribe:server:proxy-1", true);
 

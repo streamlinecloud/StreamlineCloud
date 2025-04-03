@@ -11,10 +11,7 @@ import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.core.server.CloudServerSerializer;
 import net.streamlinecloud.main.utils.Cache;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,6 +31,13 @@ public class ServerSocket {
         Cache.i().backend.ws("/socket/server", ws -> {
             ws.onConnect(ctx -> {
                 System.out.println("Session opened, id: " + ctx.sessionId());
+
+                if (!Objects.equals(ctx.queryParam("key"), Cache.i().apiKey)) {
+                    ctx.send("403");
+                    ctx.closeSession();
+                    return;
+                }
+
                 sessionMap.put(ctx.sessionId(), ctx);
 
                 servers.put(ctx.sessionId(), new ArrayList<>());
