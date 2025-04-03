@@ -3,6 +3,7 @@ package net.streamlinecloud.mc.core.server;
 import com.google.gson.Gson;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.mc.SpigotSCP;
 import net.streamlinecloud.mc.core.event.ServerDataReceivedEvent;
 import net.streamlinecloud.mc.core.event.ServerDataUpdateEvent;
 import net.streamlinecloud.mc.core.player.PlayerManager;
@@ -53,16 +54,22 @@ public class ServerManager {
             StreamlineServer server = new Gson().fromJson(data.toString(), StreamlineServer.class);
 
             if (subscribedServers.removeIf(subscribedServer -> subscribedServer.getUuid().equals(server.getUuid()))) {
-                ServerDataUpdateEvent event = new ServerDataUpdateEvent(server);
-                Bukkit.getPluginManager().callEvent(event);
+                Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
+                    subscribedServers.add(server);
+
+                    ServerDataUpdateEvent event = new ServerDataUpdateEvent(server);
+                    Bukkit.getPluginManager().callEvent(event);
+                });
 
             } else {
-                ServerDataReceivedEvent event = new ServerDataReceivedEvent(server);
-                Bukkit.getPluginManager().callEvent(event);
+                Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
+                    subscribe(server);
+
+                    ServerDataReceivedEvent event = new ServerDataReceivedEvent(server);
+                    Bukkit.getPluginManager().callEvent(event);
+                });
 
             }
-
-            subscribedServers.add(server);
 
             return null;
         }
@@ -97,7 +104,14 @@ public class ServerManager {
             if (subscribedServer.getUuid().equals(server.getUuid())) return;
         }
 
+        subscribedServers.add(server);
         socket.sendText("subscribe:server:" + server.getName(), true);
+
+        System.out.println("STACK TRACE FOR SERVER SUBSCRIBED: " + server.getName());
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (StackTraceElement element : stackTrace) {
+            System.out.println(element.getClassName());
+        }
     }
 
     public void subscribeToStartingServers(String groupName) {

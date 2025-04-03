@@ -8,6 +8,7 @@ import net.streamlinecloud.mc.command.spigot.ServerInfoCommand;
 import net.streamlinecloud.mc.command.spigot.StreamlineCommand;
 import net.streamlinecloud.mc.command.spigot.TestCommand;
 import net.streamlinecloud.mc.listener.spigot.ConnectionListener;
+import net.streamlinecloud.mc.listener.spigot.ServerLoadListener;
 import net.streamlinecloud.mc.utils.Functions;
 import net.streamlinecloud.mc.utils.StaticCache;
 import lombok.Getter;
@@ -55,6 +56,7 @@ public final class SpigotSCP extends JavaPlugin {
     private void registerEvents() {
         PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new ConnectionListener(), this);
+        manager.registerEvents(new ServerLoadListener(), this);
     }
 
     public StaticServerDataPacket getServerData() {

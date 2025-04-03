@@ -29,18 +29,6 @@ public class ServerHelloWorldRestController {
             StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", ser.getName() + "-" + ser.getUuid())});
             ser.setServerState(ServerState.ONLINE);
 
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
-                    .create();
-
-            for (String session : Cache.serverSocket.subscribedStartingServers.keySet()) {
-                for (StreamlineGroup group : Cache.serverSocket.subscribedStartingServers.get(session)) {
-                    if (group.getName().equals(ser.getGroup())) {
-                        Cache.serverSocket.sessionMap.get(session).send(gson.toJson(ser));
-                    }
-                }
-            }
-
             ctx.status(201);
 
         });

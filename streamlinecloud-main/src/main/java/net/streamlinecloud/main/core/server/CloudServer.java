@@ -1,11 +1,15 @@
 package net.streamlinecloud.main.core.server;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.streamlinemc.api.RestUtils.RconData;
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.plugin.event.predefined.*;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.ReplacePaket;
@@ -76,6 +80,18 @@ public class CloudServer extends StreamlineServer {
                     new ReplacePaket("%1", getName()),
                     new ReplacePaket("%2", "staticservers/" + getName())
             });
+        }
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
+                .create();
+
+        for (String session : Cache.serverSocket.subscribedStartingServers.keySet()) {
+            for (StreamlineGroup group : Cache.serverSocket.subscribedStartingServers.get(session)) {
+                if (group.getName().equals(getGroup())) {
+                    Cache.serverSocket.sessionMap.get(session).send(gson.toJson(this));
+                }
+            }
         }
 
         ServerTemplate template;

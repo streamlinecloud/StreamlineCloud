@@ -27,6 +27,8 @@ public class ServerUpdateDataRestController {
                 return;
             }
 
+            System.out.println("UPDATE FROM SERVER: " + s.getName() + " (" + new Gson().toJson(s) + ")");
+
             cs.setOnlinePlayers(s.getOnlinePlayers());
             cs.setServerState(s.getServerState());
             cs.setServerUseState(s.getServerUseState());
