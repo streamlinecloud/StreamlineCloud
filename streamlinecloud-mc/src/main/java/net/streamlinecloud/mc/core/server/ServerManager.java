@@ -106,12 +106,6 @@ public class ServerManager {
 
         subscribedServers.add(server);
         socket.sendText("subscribe:server:" + server.getName(), true);
-
-        System.out.println("STACK TRACE FOR SERVER SUBSCRIBED: " + server.getName());
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        for (StackTraceElement element : stackTrace) {
-            System.out.println(element.getClassName());
-        }
     }
 
     public void subscribeToStartingServers(String groupName) {
