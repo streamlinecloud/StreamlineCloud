@@ -30,7 +30,6 @@ public class ServerSocket {
 
         Cache.i().backend.ws("/socket/server", ws -> {
             ws.onConnect(ctx -> {
-                System.out.println("Session opened, id: " + ctx.sessionId());
 
                 if (!Objects.equals(ctx.queryParam("key"), Cache.i().apiKey)) {
                     ctx.send("403");
@@ -45,7 +44,6 @@ public class ServerSocket {
 
             });
             ws.onMessage(ctx -> {
-                System.out.println("Received from " + ctx.sessionId() + ": " + ctx.message());
 
                 // subscribe:server:{serverName}
                 // subscribe:starting:{groupName}
@@ -79,7 +77,6 @@ public class ServerSocket {
 
             });
             ws.onClose(ctx -> {
-                System.out.println("Session closed, id: " + ctx.sessionId());
                 servers.remove(ctx.sessionId());
                 sessionMap.remove(ctx.sessionId());
 

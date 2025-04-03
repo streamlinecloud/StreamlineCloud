@@ -40,13 +40,11 @@ public class ServerManager {
 
         @Override
         public void onOpen(WebSocket webSocket) {
-            System.out.println("Connected!");
             webSocket.request(1);
         }
 
         @Override
         public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
-            System.out.println("Server: " + data);
             webSocket.request(1);
 
             if (data.toString().equals("heartbeat")) return null;
@@ -77,12 +75,12 @@ public class ServerManager {
 
         @Override
         public void onError(WebSocket webSocket, Throwable error) {
-            System.err.println("Error: " + error.getMessage());
+            SpigotSCP.getInstance().getLogger().warning("Error: " + error.getMessage());
         }
 
         @Override
         public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
-            System.out.println("Connection closed: " + reason);
+            SpigotSCP.getInstance().getLogger().info("Connection closed: " + reason);
             return null;
         }
     }
