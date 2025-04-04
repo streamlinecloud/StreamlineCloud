@@ -1,5 +1,53 @@
 {
   "lang.name": "English",
-  "lang.author": "John Doe",
-  "lang.welcome": "Lang set to English"
+  "lang.author": "Quinilo, creperozelot",
+  "lang.welcome": "The language was changed to English",
+
+  "sl.setup.enterJavaPath": "Please enter the path to your Java installation",
+  "sl.setup.generateGroups": "Should we generate a default setup so you are ready to go?",
+  "sl.setup.groupsGenerated": "The groups Lobby and Proxy were created",
+  "sl.setup.downloading": "Downloading the Paper and Velocity servers for Minecraft 1.20.2...",
+  "sl.setup.downloadFailed": "§IMPORTANTDer Download ist fehlgeschlagen!",
+  "sl.setup.finished": "Setup finished. Restarting...",
+  "sl.ready": "§RED-> The setup was finished and §GREENStreamlineCloud is ready. §REDJust restart the cloud!",
+
+  "sl.startup.startingServers": "Starting all servers...",
+  "sl.startup.serversStarted": "§GREENAll servers are online!",
+
+  "sl.backend.started": "The §AQUABackend §RED is now online",
+
+  "sl.server.preparing": "Preparing %1",
+  "sl.server.starting": "Starting %1 at %2",
+  "sl.server.jarNotFound": "§DARK_RED The server %0 could not find a server.jar file. The group %1 wont start any new servers until StreamlineCloud has been restarted!",
+  "sl.server.online": "%1 is online",
+  "sl.server.screen.enabled": "Screen from %1 opened",
+  "sl.server.screen.disabled": "Screen from %1 closed",
+  "sl.server.killing": "Deleting %1...",
+  "sl.server.deleted": "%1 deleted",
+
+  "sl.group.downloadFinished": "Download successful",
+  "sl.group.downloadFailed": "Download failed",
+
+  "sl.command.groups.notFound": "The group %1 does not exist :/",
+  "sl.command.groups.enterGroup": "Please enter a group",
+  "sl.command.groups.crate.enterValidRuntime": "Please enter a valid type (server/proxy)",
+  "sl.command.groups.create.cantSave": "Failed to save group: %1",
+  "sl.command.groups.create.created": "Group %1 created",
+  "sl.command.groups.delete.deleted": "Group %1 deleted",
+  "sl.command.groups.list.title": "Groups:",
+  "sl.command.groups.templateAdded": "Template %0 added to %1",
+  "sl.command.groups.list.templates.empty": "This group has no templates",
+  "sl.command.groups.list.templates.title": "Templates from %0",
+  "sl.command.servers.serverNotFound": "Server not found :/",
+  "sl.command.servers.enterServerName": "Please enter a server name",
+  "sl.command.servers.command.enterCommand": "Please enter a command",
+  "sl.command.multiRoot.generate": "",
+
+  "sl.error.title": "§IMPORTANTAn error occurred: §RED%0",
+  "sl.error.details": "Visit §GREENdata/error/%0 §REDfor more details!",
+  "sl.error.again": "§IMPORTANTThe error §RED%0 §IMPORTANT appeared again :(",
+
+  "sl.shutdown.shuttingDown": "Stopping StreamlineCloud...",
+
+  "sl.thanksForUsing": "Thanks for using StreamlineCloud!"
 }
