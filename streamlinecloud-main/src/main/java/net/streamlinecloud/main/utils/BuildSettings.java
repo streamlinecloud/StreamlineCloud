@@ -5,7 +5,7 @@ import net.streamlinecloud.main.utils.MainBuildConfig;
 public class BuildSettings {
 
     public static String name = "StreamlineCloud";
-    public static String version = "BETA_0.2";
+    public static String version = "BETA_0.3";
     public static String authors = "Quinilo, creperozelot";
     public static String website = "https://streamlinecloud.net";
     public static boolean testBuild = false;
