@@ -25,7 +25,7 @@ public class ServerSocket {
 
     public ServerSocket() {
         ScheduledExecutorService heartbeatExecutor = Executors.newSingleThreadScheduledExecutor();
-        heartbeatExecutor.scheduleAtFixedRate(createHeartbeatRunnable(), 0, 30, TimeUnit.SECONDS);
+        heartbeatExecutor.scheduleAtFixedRate(createHeartbeatRunnable(), 0, 20, TimeUnit.SECONDS);
 
 
         Cache.i().backend.ws("/socket/server", ws -> {
@@ -82,7 +82,7 @@ public class ServerSocket {
 
             });
             ws.onError(ctx -> {
-                System.out.println("Error: " + ctx.error());
+                StreamlineCloud.log("CRITICAL: Socket connection error from " + ctx.sessionId() + " - " + ctx.error() );
             });
         });
     }

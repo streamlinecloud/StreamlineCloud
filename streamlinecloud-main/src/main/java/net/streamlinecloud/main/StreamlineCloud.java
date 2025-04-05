@@ -315,7 +315,6 @@ public class StreamlineCloud {
 
         for (CloudServer server : servers) {
             if (server.getThread() != null) {
-                StreamlineCloud.log("sl.server.killing", new ReplacePaket[]{new ReplacePaket("%1", server.getName())});
                 server.kill();
             }
         }

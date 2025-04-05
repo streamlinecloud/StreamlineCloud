@@ -210,9 +210,6 @@ public class CloudServer extends StreamlineServer {
         File finalFile = file;
         Runnable runnable = () -> {
 
-            //StartServer
-            AtomicInteger execcode = new AtomicInteger(-1);
-
             Thread jarThread = new Thread(() -> {
                 try {
                     ProcessBuilder processBuilder = new ProcessBuilder(javaExec.getAbsolutePath(), "-jar", finalFile + "/server.jar");
@@ -257,7 +254,7 @@ public class CloudServer extends StreamlineServer {
                     if (getServerState().equals(ServerState.STOPPING)) process.waitFor();
 
                 } catch (Exception e) {
-                    StreamlineCloud.printError("Failed to start server", e);
+                    if (!getServerState().equals(ServerState.STOPPING)) StreamlineCloud.printError("Failed to start server", e);
                 } finally {
                     task();
                 }
@@ -356,7 +353,7 @@ public class CloudServer extends StreamlineServer {
         if (isOutput()) disableScreen();
 
         if (process != null) {
-            process.destroy();
+            process.destroyForcibly();
         }
         delete();
     }
@@ -394,7 +391,7 @@ public class CloudServer extends StreamlineServer {
             //CloudMain.getInstance().getTerminal().getRunner().run();
 
         } catch (IOException e) {
-            System.out.println("Error executing command: " + e.getMessage());
+            StreamlineCloud.log("Error executing command: " + e.getMessage());
         }
     }
 

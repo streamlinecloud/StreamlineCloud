@@ -93,7 +93,6 @@ public class Functions {
     public static void startup() {
         try {
             StaticCache.plFolder = new File(System.getProperty("user.dir"));
-            System.out.println(StaticCache.plFolder);
             File key = new File(StaticCache.plFolder.getAbsolutePath() + "/.apikey.json");
 
             String keyString = FileUtils.readFileToString(key, Charset.defaultCharset());
@@ -102,8 +101,6 @@ public class Functions {
             StaticCache.serverData = new Gson().fromJson(keyString.split(",_,")[1], StaticServerDataPacket.class);
 
             FileUtils.forceDelete(key);
-
-            System.out.println("DEBUG PORT: " + StaticCache.serverData.getPort());
 
             post(StaticCache.serverData.getUuid(), "post/server/hello-world");
         } catch (Exception e) {

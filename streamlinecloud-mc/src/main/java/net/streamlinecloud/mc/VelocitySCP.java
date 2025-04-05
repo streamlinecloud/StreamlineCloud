@@ -45,8 +45,6 @@ public class VelocitySCP {
     public VelocitySCP(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
         this.proxy = proxy;
         this.logger = getLogger();
-
-        System.out.println("DEBUG: Plugin enabled");
         //proxy.getConfiguration().get
 
         this.onLoad();
@@ -109,11 +107,9 @@ public class VelocitySCP {
     }
 
     public void onEnable() {
-        System.out.println("DEBUG: Plugin enabled");
     }
 
     public void onDisable() {
-        System.out.println("DEBUG: Plugin disabled");
     }
 
     public void registerServer(String serverName, String hostname, int port) {
