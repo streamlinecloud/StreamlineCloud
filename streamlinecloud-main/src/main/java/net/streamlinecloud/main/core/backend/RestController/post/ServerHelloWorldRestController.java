@@ -26,7 +26,7 @@ public class ServerHelloWorldRestController {
                 return;
             }
 
-            StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", ser.getName() + "-" + ser.getUuid())});
+            StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", ser.getName() + "-" + ser.getShortUuid())});
             ser.setServerState(ServerState.ONLINE);
 
             ctx.status(201);

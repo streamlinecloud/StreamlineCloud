@@ -88,7 +88,6 @@ public class StreamlineConfig {
         String firstLine = reader.readLine();
         reader.close();
         Cache.i().setApiKey(firstLine);
-        StreamlineCloud.log("ApiKey: " + firstLine);
 
         Cache.i().setDisabledColors(Cache.i().getConfig().disableColors);
         Cache.i().setUseLgecyColor(Cache.i().getConfig().useLegacyColor);

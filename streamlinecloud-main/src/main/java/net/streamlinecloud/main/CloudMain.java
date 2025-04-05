@@ -95,8 +95,6 @@ public class CloudMain {
         Cache.i().getPluginManager().loadPlugins();
         Cache.i().getPluginManager().executeStartup();
 
-
-        StreamlineCloud.log("sl.startup.startingServers");
         StreamlineCloud.checkGroups();
 
         new ServerStarterTask();

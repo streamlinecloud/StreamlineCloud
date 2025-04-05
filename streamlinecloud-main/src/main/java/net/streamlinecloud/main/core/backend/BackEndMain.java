@@ -16,8 +16,6 @@ public class BackEndMain {
 
     public static void startBE() {
 
-        StreamlineCloud.log("sl.backend.starting", new ReplacePaket[]{new ReplacePaket("%0", Cache.i().getConfig().getCommunicationBridgePort() + "")});
-
         Cache.i().setBackend(Javalin.create());
 
         //Load Rest Classes

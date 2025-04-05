@@ -42,7 +42,6 @@ public class ServerStarterTask {
                 if (firstStartup) {
 
                     firstStartup = false;
-                    StreamlineCloud.log("sl.startup.serversStarting");
                 }
 
             }

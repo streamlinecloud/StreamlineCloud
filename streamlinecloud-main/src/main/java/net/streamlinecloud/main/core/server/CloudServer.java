@@ -61,6 +61,10 @@ public class CloudServer extends StreamlineServer {
         setServerState(ServerState.PREPARING);
     }
 
+    public String getShortUuid() {
+        return getUuid().split("-")[0];
+    }
+
     public void start(File javaExec) throws IOException {
 
         if (getGroup() == null) setGroup(Cache.i().getDefaultGroup().getName());
@@ -72,13 +76,13 @@ public class CloudServer extends StreamlineServer {
         if (!isStaticServer()) {
 
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
-                    new ReplacePaket("%1", getName() + "-" + getUuid()),
+                    new ReplacePaket("%1", getName() + "-" + getShortUuid()),
                     new ReplacePaket("%2", "temp/" + getName())
             });
         } else {
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
                     new ReplacePaket("%1", getName()),
-                    new ReplacePaket("%2", "staticservers/" + getName())
+                    new ReplacePaket("%2", "staticservers/" + getShortUuid())
             });
         }
 
@@ -107,7 +111,7 @@ public class CloudServer extends StreamlineServer {
 
         if (serverStartEvent.isCancelled()) return;
 
-        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
+        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid());
         file.mkdirs();
 
         File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
@@ -273,8 +277,8 @@ public class CloudServer extends StreamlineServer {
     public boolean deployPlugin() {
         String pluginFileName = "streamlinecloud_MC-alpha-1.0.0";
         try {
-            new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins").mkdirs();
-            Files.copy(Utils.getResourceFile(pluginFileName, "").toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
+            new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins").mkdirs();
+            Files.copy(Utils.getResourceFile(pluginFileName, "").toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -309,7 +313,7 @@ public class CloudServer extends StreamlineServer {
 
         Cache.i().getRunningServers().remove(this);
 
-        StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
+        StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid())});
     }
 
     private void copyResources(File sourceFile, File targetFile) {
