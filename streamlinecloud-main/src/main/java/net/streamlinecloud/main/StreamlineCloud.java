@@ -114,7 +114,7 @@ public class StreamlineCloud {
     }
 
     @SneakyThrows
-    public static void printError(String error, String[] fixes, Exception e) {
+    public static void printError(String error, Exception e) {
 
         if (printedErrors.contains(error)) {
             StreamlineCloud.log("sl.error.again", new ReplacePaket[]{new ReplacePaket("%0", error)});
@@ -122,20 +122,6 @@ public class StreamlineCloud {
         }
 
         StreamlineCloud.log("sl.error.title", new ReplacePaket[]{new ReplacePaket("%0", error)});
-        StreamlineCloud.log("sl.error.fixes");
-
-        if (fixes == null) {
-
-            StreamlineCloud.log("sl.error.noFixes");
-
-        } else {
-
-            for (String fix : fixes) {
-
-                StreamlineCloud.log("sl.error.fix." + fix);
-
-            }
-        }
 
         if (e != null) {
 

@@ -238,23 +238,26 @@ public class CloudServer extends StreamlineServer {
                     }, 500, 500, TimeUnit.MILLISECONDS);
 
                     String line;
-                    while (!getServerState().equals(ServerState.STOPPING) && (line = inputReader.readLine()) != null) {
-                        addLog(line);
-                        if (output) {
-                            IncommingServerMessageEvent incommingEvent = eventManager.callEvent(
-                                    new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line)
-                            );
-                            if (!incommingEvent.isCancelled()) {
-                                StreamlineCloud.logSingle(getName() + " " + line);
+                    try {
+                        while (!getServerState().equals(ServerState.STOPPING) && (line = inputReader.readLine()) != null) {
+                            addLog(line);
+                            if (output) {
+                                IncommingServerMessageEvent incommingEvent = eventManager.callEvent(
+                                        new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line)
+                                );
+                                if (!incommingEvent.isCancelled()) {
+                                    StreamlineCloud.logSingle(getName() + " " + line);
+                                }
                             }
                         }
+                    } catch (IOException ignored) {
+                        return;
                     }
 
                     if (getServerState().equals(ServerState.STOPPING)) process.waitFor();
 
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    StreamlineCloud.printError("CantStartServer", new String[]{"1", "2"}, e);
+                    StreamlineCloud.printError("Failed to start server", e);
                 } finally {
                     task();
                 }
