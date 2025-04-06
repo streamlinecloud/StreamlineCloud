@@ -9,8 +9,8 @@ plugins {
 }
 
 group = "io.streamlinemc"
-version = "1.0-SNAPSHOT"
-val branch = "alpha"
+version = "0.3"
+val branch = "BETA"
 
 repositories {
     mavenCentral()
@@ -66,6 +66,7 @@ tasks.register("generateBuildConfig") {
             public final class MainBuildConfig {
                 public static final String BUILD_NUMBER = "SC-$currentBuildNumber";
                 public static final String BUILD_DATE = "$currentBuildTime";
+                public static final String VERSION = "$branch-$version";
             }
             """.trimIndent()
         )
@@ -120,7 +121,7 @@ tasks.register("Make Main Project") {
         val copiedJar = project.copy {
             from(jarFile)
             into(bdir)
-            rename(jarFile.asFile.name, "streamlinecloud_NODE-$branch-$version.jar")
+            rename(jarFile.asFile.name, "streamlinecloud_MAIN-$branch-$version.jar")
         }
 
         println("Built Jar File: $bdir")

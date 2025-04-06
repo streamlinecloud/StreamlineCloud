@@ -80,7 +80,7 @@ public class StreamlineConfig {
             writer.write("\n# Gebe diesen Key niemals weiter!");
             writer.write("\n# Lösche diese Datei um den Key neu zu generieren.");
             writer.write("\n#");
-            writer.write("\n# Entwickelt von: " + BuildSettings.authors);
+            writer.write("\n# Entwickelt von: " + Settings.authors);
             writer.close();
         }
 

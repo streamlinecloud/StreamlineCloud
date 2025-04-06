@@ -12,10 +12,8 @@ import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.core.task.ServerStarterTask;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.streamlinecloud.main.utils.BuildSettings;
-import net.streamlinecloud.main.utils.Cache;
-import net.streamlinecloud.main.utils.StreamlineConfig;
-import net.streamlinecloud.main.utils.StreamlineSetup;
+import net.streamlinecloud.main.utils.*;
+import net.streamlinecloud.main.utils.MainBuildConfig;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.simple.SimpleLogger;
 
@@ -55,13 +53,13 @@ public class CloudMain {
         StreamlineCloud.logSingle("");
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDA Streamlined Minecraft network");
         StreamlineCloud.logSingle("");
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDVersion: §AQUA" + BuildSettings.version);
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + BuildSettings.authors);
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDWebsite: §AQUA" + BuildSettings.website);
+        StreamlineCloud.logSingle("§DARK_GRAY-> §REDVersion: §AQUA" + MainBuildConfig.VERSION);
+        StreamlineCloud.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + Settings.authors);
+        StreamlineCloud.logSingle("§DARK_GRAY-> §REDWebsite: §AQUA" + Settings.website);
         StreamlineCloud.logSingle("");
 
 
-        BuildSettings.name = "§REDStreamlineCloud §8-> §RED";
+        Settings.name = "§REDStreamlineCloud §8-> §RED";
         StreamlineCloud.log("Starting StreamlineCloud");
 
         //init

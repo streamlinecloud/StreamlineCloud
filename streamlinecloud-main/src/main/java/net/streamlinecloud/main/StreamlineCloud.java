@@ -8,7 +8,8 @@ import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.core.backend.BackEndMain;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.terminal.Color;
-import net.streamlinecloud.main.utils.BuildSettings;
+import net.streamlinecloud.main.utils.MainBuildConfig;
+import net.streamlinecloud.main.utils.Settings;
 import net.streamlinecloud.main.utils.Downloader;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -51,14 +52,14 @@ public class StreamlineCloud {
 
     public static void log(String msg) { logIntern(msg, new ReplacePaket[]{}, true); }
     public static void log(String msg, ReplacePaket[] packets) { logIntern(msg, packets, true); }
-    public static void logError(String msg) { logIntern(BuildSettings.name + "§DARK_RED" + msg, new ReplacePaket[]{}, true); }
+    public static void logError(String msg) { logIntern(Settings.name + "§DARK_RED" + msg, new ReplacePaket[]{}, true); }
 
 
     public static void logImportant(String msg) {
 
-        logIntern(BuildSettings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
-        logIntern(BuildSettings.name + msg, new ReplacePaket[]{}, true);
-        logIntern(BuildSettings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
+        logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
+        logIntern(Settings.name + msg, new ReplacePaket[]{}, true);
+        logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
     }
 
     private static void logIntern(String msg, ReplacePaket[] pakets, boolean prefix) {
@@ -89,7 +90,7 @@ public class StreamlineCloud {
         String s = msg + "§RED";
 
         if (prefix) {
-            s = "§RED" + formattedDate + " §8| " + BuildSettings.name + msg + "§RED";
+            s = "§RED" + formattedDate + " §8| " + Settings.name + msg + "§RED";
         }
 
         for (ReplacePaket p : pakets) {
@@ -153,7 +154,7 @@ public class StreamlineCloud {
                 bufferedWriter.newLine();
             }
             bufferedWriter.newLine();
-            bufferedWriter.write("Streamline-Version: " + BuildSettings.version + " (API: " + StreamlineAPI.getApiVersion() + ")");
+            bufferedWriter.write("Streamline-Version: " + MainBuildConfig.VERSION + " (API: " + StreamlineAPI.getApiVersion() + ")");
             bufferedWriter.newLine();
             bufferedWriter.write("StreamlineMC-Version: " + Cache.i().getPluginVersion() + " (API: " + Cache.i().getPluginApiVersion() + ")");
             bufferedWriter.newLine();
@@ -161,7 +162,7 @@ public class StreamlineCloud {
 
             bufferedWriter.newLine();
             bufferedWriter.newLine();
-            bufferedWriter.write("StreamlineCloud by " + BuildSettings.authors);
+            bufferedWriter.write("StreamlineCloud by " + Settings.authors);
             bufferedWriter.newLine();
             bufferedWriter.write("Need help? https://streamline.jdev.shop");
 
