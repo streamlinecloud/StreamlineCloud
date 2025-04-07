@@ -1,0 +1,13 @@
+name: Feature request
+description: A new feature.
+title: "[Feature request]: "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe the feature
+      placeholder: Tell us what you think!
+      value: "...!"
+    validations:
+      required: true
