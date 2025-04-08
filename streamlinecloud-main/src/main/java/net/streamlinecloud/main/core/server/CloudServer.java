@@ -28,7 +28,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static net.streamlinecloud.main.plugin.PluginManager.eventManager;
 
@@ -143,7 +142,6 @@ public class CloudServer extends StreamlineServer {
 
                 Cache.i().rconDetails.put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
             } catch (IOException e) {
-                e.printStackTrace();
                 StreamlineCloud.logError(e.getMessage());
             }
 
@@ -153,7 +151,6 @@ public class CloudServer extends StreamlineServer {
                 if (!eula.exists()) eula.createNewFile();
                 FileUtils.writeStringToFile(eula, "eula=true");
             } catch (IOException e) {
-                e.printStackTrace();
                 StreamlineCloud.logError(e.getMessage());
             }
 
@@ -161,7 +158,8 @@ public class CloudServer extends StreamlineServer {
             List<String> t = new ArrayList<>();
             CloudGroup g = StreamlineCloud.getGroupByName(getGroup());
 
-            for (String te : g.getTemplates()) customTemplates.add(te);
+            assert g != null;
+            customTemplates.addAll(g.getTemplates());
 
             t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
             for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
@@ -278,10 +276,9 @@ public class CloudServer extends StreamlineServer {
         String pluginFileName = "streamlinecloud_MC-alpha-1.0.0";
         try {
             new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins").mkdirs();
-            Files.copy(Utils.getResourceFile(pluginFileName, "").toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
+            Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            StreamlineCloud.logError(e.getMessage());
         }
         return true;
     }
@@ -337,7 +334,6 @@ public class CloudServer extends StreamlineServer {
 
 
         } catch (IOException e) {
-            e.printStackTrace();
             StreamlineCloud.logError(e.getMessage());
         }
     }
@@ -389,10 +385,8 @@ public class CloudServer extends StreamlineServer {
     private void executeCommand(String command, OutputStream outputStream) {
         try {
 
-            // Schreibe den Befehl in den OutputStream des Prozesses
             outputStream.write((command + System.lineSeparator()).getBytes());
             outputStream.flush();
-            //CloudMain.getInstance().getTerminal().getRunner().run();
 
         } catch (IOException e) {
             StreamlineCloud.log("Error executing command: " + e.getMessage());
@@ -402,7 +396,7 @@ public class CloudServer extends StreamlineServer {
     private void addLog(String str) {
 
         if (logs.size() > 300) {
-            logs.remove(0);
+            logs.removeFirst();
         }
         logs.add(str);
 
@@ -423,27 +417,25 @@ public class CloudServer extends StreamlineServer {
                             Path destinationPath = destination.resolve(relativePath);
 
                             if (Files.isDirectory(sourcePath)) {
-                                // Copy directory (create if not exists)
                                 try {
                                     Files.createDirectories(destinationPath);
                                 } catch (IOException e) {
-                                    e.printStackTrace();
+                                    StreamlineCloud.logError(e.getMessage());
                                 }
                             } else {
-                                // Copy file
                                 if (!copiedFiles.contains(destinationPath.toString())) {
                                     try {
                                         Files.createDirectories(destinationPath.getParent());
                                         Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
                                         copiedFiles.add(destinationPath.toString());
                                     } catch (IOException e) {
-                                        e.printStackTrace();
+                                        StreamlineCloud.logError(e.getMessage());
                                     }
                                 }
                             }
                         });
             } catch (IOException e) {
-                e.printStackTrace();
+                StreamlineCloud.logError(e.getMessage());
             }
 
         }

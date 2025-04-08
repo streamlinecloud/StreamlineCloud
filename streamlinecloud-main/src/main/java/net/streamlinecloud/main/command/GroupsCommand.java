@@ -124,64 +124,66 @@ public class GroupsCommand extends CloudCommand {
 
                         String groupSub = args[3];
 
-                        if (groupSub.equals("set")) {
+                        switch (groupSub) {
+                            case "set" -> {
 
-                            String setSub = args[4];
+                                String setSub = args[4];
 
-                            if (setSub.equalsIgnoreCase("minOnlineCount") || setSub.equals("moc")) {
+                                if (setSub.equalsIgnoreCase("minOnlineCount") || setSub.equals("moc")) {
 
-                                if (args.length == 6) {
+                                    if (args.length == 6) {
 
-                                    try {
-                                        group.setMinOnlineCount(Integer.parseInt(args[5]));
-                                    } catch (NumberFormatException e) {
-                                        StreamlineCloud.log("Please enter a valid number");
+                                        try {
+                                            group.setMinOnlineCount(Integer.parseInt(args[5]));
+                                        } catch (NumberFormatException e) {
+                                            StreamlineCloud.log("Please enter a valid number");
+                                            return;
+                                        }
+
+                                    } else {
+
+                                        StreamlineCloud.log("Enter a number");
                                         return;
+
                                     }
 
-                                } else {
-
-                                    StreamlineCloud.log("Enter a number");
-                                    return;
-
                                 }
-
                             }
+                            case "add" -> {
 
-                        } else if (groupSub.equals("add")) {
+                                String addSub = args[4];
 
-                            String addSub = args[4];
+                                if (addSub.equals("template") || addSub.equals("t")) {
 
-                            if (addSub.equals("template") || addSub.equals("t")) {
+                                    group.getTemplates().add(args[5]);
+                                    StreamlineCloud.log("sl.command.groups.templateAdded", new ReplacePaket[]{new ReplacePaket("%0", args[5]), new ReplacePaket("%1", group.getName())});
 
-                                group.getTemplates().add(args[5]);
-                                StreamlineCloud.log("sl.command.groups.templateAdded", new ReplacePaket[]{new ReplacePaket("%0", args[5]), new ReplacePaket("%1", group.getName())});
+                                    try {
+                                        group.save();
+                                    } catch (IOException e) {
+                                        StreamlineCloud.log(e.getMessage());
+                                    }
 
-                                try {
-                                    group.save();
-                                } catch (IOException e) {
-                                    StreamlineCloud.log(e.getMessage());
-                                    e.printStackTrace();
                                 }
-
                             }
-                        } else if (groupSub.equals("list")) {
+                            case "list" -> {
 
-                            String listSub = args[4];
+                                String listSub = args[4];
 
-                            if (listSub.equals("templates")) {
+                                if (listSub.equals("templates")) {
 
-                                if (group.getTemplates().isEmpty()) {
-                                    StreamlineCloud.log("sl.command.groups.list.templates.empty");
-                                } else {
-                                    StreamlineCloud.log("sl.command.groups.list.templates.title",
-                                            new ReplacePaket[]{new ReplacePaket("%0", group.getName())});
+                                    if (group.getTemplates().isEmpty()) {
+                                        StreamlineCloud.log("sl.command.groups.list.templates.empty");
+                                    } else {
+                                        StreamlineCloud.log("sl.command.groups.list.templates.title",
+                                                new ReplacePaket[]{new ReplacePaket("%0", group.getName())});
+                                    }
+
+                                    for (String template : group.getTemplates()) {
+                                        StreamlineCloud.log("TEMPLATE: " + template);
+                                    }
+
                                 }
-
-                                for (String template : group.getTemplates()) {
-                                    StreamlineCloud.log("TEMPLATE: " + template);
-                                }
-
                             }
                         }
 

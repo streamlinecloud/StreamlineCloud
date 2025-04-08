@@ -45,8 +45,6 @@ public class VelocitySCP {
     public VelocitySCP(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
         this.proxy = proxy;
         this.logger = getLogger();
-        //proxy.getConfiguration().get
-
         this.onLoad();
     }
 
@@ -67,6 +65,7 @@ public class VelocitySCP {
         List<String> allServers = new ArrayList<>();
         String whitelist = Functions.get("get/whitelist");
 
+        assert whitelist != null;
         if (whitelist.equals("false")) {
             StaticCache.whitelistEnabled = false;
         } else {

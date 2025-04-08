@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class StreamlineSetup {
@@ -20,14 +21,15 @@ public class StreamlineSetup {
     public StreamlineSetup() {
         StreamlineCloud.logSingle("");
         StreamlineCloud.logSingle("StreamlineCloud");
-        StreamlineCloud.logSingle(" $$$$$$\\  $$$$$$$$\\ $$$$$$$$\\ $$\\   $$\\ $$$$$$$\\        \n" +
-                "$$  __$$\\ $$  _____|\\__$$  __|$$ |  $$ |$$  __$$\\       \n" +
-                "$$ /  \\__|$$ |         $$ |   $$ |  $$ |$$ |  $$ |      \n" +
-                "\\$$$$$$\\  $$$$$\\       $$ |   $$ |  $$ |$$$$$$$  |      \n" +
-                " \\____$$\\ $$  __|      $$ |   $$ |  $$ |$$  ____/       \n" +
-                "$$\\   $$ |$$ |         $$ |   $$ |  $$ |$$ |            \n" +
-                "\\$$$$$$  |$$$$$$$$\\    $$ |   \\$$$$$$  |$$ |            \n" +
-                " \\______/ \\________|   \\__|    \\______/ \\__|           ");
+        StreamlineCloud.logSingle("""
+                 $$$$$$\\  $$$$$$$$\\ $$$$$$$$\\ $$\\   $$\\ $$$$$$$\\       \s
+                $$  __$$\\ $$  _____|\\__$$  __|$$ |  $$ |$$  __$$\\      \s
+                $$ /  \\__|$$ |         $$ |   $$ |  $$ |$$ |  $$ |     \s
+                \\$$$$$$\\  $$$$$\\       $$ |   $$ |  $$ |$$$$$$$  |     \s
+                 \\____$$\\ $$  __|      $$ |   $$ |  $$ |$$  ____/      \s
+                $$\\   $$ |$$ |         $$ |   $$ |  $$ |$$ |           \s
+                \\$$$$$$  |$$$$$$$$\\    $$ |   \\$$$$$$  |$$ |           \s
+                 \\______/ \\________|   \\__|    \\______/ \\__|          \s""");
         StreamlineCloud.logSingle("");
 
         Cache.i().setConfig(new StreamlineConfig("", 19132, 5378, "lobby"));
@@ -52,12 +54,12 @@ public class StreamlineSetup {
                                     "lobby",
                                     Cache.i().getConfig().getDefaultJavaPath(),
                                     1,
-                                    Arrays.asList(new String[]{}), ServerRuntime.SERVER);
+                                    List.of(), ServerRuntime.SERVER);
                             CloudGroup proxy = new CloudGroup(
                                     "proxy",
                                     Cache.i().getConfig().getDefaultJavaPath(),
                                     1,
-                                    Arrays.asList(new String[]{}), ServerRuntime.PROXY);
+                                    List.of(), ServerRuntime.PROXY);
 
                             try {
                                 lobby.save();
@@ -77,7 +79,7 @@ public class StreamlineSetup {
                             });
 
                             try {
-                                Files.copy(Utils.getResourceFile("velocity/velocity.toml", "").toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
+                                Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity/velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
                                 Files.writeString(Path.of(Cache.i().homeFile + "/templates/default/proxy/forwarding.secret"), new Random().nextInt(999999999) + "", StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);

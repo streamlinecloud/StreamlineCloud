@@ -76,11 +76,11 @@ public class StreamlineConfig {
             FileWriter writer = new FileWriter(apiKeyFile);
             writer.write(StreamlineCloud.generateApiKey());
             writer.write("\n#");
-            writer.write("\n# Dieser Key ist zufällig generiert und nur für die interne Kommunikation wichtig.");
-            writer.write("\n# Gebe diesen Key niemals weiter!");
-            writer.write("\n# Lösche diese Datei um den Key neu zu generieren.");
+            writer.write("\n# This key is randomly generated and only used for internal purposes.");
+            writer.write("\n# Do NOT share this key!");
+            writer.write("\n# Delete this file to regenerate the key.");
             writer.write("\n#");
-            writer.write("\n# Entwickelt von: " + Settings.authors);
+            writer.write("\n# Developed by: " + Settings.authors);
             writer.close();
         }
 

@@ -14,7 +14,7 @@ public class StaticCache {
     public static String accessKey = null;
     public static File plFolder;
     public static boolean whitelistEnabled = false;
-    public static List<String> whitelist = new ArrayList<>();
+    public static List whitelist = new ArrayList<>();
 
     @Getter @Setter
     private static ServerRuntime runtime;

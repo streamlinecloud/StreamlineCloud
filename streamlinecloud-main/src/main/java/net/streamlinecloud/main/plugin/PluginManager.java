@@ -21,8 +21,8 @@ public class PluginManager {
 
     public static final EventManager eventManager = new EventManager();
     public static final CommandManager commandManager = new CommandManager();
-    private List<StreamlinePlugin> pluginList = new ArrayList<>();
-    private File pluginsFolder = new File(System.getProperty("user.dir") + "/plugins");
+    private final List<StreamlinePlugin> pluginList = new ArrayList<>();
+    private final File pluginsFolder = new File(System.getProperty("user.dir") + "/plugins");
     public void loadPlugins() {
         pluginsFolder.mkdirs();
 
@@ -55,8 +55,7 @@ public class PluginManager {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            // Handle error: Failed to extract or parse the plugin.yml
+            StreamlineCloud.logError(e.getMessage());
         }
 
         return null;
@@ -73,7 +72,6 @@ public class PluginManager {
 
                 StreamlineCloud.log("§GOLDLoaded plugin: " + config.getName() + " by " + config.getAuthor() + " version " + config.getVersion());
             } else {
-                // Handle error: The class doesn't implement StreamlinePlugin
                 StreamlineCloud.log("There are Files that are not Streamline Plugins.");
             }
         } catch (Exception e) {

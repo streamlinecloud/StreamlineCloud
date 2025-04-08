@@ -392,18 +392,6 @@ public class StreamlineCloud {
 
     public static String streamlineBanner() {
 
-        /*StreamlineCloud.log("  ____ _____ ____  _____    _    __  __ _     ___ _   _ _____ ");
-        StreamlineCloud.log("/ ___|_   _|  _ \\| ____|  / \\  |  \\/  | |   |_ _| \\ | | ____|");
-        StreamlineCloud.log("\\___ \\ | | | |_) |  _|   / _ \\ | |\\/| | |    | ||  \\| |  _|  ");
-        StreamlineCloud.log(" ___) || | |  _ <| |___ / ___ \\| |  | | |___ | || |\\  | |___ ");
-        StreamlineCloud.log("|____/ |_| |_| \\_\\_____/_/   \\_\\_|  |_|_____|___|_| \\_|_____|");
-        StreamlineCloud.log("");
-        StreamlineCloud.log(" / ___| |   / _ \\| | | |  _ \\ ");
-        StreamlineCloud.log("| |   | |  | | | | | | | | | |");
-        StreamlineCloud.log("| |___| |__| |_| | |_| | |_| | ");
-        StreamlineCloud.log("| |___| |__| |_| | |_| | |_| | ");
-        StreamlineCloud.log(" \\____|_____\\___/ \\___/|____/ ");*/
-
         return "\n\n" +
                 "  /$$$$$$   /$$                                                 /$$       /$$                          \n" +
                 " /$$__  $$ | $$                                                | $$      |__/                          \n" +

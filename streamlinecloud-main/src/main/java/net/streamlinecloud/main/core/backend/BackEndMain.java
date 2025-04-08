@@ -5,7 +5,6 @@ import net.streamlinecloud.main.core.backend.RestController.AllGroupsRestControl
 import net.streamlinecloud.main.core.backend.RestController.get.*;
 import net.streamlinecloud.main.core.backend.RestController.post.*;
 import net.streamlinecloud.main.core.backend.socket.ServerSocket;
-import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import io.javalin.Javalin;
 

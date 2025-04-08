@@ -16,8 +16,7 @@ public class GetServerdataRestController {
             CloudServer server = StreamlineCloud.getServerByUuid(uuid);
 
             if (server != null) {
-                StreamlineServer streamlineServer = server;
-                ctx.result(new Gson().toJson(streamlineServer, StreamlineServer.class));
+                ctx.result(new Gson().toJson(server, StreamlineServer.class));
                 ctx.status(200);
             } else {
                 ctx.result("serverNotFound");
@@ -30,8 +29,7 @@ public class GetServerdataRestController {
             CloudServer server = StreamlineCloud.getServerByName(name);
 
             if (server != null) {
-                StreamlineServer streamlineServer = server;
-                ctx.result(new Gson().toJson(streamlineServer, StreamlineServer.class));
+                ctx.result(new Gson().toJson(server, StreamlineServer.class));
                 ctx.status(200);
             } else {
                 ctx.result("serverNotFound");

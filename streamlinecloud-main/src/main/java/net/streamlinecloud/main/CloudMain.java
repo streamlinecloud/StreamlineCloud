@@ -123,7 +123,7 @@ public class CloudMain {
 
         if (Cache.i().getCurrentLanguage() == null) {
             StreamlineCloud.log("Lang " + Cache.i().getConfig().getLanguage() + " is invalid. Loading en.json");
-            Cache.i().setCurrentLanguage(Cache.i().getLanguages().get(0));
+            Cache.i().setCurrentLanguage(Cache.i().getLanguages().getFirst());
         }
     }
 

@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.lang;
 
+import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
 import org.json.JSONObject;
@@ -32,35 +33,31 @@ public class LangManager {
             try (Stream<Path> paths = Files.walk(Paths.get(langFile.getPath()))) {
                 paths
                         .filter(Files::isRegularFile)
-                        .forEach(path -> readLangFile(path));
+                        .forEach(LangManager::readLangFile);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            StreamlineCloud.log(e.getMessage());
         }
     }
 
     public static void readLangFile(Path file) {
         try (BufferedReader reader = Files.newBufferedReader(file)) {
-            // Lese den Inhalt der Datei
             StringBuilder content = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 content.append(line);
             }
 
-            // Konvertiere den Inhalt zu einem JSONObject
             JSONObject configJson = new JSONObject(content.toString());
 
-            // Konvertiere das JSONObject zu einer Map
             HashMap<String, String> config = new HashMap<>();
             for (String key : configJson.keySet()) {
                 config.put(key, configJson.getString(key));
             }
 
-            // Füge die Map zur HashMap hinzu
             Cache.i().getLanguages().add(new CloudLanguage(file.getFileName().toString(), config));
         } catch (IOException e) {
-            e.printStackTrace();
+            StreamlineCloud.log(e.getMessage());
         }
     }
 }

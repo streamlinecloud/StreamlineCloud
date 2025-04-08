@@ -24,7 +24,7 @@ public class ServerStarterTask {
 
             if (!Cache.i().getServersWaitingForStart().isEmpty()) {
                 try {
-                CloudServer server = Cache.i().getServersWaitingForStart().get(0);
+                CloudServer server = Cache.i().getServersWaitingForStart().getFirst();
 
                 for (String s : Cache.i().getDataCache()) {
                     if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;

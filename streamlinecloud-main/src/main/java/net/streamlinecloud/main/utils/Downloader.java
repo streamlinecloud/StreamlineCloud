@@ -43,7 +43,7 @@ public class Downloader {
         download(url, file);
     }
 
-    class FileDownloadResponseHandler implements ResponseHandler<File> {
+    static class FileDownloadResponseHandler implements ResponseHandler<File> {
 
         private final File target;
         Continue next = null;

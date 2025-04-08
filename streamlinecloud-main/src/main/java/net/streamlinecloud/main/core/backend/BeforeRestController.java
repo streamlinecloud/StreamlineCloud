@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.core.backend;
 
+import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.utils.Cache;
 
 import static net.streamlinecloud.main.core.backend.BackEndMain.mainPath;
@@ -29,7 +30,7 @@ public class BeforeRestController {
                     return;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                StreamlineCloud.logError(e.getMessage());
             }
         });
     }

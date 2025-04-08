@@ -1,7 +1,6 @@
 package net.streamlinecloud.main.core.server;
 
 import com.google.gson.*;
-import net.streamlinecloud.api.server.StreamlineServer;
 
 import java.lang.reflect.Type;
 

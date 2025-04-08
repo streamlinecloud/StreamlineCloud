@@ -28,58 +28,57 @@ public class TemplatesCommand extends CloudCommand {
         //
 
 
-        if (args[1].equals("create")) {
-            if (args.length < 4) {
-                StreamlineCloud.log("Syntax Error, please use template help");
-                return;
+        switch (args[1]) {
+            case "create" -> {
+                if (args.length < 4) {
+                    StreamlineCloud.log("Syntax Error, please use template help");
+                    return;
+                }
+
+                String name = args[2];
+                String software = args[3];
+                String url = args[4];
+
+                File template_dir = new File(System.getProperty("user.dir") + "/templates/" + name);
+
+                if (template_dir.exists()) {
+                    StreamlineCloud.log("Error: Templates with name " + name + " already exists!");
+                    return;
+                }
+
+                if (!TemplateEnums.SOFTWARE.SERVER.equals(TemplateEnums.SOFTWARE.valueOf(software)) && !TemplateEnums.SOFTWARE.PROXY.equals(TemplateEnums.SOFTWARE.valueOf(software))) {
+                    StreamlineCloud.log("Error: Unkown Software, enter SERVER | PROXY");
+                    return;
+                }
+
+                template_dir.mkdirs();
+
+                Downloader downoader = new Downloader();
+
+                if (software.equals("SERVER")) {
+                    downoader.download(new URL(url), new File(template_dir.getAbsolutePath() + "/server.jar"));
+                } else if (software.equals("PROXY")) {
+                    downoader.download(new URL(url), new File(template_dir.getAbsolutePath() + "/proxy.jar"));
+                }
+
+                ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+                scheduledExecutorService.schedule(() -> {
+                    StreamlineCloud.log("Download Complete!");
+                    StreamlineCloud.log("§GREEN Template with name " + name + " created!§RED");
+                    scheduledExecutorService.shutdownNow();
+                }, 3, TimeUnit.SECONDS);
             }
-
-            String name = args[2];
-            String software = args[3];
-            String url = args[4];
-
-            File template_dir = new File(System.getProperty("user.dir") + "/templates/" + name);
-
-            if (template_dir.exists()) {
-                 StreamlineCloud.log("Error: Templates with name " + name + " already exists!");
-                return;
+            case "help" -> StreamlineCloud.log("- template create <templatename> <SERVER | PROXY> <SOFTWARE-URL>");
+            case "delete" -> {
+                if (!Files.exists(Paths.get(Cache.i().homeFile + "/template/" + args[1]))) {
+                    File template = new File(Cache.i().homeFile + "/templates/" + args[1]);
+                    template.delete();
+                    StreamlineCloud.log("tmp.delete.success");
+                    return;
+                }
+                StreamlineCloud.log("tmp.delete.notfound");
             }
-
-            if (!TemplateEnums.SOFTWARE.SERVER.equals(TemplateEnums.SOFTWARE.valueOf(software)) && !TemplateEnums.SOFTWARE.PROXY.equals(TemplateEnums.SOFTWARE.valueOf(software))) {
-                StreamlineCloud.log("Error: Unkown Software, enter SERVER | PROXY");
-                return;
-            }
-
-            template_dir.mkdirs();
-
-            Downloader downoader = new Downloader();
-
-            if (software.equals("SERVER")) {
-                downoader.download(new URL(url), new File(template_dir.getAbsolutePath() + "/server.jar"));
-            } else if (software.equals("PROXY")) {
-                downoader.download(new URL(url), new File(template_dir.getAbsolutePath() + "/proxy.jar"));
-            }
-
-            ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-            scheduledExecutorService.schedule(() -> {
-                StreamlineCloud.log("Download Complete!");
-                StreamlineCloud.log("§GREEN Template with name " + name + " created!§RED");
-                scheduledExecutorService.shutdownNow();
-            }, 3, TimeUnit.SECONDS);
-        } else if (args[1].equals("help")) {
-            StreamlineCloud.log("- template create <templatename> <SERVER | PROXY> <SOFTWARE-URL>");
-        } else if (args[1].equals("delete")) {
-            if (!Files.exists(Paths.get(Cache.i().homeFile + "/template/" + args[1]))) {
-                File template = new File(Cache.i().homeFile + "/templates/" + args[1]);
-                template.delete();
-                StreamlineCloud.log("tmp.delete.success");
-             return;
-            }
-            StreamlineCloud.log("tmp.delete.notfound");
-
-
-        } else {
-            sendHelp();
+            default -> sendHelp();
         }
     }
 
