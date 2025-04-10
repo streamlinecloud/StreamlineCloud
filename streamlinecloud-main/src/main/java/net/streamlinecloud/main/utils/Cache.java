@@ -4,7 +4,7 @@ package net.streamlinecloud.main.utils;
 import com.google.gson.Gson;
 import io.javalin.Javalin;
 import io.streamlinemc.api.RestUtils.RconData;
-import net.streamlinecloud.main.core.backend.remoteLogic.WSClient;
+import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
@@ -48,7 +48,7 @@ public class Cache {
     public long startuptime = 0L;
     public boolean firstLaunch = false;
     public Gson gson = new Gson().newBuilder().create();
-    public WSClient webSocketClient = null;
+    public RemoteSocket webSocketClient = null;
     public PluginManager pluginManager = new PluginManager();
     public boolean disabledColors = false;
     public boolean useLgecyColor = false;

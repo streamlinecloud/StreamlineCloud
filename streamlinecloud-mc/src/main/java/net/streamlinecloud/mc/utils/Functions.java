@@ -2,6 +2,7 @@ package net.streamlinecloud.mc.utils;
 
 import com.google.gson.Gson;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
+import net.streamlinecloud.mc.core.server.ServerManager;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -101,8 +102,6 @@ public class Functions {
             StaticCache.serverData = new Gson().fromJson(keyString.split(",_,")[1], StaticServerDataPacket.class);
 
             FileUtils.forceDelete(key);
-
-            post(StaticCache.serverData.getUuid(), "post/server/hello-world");
         } catch (Exception e) {
             e.printStackTrace();
         }

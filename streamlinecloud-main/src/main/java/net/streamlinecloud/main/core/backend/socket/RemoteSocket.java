@@ -1,4 +1,4 @@
-package net.streamlinecloud.main.core.backend.remoteLogic;
+package net.streamlinecloud.main.core.backend.socket;
 
 import net.streamlinecloud.api.plugin.event.predefined.ExecuteCommandEvent;
 import net.streamlinecloud.main.StreamlineCloud;
@@ -15,13 +15,13 @@ import java.util.Arrays;
 import static net.streamlinecloud.main.plugin.PluginManager.eventManager;
 
 
-public class WSClient {
+public class RemoteSocket {
 
     @Getter
     WebSocketClient client;
 
     @SneakyThrows
-    public WSClient() {
+    public RemoteSocket() {
         String serverURI = Cache.i().getConfig().getWebsocketUrl();
         client = new WebSocketClient(new URI(serverURI)) {
             @Override

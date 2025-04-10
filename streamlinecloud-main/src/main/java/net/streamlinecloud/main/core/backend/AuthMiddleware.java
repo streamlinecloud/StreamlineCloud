@@ -6,9 +6,9 @@ import net.streamlinecloud.main.utils.Cache;
 import static net.streamlinecloud.main.core.backend.BackEndMain.mainPath;
 
 
-public class BeforeRestController {
+public class AuthMiddleware {
 
-    public BeforeRestController() {
+    public AuthMiddleware() {
         Cache.i().getBackend().before(ctx -> {
             if (ctx.path().equals(mainPath + "ping")) return;
 

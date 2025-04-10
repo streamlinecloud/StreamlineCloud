@@ -2,7 +2,7 @@ package net.streamlinecloud.main;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.command.*;
-import net.streamlinecloud.main.core.backend.remoteLogic.WSClient;
+import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
@@ -85,7 +85,7 @@ public class CloudMain {
         StreamlineCloud.log("lang.welcome");
 
         if (Cache.i().getConfig().isUseMultiRoot() || Cache.i().getConfig().isUseWebSocket()) {
-            Cache.i().setWebSocketClient(new WSClient());
+            Cache.i().setWebSocketClient(new RemoteSocket());
         }
 
         BackEndMain.startBE();
@@ -97,7 +97,6 @@ public class CloudMain {
 
         new ServerStarterTask();
 
-        registerCommand(new TestCommand());
         registerCommand(new HelpCommand());
         registerCommand(new ShutDownCommand());
         registerCommand(new GroupsCommand());
