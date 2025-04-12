@@ -1,9 +1,12 @@
 package net.streamlinecloud.mc.utils;
 
+import net.streamlinecloud.api.server.StreamlineServerSnapshot;
+
 import java.util.HashMap;
+import java.util.List;
 
 public class Utils {
 
-    public static HashMap<String, Double> servers;
+    public static List<StreamlineServerSnapshot> servers;
 
 }

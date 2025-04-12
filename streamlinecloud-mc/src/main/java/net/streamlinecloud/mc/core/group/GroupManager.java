@@ -27,12 +27,12 @@ public class GroupManager {
 
     private void updateGroups() {
         List<String> servers = new ArrayList<>();
-        servers = new Gson().fromJson(Functions.get("get/allgroups"), servers.getClass());
+        servers = new Gson().fromJson(Functions.get("groups"), servers.getClass());
 
         for (String name : servers) {
             if (!groupExists(name)) {
                 try {
-                    StreamlineGroup streamlineGroup = new Gson().fromJson(Functions.get("get/groupdata/" + name), StreamlineGroup.class);
+                    StreamlineGroup streamlineGroup = new Gson().fromJson(Functions.get("groups/" + name), StreamlineGroup.class);
                     groups.add(streamlineGroup);
                 } catch (Exception e) {
                     SpigotSCP.getInstance().getLogger().info("error!" + e.getMessage());
@@ -52,7 +52,6 @@ public class GroupManager {
         scheduler.scheduleAtFixedRate(runnable, 0, 20, TimeUnit.SECONDS);
     }
 
-    //GroupExists
     private boolean groupExists(String name) {
         for (StreamlineGroup server : groups) {
             if (server.getName().toString().equals(name)) {
@@ -61,8 +60,6 @@ public class GroupManager {
         }
         return false;
     }
-
-    //GetGroup
 
     /**
      * Get a group by name

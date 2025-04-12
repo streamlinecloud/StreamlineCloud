@@ -15,6 +15,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import com.velocitypowered.api.proxy.server.ServerPing;
+import io.leangen.geantyref.TypeToken;
+import net.streamlinecloud.api.server.StreamlineServerSnapshot;
 import net.streamlinecloud.mc.utils.Functions;
 import net.streamlinecloud.mc.utils.StaticCache;
 import net.streamlinecloud.mc.utils.Utils;
@@ -61,9 +63,8 @@ public class VelocitySCP {
     public void onLoad() {
 
         Functions.startup();
-        HashMap<String, Double> servers = new HashMap<>();
-        List<String> allServers = new ArrayList<>();
-        String whitelist = Functions.get("get/whitelist");
+        final List<String>[] allServers = new List[]{new ArrayList<>()};
+        String whitelist = Functions.get("whitelist");
 
         assert whitelist != null;
         if (whitelist.equals("false")) {
@@ -76,31 +77,32 @@ public class VelocitySCP {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
 
-            servers.putAll(new Gson().fromJson(Functions.get("get/allservers"), servers.getClass()));
+            System.out.println("1");
 
-            for (String s : allServers) getProxy().unregisterServer(proxy.getServer(s).get().getServerInfo());
-            allServers.clear();
+            List<StreamlineServerSnapshot> servers = new Gson().fromJson(Functions.get("servers/allSnapshots"), new TypeToken<List<StreamlineServerSnapshot>>(){}.getType());
 
+            for (String s : allServers[0]) getProxy().unregisterServer(proxy.getServer(s).get().getServerInfo());
+            allServers[0] = new ArrayList<>();
 
-            servers.forEach((str, port) -> {
+            for (StreamlineServerSnapshot server : servers) {
 
-                if (port != 1.0) {
-                    if (!str.contains("proxy")) {
+                if (server.getPort() != 1.0) {
+                    if (!server.getName().contains("proxy")) {
                         ServerInfo serverInfo = new ServerInfo(
-                                str,
-                                new InetSocketAddress("localhost", Integer.parseInt(String.valueOf(port).split("\\.")[0]))
+                                server.getName(),
+                                new InetSocketAddress("localhost", Integer.parseInt(String.valueOf(server.getPort()).split("\\.")[0]))
                         );
 
-                        allServers.add(str);
+                        allServers[0].add(server.getName());
                         proxy.registerServer(serverInfo);
                     }
                 }
 
-            });
+            };
 
             Utils.servers = servers;
 
-            fallbacks = new Gson().fromJson(Functions.get("get/fallbackservers"), List.class);
+            fallbacks = new Gson().fromJson(Functions.get("servers/fallbackServers"), List.class);
 
         }, 0, 3, TimeUnit.SECONDS);
     }

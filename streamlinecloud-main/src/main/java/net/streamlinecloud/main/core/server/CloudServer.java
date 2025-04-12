@@ -214,7 +214,7 @@ public class CloudServer extends StreamlineServer {
 
             Thread jarThread = new Thread(() -> {
                 try {
-                    ProcessBuilder processBuilder = new ProcessBuilder(javaExec.getAbsolutePath(), "-jar", finalFile + "/server.jar");
+                    ProcessBuilder processBuilder = new ProcessBuilder(javaExec.getAbsolutePath(), "-jar", finalFile + "/server.jar", "nogui");
                     processBuilder.redirectErrorStream(true); // Combine stderr and stdout
                     processBuilder.directory(finalFile);
                     Process process = processBuilder.start();

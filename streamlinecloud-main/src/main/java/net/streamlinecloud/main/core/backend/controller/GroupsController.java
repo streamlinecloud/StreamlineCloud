@@ -1,9 +1,17 @@
 package net.streamlinecloud.main.core.backend.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.javalin.apibuilder.CrudHandler;
+import io.javalin.http.Context;
 import net.streamlinecloud.api.group.StreamlineGroup;
+import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.utils.Cache;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,27 +20,63 @@ import static net.streamlinecloud.main.core.backend.BackEndMain.mainPath;
 
 public class GroupsController {
 
-    public GroupsController() {
-        Cache.i().getBackend().get(mainPath + "get/allgroups", ctx -> {
-            List<String> groups = new ArrayList<>();
+    public void create(@NotNull Context context) {
 
-            Cache.i().getActiveGroups().forEach(g -> groups.add(g.getName()));
-
-            ctx.result(new Gson().toJson(groups));
-            ctx.status(200);
-        });
-
-        Cache.i().getBackend().get(mainPath + "get/groupdata/{name}", ctx -> {
-            String name = ctx.pathParam("name");
-            StreamlineGroup server = StreamlineCloud.getGroupByName(name);
-
-            if (server != null) {
-                ctx.result(new Gson().toJson(server, StreamlineGroup.class));
-                ctx.status(200);
-            } else {
-                ctx.result("serverNotFound");
-                ctx.status(601);
-            }
-        });
     }
+
+    public void getAll(@NotNull Context context) {
+        List<String> groups = new ArrayList<>();
+
+        Cache.i().getActiveGroups().forEach(g -> groups.add(g.getName()));
+
+        context.result(new Gson().toJson(groups));
+        context.status(200);
+    }
+
+
+    public void get(@NotNull Context context) {
+        String name = context.pathParam("name");
+        StreamlineGroup server = StreamlineCloud.getGroupByName(name);
+
+        if (server != null) {
+            context.result(new Gson().toJson(server, StreamlineGroup.class));
+            context.status(200);
+        } else {
+            context.result("serverNotFound");
+            context.status(601);
+        }
+    }
+
+    public void servers(@NotNull Context context) {
+        try {
+            CloudGroup group = StreamlineCloud.getGroupByName(context.pathParam("name"));
+            if (group == null) {
+                context.result("groupNotFound");
+                context.status(200);
+                return;
+            }
+
+            List<CloudServer> servers = StreamlineCloud.getGroupOnlineServers(group);
+
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
+                    .create();
+
+            List<StreamlineServer> streamlineServers = new ArrayList<>(servers);
+
+            context.result(gson.toJson(streamlineServers));
+            context.status(200);
+        } catch (Exception e) {
+            StreamlineCloud.logError(e.getMessage());
+        }
+    }
+
+    public void update(@NotNull Context context, @NotNull String s) {
+
+    }
+
+    public void delete(@NotNull Context context, @NotNull String s) {
+
+    }
+
 }

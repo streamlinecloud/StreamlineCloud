@@ -120,7 +120,7 @@ public class ServerManager {
         s.setServerState(ServerState.ONLINE);
         s.setMaxOnlineCount(Bukkit.getMaxPlayers());
 
-        Functions.post(s, "post/server/updatedata");
+        Functions.post(s, "servers/update");
     }
 
     /*private void updateServers() {
@@ -153,7 +153,7 @@ public class ServerManager {
             if (s != null) if (s.getUuid().equals(uuid.toString())) return s;
         }
 
-        return new Gson().fromJson(Functions.get("get/serverdata/" + uuid.toString()), StreamlineServer.class);
+        return new Gson().fromJson(Functions.get("servers/" + uuid.toString()), StreamlineServer.class);
     }
 
     public StreamlineServer getServer(String name) {
@@ -161,6 +161,6 @@ public class ServerManager {
             if (s.getName().equals(name)) return s;
         }
 
-        return new Gson().fromJson(Functions.get("get/serverdata/name/" + name), StreamlineServer.class);
+        return new Gson().fromJson(Functions.get("servers/name/" + name), StreamlineServer.class);
     }
 }
