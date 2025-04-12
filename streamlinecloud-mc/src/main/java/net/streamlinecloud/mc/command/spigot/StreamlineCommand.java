@@ -29,7 +29,7 @@ public class StreamlineCommand implements CommandExecutor {
             RemoteCommandPacket packet = new RemoteCommandPacket(builder.toString(), StaticCache.serverData.getName(), player.getName());
             player.sendMessage(packet.getCommand());
 
-            Functions.post(packet, "post/command");
+            Functions.post(packet, "command");
 
         }
 

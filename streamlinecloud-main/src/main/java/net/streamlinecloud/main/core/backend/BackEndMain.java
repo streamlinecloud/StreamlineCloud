@@ -32,6 +32,7 @@ public class BackEndMain {
 
         app.get("/streamline/groups", groupsController::getAll);
         app.get("/streamline/groups/{name}", groupsController::get);
+        app.get("/streamline/groups/{name}/servers", groupsController::servers);
 
         app.get("/streamline/servers/allSnapshots", serverController::getAllSnapshots);
         app.get("/streamline/servers/fallbackServers", serverController::getFallbackServers);

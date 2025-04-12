@@ -77,8 +77,6 @@ public class VelocitySCP {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
 
-            System.out.println("1");
-
             List<StreamlineServerSnapshot> servers = new Gson().fromJson(Functions.get("servers/allSnapshots"), new TypeToken<List<StreamlineServerSnapshot>>(){}.getType());
 
             for (String s : allServers[0]) getProxy().unregisterServer(proxy.getServer(s).get().getServerInfo());
