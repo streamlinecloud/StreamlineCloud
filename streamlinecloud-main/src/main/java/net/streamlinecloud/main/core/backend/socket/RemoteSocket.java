@@ -22,7 +22,7 @@ public class RemoteSocket {
 
     @SneakyThrows
     public RemoteSocket() {
-        String serverURI = Cache.i().getConfig().getWebsocketUrl();
+        String serverURI = Cache.i().getConfig().getWebsocket().getWebsocketUrl();
         client = new WebSocketClient(new URI(serverURI)) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {

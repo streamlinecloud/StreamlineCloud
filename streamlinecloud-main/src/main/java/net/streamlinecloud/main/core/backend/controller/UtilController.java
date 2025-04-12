@@ -42,7 +42,7 @@ public class UtilController {
     }
 
     public void whitelist(@NotNull Context context) {
-        if (!Cache.i().config.isWhitelistEnabled()) {
+        if (!Cache.i().config.getWhitelist().isWhitelistEnabled()) {
             context.result("false");
             context.status(200);
             return;

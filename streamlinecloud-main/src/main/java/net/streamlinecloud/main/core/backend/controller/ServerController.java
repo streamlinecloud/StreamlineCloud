@@ -40,7 +40,7 @@ public class ServerController {
     }
 
     public void getFallbackServers(@NotNull Context context) {
-        List<CloudServer> servers = StreamlineCloud.getGroupOnlineServers(StreamlineCloud.getGroupByName(Cache.i().getConfig().getFallbackGroup()));
+        List<CloudServer> servers = StreamlineCloud.getGroupOnlineServers(StreamlineCloud.getGroupByName(Cache.i().getConfig().getFallback().getFallbackGroup()));
         List<String> names = new ArrayList<>();
         for (CloudServer s : servers) names.add(s.getName());
 

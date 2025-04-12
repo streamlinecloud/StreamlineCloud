@@ -84,7 +84,7 @@ public class CloudMain {
 
         StreamlineCloud.log("lang.welcome");
 
-        if (Cache.i().getConfig().isUseMultiRoot() || Cache.i().getConfig().isUseWebSocket()) {
+        if (Cache.i().getConfig().getWebsocket().isUseWebSocket()) {
             Cache.i().setWebSocketClient(new RemoteSocket());
         }
 

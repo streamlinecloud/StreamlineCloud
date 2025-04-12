@@ -45,7 +45,7 @@ public class StreamlineCloud {
         } while (generatedPorts.contains(port));
 
         generatedPorts.add(port);
-        if (Cache.i().getConfig().isEnableRconSupport()) generatedPorts.add(port + 1);
+        if (Cache.i().getConfig().getAdvanced().isEnableRconSupport()) generatedPorts.add(port + 1);
 
         return port;
     }
@@ -330,7 +330,7 @@ public class StreamlineCloud {
 
     public static String generateApiKey() {
 
-        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.:/*+-~^";
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.:*+-~";
         StringBuilder builder = new StringBuilder();
         int length = 120;
 

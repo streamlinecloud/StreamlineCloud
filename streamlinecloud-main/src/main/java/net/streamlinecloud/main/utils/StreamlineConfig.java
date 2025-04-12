@@ -16,25 +16,45 @@ import java.util.List;
 @Getter @Setter
 public class StreamlineConfig {
 
-    int defaultProxyPort;
-    int communicationBridgePort;
-
     String language;
     String defaultJavaPath;
-    String fallbackGroup;
+    FallbackConfig fallback = new FallbackConfig();
+    WhitelistConfig whitelist = new WhitelistConfig();
+    WebSocketConfig websocket = new WebSocketConfig();
+    NetworkConfig network = new NetworkConfig();
+    AdvancedConfig advanced = new AdvancedConfig();
 
-    boolean useWebSocket = false;
-    String websocketUrl = "http://localhost:3000";
+    @Getter @Setter
+    public static class FallbackConfig {
+        String fallbackGroup;
+        String fallbackPlayerSpreading = "SPLIT"; //BUNDLE or SPLIT
+        boolean dynamicFallbacks = false;
+    }
 
-    boolean useMultiRoot = false;
-    String multiRootConnection = "";
+    @Getter @Setter
+    public static class WhitelistConfig {
+        boolean whitelistEnabled = false;
+        List<String> whitelist = new ArrayList<>();
+    }
 
-    boolean disableColors = false;
-    boolean useLegacyColor = false;
-    boolean enableRconSupport = true;
+    @Getter @Setter
+    public static class WebSocketConfig {
+        boolean useWebSocket = false;
+        String websocketUrl = "http://localhost:3000";
+    }
 
-    boolean whitelistEnabled = false;
-    List<String> whitelist = new ArrayList<>();
+    @Getter @Setter
+    public static class NetworkConfig {
+        int defaultProxyPort;
+        int communicationBridgePort;
+    }
+
+    @Getter @Setter
+    public static class AdvancedConfig {
+        boolean disableColors = false;
+        boolean useLegacyColor = false;
+        boolean enableRconSupport = true;
+    }
 
     public static StreamlineConfig fromJson(String json) {
         Gson gson = new Gson();
@@ -42,11 +62,11 @@ public class StreamlineConfig {
     }
 
     public StreamlineConfig(String defaultJavaPath, int defaultProxyPort, int communicationBridgePort, String fallbackGroup) {
-        this.defaultJavaPath = defaultJavaPath;
-        this.defaultProxyPort = defaultProxyPort;
-        this.communicationBridgePort = communicationBridgePort;
-        this.fallbackGroup = fallbackGroup;
         this.language = "en.json";
+        this.defaultJavaPath = defaultJavaPath;
+        this.network.defaultProxyPort = defaultProxyPort;
+        this.network.communicationBridgePort = communicationBridgePort;
+        this.fallback.fallbackGroup = fallbackGroup;
     }
 
     @SneakyThrows
@@ -89,8 +109,8 @@ public class StreamlineConfig {
         reader.close();
         Cache.i().setApiKey(firstLine);
 
-        Cache.i().setDisabledColors(Cache.i().getConfig().disableColors);
-        Cache.i().setUseLgecyColor(Cache.i().getConfig().useLegacyColor);
+        Cache.i().setDisabledColors(Cache.i().getConfig().advanced.disableColors);
+        Cache.i().setUseLgecyColor(Cache.i().getConfig().advanced.useLegacyColor);
 
         if (files != null) {
             for (File file : files) {

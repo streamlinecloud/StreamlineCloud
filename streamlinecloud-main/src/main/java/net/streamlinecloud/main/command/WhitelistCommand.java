@@ -25,23 +25,23 @@ public class WhitelistCommand extends CloudCommand {
 
         if (args.length == 3) {
 
-            Cache.i().getConfig().getWhitelist().add(args[2]);
+            Cache.i().getConfig().getWhitelist().getWhitelist().add(args[2]);
             StreamlineCloud.log("Added " + args[2] + " to the whitelist");
             StreamlineConfig.saveConfig();
 
         }
 
         if (args[1].equals("enable")) {
-            if (!Cache.i().getConfig().isWhitelistEnabled()) {
-                Cache.i().getConfig().setWhitelistEnabled(true);
+            if (!Cache.i().getConfig().getWhitelist().isWhitelistEnabled()) {
+                Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
                 StreamlineCloud.log("Whitelist enabled");
                 StreamlineConfig.saveConfig();
             }
         }
 
         if (args[1].equals("disable")) {
-            if (Cache.i().getConfig().isWhitelistEnabled()) {
-                Cache.i().getConfig().setWhitelistEnabled(false);
+            if (Cache.i().getConfig().getWhitelist().isWhitelistEnabled()) {
+                Cache.i().getConfig().getWhitelist().setWhitelistEnabled(false);
                 StreamlineCloud.log("Whitelist disabled");
                 StreamlineConfig.saveConfig();
             }

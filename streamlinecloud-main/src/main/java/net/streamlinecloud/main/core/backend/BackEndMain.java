@@ -47,7 +47,7 @@ public class BackEndMain {
 
         Cache.serverSocket = new ServerSocket();
 
-        Cache.i().getBackend().start(Cache.i().getConfig().getCommunicationBridgePort());
+        Cache.i().getBackend().start(Cache.i().getConfig().getNetwork().getCommunicationBridgePort());
         StreamlineCloud.log("sl.backend.started");
 
 
