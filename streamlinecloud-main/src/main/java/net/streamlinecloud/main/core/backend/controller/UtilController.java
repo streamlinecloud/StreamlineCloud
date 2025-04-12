@@ -41,6 +41,11 @@ public class UtilController {
         context.status(200);
     }
 
+    public void fallbackSpreading(@NotNull Context context) {
+        context.result(Cache.i().getConfig().getFallback().getFallbackPlayerSpreading());
+        context.status(200);
+    }
+
     public void whitelist(@NotNull Context context) {
         if (!Cache.i().config.getWhitelist().isWhitelistEnabled()) {
             context.result("false");

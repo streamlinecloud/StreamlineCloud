@@ -137,6 +137,7 @@ public class CloudServer extends StreamlineServer {
                 properties.setProperty("enable-rcon", "true");
                 properties.setProperty("rcon.port", String.valueOf(getPort() + 1));
                 properties.setProperty("rcon.password", rconpw);
+                properties.setProperty("max-players", String.valueOf(group.getServerOnlineCount()));
 
                 properties.store(Files.newBufferedWriter(Path.of(propertiesFile.toURI())), null);
 

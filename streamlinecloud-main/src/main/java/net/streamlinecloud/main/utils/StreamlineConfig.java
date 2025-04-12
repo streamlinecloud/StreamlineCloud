@@ -27,8 +27,9 @@ public class StreamlineConfig {
     @Getter @Setter
     public static class FallbackConfig {
         String fallbackGroup;
-        String fallbackPlayerSpreading = "SPLIT"; //BUNDLE or SPLIT
+        String fallbackPlayerSpreading = "RANDOM";
         boolean dynamicFallbacks = false;
+        String _info = "dynamicFallbacks starts and stopps the fallbacks based on the network player count. You can set fallbackPlayerSpreading to SPLIT, BUNDLE, RANDOM";
     }
 
     @Getter @Setter

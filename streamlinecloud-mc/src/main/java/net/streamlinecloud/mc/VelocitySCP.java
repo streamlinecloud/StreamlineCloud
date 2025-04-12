@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 @Getter
@@ -40,8 +41,10 @@ public class VelocitySCP {
 
     private final ProxyServer proxy;
     private final Logger logger;
+    private String playerSpreading;
 
     List<String> fallbacks = new ArrayList<>();
+    List<StreamlineServerSnapshot> servers = new ArrayList<>();
 
     @Inject
     public VelocitySCP(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
@@ -66,6 +69,8 @@ public class VelocitySCP {
         final List<String>[] allServers = new List[]{new ArrayList<>()};
         String whitelist = Functions.get("whitelist");
 
+        playerSpreading = Functions.get("fallback-spreading");
+
         assert whitelist != null;
         if (whitelist.equals("false")) {
             StaticCache.whitelistEnabled = false;
@@ -77,7 +82,7 @@ public class VelocitySCP {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
 
-            List<StreamlineServerSnapshot> servers = new Gson().fromJson(Functions.get("servers/allSnapshots"), new TypeToken<List<StreamlineServerSnapshot>>(){}.getType());
+            servers = new Gson().fromJson(Functions.get("servers/allSnapshots"), new TypeToken<List<StreamlineServerSnapshot>>(){}.getType());
 
             for (String s : allServers[0]) getProxy().unregisterServer(proxy.getServer(s).get().getServerInfo());
             allServers[0] = new ArrayList<>();
@@ -130,7 +135,13 @@ public class VelocitySCP {
                 }
             }
 
-            if (event.getPlayer().getCurrentServer().isEmpty()) event.setInitialServer(searchFallback().get());
+            Optional<RegisteredServer> server = searchFallback();
+            if (server == null) {
+                player.disconnect(Component.text("§cThere are no fallback servers available\n§8»§l§cStreamlineCloud"));
+                return;
+            }
+
+            if (event.getPlayer().getCurrentServer().isEmpty()) event.setInitialServer(server.get());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,7 +154,13 @@ public class VelocitySCP {
 
         if (!fallbacks.contains(event.getServer().getServerInfo().getName())) {
 
-            event.setResult(KickedFromServerEvent.RedirectPlayer.create(searchFallback().get()));
+            Optional<RegisteredServer> server = searchFallback();
+            if (server == null) {
+                player.disconnect(Component.text("§cThere are no fallback servers available\n§8»§l§cStreamlineCloud"));
+                return;
+            }
+
+            event.setResult(KickedFromServerEvent.RedirectPlayer.create(server.get()));
             return;
         }
 
@@ -166,7 +183,62 @@ public class VelocitySCP {
     }
 
     public Optional<RegisteredServer> searchFallback() {
-        return proxy.getServer(fallbacks.get(new Random().nextInt(fallbacks.size())));
+        if (fallbacks.isEmpty()) return null;
+
+        switch (playerSpreading) {
+            case "RANDOM" -> {
+                System.out.println("RANDOM");
+                return proxy.getServer(fallbacks.get(new Random().nextInt(fallbacks.size())));
+            }
+            case "SPLIT" -> {
+                System.out.println("SPLIT");
+                AtomicReference<StreamlineServerSnapshot> target = new AtomicReference<>();
+
+                for (String fallback : fallbacks) {
+                    StreamlineServerSnapshot serverSnapshot = getServerSnapshot(fallback);
+
+                    if (target.get() == null) {
+                        if (serverSnapshot.getOnlineCount() != serverSnapshot.getMaxOnlineCount()) target.set(serverSnapshot);
+                    } else {
+                        if (target.get().getOnlineCount() > serverSnapshot.getOnlineCount() && serverSnapshot.getOnlineCount() != serverSnapshot.getMaxOnlineCount()) {
+                            target.set(serverSnapshot);
+                        }
+                    }
+
+                }
+
+                return proxy.getServer(target.get().getName());
+
+            }
+            case "BUNDLE" -> {
+                System.out.println("BUNDLE");
+                AtomicReference<StreamlineServerSnapshot> target = new AtomicReference<>();
+
+                for (String fallback : fallbacks) {
+                    StreamlineServerSnapshot serverSnapshot = getServerSnapshot(fallback);
+
+                    if (target.get() == null) {
+                        if (serverSnapshot.getOnlineCount() != serverSnapshot.getMaxOnlineCount()) target.set(serverSnapshot);
+                    } else {
+                        if (target.get().getOnlineCount() < serverSnapshot.getOnlineCount() && serverSnapshot.getOnlineCount() != serverSnapshot.getMaxOnlineCount())
+                            target.set(serverSnapshot);
+                    }
+
+                }
+
+                return proxy.getServer(target.get().getName());
+
+            }
+        }
+
+        return null;
+    }
+
+    public StreamlineServerSnapshot getServerSnapshot(String name) {
+        for (StreamlineServerSnapshot server : servers) {
+            if (server.getName().equals(name)) return server;
+        }
+        return null;
     }
 
 }

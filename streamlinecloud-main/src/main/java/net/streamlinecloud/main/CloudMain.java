@@ -88,6 +88,13 @@ public class CloudMain {
             Cache.i().setWebSocketClient(new RemoteSocket());
         }
 
+        String playerSpreading = Cache.i().getConfig().getFallback().getFallbackPlayerSpreading();
+        if (!(playerSpreading.equals("SPLIT") || playerSpreading.equals("BUNDLE") || playerSpreading.equals("RANDOM"))) {
+            StreamlineCloud.logError("The config option '" + playerSpreading + "' for fallbackPlayerSpreading is invalid. Set it to 'SPLIT' or 'BUNDLE'");
+            StreamlineCloud.log("Changed config value fallbackPlayerSpreading to 'RANDOM'");
+            Cache.i().getConfig().getFallback().setFallbackPlayerSpreading("RANDOM");
+        }
+
         BackEndMain.startBE();
 
         Cache.i().getPluginManager().loadPlugins();

@@ -33,7 +33,7 @@ public class ServerController {
     public void getAllSnapshots(@NotNull Context context) {
         AtomicReference<List<StreamlineServerSnapshot>> snapshots = new AtomicReference<>(new ArrayList<>());
 
-        Cache.i().getRunningServers().forEach(server -> snapshots.get().add(new StreamlineServerSnapshot(server.getName(), server.getUuid(), server.getPort())));
+        Cache.i().getRunningServers().forEach(server -> snapshots.get().add(new StreamlineServerSnapshot(server.getName(), server.getUuid(), server.getPort(), server.getOnlinePlayers().size(), server.getMaxOnlineCount())));
 
         context.result(new Gson().toJson(snapshots.get()));
         context.status(200);

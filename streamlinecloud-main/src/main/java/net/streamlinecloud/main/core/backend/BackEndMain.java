@@ -28,6 +28,7 @@ public class BackEndMain {
         app.get("/streamline/ping", utilController::ping);
         app.get("/streamline/uptime", utilController::uptime);
         app.get("/streamline/whitelist", utilController::whitelist);
+        app.get("/streamline/fallback-spreading", utilController::fallbackSpreading);
         app.post("/streamline/command", utilController::command);
 
         app.get("/streamline/groups", groupsController::getAll);

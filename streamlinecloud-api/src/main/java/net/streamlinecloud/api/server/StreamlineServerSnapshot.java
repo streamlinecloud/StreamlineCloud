@@ -10,5 +10,7 @@ public class StreamlineServerSnapshot {
     String name;
     String uuid;
     int port;
+    int onlineCount;
+    int maxOnlineCount;
 
 }

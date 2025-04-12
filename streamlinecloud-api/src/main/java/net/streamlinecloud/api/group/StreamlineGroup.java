@@ -10,6 +10,7 @@ import java.util.List;
 public class StreamlineGroup implements StreamlineGroupImpl {
 
     String name;
+    int serverOnlineCount = 50;
     int minOnlineCount;
     List<String> templates;
     String javaExec;
