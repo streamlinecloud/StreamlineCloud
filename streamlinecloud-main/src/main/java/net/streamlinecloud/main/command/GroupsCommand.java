@@ -51,7 +51,6 @@ public class GroupsCommand extends CloudCommand {
 
                     CloudGroup group = new CloudGroup(
                             name,
-                            Cache.i().getConfig().getDefaultJavaPath(),
                             1,
                             new ArrayList<>(), runtime);
                     group.setStaticGroup(staticGroup);

@@ -42,53 +42,52 @@ public class StreamlineSetup {
                 CloudMain.getInstance().initLang();
                 StreamlineCloud.log("lang.welcome");
 
-                new ConsoleQuestion(ConsoleQuestion.InputType.STRING, "sl.setup.enterJavaPath", output1 -> {
-                    Cache.i().getConfig().setDefaultJavaPath(output1);
-                    StreamlineConfig.saveConfig();
+                String javaPath = System.getProperty("java.home")  + "/bin/java";
+                StreamlineCloud.log("Changing the default Java path to " + javaPath);
+                Cache.i().getConfig().setDefaultJavaPath(javaPath);
 
-                    new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.generateGroups", output2 -> {
+                StreamlineConfig.saveConfig();
 
-                        if (output2.equals("yes")) {
+                new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.generateGroups", output2 -> {
 
-                            CloudGroup lobby = new CloudGroup(
-                                    "lobby",
-                                    Cache.i().getConfig().getDefaultJavaPath(),
-                                    1,
-                                    List.of(), ServerRuntime.SERVER);
-                            CloudGroup proxy = new CloudGroup(
-                                    "proxy",
-                                    Cache.i().getConfig().getDefaultJavaPath(),
-                                    1,
-                                    List.of(), ServerRuntime.PROXY);
+                    if (output2.equals("yes")) {
 
-                            try {
-                                lobby.save();
-                                proxy.save();
-                            } catch (IOException e) {
-                                StreamlineCloud.log("sl.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", e.getMessage())});
-                                return;
-                            }
+                        CloudGroup lobby = new CloudGroup(
+                                "lobby",
+                                1,
+                                List.of(), ServerRuntime.SERVER);
+                        CloudGroup proxy = new CloudGroup(
+                                "proxy",
+                                1,
+                                List.of(), ServerRuntime.PROXY);
 
-                            StreamlineCloud.log("sl.setup.groupsGenerated");
-                            StreamlineCloud.log("sl.setup.downloading");
-
-                            StreamlineCloud.download("https://api.papermc.io/v2/projects/velocity/versions/3.4.0-SNAPSHOT/builds/483/downloads/velocity-3.4.0-SNAPSHOT-483.jar", "default/proxy", proxySuccess ->  {
-                                StreamlineCloud.download("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar", "default/server", lobbySuccess -> {
-                                    finishSetup();
-                                });
-                            });
-
-                            try {
-                                Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity/velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
-                                Files.writeString(Path.of(Cache.i().homeFile + "/templates/default/proxy/forwarding.secret"), new Random().nextInt(999999999) + "", StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                        } else {
-                            finishSetup();
+                        try {
+                            lobby.save();
+                            proxy.save();
+                        } catch (IOException e) {
+                            StreamlineCloud.log("sl.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", e.getMessage())});
+                            return;
                         }
-                    });
+
+                        StreamlineCloud.log("sl.setup.groupsGenerated");
+                        StreamlineCloud.log("sl.setup.downloading");
+
+                        StreamlineCloud.download("https://api.papermc.io/v2/projects/velocity/versions/3.4.0-SNAPSHOT/builds/483/downloads/velocity-3.4.0-SNAPSHOT-483.jar", "default/proxy", proxySuccess ->  {
+                            StreamlineCloud.download("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar", "default/server", lobbySuccess -> {
+                                finishSetup();
+                            });
+                        });
+
+                        try {
+                            Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity/velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
+                            Files.writeString(Path.of(Cache.i().homeFile + "/templates/default/proxy/forwarding.secret"), new Random().nextInt(999999999) + "", StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    } else {
+                        finishSetup();
+                    }
                 });
             } else {
                 new StreamlineSetup();

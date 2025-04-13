@@ -15,9 +15,9 @@ import java.util.List;
 @Getter
 public class CloudGroup extends StreamlineGroup {
 
-    public CloudGroup(String name, String javaExec, int minOnlineCount, List<String> templates, ServerRuntime runtime) {
+    public CloudGroup(String name, int minOnlineCount, List<String> templates, ServerRuntime runtime) {
         setName(name);
-        setJavaExec(javaExec);
+        setJavaExec("%default");
         setMinOnlineCount(minOnlineCount);
         setTemplates(templates);
         setRuntime(runtime);

@@ -30,7 +30,7 @@ public class ServerStarterTask {
                     if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
                 }
 
-                server.start(new File(server.getGroupDirect().getJavaExec()));
+                server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
                 Cache.i().getServersWaitingForStart().remove(server);
                 } catch (IOException e) {
                     throw new RuntimeException(e);

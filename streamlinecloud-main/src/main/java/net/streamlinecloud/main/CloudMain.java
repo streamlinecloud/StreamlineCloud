@@ -51,7 +51,7 @@ public class CloudMain {
 
         StreamlineCloud.logSingle("§RED" + StreamlineCloud.streamlineBanner());
         StreamlineCloud.logSingle("");
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDA Streamlined Minecraft network");
+        StreamlineCloud.logSingle("§DARK_GRAY-> §REDA streamlined Minecraft network");
         StreamlineCloud.logSingle("");
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDVersion: §AQUA" + MainBuildConfig.VERSION);
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + Settings.authors);
@@ -117,7 +117,7 @@ public class CloudMain {
         registerCommand(new DownloadCommand());
         registerCommand(new WhitelistCommand());
 
-        if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", Cache.i().getConfig().getDefaultJavaPath(), 0, new ArrayList<>(), ServerRuntime.SERVER));
+        if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER));
         Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());
 
     }
