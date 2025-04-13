@@ -354,7 +354,7 @@ public class StreamlineCloud {
         return builder.toString();
     }
 
-    public static void download(String url, String file, CloudGroup.DownloadResponse response) {
+    public static boolean download(String url, String file, CloudGroup.DownloadResponse response) {
         File template_dir = new File(System.getProperty("user.dir") + "/templates/" + file);
         Downloader downloader = new Downloader();
         try {
@@ -366,7 +366,9 @@ public class StreamlineCloud {
         } catch (Exception e) {
             StreamlineCloud.log("sl.group.downloadFailed");
             response.execute(false);
+            return false;
         }
+        return true;
     }
 
     public static String generatePassword() {
