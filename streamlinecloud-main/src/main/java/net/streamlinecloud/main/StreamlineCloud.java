@@ -321,7 +321,15 @@ public class StreamlineCloud {
             }
         }
 
-        log("sl.thanksForUsing");
+        if (Cache.i().isFirstLaunch()) {
+            logSingle("");
+            logSingle(readyBanner());
+            logSingle("");
+            logSingle("Please start StreamlineCloud again.");
+            logSingle("");
+        } else {
+            log("sl.thanksForUsing");
+        }
 
         CloudMain.getInstance().getTerminal().close();
 
