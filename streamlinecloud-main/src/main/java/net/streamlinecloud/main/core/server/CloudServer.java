@@ -39,6 +39,7 @@ public class CloudServer extends StreamlineServer {
     Thread thread;
     Process process;
     List<String> commandQueue = new ArrayList<>();
+    final String address = "localhost";
 
     List<String> customTemplates = new ArrayList<>();
 
@@ -89,10 +90,10 @@ public class CloudServer extends StreamlineServer {
                 .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
                 .create();
 
-        for (String session : Cache.serverSocket.subscribedStartingServers.keySet()) {
-            for (StreamlineGroup group : Cache.serverSocket.subscribedStartingServers.get(session)) {
+        for (String session : Cache.i().getServerSocket().subscribedStartingServers.keySet()) {
+            for (StreamlineGroup group : Cache.i().getServerSocket().subscribedStartingServers.get(session)) {
                 if (group.getName().equals(getGroup())) {
-                    Cache.serverSocket.sessionMap.get(session).send(gson.toJson(this));
+                    Cache.i().getServerSocket().sessionMap.get(session).send(gson.toJson(this));
                 }
             }
         }
@@ -179,6 +180,14 @@ public class CloudServer extends StreamlineServer {
                 properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
                 setPort(Integer.parseInt(properties.getProperty("server-port")));
             }
+        }
+
+        File velocityFile = new File(file.getAbsolutePath() + "/velocity.toml");
+
+        if (velocityFile.exists()) {
+            String content = new String(Files.readAllBytes(velocityFile.toPath()));
+            content = content.replace("%port", getPort() + "");
+            Files.write(velocityFile.toPath(), content.getBytes());
         }
 
         //Apikey

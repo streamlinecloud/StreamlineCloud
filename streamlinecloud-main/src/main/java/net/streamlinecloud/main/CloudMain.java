@@ -2,6 +2,7 @@ package net.streamlinecloud.main;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.command.*;
+import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
@@ -96,6 +97,8 @@ public class CloudMain {
         }
 
         BackEndMain.startBE();
+
+        for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) loadBalancer.start();
 
         Cache.i().getPluginManager().loadPlugins();
         Cache.i().getPluginManager().executeStartup();

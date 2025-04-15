@@ -3,6 +3,7 @@ package net.streamlinecloud.main.utils;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
@@ -45,6 +46,7 @@ public class StreamlineSetup {
                 String javaPath = System.getProperty("java.home")  + "/bin/java";
                 StreamlineCloud.log("Changing the default Java path to " + javaPath);
                 Cache.i().getConfig().setDefaultJavaPath(javaPath);
+                Cache.i().getConfig().getNetwork().setLoadBalancers(new LoadBalancer[]{new LoadBalancer("MainLoadBalancer", "proxy", 25565)});
 
                 new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "Do you want to enable the whitelist", output1 -> {
                     if (output1.equals("yes")) {
@@ -75,31 +77,33 @@ public class StreamlineSetup {
                                 return;
                             }
 
+                            new File(Cache.i().homeFile + "/templates/default/proxy").mkdirs();
+                            new File(Cache.i().homeFile + "/templates/default/server").mkdirs();
+
                             StreamlineCloud.log("sl.setup.groupsGenerated");
                             StreamlineCloud.log("sl.setup.downloading");
 
                             boolean download = StreamlineCloud.download("https://api.papermc.io/v2/projects/velocity/versions/3.4.0-SNAPSHOT/builds/483/downloads/velocity-3.4.0-SNAPSHOT-483.jar", "default/proxy", proxySuccess ->  {
                                 StreamlineCloud.download("https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/318/downloads/paper-1.20.2-318.jar", "default/server", lobbySuccess -> {
+
+                                    try {
+                                        Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
+                                        Files.writeString(Path.of(Cache.i().homeFile + "/templates/default/proxy/forwarding.secret"), new Random().nextInt(999999999) + "", StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
+                                    finishSetup();
                                 });
                             });
 
-                            if (download) {
-
-                                finishSetup();
-
-                                try {
-                                    Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity/velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
-                                    Files.writeString(Path.of(Cache.i().homeFile + "/templates/default/proxy/forwarding.secret"), new Random().nextInt(999999999) + "", StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-
-                            } else {
+                            if (!download) {
 
                                 StreamlineCloud.logError("WARNING: We couldn't find server jar files. StreamlineCloud wont work out of the box!");
 
                                 Thread.sleep(5000);
                                 finishSetup();
+
                             }
 
                         } else {

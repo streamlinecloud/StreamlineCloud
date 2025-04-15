@@ -4,6 +4,7 @@ package net.streamlinecloud.main.utils;
 import com.google.gson.Gson;
 import io.javalin.Javalin;
 import io.streamlinemc.api.RestUtils.RconData;
+import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
@@ -54,8 +55,9 @@ public class Cache {
     public boolean useLgecyColor = false;
     public Javalin backend;
     public final HashMap<String, RconData> rconDetails = new HashMap<>();
-    public static int currentAnimationLine = 1;
-    public static ServerSocket serverSocket;
+    public int currentAnimationLine = 1;
+    public ServerSocket serverSocket;
+    public int networkPlayerCount = 0;
 
     public static Cache i() {
         return i;

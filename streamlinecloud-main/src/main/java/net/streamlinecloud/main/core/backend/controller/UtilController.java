@@ -66,4 +66,11 @@ public class UtilController {
         context.status(200);
     }
 
+    //This needs to be optimized for the cluster feature
+    public void reportProxyOnlineCount(@NotNull Context context) {
+        String name = context.pathParam("name");
+
+        Cache.i().setNetworkPlayerCount(Integer.parseInt(context.body()));
+    }
+
 }

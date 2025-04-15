@@ -30,6 +30,7 @@ public class BackEndMain {
         app.get("/streamline/whitelist", utilController::whitelist);
         app.get("/streamline/fallback-spreading", utilController::fallbackSpreading);
         app.post("/streamline/command", utilController::command);
+        app.post("/streamline/report-proxy-online-count/{name}", utilController::reportProxyOnlineCount);
 
         app.get("/streamline/groups", groupsController::getAll);
         app.get("/streamline/groups/{name}", groupsController::get);
@@ -46,7 +47,7 @@ public class BackEndMain {
 
         app.get("/streamline/servers/name/{name}", serverController::get);
 
-        Cache.serverSocket = new ServerSocket();
+        Cache.i().setServerSocket(new ServerSocket());
 
         Cache.i().getBackend().start(Cache.i().getConfig().getNetwork().getCommunicationBridgePort());
         StreamlineCloud.log("sl.backend.started");

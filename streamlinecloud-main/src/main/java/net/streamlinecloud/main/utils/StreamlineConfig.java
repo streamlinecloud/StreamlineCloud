@@ -2,6 +2,7 @@ package net.streamlinecloud.main.utils;
 
 import com.google.gson.Gson;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,10 @@ public class StreamlineConfig {
     WebSocketConfig websocket = new WebSocketConfig();
     NetworkConfig network = new NetworkConfig();
     AdvancedConfig advanced = new AdvancedConfig();
+
+    public static Gson gson = new Gson().newBuilder()
+                .setPrettyPrinting()
+            .create();
 
     @Getter @Setter
     public static class FallbackConfig {
@@ -48,6 +53,7 @@ public class StreamlineConfig {
     public static class NetworkConfig {
         int defaultProxyPort;
         int communicationBridgePort;
+        LoadBalancer[] loadBalancers = new LoadBalancer[]{};
     }
 
     @Getter @Setter
@@ -87,7 +93,7 @@ public class StreamlineConfig {
         }
 
         String jsonConfig = FileUtils.readFileToString(configFile, Charset.defaultCharset());
-        StreamlineConfig config = new Gson().newBuilder().setPrettyPrinting().create().fromJson(jsonConfig, StreamlineConfig.class);
+        StreamlineConfig config = gson.fromJson(jsonConfig, StreamlineConfig.class);
         Cache.i().setConfig(config);
 
 
@@ -140,7 +146,7 @@ public class StreamlineConfig {
     }
 
     public static void saveConfig() {
-        String json = new Gson().newBuilder().setPrettyPrinting().create().toJson(Cache.i().getConfig(), StreamlineConfig.class);
+        String json = gson.toJson(Cache.i().getConfig(), StreamlineConfig.class);
         File config = new File(Cache.i().homeFile + "/data/config.json");
         try {
             FileUtils.writeStringToFile(config, json);

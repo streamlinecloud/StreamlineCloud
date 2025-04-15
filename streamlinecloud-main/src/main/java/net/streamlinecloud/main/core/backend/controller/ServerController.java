@@ -6,11 +6,9 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.streamlinemc.api.RestUtils.RconData;
 import net.streamlinecloud.api.packet.StartServerPacket;
-import net.streamlinecloud.api.server.ServerState;
-import net.streamlinecloud.api.server.StreamlineServer;
-import net.streamlinecloud.api.server.StreamlineServerSerializer;
-import net.streamlinecloud.api.server.StreamlineServerSnapshot;
+import net.streamlinecloud.api.server.*;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
@@ -106,6 +104,10 @@ public class ServerController {
         if (cs.getServerState().equals(ServerState.STARTING)) {
 
             StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid())});
+
+            for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) {
+                if (loadBalancer.getGroup().equals(cs.getGroup())) loadBalancer.registerServer(cs);
+            }
         }
 
         cs.setOnlinePlayers(s.getOnlinePlayers());
@@ -117,12 +119,12 @@ public class ServerController {
                 .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
                 .create();
 
-        for (String session : Cache.serverSocket.servers.keySet()) {
-            for (StreamlineServer server : Cache.serverSocket.servers.get(session)) {
+        for (String session : Cache.i().getServerSocket().servers.keySet()) {
+            for (StreamlineServer server : Cache.i().getServerSocket().servers.get(session)) {
                 if (server.getUuid().equals(s.getUuid())) {
-                    for (StreamlineServer streamlineServer : Cache.serverSocket.servers.get(session)) {
+                    for (StreamlineServer streamlineServer : Cache.i().getServerSocket().servers.get(session)) {
                         if (streamlineServer.getUuid().equals(cs.getUuid())) {
-                            Cache.serverSocket.sessionMap.get(session).send(gson.toJson(s));
+                            Cache.i().getServerSocket().sessionMap.get(session).send(gson.toJson(s));
                         }
                     }
                 }

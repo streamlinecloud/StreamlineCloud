@@ -4,6 +4,8 @@ import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.utils.Cache;
 import lombok.Getter;
 
+import java.io.IOException;
+
 @Getter
 public class ConsoleQuestion {
 
@@ -45,6 +47,8 @@ public class ConsoleQuestion {
             getNext().execute(input);
             Cache.i().getConsoleInputs().remove(this);
         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

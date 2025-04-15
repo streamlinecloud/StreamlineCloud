@@ -16,13 +16,20 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import io.leangen.geantyref.TypeToken;
+import net.streamlinecloud.api.server.ServerRuntime;
+import net.streamlinecloud.api.server.ServerState;
+import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSnapshot;
+import net.streamlinecloud.mc.core.StreamlineCloud;
+import net.streamlinecloud.mc.core.player.PlayerManager;
+import net.streamlinecloud.mc.core.server.ServerManager;
 import net.streamlinecloud.mc.utils.Functions;
 import net.streamlinecloud.mc.utils.StaticCache;
 import net.streamlinecloud.mc.utils.Utils;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
@@ -39,6 +46,7 @@ import java.util.logging.Logger;
         url = "https://streamlinemc.cloud", description = "Bridge for Streamlinecloud", authors = {"Quinilo", "creperozelot"})
 public class VelocitySCP {
 
+    StreamlineCloud streamlineCloud;
     private final ProxyServer proxy;
     private final Logger logger;
     private String playerSpreading;
@@ -64,8 +72,10 @@ public class VelocitySCP {
     }
 
     public void onLoad() {
-
+        StaticCache.setRuntime(ServerRuntime.PROXY);
         Functions.startup();
+        streamlineCloud = new StreamlineCloud();
+
         final List<String>[] allServers = new List[]{new ArrayList<>()};
         String whitelist = Functions.get("whitelist");
 
@@ -110,6 +120,23 @@ public class VelocitySCP {
         }, 0, 3, TimeUnit.SECONDS);
     }
 
+    public void uploadServerInfo() {
+        StreamlineServer s = getServer(UUID.fromString(StaticCache.serverData.getUuid()));
+        HashMap<UUID, String> players = new HashMap<>();
+        for (Player player : getProxy().getAllPlayers()) {
+            players.put(player.getUniqueId(), player.getUsername());
+        }
+        s.setOnlinePlayers(players);
+        s.setServerState(ServerState.ONLINE);
+        s.setMaxOnlineCount(-1);
+
+        Functions.post(s, "servers/update");
+    }
+
+    public StreamlineServer getServer(UUID uuid) {
+        return new Gson().fromJson(Functions.get("servers/" + uuid.toString()), StreamlineServer.class);
+    }
+
     public void onEnable() {
     }
 
@@ -121,6 +148,11 @@ public class VelocitySCP {
         ServerInfo serverInfo = new ServerInfo(serverName, address);
 
         proxy.registerServer(serverInfo);
+    }
+
+    @Subscribe
+    public void onProxyInit(ProxyInitializeEvent event) {
+        uploadServerInfo();
     }
 
     @Subscribe
