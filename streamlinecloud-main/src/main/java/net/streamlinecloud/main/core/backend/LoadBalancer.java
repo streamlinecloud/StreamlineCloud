@@ -42,6 +42,7 @@ public class LoadBalancer {
         StreamlineCloud.log(server.getName() + "-" + server.getShortUuid() + " connected to " + name);
     }
 
+    //TODO: upload the player and max player count from the proxy to the backend and select the proxy with the most free slots
     private CloudServer nextServer() {
         if (backendServers.isEmpty()) return null;
         int index = currentIndex.getAndIncrement() % backendServers.size();

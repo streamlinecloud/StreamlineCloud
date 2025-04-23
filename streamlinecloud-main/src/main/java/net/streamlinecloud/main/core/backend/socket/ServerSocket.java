@@ -43,12 +43,15 @@ public class ServerSocket {
                 // subscribe:server:{serverName}
                 // subscribe:starting:{groupName}
 
+                System.out.println("message: " + ctx.message());
+
                 if (ctx.message().startsWith("subscribe")) {
 
                     if (ctx.message().split(":")[1].equals("server")) {
 
                         List<StreamlineServer> s = servers.get(ctx.sessionId());
-                        s.add(StreamlineCloud.getServerByName(ctx.message().split(":")[2]));
+                        StreamlineServer streamlineServer = StreamlineCloud.getServerByName(ctx.message().split(":")[2]);
+                        s.add(streamlineServer);
                         servers.replace(ctx.sessionId(), s);
 
                         ctx.send("success");
