@@ -5,7 +5,7 @@ import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 
-import static net.streamlinecloud.main.plugin.PluginManager.commandManager;
+import static net.streamlinecloud.main.extension.ExtensionManager.commandManager;
 
 public class HelpCommand extends CloudCommand {
 

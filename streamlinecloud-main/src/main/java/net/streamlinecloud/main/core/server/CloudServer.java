@@ -3,9 +3,9 @@ package net.streamlinecloud.main.core.server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.streamlinemc.api.RestUtils.RconData;
+import net.streamlinecloud.api.extension.event.server.*;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
-import net.streamlinecloud.api.plugin.event.predefined.*;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
@@ -29,7 +29,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static net.streamlinecloud.main.plugin.PluginManager.eventManager;
+import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 
 @Getter @Setter
 public class CloudServer extends StreamlineServer {

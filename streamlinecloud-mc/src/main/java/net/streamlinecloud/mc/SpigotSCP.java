@@ -2,16 +2,18 @@ package net.streamlinecloud.mc;
 
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
-import net.streamlinecloud.mc.core.StreamlineCloud;
-import net.streamlinecloud.mc.command.spigot.ConnectCommand;
-import net.streamlinecloud.mc.command.spigot.ServerInfoCommand;
-import net.streamlinecloud.mc.command.spigot.StreamlineCommand;
-import net.streamlinecloud.mc.command.spigot.TestCommand;
-import net.streamlinecloud.mc.listener.spigot.ConnectionListener;
-import net.streamlinecloud.mc.listener.spigot.ServerLoadListener;
-import net.streamlinecloud.mc.utils.Functions;
-import net.streamlinecloud.mc.utils.StaticCache;
+import net.streamlinecloud.mc.common.core.StreamlineCloud;
+import net.streamlinecloud.mc.common.utils.Functions;
+import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
+import net.streamlinecloud.mc.paper.command.ConnectCommand;
+import net.streamlinecloud.mc.paper.command.ServerInfoCommand;
+import net.streamlinecloud.mc.paper.command.StreamlineCommand;
+import net.streamlinecloud.mc.paper.command.TestCommand;
+import net.streamlinecloud.mc.paper.listener.ConnectionListener;
+import net.streamlinecloud.mc.paper.listener.ServerLoadListener;
+import net.streamlinecloud.mc.paper.manager.PlayerManager;
+import net.streamlinecloud.mc.paper.manager.ServerManager;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,7 +36,8 @@ public final class SpigotSCP extends JavaPlugin {
 
         Functions.startup();
 
-        streamlineCloud = new StreamlineCloud();
+        new ServerManager();
+        new PlayerManager();
 
         //ServerManager.getInstance().subscribe(ServerManager.getInstance().getServer("test-1"));
 

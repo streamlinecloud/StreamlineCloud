@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.plugin.Plugin;
-import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
@@ -20,19 +20,18 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSnapshot;
-import net.streamlinecloud.mc.core.StreamlineCloud;
-import net.streamlinecloud.mc.core.player.PlayerManager;
-import net.streamlinecloud.mc.core.server.ServerManager;
-import net.streamlinecloud.mc.utils.Functions;
-import net.streamlinecloud.mc.utils.StaticCache;
-import net.streamlinecloud.mc.utils.Utils;
+import net.streamlinecloud.mc.common.core.StreamlineCloud;
+import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
+import net.streamlinecloud.mc.common.utils.Functions;
+import net.streamlinecloud.mc.common.utils.StaticCache;
+import net.streamlinecloud.mc.common.utils.Utils;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
+import net.streamlinecloud.mc.paper.manager.ServerManager;
+import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
 
 import java.net.InetSocketAddress;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -49,16 +48,22 @@ public class VelocitySCP {
     StreamlineCloud streamlineCloud;
     private final ProxyServer proxy;
     private final Logger logger;
+    @Getter
+    private static VelocitySCP instance;
     private String playerSpreading;
 
     List<String> fallbacks = new ArrayList<>();
     List<StreamlineServerSnapshot> servers = new ArrayList<>();
 
     @Inject
-    public VelocitySCP(ProxyServer proxy, Logger logger, @DataDirectory Path path) {
+    public VelocitySCP(ProxyServer proxy, Logger logger) {
+
         this.proxy = proxy;
-        this.logger = getLogger();
-        this.onLoad();
+        this.logger = logger;
+        instance = this;
+
+        onLoad();
+
     }
 
     @Subscribe
@@ -68,13 +73,14 @@ public class VelocitySCP {
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        this.onEnable();
+
     }
 
     public void onLoad() {
         StaticCache.setRuntime(ServerRuntime.PROXY);
         Functions.startup();
-        streamlineCloud = new StreamlineCloud();
+
+        new ProxyServerManager();
 
         final List<String>[] allServers = new List[]{new ArrayList<>()};
         String whitelist = Functions.get("whitelist");
@@ -120,25 +126,10 @@ public class VelocitySCP {
         }, 0, 3, TimeUnit.SECONDS);
     }
 
-    public void uploadServerInfo() {
-        StreamlineServer s = getServer(UUID.fromString(StaticCache.serverData.getUuid()));
-        HashMap<UUID, String> players = new HashMap<>();
-        for (Player player : getProxy().getAllPlayers()) {
-            players.put(player.getUniqueId(), player.getUsername());
-        }
-        s.setOnlinePlayers(players);
-        s.setServerState(ServerState.ONLINE);
-        s.setMaxOnlineCount(-1);
-
-        Functions.post(s, "servers/update");
-    }
-
     public StreamlineServer getServer(UUID uuid) {
         return new Gson().fromJson(Functions.get("servers/" + uuid.toString()), StreamlineServer.class);
     }
 
-    public void onEnable() {
-    }
 
     public void onDisable() {
     }
@@ -148,11 +139,6 @@ public class VelocitySCP {
         ServerInfo serverInfo = new ServerInfo(serverName, address);
 
         proxy.registerServer(serverInfo);
-    }
-
-    @Subscribe
-    public void onProxyInit(ProxyInitializeEvent event) {
-        uploadServerInfo();
     }
 
     @Subscribe
@@ -178,6 +164,13 @@ public class VelocitySCP {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        ProxyServerManager.getInstance().uploadServerInfo();
+    }
+
+    @Subscribe
+    public void onDisconnect(DisconnectEvent event) {
+        ProxyServerManager.getInstance().uploadServerInfo();
     }
 
     @Subscribe

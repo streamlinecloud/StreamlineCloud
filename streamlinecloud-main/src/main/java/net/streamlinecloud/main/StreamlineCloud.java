@@ -1,7 +1,7 @@
 package net.streamlinecloud.main;
 
 import net.streamlinecloud.api.StreamlineAPI;
-import net.streamlinecloud.api.plugin.event.predefined.ConsoleMessageEvent;
+import net.streamlinecloud.api.extension.event.console.ConsoleMessageEvent;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
@@ -24,7 +24,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static net.streamlinecloud.main.plugin.PluginManager.eventManager;
+import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 
 @Getter
 public class StreamlineCloud {
@@ -338,7 +338,7 @@ public class StreamlineCloud {
 
     public static String generateApiKey() {
 
-        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.:*+-~";
+        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder builder = new StringBuilder();
         int length = 120;
 

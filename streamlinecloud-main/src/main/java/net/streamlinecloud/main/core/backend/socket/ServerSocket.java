@@ -26,7 +26,10 @@ public class ServerSocket {
         Cache.i().backend.ws("/socket/server", ws -> {
             ws.onConnect(ctx -> {
 
-                if (!Objects.equals(ctx.queryParam("key"), Cache.i().apiKey)) {
+                String key = ctx.queryParam("key");
+
+                if ( key == null || !key.equals(Cache.i().apiKey)) {
+                    System.out.println("DEBUG: Received unexpected key: " + key + " should be " + Cache.i().apiKey);
                     ctx.send("403");
                     ctx.closeSession();
                     return;
@@ -42,8 +45,6 @@ public class ServerSocket {
 
                 // subscribe:server:{serverName}
                 // subscribe:starting:{groupName}
-
-                System.out.println("message: " + ctx.message());
 
                 if (ctx.message().startsWith("subscribe")) {
 

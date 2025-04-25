@@ -1,8 +1,12 @@
 package net.streamlinecloud.main.core.backend;
 
 import lombok.Getter;
+import net.streamlinecloud.api.extension.event.EventManager;
+import net.streamlinecloud.api.extension.event.player.PlayerChoseProxyEvent;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.extension.ExtensionManager;
+import net.streamlinecloud.main.utils.Cache;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -102,10 +106,13 @@ public class LoadBalancer {
             clientChannel.configureBlocking(false);
 
             CloudServer target = nextServer();
+
             if (target == null) {
                 clientChannel.close();
                 return;
             }
+
+            ExtensionManager.eventManager.callEvent(new PlayerChoseProxyEvent(target));
 
             SocketChannel backendChannel = SocketChannel.open();
             backendChannel.configureBlocking(false);

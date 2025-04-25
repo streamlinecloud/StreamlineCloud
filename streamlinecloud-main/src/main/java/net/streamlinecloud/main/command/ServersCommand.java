@@ -123,7 +123,7 @@ public class ServersCommand extends CloudCommand {
 
                 StreamlineCloud.log("Running servers:");
                 for (CloudServer ser : Cache.i().getRunningServers()) {
-                    StreamlineCloud.log(ser.getName() + "-" + ser.getUuid() + " | " + ser.getServerState() + " | PORT: " + ser.getPort() + " | GROUP: " + ser.getGroupDirect().getName());
+                    StreamlineCloud.log(ser.getName() + "-" + ser.getUuid() + " | " + ser.getServerState() + " - " + ser.getOnlinePlayers().size() + "/" + ser.getMaxOnlineCount() + " | PORT: " + ser.getPort() + " | GROUP: " + ser.getGroupDirect().getName());
                 }
 
                 break;

@@ -1,6 +1,6 @@
 package net.streamlinecloud.main.core.backend.socket;
 
-import net.streamlinecloud.api.plugin.event.predefined.ExecuteCommandEvent;
+import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.CloudTerminalRunner;
 import net.streamlinecloud.main.utils.Cache;
@@ -12,7 +12,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.util.Arrays;
 
-import static net.streamlinecloud.main.plugin.PluginManager.eventManager;
+import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 
 
 public class RemoteSocket {

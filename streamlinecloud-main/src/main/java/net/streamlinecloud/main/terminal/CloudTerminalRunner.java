@@ -1,7 +1,7 @@
 package net.streamlinecloud.main.terminal;
 
-import net.streamlinecloud.api.exceptions.CommandException;
-import net.streamlinecloud.api.plugin.event.predefined.ExecuteCommandEvent;
+import net.streamlinecloud.api.exception.CommandException;
+import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
@@ -12,8 +12,8 @@ import org.jline.reader.UserInterruptException;
 
 import java.util.Arrays;
 
-import static net.streamlinecloud.main.plugin.PluginManager.commandManager;
-import static net.streamlinecloud.main.plugin.PluginManager.eventManager;
+import static net.streamlinecloud.main.extension.ExtensionManager.commandManager;
+import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 
 public class CloudTerminalRunner extends Thread {
 
