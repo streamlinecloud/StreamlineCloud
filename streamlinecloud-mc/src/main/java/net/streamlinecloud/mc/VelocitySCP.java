@@ -2,33 +2,22 @@ package net.streamlinecloud.mc;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.player.KickedFromServerEvent;
-import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.plugin.Plugin;
-import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
-import com.velocitypowered.api.proxy.server.ServerPing;
 import io.leangen.geantyref.TypeToken;
 import net.streamlinecloud.api.server.ServerRuntime;
-import net.streamlinecloud.api.server.ServerState;
-import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSnapshot;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
-import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.common.utils.Utils;
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.streamlinecloud.mc.paper.manager.ServerManager;
+import net.streamlinecloud.mc.velocity.listener.ProxyConnectionListener;
+import net.streamlinecloud.mc.velocity.manager.ProxyGroupManager;
 import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
 
 import java.net.InetSocketAddress;
@@ -62,29 +51,13 @@ public class VelocitySCP {
         this.logger = logger;
         instance = this;
 
-        onLoad();
-
-    }
-
-    @Subscribe
-    public EventTask onProxyPing(ProxyPingEvent event) {
-        return EventTask.async(() -> this.format(event));
-    }
-
-    @Subscribe
-    public void onProxyInitialize(ProxyInitializeEvent event) {
-
-    }
-
-    public void onLoad() {
         StaticCache.setRuntime(ServerRuntime.PROXY);
         Functions.startup();
 
         new ProxyServerManager();
+        new ProxyGroupManager();
 
-        final List<String>[] allServers = new List[]{new ArrayList<>()};
         String whitelist = Functions.get("whitelist");
-
         playerSpreading = Functions.get("fallback-spreading");
 
         assert whitelist != null;
@@ -95,6 +68,17 @@ public class VelocitySCP {
             StaticCache.whitelist = new Gson().fromJson(whitelist, List.class);
         }
 
+        task();
+
+    }
+
+    @Subscribe
+    public void onInitialize(ProxyInitializeEvent event) {
+        proxy.getEventManager().register(this, new ProxyConnectionListener());
+    }
+
+    public void task() {
+        final List<String>[] allServers = new List[]{new ArrayList<>()};
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
 
@@ -124,87 +108,6 @@ public class VelocitySCP {
             fallbacks = new Gson().fromJson(Functions.get("servers/fallbackServers"), List.class);
 
         }, 0, 3, TimeUnit.SECONDS);
-    }
-
-    public StreamlineServer getServer(UUID uuid) {
-        return new Gson().fromJson(Functions.get("servers/" + uuid.toString()), StreamlineServer.class);
-    }
-
-
-    public void onDisable() {
-    }
-
-    public void registerServer(String serverName, String hostname, int port) {
-        InetSocketAddress address = new InetSocketAddress(hostname, port);
-        ServerInfo serverInfo = new ServerInfo(serverName, address);
-
-        proxy.registerServer(serverInfo);
-    }
-
-    @Subscribe
-    public void onPlayerChooseInitialServer(PlayerChooseInitialServerEvent event) {
-        try {
-            Player player = event.getPlayer();
-
-            if (StaticCache.whitelistEnabled) {
-                if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
-                    player.disconnect(Component.text("§cYou are not whitelisted :/ \n\n§8»§l§cStreamlineCloud whitelist"));
-                    return;
-                }
-            }
-
-            Optional<RegisteredServer> server = searchFallback();
-            if (server == null) {
-                player.disconnect(Component.text("§cThere are no fallback servers available\n§8»§l§cStreamlineCloud"));
-                return;
-            }
-
-            if (event.getPlayer().getCurrentServer().isEmpty()) event.setInitialServer(server.get());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        ProxyServerManager.getInstance().uploadServerInfo();
-    }
-
-    @Subscribe
-    public void onDisconnect(DisconnectEvent event) {
-        ProxyServerManager.getInstance().uploadServerInfo();
-    }
-
-    @Subscribe
-    public void onPlayerKicked(KickedFromServerEvent event) {
-        Player player = event.getPlayer();
-
-        if (!fallbacks.contains(event.getServer().getServerInfo().getName())) {
-
-            Optional<RegisteredServer> server = searchFallback();
-            if (server == null) {
-                player.disconnect(Component.text("§cThere are no fallback servers available\n§8»§l§cStreamlineCloud"));
-                return;
-            }
-
-            event.setResult(KickedFromServerEvent.RedirectPlayer.create(server.get()));
-            return;
-        }
-
-        event.getPlayer().disconnect(Component.text(event.getServerKickReason().toString()));
-    }
-
-    private void format(ProxyPingEvent e) {
-
-        final ServerPing.Builder ping = e.getPing().asBuilder();
-
-        try {
-                ping.description(formatted("<bold><gradient:#ff4040:#d47979>Powered by StreamlineCloud</gradient></bold>\n<#4dffed>Visit streamlinecloud.net"));
-        } finally {
-            e.setPing(ping.build());
-        }
-    }
-
-    private static Component formatted(String str) {
-        return MiniMessage.miniMessage().deserialize(str);
     }
 
     public Optional<RegisteredServer> searchFallback() {

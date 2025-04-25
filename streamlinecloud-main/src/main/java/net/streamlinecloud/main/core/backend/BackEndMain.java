@@ -29,6 +29,7 @@ public class BackEndMain {
         app.get("/streamline/uptime", utilController::uptime);
         app.get("/streamline/whitelist", utilController::whitelist);
         app.get("/streamline/fallback-spreading", utilController::fallbackSpreading);
+        app.get("/streamline/network-count", utilController::networkOnlineCount);
         app.post("/streamline/command", utilController::command);
         app.post("/streamline/report-proxy-online-count/{name}", utilController::reportProxyOnlineCount);
 

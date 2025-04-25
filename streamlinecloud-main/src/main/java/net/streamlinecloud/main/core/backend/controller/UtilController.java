@@ -4,15 +4,13 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import net.streamlinecloud.api.packet.RemoteCommandPacket;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.terminal.CloudTerminalRunner;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Settings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
-
-import static net.streamlinecloud.main.core.backend.BackEndMain.mainPath;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class UtilController {
 
@@ -43,6 +41,19 @@ public class UtilController {
 
     public void fallbackSpreading(@NotNull Context context) {
         context.result(Cache.i().getConfig().getFallback().getFallbackPlayerSpreading());
+        context.status(200);
+    }
+
+    public void networkOnlineCount(@NotNull Context context) {
+        AtomicInteger online = new AtomicInteger();
+        AtomicInteger max = new AtomicInteger();
+
+        StreamlineCloud.getGroupOnlineServers(StreamlineCloud.getGroupByName("proxy")).forEach(server -> {
+            online.set(online.get() + server.getOnlinePlayers().size());
+            max.set(max.get() + server.getMaxOnlineCount());
+        });
+
+        context.result(online.intValue() + "-" + max.intValue());
         context.status(200);
     }
 
