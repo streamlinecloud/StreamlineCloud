@@ -20,6 +20,7 @@
   "sl.server.starting": "Starting %1 at %2",
   "sl.server.jarNotFound": "§DARK_RED The server %0 could not find a server.jar file. The group %1 wont start any new servers until StreamlineCloud has been restarted!",
   "sl.server.online": "%1 is online",
+  "sl.server.online.withLB": "%1 is online on %2",
   "sl.server.screen.enabled": "Screen from %1 opened",
   "sl.server.screen.disabled": "Screen from %1 closed",
   "sl.server.killing": "Deleting %1...",

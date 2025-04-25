@@ -103,11 +103,17 @@ public class ServerController {
 
         if (cs.getServerState().equals(ServerState.STARTING)) {
 
-            StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid())});
+            String lb = null;
 
             for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) {
-                if (loadBalancer.getGroup().equals(cs.getGroup())) loadBalancer.registerServer(cs);
+                if (loadBalancer.getGroup().equals(cs.getGroup())) {
+                    loadBalancer.registerServer(cs);
+                    lb = loadBalancer.getName();
+                }
             }
+
+            if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid())});
+            else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid()), new ReplacePaket("%2", lb)});
         }
 
         cs.setOnlinePlayers(s.getOnlinePlayers());

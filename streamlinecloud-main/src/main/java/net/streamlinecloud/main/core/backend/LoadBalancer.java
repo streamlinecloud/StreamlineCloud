@@ -1,12 +1,10 @@
 package net.streamlinecloud.main.core.backend;
 
 import lombok.Getter;
-import net.streamlinecloud.api.extension.event.EventManager;
 import net.streamlinecloud.api.extension.event.player.PlayerChoseProxyEvent;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.extension.ExtensionManager;
-import net.streamlinecloud.main.utils.Cache;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -15,16 +13,11 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 
 public class LoadBalancer {
 
-    transient private List<CloudServer> backendServers;
-    transient private AtomicInteger currentIndex;
-
+    transient private List<CloudServer> proxyServers;
     transient private Selector selector;
     transient private ServerSocketChannel serverChannel;
 
@@ -42,20 +35,16 @@ public class LoadBalancer {
     }
 
     public void registerServer(CloudServer server) {
-        backendServers.add(server);
-        StreamlineCloud.log(server.getName() + "-" + server.getShortUuid() + " connected to " + name);
+        proxyServers.add(server);
     }
 
-    //TODO: upload the player and max player count from the proxy to the backend and select the proxy with the most free slots
-    private CloudServer nextServer() {
-        if (backendServers.isEmpty()) return null;
-        int index = currentIndex.getAndIncrement() % backendServers.size();
-        return backendServers.get(index);
+    private Optional<CloudServer> nextServer() {
+        return proxyServers.stream()
+                .min(Comparator.comparingInt(ps -> ps.getOnlinePlayers().size()));
     }
 
     public void start() throws IOException {
-        backendServers = new ArrayList<>();
-        currentIndex = new AtomicInteger(0);
+        proxyServers = new ArrayList<>();
 
         selector = Selector.open();
 
@@ -105,7 +94,7 @@ public class LoadBalancer {
             SocketChannel clientChannel = serverSock.accept();
             clientChannel.configureBlocking(false);
 
-            CloudServer target = nextServer();
+            CloudServer target = nextServer().get();
 
             if (target == null) {
                 clientChannel.close();
