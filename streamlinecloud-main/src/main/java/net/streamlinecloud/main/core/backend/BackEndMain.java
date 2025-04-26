@@ -9,12 +9,19 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 import net.streamlinecloud.main.utils.Cache;
 import io.javalin.Javalin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BackEndMain {
 
     public static final String mainPath = "/streamline/";
     private static Javalin app;
+    public static List<String> publicRoutes = new ArrayList<>();
+    public static List<String> additionalKeys = new ArrayList<>();
 
     public static void startBE() {
+
+        publicRoutes.add(mainPath + "ping");
 
         app = Javalin.create();
         Cache.i().setBackend(app);

@@ -10,7 +10,7 @@ public class AuthMiddleware {
 
     public AuthMiddleware() {
         Cache.i().getBackend().before(ctx -> {
-            if (ctx.path().equals(mainPath + "ping")) return;
+            if (BackEndMain.publicRoutes.contains(ctx.path())) return;
 
             if (ctx.header("auth_key") == null) {
                 ctx.result("authFailed");
@@ -23,7 +23,7 @@ public class AuthMiddleware {
             try {
                 String key = ctx.header("auth_key");
 
-                if (!Cache.i().getApiKey().equals(key)) {
+                if (!Cache.i().getApiKey().equals(key) && BackEndMain.publicRoutes.contains(key)) {
                     ctx.result("authFailed");
                     ctx.status(401);
                     ctx.res().sendError(401);
