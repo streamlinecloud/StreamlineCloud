@@ -3,7 +3,7 @@ package net.streamlinecloud.main.command;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
-import net.streamlinecloud.main.utils.StreamlineConfig;
+import net.streamlinecloud.main.config.MainConfig;
 
 public class WhitelistCommand extends CloudCommand {
 
@@ -27,7 +27,7 @@ public class WhitelistCommand extends CloudCommand {
 
             Cache.i().getConfig().getWhitelist().getWhitelist().add(args[2]);
             StreamlineCloud.log("Added " + args[2] + " to the whitelist");
-            StreamlineConfig.saveConfig();
+            MainConfig.saveConfig();
 
         }
 
@@ -35,7 +35,7 @@ public class WhitelistCommand extends CloudCommand {
             if (!Cache.i().getConfig().getWhitelist().isWhitelistEnabled()) {
                 Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
                 StreamlineCloud.log("Whitelist enabled");
-                StreamlineConfig.saveConfig();
+                MainConfig.saveConfig();
             }
         }
 
@@ -43,7 +43,7 @@ public class WhitelistCommand extends CloudCommand {
             if (Cache.i().getConfig().getWhitelist().isWhitelistEnabled()) {
                 Cache.i().getConfig().getWhitelist().setWhitelistEnabled(false);
                 StreamlineCloud.log("Whitelist disabled");
-                StreamlineConfig.saveConfig();
+                MainConfig.saveConfig();
             }
         }
 

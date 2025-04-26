@@ -3,6 +3,7 @@ package net.streamlinecloud.main.utils;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.ReplacePaket;
@@ -33,7 +34,7 @@ public class StreamlineSetup {
                  \\______/ \\________|   \\__|    \\______/ \\__|          \s""");
         StreamlineCloud.logSingle("");
 
-        Cache.i().setConfig(new StreamlineConfig("", 19132, 5378, "lobby"));
+        Cache.i().setConfig(new MainConfig("", 19132, 5378, "lobby"));
 
         new ConsoleQuestion(ConsoleQuestion.InputType.STRING, "Set up language / Gebe eine Sprache ein [en/de]", output -> {
 
@@ -53,7 +54,7 @@ public class StreamlineSetup {
                         Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
                         StreamlineCloud.log("Whitelist enabled. You can use the whitelist command to add / remove players");
                     }
-                    StreamlineConfig.saveConfig();
+                    MainConfig.saveConfig();
                     StreamlineCloud.log("Config generated");
 
                     new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.generateGroups", output2 -> {

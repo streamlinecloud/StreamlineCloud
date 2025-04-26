@@ -2,6 +2,7 @@ package net.streamlinecloud.main;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.command.*;
+import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.lang.LangManager;
@@ -64,7 +65,7 @@ public class CloudMain {
         StreamlineCloud.log("Starting StreamlineCloud");
 
         //init
-        StreamlineConfig.init();
+        MainConfig.init();
         new LangManager();
 
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));

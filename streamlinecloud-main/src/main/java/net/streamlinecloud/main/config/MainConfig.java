@@ -1,4 +1,4 @@
-package net.streamlinecloud.main.utils;
+package net.streamlinecloud.main.config;
 
 import com.google.gson.Gson;
 import net.streamlinecloud.main.StreamlineCloud;
@@ -7,6 +7,8 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.utils.Settings;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
-public class StreamlineConfig {
+public class MainConfig {
 
     String language;
     String defaultJavaPath;
@@ -63,12 +65,12 @@ public class StreamlineConfig {
         boolean enableRconSupport = true;
     }
 
-    public static StreamlineConfig fromJson(String json) {
+    public static MainConfig fromJson(String json) {
         Gson gson = new Gson();
-        return gson.fromJson(json, StreamlineConfig.class);
+        return gson.fromJson(json, MainConfig.class);
     }
 
-    public StreamlineConfig(String defaultJavaPath, int defaultProxyPort, int communicationBridgePort, String fallbackGroup) {
+    public MainConfig(String defaultJavaPath, int defaultProxyPort, int communicationBridgePort, String fallbackGroup) {
         this.language = "en.json";
         this.defaultJavaPath = defaultJavaPath;
         this.network.defaultProxyPort = defaultProxyPort;
@@ -93,10 +95,8 @@ public class StreamlineConfig {
         }
 
         String jsonConfig = FileUtils.readFileToString(configFile, Charset.defaultCharset());
-        StreamlineConfig config = gson.fromJson(jsonConfig, StreamlineConfig.class);
+        MainConfig config = gson.fromJson(jsonConfig, MainConfig.class);
         Cache.i().setConfig(config);
-
-
 
         if (!apiKeyFile.exists()) {
             apiKeyFile.createNewFile();
@@ -146,7 +146,7 @@ public class StreamlineConfig {
     }
 
     public static void saveConfig() {
-        String json = gson.toJson(Cache.i().getConfig(), StreamlineConfig.class);
+        String json = gson.toJson(Cache.i().getConfig(), MainConfig.class);
         File config = new File(Cache.i().homeFile + "/data/config.json");
         try {
             FileUtils.writeStringToFile(config, json);

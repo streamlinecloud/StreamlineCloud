@@ -4,6 +4,7 @@ package net.streamlinecloud.main.utils;
 import com.google.gson.Gson;
 import io.javalin.Javalin;
 import io.streamlinemc.api.RestUtils.RconData;
+import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
@@ -36,7 +37,7 @@ public class Cache {
     public List<ConsoleQuestion> consoleInputs = new ArrayList<>();
     public CloudGroup defaultGroup;
     public String apiKey;
-    public StreamlineConfig config;
+    public MainConfig config;
     public List<CloudLanguage> languages = new ArrayList<>();
     public CloudLanguage currentLanguage;
     public boolean debugMode = false;
