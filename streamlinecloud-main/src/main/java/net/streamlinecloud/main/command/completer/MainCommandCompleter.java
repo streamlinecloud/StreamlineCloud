@@ -16,6 +16,10 @@ public class MainCommandCompleter implements Completer {
 
     public MainCommandCompleter() {
         completers.put("servers", new ServersCommandCompleter());
+        completers.put("s", new ServersCommandCompleter());
+
+        completers.put("whitelist", new WhitelistCommandCompleter());
+        completers.put("wl", new WhitelistCommandCompleter());
     }
 
     @Override

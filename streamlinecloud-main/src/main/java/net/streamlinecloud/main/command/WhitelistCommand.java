@@ -18,34 +18,48 @@ public class WhitelistCommand extends CloudCommand {
 
         if (args.length == 1) {
             StreamlineCloud.log("whitelist add <name>");
+            StreamlineCloud.log("whitelist remove <name>");
             StreamlineCloud.log("whitelist enable");
             StreamlineCloud.log("whitelist disable");
             return;
         }
 
-        if (args.length == 3) {
+        switch (args[1]) {
 
-            Cache.i().getConfig().getWhitelist().getWhitelist().add(args[2]);
-            StreamlineCloud.log("Added " + args[2] + " to the whitelist");
-            MainConfig.saveConfig();
+            case "enable":
+                if (!Cache.i().getConfig().getWhitelist().isWhitelistEnabled()) {
+                    Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
+                    StreamlineCloud.log("Whitelist enabled");
+                    MainConfig.saveConfig();
+                }
+                break;
 
-        }
+            case "disable":
+                if (Cache.i().getConfig().getWhitelist().isWhitelistEnabled()) {
+                    Cache.i().getConfig().getWhitelist().setWhitelistEnabled(false);
+                    StreamlineCloud.log("Whitelist disabled");
+                    MainConfig.saveConfig();
+                }
+                break;
 
-        if (args[1].equals("enable")) {
-            if (!Cache.i().getConfig().getWhitelist().isWhitelistEnabled()) {
-                Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
-                StreamlineCloud.log("Whitelist enabled");
+            case "list":
+                StreamlineCloud.log("Whitelist:");
+                Cache.i().getConfig().getWhitelist().getWhitelist().forEach(user -> {
+                    StreamlineCloud.log("- " + user);
+                });
+                break;
+
+            case "add":
+                Cache.i().getConfig().getWhitelist().getWhitelist().add(args[2]);
+                StreamlineCloud.log("Added " + args[2] + " to the whitelist");
                 MainConfig.saveConfig();
-            }
-        }
+                break;
 
-        if (args[1].equals("disable")) {
-            if (Cache.i().getConfig().getWhitelist().isWhitelistEnabled()) {
-                Cache.i().getConfig().getWhitelist().setWhitelistEnabled(false);
-                StreamlineCloud.log("Whitelist disabled");
+            case "remove":
+                Cache.i().getConfig().getWhitelist().getWhitelist().remove(args[2]);
+                StreamlineCloud.log("Removed " + args[2] + " from the whitelist");
                 MainConfig.saveConfig();
-            }
+                break;
         }
-
     }
 }

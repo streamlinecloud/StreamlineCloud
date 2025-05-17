@@ -13,7 +13,7 @@ public class ServersCommand extends CloudCommand {
 
     public ServersCommand() {
         setName("servers");
-        setAliases(new String[]{"ser", "s"});
+        setAliases(new String[]{"s"});
         setDescription("Manage current online servers");
     }
 

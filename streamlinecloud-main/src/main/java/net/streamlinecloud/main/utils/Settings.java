@@ -10,7 +10,7 @@ public class Settings {
     public static boolean testBuild = false;
 
     public static String getVersionInfo() {
-        return name + "#" + MainBuildConfig.VERSION + "#" + MainBuildConfig.BUILD_DATE + "#" + testBuild;
+        return  "sc#" + MainBuildConfig.VERSION + "#" + MainBuildConfig.BUILD_DATE;
     }
 
 }

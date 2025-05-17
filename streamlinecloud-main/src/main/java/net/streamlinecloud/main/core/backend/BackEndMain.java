@@ -10,7 +10,9 @@ import net.streamlinecloud.main.utils.Cache;
 import io.javalin.Javalin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BackEndMain {
 
@@ -18,6 +20,7 @@ public class BackEndMain {
     private static Javalin app;
     public static List<String> publicRoutes = new ArrayList<>();
     public static List<String> additionalKeys = new ArrayList<>();
+    public static Set<String> allowedOrigins = new HashSet<>();
 
     public static void startBE() {
 
@@ -26,7 +29,7 @@ public class BackEndMain {
         app = Javalin.create();
         Cache.i().setBackend(app);
 
-        //new AuthMiddleware();
+        new AuthMiddleware();
         GroupsController groupsController = new GroupsController();
         ServerController serverController = new ServerController();
         UtilController utilController = new UtilController();

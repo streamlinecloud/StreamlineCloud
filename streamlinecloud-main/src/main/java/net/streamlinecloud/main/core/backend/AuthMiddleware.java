@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.core.backend;
 
+import com.google.gson.Gson;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.utils.Cache;
 
@@ -13,6 +14,7 @@ public class AuthMiddleware {
             if (BackEndMain.publicRoutes.contains(ctx.path())) return;
 
             if (ctx.header("auth_key") == null) {
+                System.out.println("missing auth_key");
                 ctx.result("authFailed");
                 ctx.status(401);
                 ctx.res().sendError(401);
@@ -23,7 +25,7 @@ public class AuthMiddleware {
             try {
                 String key = ctx.header("auth_key");
 
-                if (!Cache.i().getApiKey().equals(key) && BackEndMain.publicRoutes.contains(key)) {
+                if (!Cache.i().getApiKey().equals(key) && !BackEndMain.additionalKeys.contains(key)) {
                     ctx.result("authFailed");
                     ctx.status(401);
                     ctx.res().sendError(401);
