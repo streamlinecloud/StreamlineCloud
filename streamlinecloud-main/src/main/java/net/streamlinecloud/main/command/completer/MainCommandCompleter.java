@@ -20,6 +20,9 @@ public class MainCommandCompleter implements Completer {
 
         completers.put("whitelist", new WhitelistCommandCompleter());
         completers.put("wl", new WhitelistCommandCompleter());
+
+        completers.put("groups", new GroupsCommandCompleter());
+        completers.put("g", new GroupsCommandCompleter());
     }
 
     @Override
