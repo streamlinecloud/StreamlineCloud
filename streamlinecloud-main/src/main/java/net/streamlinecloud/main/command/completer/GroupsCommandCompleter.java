@@ -29,7 +29,6 @@ public class GroupsCommandCompleter implements Completer {
                         if (!group.getName().equals("WITHOUT")) list.add(new Candidate(group.getName()));
                     });
                 }
-
                 break;
 
             case 4:

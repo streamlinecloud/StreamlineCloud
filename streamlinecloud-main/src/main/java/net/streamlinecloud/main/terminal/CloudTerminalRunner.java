@@ -8,6 +8,7 @@ import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import net.streamlinecloud.main.utils.Cache;
 import lombok.SneakyThrows;
+import org.jline.reader.LineReader;
 import org.jline.reader.UserInterruptException;
 
 import java.util.Arrays;

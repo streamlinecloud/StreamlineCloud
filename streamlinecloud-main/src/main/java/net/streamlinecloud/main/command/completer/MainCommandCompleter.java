@@ -23,6 +23,9 @@ public class MainCommandCompleter implements Completer {
 
         completers.put("groups", new GroupsCommandCompleter());
         completers.put("g", new GroupsCommandCompleter());
+
+        completers.put("language", new LanguageCommandCompleter());
+        completers.put("lang", new LanguageCommandCompleter());
     }
 
     @Override
