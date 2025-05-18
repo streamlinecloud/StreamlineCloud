@@ -126,8 +126,6 @@ public class StreamlineCloud {
 
         if (e != null) {
 
-            //Create error log
-
             long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartuptime();
             long dif_insec = dif_intime / 1000 % 60;
             long dif_inmin = (dif_intime / (1000 * 60)) % 60;
