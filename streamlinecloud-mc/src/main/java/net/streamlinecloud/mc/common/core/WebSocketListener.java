@@ -5,6 +5,7 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
+import net.streamlinecloud.mc.paper.manager.ServerManager;
 
 import java.net.http.WebSocket;
 import java.util.concurrent.CompletionStage;
@@ -28,10 +29,15 @@ public class WebSocketListener implements WebSocket.Listener {
         try {
             webSocket.request(1);
 
+            System.out.println(data.toString());
+
             if (data.toString().equals("heartbeat")) return null;
             if (data.toString().equals("success")) return null;
 
-            System.out.println("onText: " + data.toString());
+            if (data.toString().startsWith("move:")) {
+                serverManager.moveAllPlayersAndStop(data.toString().split(":")[1]);
+                return null;
+            }
 
             StreamlineServer server = new Gson().fromJson(data.toString(), StreamlineServer.class);
 

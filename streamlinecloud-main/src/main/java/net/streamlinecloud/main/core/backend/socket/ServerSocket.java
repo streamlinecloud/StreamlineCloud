@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.core.backend.socket;
 
+import com.google.gson.Gson;
 import io.javalin.websocket.WsContext;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.StreamlineServer;
@@ -18,6 +19,7 @@ public class ServerSocket {
 
     public HashMap<String, List<StreamlineServer>> servers = new HashMap<>();
     public HashMap<String, List<StreamlineGroup>> subscribedStartingServers = new HashMap<>();
+    public HashMap<StreamlineServer, WsContext> serverSessions = new HashMap<>();
     public Map<String, WsContext> sessionMap = new ConcurrentHashMap<>();
 
     public ServerSocket() {
@@ -71,8 +73,16 @@ public class ServerSocket {
 
                     }
 
-                }
+                } else if (ctx.message().startsWith("iam")) {
 
+                    System.out.println("IAM: Received iam message from " + ctx.sessionId() + " - " + ctx.message() );
+                    serverSessions.put(CloudServerManager.getInstance().getServerByUuid(ctx.message().split(":")[1]), ctx);
+                    System.out.println(CloudServerManager.getInstance().getServerByUuid(ctx.message().split(":")[1]).getName());
+
+                    ctx.send("success");
+                    return;
+
+                }
 
                 ctx.send("Something went wrong");
 
@@ -86,6 +96,20 @@ public class ServerSocket {
                 StreamlineCloud.log("CRITICAL: Socket connection error from " + ctx.sessionId() + " - " + ctx.error() );
             });
         });
+    }
+
+    public void sendTo(StreamlineServer server, String message) {
+        try {
+            System.out.println("DEBUGGGggGGGG: Sending message to " + server.getName() + " - " + message);
+            serverSessions.forEach((s, ctx) -> {
+                if (s.getUuid().equals(server.getUuid())) {
+                    System.out.println("SENDING :::::::::::::::");
+                    ctx.send(message);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Runnable createHeartbeatRunnable() {

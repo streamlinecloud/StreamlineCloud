@@ -27,16 +27,20 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
     @Getter
     public List<UUID> quittingPlayers = new ArrayList<>();
 
+    @Getter
     WebSocket socket;
 
     public void init() {
 
-        try {URI uri = URI.create("ws://localhost:5378/socket/server?key=" + StaticCache.accessKey);
+        try {
+            URI uri = URI.create("ws://localhost:5378/socket/server?key=" + StaticCache.accessKey);
             HttpClient client = HttpClient.newHttpClient();
             WebSocket webSocket = client.newWebSocketBuilder().buildAsync(uri, new WebSocketListener(this)).join();
 
             this.socket = webSocket;
             uploadServerInfo();
+
+            webSocket.sendText("iam:" + getLocalServerInfo().getUuid(), true);
         } catch (Exception e) {
             e.printStackTrace();
         }

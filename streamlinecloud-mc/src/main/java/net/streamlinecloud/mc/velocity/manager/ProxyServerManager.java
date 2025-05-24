@@ -24,6 +24,11 @@ public class ProxyServerManager extends AbstractServerManager {
     }
 
     @Override
+    public void moveAllPlayersAndStop(String target) {
+
+    }
+
+    @Override
     public void onSubscribedServerUpdated(StreamlineServer server) {
 
     }
@@ -42,6 +47,7 @@ public class ProxyServerManager extends AbstractServerManager {
     public StreamlineServer getLocalServerInfo() {
         StreamlineServer server = new StreamlineServer();
         server.setName(StaticCache.serverData.getName());
+        server.setUuid(StaticCache.serverData.getUuid());
         server.setIp(StaticCache.serverData.getIp());
         server.setPort(StaticCache.serverData.getPort());
         server.setMaxOnlineCount(VelocitySCP.getInstance().getProxy().getConfiguration().getShowMaxPlayers());

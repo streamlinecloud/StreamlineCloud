@@ -29,6 +29,20 @@ public class ServerManager extends AbstractServerManager {
     }
 
     @Override
+    public void moveAllPlayersAndStop(String target) {
+        for (Player player : SpigotSCP.getInstance().getServer().getOnlinePlayers()) {
+            PlayerManager.getInstance().sendPlayer(PlayerManager.getInstance().getPlayer(player.getName()), ServerManager.getInstance().getServer(target));
+        }
+
+        Bukkit.getScheduler().runTaskLaterAsynchronously(SpigotSCP.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                SpigotSCP.getInstance().getServer().shutdown();
+            }
+        }, 200L);
+    }
+
+    @Override
     public void onSubscribedServerUpdated(StreamlineServer server) {
         SpigotSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDataUpdateEvent(server));
     }
@@ -47,6 +61,7 @@ public class ServerManager extends AbstractServerManager {
     public StreamlineServer getLocalServerInfo() {
         StreamlineServer server = new StreamlineServer();
         server.setName(StaticCache.serverData.getName());
+        server.setUuid(StaticCache.serverData.getUuid());
         server.setIp(StaticCache.serverData.getIp());
         server.setPort(StaticCache.serverData.getPort());
         server.setMaxOnlineCount(Bukkit.getMaxPlayers());

@@ -100,7 +100,7 @@ public class ServersCommand extends CloudCommand {
 
                 if (args.length == 3) {
 
-                    CloudServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(args [2]));
+                    CloudServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(args[2]));
 
                 }  else {
                     StreamlineCloud.log("sl.command.groups.enterGroup");

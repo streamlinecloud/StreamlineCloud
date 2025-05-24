@@ -11,6 +11,8 @@ import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.backend.BackEndMain;
+import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
@@ -365,12 +367,7 @@ public class CloudServer extends StreamlineServer {
         CloudServerManager serverManager = CloudServerManager.getInstance();
         CloudServer newServer = serverManager.getServerByUuid(serverManager.startServerByGroup(getGroupDirect()));
 
-        try {
-            newServer.start(new File(newServer.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : newServer.getGroupDirect().getJavaExec()));
-            serverManager.getOverflowServers().put(newServer, this);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        serverManager.getOverflowServers().put(newServer, this);
 
         StreamlineCloud.log("Starting overflow process: " + getName() + "-" + getShortUuid() + " -> " + newServer.getName() + "-" + newServer.getShortUuid());
     }
@@ -380,7 +377,7 @@ public class CloudServer extends StreamlineServer {
         serverManager.getOverflowServers().keySet().forEach(server -> {
            if (server.getUuid().equals(getUuid())) {
 
-               //SEND TO SERVER SOCKET
+               Cache.i().getServerSocket().sendTo(serverManager.getOverflowServers().get(server), "move:" + server.getName());
 
            }
         });
