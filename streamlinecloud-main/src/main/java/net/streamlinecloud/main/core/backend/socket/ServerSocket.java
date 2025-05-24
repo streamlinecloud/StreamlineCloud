@@ -4,6 +4,8 @@ import io.javalin.websocket.WsContext;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.utils.Cache;
 
 import java.util.*;
@@ -51,7 +53,7 @@ public class ServerSocket {
                     if (ctx.message().split(":")[1].equals("server")) {
 
                         List<StreamlineServer> s = servers.get(ctx.sessionId());
-                        StreamlineServer streamlineServer = StreamlineCloud.getServerByName(ctx.message().split(":")[2]);
+                        StreamlineServer streamlineServer = CloudServerManager.getInstance().getServerByName(ctx.message().split(":")[2]);
                         s.add(streamlineServer);
                         servers.replace(ctx.sessionId(), s);
 
@@ -61,7 +63,7 @@ public class ServerSocket {
                     } else if (ctx.message().split(":")[1].equals("starting")) {
 
                         List<StreamlineGroup> s = subscribedStartingServers.get(ctx.sessionId());
-                        s.add(StreamlineCloud.getGroupByName(ctx.message().split(":")[2]));
+                        s.add(CloudGroupManager.getInstance().getGroupByName(ctx.message().split(":")[2]));
                         subscribedStartingServers.replace(ctx.sessionId(), s);
 
                         ctx.send("success");

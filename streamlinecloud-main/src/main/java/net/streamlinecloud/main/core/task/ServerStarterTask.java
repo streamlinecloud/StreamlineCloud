@@ -2,6 +2,7 @@ package net.streamlinecloud.main.core.task;
 
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.utils.Cache;
 
 import java.io.File;
@@ -20,7 +21,7 @@ public class ServerStarterTask {
 
         Runnable runnable = () -> {
 
-            StreamlineCloud.checkGroups();
+            CloudServerManager.getInstance().startServersIfNeeded();
 
             if (!Cache.i().getServersWaitingForStart().isEmpty()) {
                 try {

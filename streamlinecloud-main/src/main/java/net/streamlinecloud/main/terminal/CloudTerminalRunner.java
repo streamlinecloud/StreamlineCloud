@@ -4,6 +4,8 @@ import net.streamlinecloud.api.exception.CommandException;
 import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import net.streamlinecloud.main.utils.Cache;
@@ -60,12 +62,12 @@ public class CloudTerminalRunner extends Thread {
 
                         sb.deleteCharAt(sb.length() - 1);
 
-                        StreamlineCloud.getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
+                        CloudServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
                         executeCommands = false;
 
                     } else if (args[0].equals("exit")) {
 
-                        StreamlineCloud.getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
+                        CloudServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
                         executeCommands = false;
                     }
                 }

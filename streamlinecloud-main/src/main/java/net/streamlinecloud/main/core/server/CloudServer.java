@@ -12,6 +12,7 @@ import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
@@ -158,7 +159,7 @@ public class CloudServer extends StreamlineServer {
 
             //Copy Templates
             List<String> t = new ArrayList<>();
-            CloudGroup g = StreamlineCloud.getGroupByName(getGroup());
+            CloudGroup g = CloudGroupManager.getInstance().getGroupByName(getGroup());
 
             assert g != null;
             customTemplates.addAll(g.getTemplates());
@@ -389,7 +390,7 @@ public class CloudServer extends StreamlineServer {
     }
 
     public CloudGroup getGroupDirect() {
-        return StreamlineCloud.getGroupByName(getGroup());
+        return CloudGroupManager.getInstance().getGroupByName(getGroup());
     }
 
     private void executeCommand(String command, OutputStream outputStream) {

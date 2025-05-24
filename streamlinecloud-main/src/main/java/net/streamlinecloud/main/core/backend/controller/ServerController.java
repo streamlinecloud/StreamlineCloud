@@ -9,7 +9,9 @@ import net.streamlinecloud.api.packet.StartServerPacket;
 import net.streamlinecloud.api.server.*;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +26,7 @@ public class ServerController {
     public void start(@NotNull Context context) {
         StartServerPacket packet = new Gson().fromJson(context.body(), StartServerPacket.class);
 
-        context.result(StreamlineCloud.startServerByGroup(StreamlineCloud.getGroupByName(packet.getGroup()), Arrays.asList(packet.getTemplates())));
+        context.result(CloudServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(packet.getGroup()), Arrays.asList(packet.getTemplates())));
         context.status(200);
     }
 
@@ -38,7 +40,7 @@ public class ServerController {
     }
 
     public void getFallbackServers(@NotNull Context context) {
-        List<CloudServer> servers = StreamlineCloud.getGroupOnlineServers(StreamlineCloud.getGroupByName(Cache.i().getConfig().getFallback().getFallbackGroup()));
+        List<CloudServer> servers = CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName(Cache.i().getConfig().getFallback().getFallbackGroup()));
         List<String> names = new ArrayList<>();
         for (CloudServer s : servers) names.add(s.getName());
 
@@ -56,11 +58,11 @@ public class ServerController {
 
         if (context.pathParamMap().containsKey("uuid")) {
             String uuid = context.pathParam("uuid");
-            server = StreamlineCloud.getServerByUuid(uuid);
+            server = CloudServerManager.getInstance().getServerByUuid(uuid);
 
         } else if (context.pathParamMap().containsKey("name")) {
             String name = context.pathParam("name");
-            server = StreamlineCloud.getServerByName(name);
+            server = CloudServerManager.getInstance().getServerByName(name);
 
         }
 
@@ -94,7 +96,7 @@ public class ServerController {
 
     public void update(@NotNull Context context) {
         StreamlineServer s = new Gson().fromJson(context.body(), StreamlineServer.class);
-        CloudServer cs = StreamlineCloud.getServerByName(s.getName());
+        CloudServer cs = CloudServerManager.getInstance().getServerByName(s.getName());
 
         if (cs == null) {
             context.status(201);

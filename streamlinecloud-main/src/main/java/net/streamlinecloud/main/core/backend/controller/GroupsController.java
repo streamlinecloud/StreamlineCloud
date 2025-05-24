@@ -9,7 +9,9 @@ import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.utils.Cache;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +38,7 @@ public class GroupsController {
 
     public void get(@NotNull Context context) {
         String name = context.pathParam("name");
-        StreamlineGroup server = StreamlineCloud.getGroupByName(name);
+        StreamlineGroup server = CloudGroupManager.getInstance().getGroupByName(name);
 
         if (server != null) {
             context.result(new Gson().toJson(server, StreamlineGroup.class));
@@ -49,14 +51,14 @@ public class GroupsController {
 
     public void servers(@NotNull Context context) {
         try {
-            CloudGroup group = StreamlineCloud.getGroupByName(context.pathParam("name"));
+            CloudGroup group = CloudGroupManager.getInstance().getGroupByName(context.pathParam("name"));
             if (group == null) {
                 context.result("groupNotFound");
                 context.status(200);
                 return;
             }
 
-            List<CloudServer> servers = StreamlineCloud.getGroupOnlineServers(group);
+            List<CloudServer> servers = CloudGroupManager.getInstance().getGroupOnlineServers(group);
 
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())

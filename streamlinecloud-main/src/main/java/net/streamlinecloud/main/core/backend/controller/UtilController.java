@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import net.streamlinecloud.api.packet.RemoteCommandPacket;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.terminal.CloudTerminalRunner;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Settings;
@@ -48,7 +50,7 @@ public class UtilController {
         AtomicInteger online = new AtomicInteger();
         AtomicInteger max = new AtomicInteger();
 
-        StreamlineCloud.getGroupOnlineServers(StreamlineCloud.getGroupByName("proxy")).forEach(server -> {
+        CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName("proxy")).forEach(server -> {
             online.set(online.get() + server.getOnlinePlayers().size());
             max.set(max.get() + server.getMaxOnlineCount());
         });

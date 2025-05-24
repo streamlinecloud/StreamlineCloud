@@ -2,6 +2,7 @@ package net.streamlinecloud.main.command;
 
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 
@@ -29,12 +30,12 @@ public class UptimeCommand extends CloudCommand {
         }
 
 
-            if (StreamlineCloud.getServerByName(args[1]) == null) {
+            if (CloudServerManager.getInstance().getServerByName(args[1]) == null) {
                 StreamlineCloud.log("Server not found");
                 return;
             }
 
-            CloudServer server = StreamlineCloud.getServerByName(args[1]);
+            CloudServer server = CloudServerManager.getInstance().getServerByName(args[1]);
 
             long dif_intime = Calendar.getInstance().getTimeInMillis() - server.getStartupTime();
             long dif_insec = dif_intime / 1000 % 60;

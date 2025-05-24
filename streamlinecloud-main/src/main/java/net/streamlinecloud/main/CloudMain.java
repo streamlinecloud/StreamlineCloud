@@ -5,6 +5,8 @@ import net.streamlinecloud.main.command.*;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
@@ -64,7 +66,9 @@ public class CloudMain {
         Settings.name = "§REDStreamlineCloud §8-> §RED";
         StreamlineCloud.log("Starting StreamlineCloud");
 
-        //init
+        new CloudServerManager();
+        new CloudGroupManager();
+
         MainConfig.init();
         new LangManager();
 
@@ -104,7 +108,7 @@ public class CloudMain {
         Cache.i().getPluginManager().loadPlugins();
         Cache.i().getPluginManager().executeStartup();
 
-        StreamlineCloud.checkGroups();
+        CloudServerManager.getInstance().startServersIfNeeded();
 
         new ServerStarterTask();
 

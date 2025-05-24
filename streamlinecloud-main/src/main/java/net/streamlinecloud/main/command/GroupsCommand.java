@@ -3,6 +3,8 @@ package net.streamlinecloud.main.command;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
@@ -74,7 +76,7 @@ public class GroupsCommand extends CloudCommand {
 
                 if (args.length == 3) {
 
-                    CloudGroup group = StreamlineCloud.getGroupByName(args[2]);
+                    CloudGroup group = CloudGroupManager.getInstance().getGroupByName(args[2]);
 
                     if (group != null) {
 
@@ -99,7 +101,7 @@ public class GroupsCommand extends CloudCommand {
                 StreamlineCloud.log("sl.command.groups.list.title");
 
                 for (CloudGroup g : Cache.i().getActiveGroups()) {
-                    StreamlineCloud.log(g.getName() + " - online: " + StreamlineCloud.getGroupOnlineServers(g).size() + " - minOnline: " + g.getMinOnlineCount());
+                    StreamlineCloud.log(g.getName() + " - online: " + CloudGroupManager.getInstance().getGroupOnlineServers(g).size() + " - minOnline: " + g.getMinOnlineCount());
                 }
 
                 break;
@@ -112,7 +114,7 @@ public class GroupsCommand extends CloudCommand {
 
                 if (args[2] != null) {
 
-                    CloudGroup group = StreamlineCloud.getGroupByName(args[2]);
+                    CloudGroup group = CloudGroupManager.getInstance().getGroupByName(args[2]);
 
                     if (group != null) {
 

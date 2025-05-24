@@ -2,7 +2,10 @@ package net.streamlinecloud.main.command;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 
@@ -20,7 +23,7 @@ public class ServersCommand extends CloudCommand {
     @Override
     public void execute(String[] args) {
 
-        if (args.length == 1) {
+        if (args.length == 1) {  
             sendHelp();
             return;
         }
@@ -32,7 +35,7 @@ public class ServersCommand extends CloudCommand {
 
                 if (args[2] != null) {
 
-                    CloudServer server = StreamlineCloud.getServerByName(args[2]);
+                    CloudServer server = CloudServerManager.getInstance().getServerByName(args[2]);
 
                     if (server != null) {
 
@@ -45,7 +48,7 @@ public class ServersCommand extends CloudCommand {
                                     server.disableScreen();
                                 } else {
                                     if (Cache.i().getCurrentScreenServerName() != null)
-                                        StreamlineCloud.getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
+                                        CloudServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
                                     server.enableScreen();
                                 }
 
@@ -97,7 +100,7 @@ public class ServersCommand extends CloudCommand {
 
                 if (args.length == 3) {
 
-                    StreamlineCloud.startServerByGroup(StreamlineCloud.getGroupByName(args [2]));
+                    CloudServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(args [2]));
 
                 }  else {
                     StreamlineCloud.log("sl.command.groups.enterGroup");
