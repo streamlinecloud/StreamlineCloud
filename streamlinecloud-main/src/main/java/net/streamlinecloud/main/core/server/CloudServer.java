@@ -68,7 +68,11 @@ public class CloudServer extends StreamlineServer {
 
     public void start(File javaExec) throws IOException {
 
-        if (getGroup() == null) setGroup(Cache.i().getDefaultGroup().getName());
+        if (getGroup() == null)
+            setGroup(Cache.i().getDefaultGroup().getName());
+
+        if (getGroupDirect().getOverflowMinutes() != -1)
+            setStopTime(System.currentTimeMillis() + getGroupDirect().getOverflowMinutes() * 60 * 1000L);
 
         setStaticServer(getGroupDirect().isStaticGroup());
         setServerState(ServerState.STARTING);
@@ -81,6 +85,7 @@ public class CloudServer extends StreamlineServer {
                     new ReplacePaket("%2", "temp/" + getName())
             });
         } else {
+
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
                     new ReplacePaket("%1", getName()),
                     new ReplacePaket("%2", "staticservers/" + getShortUuid())
@@ -347,6 +352,31 @@ public class CloudServer extends StreamlineServer {
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
         }
+    }
+
+    public void overflow() {
+        CloudServerManager serverManager = CloudServerManager.getInstance();
+        CloudServer newServer = serverManager.getServerByUuid(serverManager.startServerByGroup(getGroupDirect()));
+
+        try {
+            newServer.start(new File(newServer.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : newServer.getGroupDirect().getJavaExec()));
+            serverManager.getOverflowServers().put(newServer, this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        StreamlineCloud.log("Starting overflow process: " + getName() + "-" + getShortUuid() + " -> " + newServer.getName() + "-" + newServer.getShortUuid());
+    }
+
+    public void checkOverflow() {
+        CloudServerManager serverManager = CloudServerManager.getInstance();
+        serverManager.getOverflowServers().keySet().forEach(server -> {
+           if (server.getUuid().equals(getUuid())) {
+
+               //SEND TO SERVER SOCKET
+
+           }
+        });
     }
 
     public void kill() {

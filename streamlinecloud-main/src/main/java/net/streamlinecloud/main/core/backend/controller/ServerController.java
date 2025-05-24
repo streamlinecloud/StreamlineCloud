@@ -116,6 +116,8 @@ public class ServerController {
 
             if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid())});
             else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid()), new ReplacePaket("%2", lb)});
+
+            cs.checkOverflow();
         }
 
         cs.setOnlinePlayers(s.getOnlinePlayers());

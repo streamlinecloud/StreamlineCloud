@@ -8,12 +8,16 @@ import net.streamlinecloud.main.utils.Cache;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Getter
 public class CloudServerManager {
+
+    HashMap<CloudServer, CloudServer> overflowServers = new HashMap<>();
 
     @Getter
     private static CloudServerManager instance;
@@ -54,6 +58,13 @@ public class CloudServerManager {
 
                     firstStartup = false;
                 }
+
+            }
+
+            for (CloudServer server : Cache.i().getRunningServers()) {
+
+                if (server.getStopTime() == -1) continue;
+                if (System.currentTimeMillis() >= server.getStopTime()) server.overflow();
 
             }
         };
