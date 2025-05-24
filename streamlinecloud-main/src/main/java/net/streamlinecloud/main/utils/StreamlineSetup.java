@@ -49,6 +49,8 @@ public class StreamlineSetup {
                 Cache.i().getConfig().setDefaultJavaPath(javaPath);
                 Cache.i().getConfig().getNetwork().setLoadBalancers(new LoadBalancer[]{new LoadBalancer("MainLoadBalancer", "proxy", 25565)});
 
+                //TODO: ADD EULA ADVICE (Streamline automatically accepts the Minecraft EULA for each server you create (Please visit https://www.minecraft.net/en-us/eula) - Press enter to continue)
+
                 new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "Do you want to enable the whitelist", output1 -> {
                     if (output1.equals("yes")) {
                         Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);

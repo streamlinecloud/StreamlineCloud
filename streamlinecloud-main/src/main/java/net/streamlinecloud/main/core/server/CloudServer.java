@@ -199,7 +199,7 @@ public class CloudServer extends StreamlineServer {
         }
 
         f.createNewFile();
-        FileUtils.writeStringToFile(f, Cache.i().getApiKey() + ",_," + Cache.i().getGson().toJson(new StaticServerDataPacket(getName(), getPort(), getIp(), getGroup(), getUuid())), Charset.defaultCharset());
+        FileUtils.writeStringToFile(f, Cache.i().getApiKey() + ",_," + Cache.i().getGson().toJson(new StaticServerDataPacket(getName(), getPort(), getIp(), getGroup(), getUuid(), getStopTime())), Charset.defaultCharset());
 
         if (!new File(file.getPath() + "/server.jar").exists()) {
 
