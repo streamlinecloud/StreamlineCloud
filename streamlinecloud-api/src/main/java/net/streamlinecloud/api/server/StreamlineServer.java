@@ -17,6 +17,7 @@ public class StreamlineServer implements StreamlineServerDataImpl, StaticStreaml
 
     int port = 1;
     int maxOnlineCount = -1;
+    long stopTime = -1;
 
     HashMap<UUID, String> onlinePlayers = new HashMap<>();
     ServerUseState serverUseState = ServerUseState.UNKNOWN;

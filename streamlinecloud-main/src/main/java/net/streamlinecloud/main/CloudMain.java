@@ -109,8 +109,6 @@ public class CloudMain {
 
         CloudServerManager.getInstance().startServersIfNeeded();
 
-        new ServerStarterTask();
-
         registerCommand(new HelpCommand());
         registerCommand(new ShutDownCommand());
         registerCommand(new GroupsCommand());
