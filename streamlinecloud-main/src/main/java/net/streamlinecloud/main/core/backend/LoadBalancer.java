@@ -94,23 +94,27 @@ public class LoadBalancer {
             SocketChannel clientChannel = serverSock.accept();
             clientChannel.configureBlocking(false);
 
-            CloudServer target = nextServer().get();
+            try {
+                CloudServer target = nextServer().get();
 
-            if (target == null) {
-                clientChannel.close();
-                return;
+                if (target == null) {
+                    clientChannel.close();
+                    return;
+                }
+
+                ExtensionManager.eventManager.callEvent(new PlayerChoseProxyEvent(target));
+
+                SocketChannel backendChannel = SocketChannel.open();
+                backendChannel.configureBlocking(false);
+                backendChannel.connect(new InetSocketAddress(target.getAddress(), target.getPort()));
+
+                ConnectionPair pair = new ConnectionPair(clientChannel, backendChannel);
+
+                clientChannel.register(selector, SelectionKey.OP_READ, pair);
+                backendChannel.register(selector, SelectionKey.OP_CONNECT, pair);
+            } catch (NoSuchElementException e) {
+                StreamlineCloud.log(getName() + " does not have any registered servers (" + e.getMessage() + ")");
             }
-
-            ExtensionManager.eventManager.callEvent(new PlayerChoseProxyEvent(target));
-
-            SocketChannel backendChannel = SocketChannel.open();
-            backendChannel.configureBlocking(false);
-            backendChannel.connect(new InetSocketAddress(target.getAddress(), target.getPort()));
-
-            ConnectionPair pair = new ConnectionPair(clientChannel, backendChannel);
-
-            clientChannel.register(selector, SelectionKey.OP_READ, pair);
-            backendChannel.register(selector, SelectionKey.OP_CONNECT, pair);
         } catch (IOException e) {
             e.printStackTrace();
         }
