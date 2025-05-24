@@ -5,16 +5,60 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.utils.Cache;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class CloudServerManager {
 
     @Getter
     private static CloudServerManager instance;
 
+    boolean firstStartup = true;
+
     public CloudServerManager() {
         instance = this;
+        task();
+    }
+
+    public void task() {
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        Runnable runnable = () -> {
+
+            CloudServerManager.getInstance().startServersIfNeeded();
+
+            if (!Cache.i().getServersWaitingForStart().isEmpty()) {
+                try {
+                    CloudServer server = Cache.i().getServersWaitingForStart().getFirst();
+
+                    for (String s : Cache.i().getDataCache()) {
+                        if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
+                    }
+
+                    server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
+                    Cache.i().getServersWaitingForStart().remove(server);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            if (Cache.i().getServersWaitingForStart().isEmpty()) {
+
+                if (firstStartup) {
+
+                    firstStartup = false;
+                }
+
+            }
+        };
+
+        scheduler.scheduleAtFixedRate(runnable, 0, 3, TimeUnit.SECONDS);
     }
 
     public CloudServer getServerByName(String name) {
