@@ -28,8 +28,6 @@ import java.util.List;
 @Getter
 public class CloudMain {
 
-    //TODO: Wenn ein Server normal gestoppt wird auch im Main Modul erkennen
-
     @Getter
     private static CloudMain instance;
     private static Cache cache;

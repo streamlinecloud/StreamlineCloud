@@ -254,14 +254,21 @@ public class CloudServer extends StreamlineServer {
 
                     String line;
                     try {
-                        while (!getServerState().equals(ServerState.STOPPING) && (line = inputReader.readLine()) != null) {
-                            addLog(line);
-                            if (output) {
-                                IncommingServerMessageEvent incommingEvent = eventManager.callEvent(
-                                        new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line)
-                                );
-                                if (!incommingEvent.isCancelled()) {
-                                    StreamlineCloud.logSingle(getName() + " " + line);
+                        while (!getServerState().equals(ServerState.STOPPING)) {
+                            if (!getProcess().isAlive()) {
+                                delete();
+                                return;
+                            }
+
+                            if ((line = inputReader.readLine()) != null) {
+                                addLog(line);
+                                if (output) {
+                                    IncommingServerMessageEvent incommingEvent = eventManager.callEvent(
+                                            new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line)
+                                    );
+                                    if (!incommingEvent.isCancelled()) {
+                                        StreamlineCloud.logSingle(getName() + " " + line);
+                                    }
                                 }
                             }
                         }
