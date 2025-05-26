@@ -11,8 +11,6 @@ import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.backend.BackEndMain;
-import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
@@ -48,6 +46,7 @@ public class CloudServer extends StreamlineServer {
 
     boolean output = false;
     boolean staticServer = false;
+    boolean inOverflowProcess = false;
 
     public CloudServer(String name, ServerRuntime runtime) {
         setName(name);
@@ -364,6 +363,8 @@ public class CloudServer extends StreamlineServer {
     }
 
     public void overflow() {
+        inOverflowProcess = true;
+
         CloudServerManager serverManager = CloudServerManager.getInstance();
         CloudServer newServer = serverManager.getServerByUuid(serverManager.startServerByGroup(getGroupDirect()));
 

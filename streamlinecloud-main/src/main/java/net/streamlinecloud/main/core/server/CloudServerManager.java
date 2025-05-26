@@ -35,37 +35,43 @@ public class CloudServerManager {
 
         Runnable runnable = () -> {
 
-            CloudServerManager.getInstance().startServersIfNeeded();
+            try {
 
-            if (!Cache.i().getServersWaitingForStart().isEmpty()) {
-                try {
-                    CloudServer server = Cache.i().getServersWaitingForStart().getFirst();
+                startServersIfNeeded();
 
-                    for (String s : Cache.i().getDataCache()) {
-                        if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
+                if (!Cache.i().getServersWaitingForStart().isEmpty()) {
+                    try {
+                        CloudServer server = Cache.i().getServersWaitingForStart().getFirst();
+
+                        for (String s : Cache.i().getDataCache()) {
+                            if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
+                        }
+
+                        server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
+                        Cache.i().getServersWaitingForStart().remove(server);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if (Cache.i().getServersWaitingForStart().isEmpty()) {
+
+                    if (firstStartup) {
+
+                        firstStartup = false;
                     }
 
-                    server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
-                    Cache.i().getServersWaitingForStart().remove(server);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            if (Cache.i().getServersWaitingForStart().isEmpty()) {
-
-                if (firstStartup) {
-
-                    firstStartup = false;
                 }
 
-            }
+                for (CloudServer server : new ArrayList<>(Cache.i().getRunningServers())) {
 
-            for (CloudServer server : Cache.i().getRunningServers()) {
+                    if (server.getStopTime() == -1) continue;
+                    if (System.currentTimeMillis() >= server.getStopTime() && !server.isInOverflowProcess()) server.overflow();
 
-                if (server.getStopTime() == -1) continue;
-                if (System.currentTimeMillis() >= server.getStopTime()) server.overflow();
+                }
 
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
 

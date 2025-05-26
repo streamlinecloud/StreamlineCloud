@@ -75,9 +75,7 @@ public class ServerSocket {
 
                 } else if (ctx.message().startsWith("iam")) {
 
-                    System.out.println("IAM: Received iam message from " + ctx.sessionId() + " - " + ctx.message() );
                     serverSessions.put(CloudServerManager.getInstance().getServerByUuid(ctx.message().split(":")[1]), ctx);
-                    System.out.println(CloudServerManager.getInstance().getServerByUuid(ctx.message().split(":")[1]).getName());
 
                     ctx.send("success");
                     return;
@@ -100,10 +98,8 @@ public class ServerSocket {
 
     public void sendTo(StreamlineServer server, String message) {
         try {
-            System.out.println("DEBUGGGggGGGG: Sending message to " + server.getName() + " - " + message);
             serverSessions.forEach((s, ctx) -> {
                 if (s.getUuid().equals(server.getUuid())) {
-                    System.out.println("SENDING :::::::::::::::");
                     ctx.send(message);
                 }
             });
