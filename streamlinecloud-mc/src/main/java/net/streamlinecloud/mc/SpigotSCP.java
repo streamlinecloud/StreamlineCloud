@@ -14,6 +14,7 @@ import net.streamlinecloud.mc.paper.listener.ConnectionListener;
 import net.streamlinecloud.mc.paper.listener.ServerLoadListener;
 import net.streamlinecloud.mc.paper.manager.PlayerManager;
 import net.streamlinecloud.mc.paper.manager.ServerManager;
+import net.streamlinecloud.mc.paper.task.StopCountdownTask;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +39,8 @@ public final class SpigotSCP extends JavaPlugin {
 
         new ServerManager();
         new PlayerManager();
+
+        new StopCountdownTask();
 
         //ServerManager.getInstance().subscribe(ServerManager.getInstance().getServer("test-1"));
 
