@@ -22,7 +22,7 @@ public interface StreamlineGroupImpl {
     /**
      * @return Automatically start the server overflow process
      */
-    int getOverflowMinutes();
+    int getAutoRestartMinutes();
 
     /**
      * @return The path to the template (%default for the default path from the main config)

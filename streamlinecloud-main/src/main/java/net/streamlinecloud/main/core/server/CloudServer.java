@@ -72,8 +72,8 @@ public class CloudServer extends StreamlineServer {
         if (getGroup() == null)
             setGroup(Cache.i().getDefaultGroup().getName());
 
-        if (getGroupDirect().getOverflowMinutes() != -1)
-            setStopTime(System.currentTimeMillis() + getGroupDirect().getOverflowMinutes() * 60 * 1000L);
+        if (getGroupDirect().getAutoRestartMinutes() != -1)
+            setStopTime(System.currentTimeMillis() + getGroupDirect().getAutoRestartMinutes() * 60 * 1000L);
 
         setStaticServer(getGroupDirect().isStaticGroup());
         setServerState(ServerState.STARTING);

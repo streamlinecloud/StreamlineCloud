@@ -18,6 +18,6 @@ public class StreamlineGroup implements StreamlineGroupImpl {
     boolean staticGroup = false;
     int serverOnlineCount = 50;
     int minOnlineCount;
-    int overflowMinutes = -1;
+    int autoRestartMinutes = -1;
 
 }

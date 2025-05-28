@@ -144,7 +144,7 @@ public class ServerController {
         context.status(200);
     }
 
-    public void startOverflow(@NotNull Context context) {
+    public void autoRestart(@NotNull Context context) {
         String uuid = context.pathParam("uuid");
         CloudServer server = CloudServerManager.getInstance().getServerByUuid(uuid);
 
