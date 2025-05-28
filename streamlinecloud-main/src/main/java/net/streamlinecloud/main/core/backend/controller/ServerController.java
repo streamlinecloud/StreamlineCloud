@@ -144,6 +144,22 @@ public class ServerController {
         context.status(200);
     }
 
+    public void startOverflow(@NotNull Context context) {
+        String uuid = context.pathParam("uuid");
+        CloudServer server = CloudServerManager.getInstance().getServerByUuid(uuid);
+
+        if (server == null) {
+            context.result("serverNotFound");
+            context.status(201);
+            return;
+        }
+
+        server.overflow();
+
+        context.result("success");
+        context.status(200);
+    }
+
     public void stop(@NotNull Context context) {
         String uuid = context.pathParam("uuid");
     }

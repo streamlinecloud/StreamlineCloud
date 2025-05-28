@@ -54,6 +54,7 @@ public class BackEndMain {
 
         app.get("/streamline/servers/{uuid}", serverController::get);
         app.get("/streamline/servers/{uuid}/rconDetails", serverController::getRconDetails);
+        app.get("/streamline/servers/{uuid}/startOverflow", serverController::startOverflow);
         app.post("/streamline/servers/update", serverController::update);
 
         app.get("/streamline/servers/name/{name}", serverController::get);
