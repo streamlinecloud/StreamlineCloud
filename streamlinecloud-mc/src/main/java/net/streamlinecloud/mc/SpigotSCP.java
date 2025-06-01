@@ -19,6 +19,7 @@ import net.streamlinecloud.mc.paper.task.StopCountdownTask;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Getter
 public final class SpigotSCP extends JavaPlugin {
 
     StreamlineCloud streamlineCloud;

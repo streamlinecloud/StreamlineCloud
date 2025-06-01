@@ -1,6 +1,8 @@
 package net.streamlinecloud.mc.paper.command;
 
 import net.streamlinecloud.api.packet.RemoteCommandPacket;
+import net.streamlinecloud.mc.SpigotSCP;
+import net.streamlinecloud.mc.common.core.PluginConfig;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import org.bukkit.command.Command;
@@ -15,8 +17,14 @@ public class StreamlineCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         Player player = (Player) sender;
+        PluginConfig config = SpigotSCP.getInstance().getConfigManager().getConfig();
 
         if (args[0].equals("cmd") || args[0].equals("command")) {
+
+            if (!player.hasPermission(config.getPermissions().getRemoteCLI())) {
+                player.sendMessage(config.getPrefix() + "§cYou don't have permission to use this command!");
+                return false;
+            }
 
             StringBuilder builder = new StringBuilder();
 
