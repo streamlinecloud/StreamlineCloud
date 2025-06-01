@@ -5,7 +5,6 @@ import net.streamlinecloud.main.core.backend.controller.GroupsController;
 import net.streamlinecloud.main.core.backend.controller.ServerController;
 import net.streamlinecloud.main.core.backend.controller.UtilController;
 import net.streamlinecloud.main.core.backend.socket.ServerSocket;
-import static io.javalin.apibuilder.ApiBuilder.*;
 import net.streamlinecloud.main.utils.Cache;
 import io.javalin.Javalin;
 

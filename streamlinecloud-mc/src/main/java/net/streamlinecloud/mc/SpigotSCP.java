@@ -3,6 +3,7 @@ package net.streamlinecloud.mc;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
+import net.streamlinecloud.mc.common.core.manager.ConfigManager;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class SpigotSCP extends JavaPlugin {
 
     StreamlineCloud streamlineCloud;
+    ConfigManager configManager;
 
     @Getter
     private static SpigotSCP instance;
@@ -37,12 +39,12 @@ public final class SpigotSCP extends JavaPlugin {
 
         Functions.startup();
 
+        configManager = new ConfigManager(getDataFolder());
+
         new ServerManager();
         new PlayerManager();
 
         new StopCountdownTask();
-
-        //ServerManager.getInstance().subscribe(ServerManager.getInstance().getServer("test-1"));
 
         this.getLogger().info("plugin enabled");
     }
