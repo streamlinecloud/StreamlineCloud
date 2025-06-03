@@ -23,7 +23,7 @@ public class CloudTerminal {
     @Getter
     private final CloudTerminalRunner runner;
 
-    private boolean isInterupted = false;
+    private boolean isInterrupted = false;
 
     public CloudTerminal() {
 
@@ -36,12 +36,6 @@ public class CloudTerminal {
                     .dumb(true)
                     .encoding(StandardCharsets.UTF_8)
                     .build();
-
-            /*
-            Terminal.SignalHandler signalHandler = signal -> runHardStop();
-
-            terminal.handle(Terminal.Signal.INT, signalHandler);
-             */
 
             this.lineReader = LineReaderBuilder.builder()
                     .terminal(terminal)
@@ -84,17 +78,17 @@ public class CloudTerminal {
     }
 
     public void runHardStop() {
-        if (!isInterupted) {
+        if (!isInterrupted) {
 
             StreamlineCloud.log("§DARK_REDCloud Interruption detected. To Hard Stop the Cloud press CTRL+C again in the next 10 Seconds!");
 
             ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
             scheduledExecutorService.schedule(() -> {
-                isInterupted = false;
+                isInterrupted = false;
             }, 10, java.util.concurrent.TimeUnit.SECONDS);
 
-            isInterupted = true;
+            isInterrupted = true;
             return;
         }
 

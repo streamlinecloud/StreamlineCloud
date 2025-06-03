@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 
 @Getter
 @Setter
@@ -43,7 +44,7 @@ public class StreamlineConfig {
         String json = gson.toJson(getData(), getData().getClass());
         File config = new File(getPath());
         try {
-            FileUtils.writeStringToFile(config, json);
+            Files.writeString(config.toPath(), json);
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
         }

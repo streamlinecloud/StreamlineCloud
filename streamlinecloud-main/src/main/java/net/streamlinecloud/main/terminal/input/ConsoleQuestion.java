@@ -48,8 +48,6 @@ public class ConsoleQuestion {
             Cache.i().getConsoleInputs().remove(this);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

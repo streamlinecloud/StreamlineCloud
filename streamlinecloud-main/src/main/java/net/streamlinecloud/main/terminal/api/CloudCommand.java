@@ -41,7 +41,7 @@ public abstract class CloudCommand implements CloudCommandImpl {
     }
 
     @Override
-    public void execute(String[] args) throws MalformedURLException {
+    public void execute(String[] args) {
     }
 
     public void addArgument(CloudCommandArgument argument) {

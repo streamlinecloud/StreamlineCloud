@@ -13,5 +13,5 @@ public interface CloudCommandImpl {
 
     List<CloudCommandArgument> arguments();
 
-    void execute(String[] args) throws MalformedURLException;
+    void execute(String[] args);
 }

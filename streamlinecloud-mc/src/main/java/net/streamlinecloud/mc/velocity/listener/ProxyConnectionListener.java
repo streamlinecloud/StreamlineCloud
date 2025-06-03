@@ -33,7 +33,7 @@ public class ProxyConnectionListener {
             }
 
             Optional<RegisteredServer> server = VelocitySCP.getInstance().searchFallback();
-            if (server == null) {
+            if (server.isEmpty()) {
                 player.disconnect(Component.text("§cThere are no fallback servers available\n§8»§l§cStreamlineCloud"));
                 return;
             }
@@ -59,7 +59,7 @@ public class ProxyConnectionListener {
         if (!VelocitySCP.getInstance().getFallbacks().contains(event.getServer().getServerInfo().getName())) {
 
             Optional<RegisteredServer> server = VelocitySCP.getInstance().searchFallback();
-            if (server == null) {
+            if (server.isEmpty()) {
                 player.disconnect(Component.text("§cThere are no fallback servers available\n§8»§l§cStreamlineCloud"));
                 return;
             }
@@ -82,16 +82,13 @@ public class ProxyConnectionListener {
         String count = Functions.get("network-count");
 
         try {
+            assert count != null;
             ping.onlinePlayers(Integer.parseInt(count.split("-")[0]));
             ping.maximumPlayers(Integer.parseInt(count.split("-")[1]));
-            ping.description(formatted("<bold><gradient:#ff4040:#d47979>Powered by StreamlineCloud</gradient></bold>\n<#4dffed>Visit streamlinecloud.net"));
+            ping.description(MiniMessage.miniMessage().deserialize("<bold><gradient:#ff4040:#d47979>Powered by StreamlineCloud</gradient></bold>\n<#4dffed>Visit streamlinecloud.net"));
         } finally {
             e.setPing(ping.build());
         }
-    }
-
-    private static Component formatted(String str) {
-        return MiniMessage.miniMessage().deserialize(str);
     }
 
 }

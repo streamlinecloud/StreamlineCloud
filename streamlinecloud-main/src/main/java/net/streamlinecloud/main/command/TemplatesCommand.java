@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.command;
 
+import lombok.SneakyThrows;
 import net.streamlinecloud.api.server.TemplateEnums;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
@@ -23,8 +24,9 @@ public class TemplatesCommand extends CloudCommand {
         setDescription("Manage templates");
     }
 
+    @SneakyThrows
     @Override
-    public void execute(String[] args) throws MalformedURLException {
+    public void execute(String[] args) {
         //
 
 
@@ -72,7 +74,7 @@ public class TemplatesCommand extends CloudCommand {
             case "delete" -> {
                 if (!Files.exists(Paths.get(Cache.i().homeFile + "/template/" + args[1]))) {
                     File template = new File(Cache.i().homeFile + "/templates/" + args[1]);
-                    template.delete();
+                    Files.delete(template.toPath());
                     StreamlineCloud.log("tmp.delete.success");
                     return;
                 }

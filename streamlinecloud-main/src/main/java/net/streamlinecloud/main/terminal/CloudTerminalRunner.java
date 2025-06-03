@@ -121,11 +121,7 @@ public class CloudTerminalRunner extends Thread {
 
         commandManager.commands.values().forEach(command -> {
             if (command.getName().equals(args[0])) {
-                try {
-                    commandManager.executeCommand(command.getName(), Arrays.stream(args).skip(1).toArray(String[]::new));
-                } catch (CommandException e) {
-                    throw new RuntimeException(e);
-                }
+                commandManager.executeCommand(command.getName(), Arrays.stream(args).skip(1).toArray(String[]::new));
             }
         });
 

@@ -17,7 +17,7 @@ public class UptimeCommand extends CloudCommand {
     }
 
     @Override
-    public void execute(String[] args) throws MalformedURLException {
+    public void execute(String[] args) {
 
         if (args.length == 1){
             long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartuptime();

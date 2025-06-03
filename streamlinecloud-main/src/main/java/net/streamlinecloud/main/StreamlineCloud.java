@@ -30,10 +30,10 @@ import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 public class StreamlineCloud {
 
     private static List<String> savedLogs = new ArrayList<>();
-    private static List<Integer> generatedPorts = new ArrayList<>();
-    private static Random random = new Random();
+    private static final List<Integer> generatedPorts = new ArrayList<>();
+    private static final Random random = new Random();
 
-    private static List<String> printedErrors = new ArrayList<>();
+    private static final List<String> printedErrors = new ArrayList<>();
 
     public static int generateUniquePort() {
 
@@ -50,19 +50,19 @@ public class StreamlineCloud {
         return port;
     }
 
-    public static void log(String msg) { logIntern(msg, new ReplacePaket[]{}, true); }
-    public static void log(String msg, ReplacePaket[] packets) { logIntern(msg, packets, true); }
-    public static void logError(String msg) { logIntern(Settings.name + "§DARK_RED" + msg, new ReplacePaket[]{}, true); }
+    public static void log(String msg) { logIntern(msg, new ReplacePaket[]{}); }
+    public static void log(String msg, ReplacePaket[] packets) { logIntern(msg, packets); }
+    public static void logError(String msg) { logIntern(Settings.name + "§DARK_RED" + msg, new ReplacePaket[]{}); }
 
 
     public static void logImportant(String msg) {
 
-        logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
-        logIntern(Settings.name + msg, new ReplacePaket[]{}, true);
-        logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{}, true);
+        logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{});
+        logIntern(Settings.name + msg, new ReplacePaket[]{});
+        logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{});
     }
 
-    private static void logIntern(String msg, ReplacePaket[] pakets, boolean prefix) {
+    private static void logIntern(String msg, ReplacePaket[] pakets) {
 
         Date now = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd.MM-HH:mm:ss");
@@ -89,9 +89,7 @@ public class StreamlineCloud {
 
         String s = msg + "§RED";
 
-        if (prefix) {
-            s = "§RED" + formattedDate + " §8| " + Settings.name + msg + "§RED";
-        }
+        s = "§RED" + formattedDate + " §8| " + Settings.name + msg + "§RED";
 
         for (ReplacePaket p : pakets) {
             s = s.replace(p.getTarget(), p.getValue());
@@ -175,7 +173,7 @@ public class StreamlineCloud {
 
     public static void releaseSavedLogs() {
 
-        for (String log : savedLogs) logIntern(log, new ReplacePaket[]{}, true);
+        for (String log : savedLogs) logIntern(log, new ReplacePaket[]{});
         savedLogs = new ArrayList<>();
     }
 
@@ -274,24 +272,6 @@ public class StreamlineCloud {
             return false;
         }
         return true;
-    }
-
-    public static String generatePassword() {
-
-        String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?*+-";
-        StringBuilder builder = new StringBuilder();
-        int length = 64;
-
-        Random random = new Random();
-
-        for (int i = 0; i < length; i++) {
-
-            int zufallsIndex = random.nextInt(letters.length());
-            char zufallsZeichen = letters.charAt(zufallsIndex);
-            builder.append(zufallsZeichen);
-        }
-
-        return builder.toString();
     }
 
     public static String readyBanner() {

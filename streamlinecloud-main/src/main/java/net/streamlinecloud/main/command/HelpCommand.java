@@ -17,15 +17,6 @@ public class HelpCommand extends CloudCommand {
     @Override
     public void execute(String[] args) {
 
-        /*
-        addArgument(new CloudCommandArgument("servers")
-                .addSubargument(new CloudCommandArgument("add"))
-                .addSubargument(new CloudCommandArgument("delete")
-                        .addSubargument(new CloudCommandArgument("-force")))
-                .addSubargument(new CloudCommandArgument("restart")
-                        .addSubargument(new CloudCommandArgument("-force"))));
-         */
-
         if (args.length == 2) {
             if (args[1].equals("-toggleDebugMode") || args[1].equals("-tdm")) {
                 if (Cache.i().isDebugMode()) {
@@ -33,7 +24,7 @@ public class HelpCommand extends CloudCommand {
                     StreamlineCloud.log("Disabled!");
                 } else {
                     Cache.i().setDebugMode(true);
-                    StreamlineCloud.log("Have fun!");
+                    StreamlineCloud.log("Debug mode enabled!");
                 }
                 return;
             }

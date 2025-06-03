@@ -64,11 +64,7 @@ public class Downloader {
                     scheduledExecutorService.shutdownNow();
 
                     if (next != null) {
-                        try {
-                            next.execute("s");
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                        next.execute("s");
                     }
                 }
 
@@ -79,7 +75,7 @@ public class Downloader {
         }
 
         @Override
-        public File handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+        public File handleResponse(HttpResponse response) throws IOException {
             startProgressbar(response);
             InputStream source = response.getEntity().getContent();
             FileUtils.copyInputStreamToFile(source, this.target);
@@ -89,7 +85,7 @@ public class Downloader {
     }
 
     public interface Continue {
-        void execute(String s) throws InterruptedException;
+        void execute(String s);
     }
 
 }

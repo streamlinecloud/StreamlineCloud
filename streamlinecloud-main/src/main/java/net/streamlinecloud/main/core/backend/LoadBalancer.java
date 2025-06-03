@@ -19,7 +19,6 @@ public class LoadBalancer {
 
     transient private List<CloudServer> proxyServers;
     transient private Selector selector;
-    transient private ServerSocketChannel serverChannel;
 
     @Getter
     String name;
@@ -48,7 +47,7 @@ public class LoadBalancer {
 
         selector = Selector.open();
 
-        serverChannel = ServerSocketChannel.open();
+        ServerSocketChannel serverChannel = ServerSocketChannel.open();
         serverChannel.configureBlocking(false);
         serverChannel.bind(new InetSocketAddress(port));
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -95,7 +94,7 @@ public class LoadBalancer {
             clientChannel.configureBlocking(false);
 
             try {
-                CloudServer target = nextServer().get();
+                CloudServer target = nextServer().orElse(null);
 
                 if (target == null) {
                     clientChannel.close();
@@ -170,9 +169,9 @@ public class LoadBalancer {
         }
     }
 
-    private class ConnectionPair {
-        private SocketChannel clientChannel;
-        private SocketChannel backendChannel;
+    private static class ConnectionPair {
+        private final SocketChannel clientChannel;
+        private final SocketChannel backendChannel;
 
         public ConnectionPair(SocketChannel clientChannel, SocketChannel backendChannel) {
             this.clientChannel = clientChannel;

@@ -2,7 +2,6 @@ package net.streamlinecloud.main.core.backend.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.StreamlineServer;
@@ -11,19 +10,15 @@ import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServer;
-import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.utils.Cache;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.streamlinecloud.main.core.backend.BackEndMain.mainPath;
-
 public class GroupsController {
 
     public void create(@NotNull Context context) {
-
     }
 
     public void getAll(@NotNull Context context) {

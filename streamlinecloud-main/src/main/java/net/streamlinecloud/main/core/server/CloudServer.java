@@ -23,6 +23,7 @@ import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -132,11 +133,9 @@ public class CloudServer extends StreamlineServer {
 
                 propertiesFile.createNewFile();
 
-                //String[][] replacements = {{"server-port=", "server-port=" + getPort()}, {"enable-rcon=false", "enable-rcon=true"}, {"rcon.port=25575", "rcon.port=" + (getPort() + 1)}, {"rcon.password=", "rcon.password=" + rconpw}};
-
                 properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
 
-                String rconpw = StreamlineCloud.generatePassword();
+                String rconpw = StreamlineCloud.generateApiKey();
                 Cache.i().getRconDetails().put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
 
                 properties.setProperty("server-port", String.valueOf(getPort()));
@@ -157,8 +156,8 @@ public class CloudServer extends StreamlineServer {
             //Eula
             try {
                 File eula = new File(file.getAbsolutePath() + "/eula.txt");
-                if (!eula.exists()) eula.createNewFile();
-                FileUtils.writeStringToFile(eula, "eula=true");
+                if (!eula.exists()) Files.createFile(eula.toPath());
+                Files.writeString(eula.toPath(), "eula=true");
             } catch (IOException e) {
                 StreamlineCloud.logError(e.getMessage());
             }
@@ -204,7 +203,7 @@ public class CloudServer extends StreamlineServer {
             FileUtils.forceDelete(f);
         }
 
-        f.createNewFile();
+        Files.createFile(f.toPath());
         FileUtils.writeStringToFile(f, Cache.i().getApiKey() + ",_," + Cache.i().getGson().toJson(new StaticServerDataPacket(getName(), getPort(), getIp(), getGroup(), getUuid(), getStopTime())), Charset.defaultCharset());
 
         if (!new File(file.getPath() + "/server.jar").exists()) {
@@ -303,6 +302,7 @@ public class CloudServer extends StreamlineServer {
             Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
+            return false;
         }
         return true;
     }

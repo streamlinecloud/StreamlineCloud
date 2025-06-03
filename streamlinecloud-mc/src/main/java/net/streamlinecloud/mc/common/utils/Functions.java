@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Functions {
 
-    public static String post(Object o, String path) {
+    public static void post(Object o, String path) {
         String res = "";
         try {
             String url = "http://localhost:5378/streamline/" + path;
@@ -46,12 +46,10 @@ public class Functions {
             }
 
             connection.disconnect();
-            return res;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "";
     }
 
     public static String get(String path) {

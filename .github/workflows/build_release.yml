@@ -124,7 +124,6 @@ jobs:
         files: |
             LICENCE.md
             *.jar
-        release_notes: ${{ env.CHANGELOG }}
 
     - name: Upload Docker image digest
       run: echo "${{ github.sha }}" > image-digest.txt

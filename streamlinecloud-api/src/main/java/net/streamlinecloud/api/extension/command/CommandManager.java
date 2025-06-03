@@ -38,7 +38,7 @@ public class CommandManager {
      * @param args Arguments for the command
      * @throws CommandException If the command does not exist
      */
-    public void executeCommand(String name, String[] args) throws CommandException {
+    public void executeCommand(String name, String[] args) {
         if (!commands.containsKey(name)) {
             return;
         }

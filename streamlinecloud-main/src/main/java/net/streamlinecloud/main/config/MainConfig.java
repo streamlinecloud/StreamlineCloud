@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,7 +150,7 @@ public class MainConfig {
         String json = gson.toJson(Cache.i().getConfig(), MainConfig.class);
         File config = new File(Cache.i().homeFile + "/data/config.json");
         try {
-            FileUtils.writeStringToFile(config, json);
+            Files.writeString(config.toPath(), json);
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
         }

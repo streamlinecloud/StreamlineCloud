@@ -30,14 +30,13 @@ public class CloudMain {
 
     @Getter
     private static CloudMain instance;
-    private static Cache cache;
     private final CloudTerminal terminal;
     List<CloudCommand> commandMap = new ArrayList<>();
 
     @SneakyThrows
-    public CloudMain(String[] args) throws InterruptedException {
+    public CloudMain(String[] args) {
 
-        cache = new Cache();
+        Cache cache = new Cache();
         cache.setStartuptime(Calendar.getInstance().getTimeInMillis());
 
         for (String arg : args) {
@@ -58,7 +57,6 @@ public class CloudMain {
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + Settings.authors);
         StreamlineCloud.logSingle("§DARK_GRAY-> §REDWebsite: §AQUA" + Settings.website);
         StreamlineCloud.logSingle("");
-
 
         Settings.name = "§REDStreamlineCloud §8-> §RED";
         StreamlineCloud.log("Starting StreamlineCloud");

@@ -25,7 +25,7 @@ public class Utils {
 
         if (inputStream != null) {
             try {
-                File tempFile = File.createTempFile("tempFile_" + UUID.randomUUID().toString(), "." + filetype);
+                File tempFile = File.createTempFile("tempFile_" + UUID.randomUUID(), "." + filetype);
 
                 try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
                     byte[] buffer = new byte[1024];

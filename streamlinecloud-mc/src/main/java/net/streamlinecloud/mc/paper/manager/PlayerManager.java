@@ -33,11 +33,6 @@ public class PlayerManager {
      * @param server StreamlineServer to send to
      */
     public void sendPlayer(StreamlinePlayer player, StreamlineServer server) {
-        /*ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Connect");
-        out.writeUTF(server.getName());
-        Player p = player.getPlayer();
-        p.sendPluginMessage(SpigotSCP.getInstance(), "BungeeCord", out.toByteArray());*/
 
         if (server.getMaxOnlineCount() == -1) {
             player.getPlayer().sendMessage("§cServer is starting!");
