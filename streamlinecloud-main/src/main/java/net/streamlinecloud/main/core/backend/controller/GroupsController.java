@@ -38,10 +38,11 @@ public class GroupsController {
 
     public void get(@NotNull Context context) {
         String name = context.pathParam("name");
-        StreamlineGroup server = CloudGroupManager.getInstance().getGroupByName(name);
+        StreamlineGroup group = CloudGroupManager.getInstance().getGroupByName(name);
 
-        if (server != null) {
-            context.result(new Gson().toJson(server, StreamlineGroup.class));
+        if (group != null) {
+            group.setServerOnlineCount(CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName(group.getName())).size());
+            context.result(new Gson().toJson(group, StreamlineGroup.class));
             context.status(200);
         } else {
             context.result("serverNotFound");
