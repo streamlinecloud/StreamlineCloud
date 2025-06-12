@@ -8,6 +8,7 @@ import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.SpigotSCP;
 import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
+import net.streamlinecloud.mc.paper.event.ServerDataReceivedEvent;
 import net.streamlinecloud.mc.paper.event.ServerDataUpdateEvent;
 import net.streamlinecloud.mc.paper.event.ServerDeletedEvent;
 import org.bukkit.Bukkit;
@@ -44,17 +45,23 @@ public class ServerManager extends AbstractServerManager {
 
     @Override
     public void onSubscribedServerUpdated(StreamlineServer server) {
-        SpigotSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDataUpdateEvent(server));
+        Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
+            Bukkit.getPluginManager().callEvent(new ServerDataUpdateEvent(server));
+        });
     }
 
     @Override
     public void onSubscribedServerStarted(StreamlineServer server) {
-        SpigotSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDataUpdateEvent(server));
+        Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
+            SpigotSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDataReceivedEvent(server));
+        });
     }
 
     @Override
     public void onSubscribedServerStopped(StreamlineServer server) {
-        SpigotSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDeletedEvent(server));
+        Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
+            SpigotSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDeletedEvent(server));
+        });
     }
 
     @Override

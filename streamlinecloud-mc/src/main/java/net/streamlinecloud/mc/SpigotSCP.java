@@ -12,12 +12,15 @@ import net.streamlinecloud.mc.paper.command.ServerInfoCommand;
 import net.streamlinecloud.mc.paper.command.StreamlineCommand;
 import net.streamlinecloud.mc.paper.command.TestCommand;
 import net.streamlinecloud.mc.paper.listener.ConnectionListener;
-import net.streamlinecloud.mc.paper.listener.ServerLoadListener;
+import net.streamlinecloud.mc.paper.listener.ServerListener;
 import net.streamlinecloud.mc.paper.manager.PlayerManager;
 import net.streamlinecloud.mc.paper.manager.ServerManager;
 import net.streamlinecloud.mc.paper.task.StopCountdownTask;
+import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.net.http.WebSocket;
 
 @Getter
 public final class SpigotSCP extends JavaPlugin {
@@ -52,7 +55,7 @@ public final class SpigotSCP extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        ServerManager.getInstance().getSocket().sendClose(WebSocket.NORMAL_CLOSURE, "PluginShutdown");
     }
 
     private void registerCommand() {
@@ -65,7 +68,7 @@ public final class SpigotSCP extends JavaPlugin {
     private void registerEvents() {
         PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new ConnectionListener(), this);
-        manager.registerEvents(new ServerLoadListener(), this);
+        manager.registerEvents(new ServerListener(), this);
     }
 
     public StaticServerDataPacket getServerData() {

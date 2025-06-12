@@ -1,11 +1,14 @@
 package net.streamlinecloud.main.core.backend.socket;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.javalin.websocket.WsContext;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
+import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.utils.Cache;
 
@@ -33,7 +36,6 @@ public class ServerSocket {
                 String key = ctx.queryParam("key");
 
                 if ( key == null || !key.equals(Cache.i().apiKey)) {
-                    System.out.println("DEBUG: Received unexpected key: " + key + " should be " + Cache.i().apiKey);
                     ctx.send("403");
                     ctx.closeSession();
                     return;
@@ -105,6 +107,25 @@ public class ServerSocket {
             });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void sendUpdate(StreamlineServer s) {
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
+                .create();
+
+        for (String session : Cache.i().getServerSocket().servers.keySet()) {
+            for (StreamlineServer server : Cache.i().getServerSocket().servers.get(session)) {
+                if (server.getUuid().equals(s.getUuid())) {
+                    for (StreamlineServer streamlineServer : Cache.i().getServerSocket().servers.get(session)) {
+                        if (streamlineServer.getUuid().equals(s.getUuid())) {
+                            Cache.i().getServerSocket().sessionMap.get(session).send(gson.toJson(s));
+                        }
+                    }
+                }
+            }
         }
     }
 

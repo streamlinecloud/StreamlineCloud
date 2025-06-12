@@ -125,21 +125,7 @@ public class ServerController {
         cs.setServerUseState(s.getServerUseState());
         cs.setMaxOnlineCount(s.getMaxOnlineCount());
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
-                .create();
-
-        for (String session : Cache.i().getServerSocket().servers.keySet()) {
-            for (StreamlineServer server : Cache.i().getServerSocket().servers.get(session)) {
-                if (server.getUuid().equals(s.getUuid())) {
-                    for (StreamlineServer streamlineServer : Cache.i().getServerSocket().servers.get(session)) {
-                        if (streamlineServer.getUuid().equals(cs.getUuid())) {
-                            Cache.i().getServerSocket().sessionMap.get(session).send(gson.toJson(s));
-                        }
-                    }
-                }
-            }
-        }
+        Cache.i().serverSocket.sendUpdate(s);
 
         context.status(200);
     }

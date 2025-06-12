@@ -2,10 +2,10 @@ package net.streamlinecloud.mc.common.core;
 
 import com.google.gson.Gson;
 import net.streamlinecloud.api.server.ServerRuntime;
+import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
-import net.streamlinecloud.mc.paper.manager.ServerManager;
 
 import java.net.http.WebSocket;
 import java.util.concurrent.CompletionStage;
@@ -45,7 +45,9 @@ public class WebSocketListener implements WebSocket.Listener {
                 serverManager.getSubscribedServers().add(server);
 
                 if (StaticCache.getRuntime().equals(ServerRuntime.SERVER)) {
-                    serverManager.onSubscribedServerUpdated(server);
+                    if (server.getServerState().equals(ServerState.STOPPING))
+                        serverManager.onSubscribedServerStopped(server);
+                    else serverManager.onSubscribedServerUpdated(server);
                 }
 
             } else {

@@ -326,6 +326,8 @@ public class CloudServer extends StreamlineServer {
 
     private void delete() {
 
+        Cache.i().serverSocket.sendUpdate(this);
+
         ServerDeleteEvent serverDeleteEvent = eventManager.callEvent(new ServerDeleteEvent(getName(), getUuid()));
 
         if (serverDeleteEvent.isCancelled()) {
