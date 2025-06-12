@@ -407,8 +407,7 @@ public class CloudServer extends StreamlineServer {
     }
 
     public void stop() {
-        setServerState(ServerState.STOPPING);
-        executeCommand("stop", this.process.getOutputStream());
+        addCommand("stop");
     }
 
     public void enableScreen() {

@@ -219,7 +219,7 @@ public class StreamlineCloud {
 
         for (CloudServer server : servers) {
             if (server.getThread() != null) {
-                if (server.isStaticServer()) server.stop() ;
+                if (server.isStaticServer()) server.stop();
                 else server.kill();
             }
         }
