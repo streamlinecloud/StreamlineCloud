@@ -19,6 +19,15 @@ public class StreamlineCommand implements CommandExecutor {
         Player player = (Player) sender;
         PluginConfig config = SpigotSCP.getInstance().getConfigManager().getConfig();
 
+        if (args.length == 0) {
+            player.sendMessage("");
+            player.sendMessage("§8| §7This server is powered by");
+            player.sendMessage("§8| §c§lStreamline§b§lCloud");
+            player.sendMessage("§8| §7Visit streamlinecloud.net for more information");
+            player.sendMessage("");
+            return true;
+        }
+
         if (args[0].equals("cmd") || args[0].equals("command")) {
 
             if (!player.hasPermission(config.getPermissions().getRemoteCLI())) {
