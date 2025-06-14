@@ -2,6 +2,7 @@ package net.streamlinecloud.mc.velocity.manager;
 
 import com.velocitypowered.api.proxy.Player;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.ServerUseState;
@@ -26,6 +27,13 @@ public class ProxyServerManager extends AbstractServerManager {
     @Override
     public void moveAllPlayersAndStop(String target) {
 
+    }
+
+    @Override
+    public void closeServer(String message) {
+        VelocitySCP.getInstance().getProxy().getAllPlayers().forEach(player -> {
+            player.disconnect(Component.text("(proxy) " + message));
+        });
     }
 
     @Override
