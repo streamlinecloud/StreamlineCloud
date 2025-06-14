@@ -27,6 +27,8 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
     @Getter
     public List<UUID> quittingPlayers = new ArrayList<>();
 
+    int reInits = 0;
+
     @Getter
     WebSocket socket;
 
@@ -46,6 +48,17 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
         }
 
         uploadServerInfo();
+    }
+
+    public void reinit() {
+        reInits++;
+
+        if (reInits == 5) {
+            closeServer("The server lost connection to the StreamlineCloud backend.");
+            return;
+        }
+
+        init();
     }
 
     public void subscribe(StreamlineServer server) {

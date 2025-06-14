@@ -6,6 +6,7 @@ import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
+import net.streamlinecloud.mc.paper.manager.ServerManager;
 
 import java.net.http.WebSocket;
 import java.util.concurrent.CompletionStage;
@@ -68,7 +69,8 @@ public class WebSocketListener implements WebSocket.Listener {
 
     @Override
     public void onError(WebSocket webSocket, Throwable error) {
-        System.out.println("Error: " + error.getMessage());
+        System.out.println("WS Error: " + error.getMessage());
+        ServerManager.getInstance().reinit();
     }
 
     @Override

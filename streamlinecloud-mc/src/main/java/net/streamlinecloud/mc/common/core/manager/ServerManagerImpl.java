@@ -9,6 +9,7 @@ public interface ServerManagerImpl {
     void subscribe(StreamlineServer server);
     void subscribeToGroup(String name);
     void uploadServerInfo();
+    void closeServer(String message);
     void moveAllPlayersAndStop(String target);
     StreamlineServer getServer(UUID uuid);
     StreamlineServer getServer(String name);

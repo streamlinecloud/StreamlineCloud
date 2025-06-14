@@ -44,6 +44,20 @@ public class ServerManager extends AbstractServerManager {
     }
 
     @Override
+    public void closeServer(String message) {
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.kickPlayer(message);
+        });
+
+        Bukkit.getScheduler().runTaskLaterAsynchronously(SpigotSCP.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                SpigotSCP.getInstance().getServer().shutdown();
+            }
+        }, 100L);
+    }
+
+    @Override
     public void onSubscribedServerUpdated(StreamlineServer server) {
         Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
             Bukkit.getPluginManager().callEvent(new ServerDataUpdateEvent(server));
