@@ -34,7 +34,7 @@ public class StreamlineSetup {
                  \\______/ \\________|   \\__|    \\______/ \\__|          \s""");
         StreamlineCloud.logSingle("");
 
-        Cache.i().setConfig(new MainConfig("", 19132, 5378, "lobby"));
+        Cache.i().setConfig(new MainConfig("", 5378, "lobby"));
 
         new ConsoleQuestion(ConsoleQuestion.InputType.STRING, "Set up language / Gebe eine Sprache ein [en/de]", output -> {
 

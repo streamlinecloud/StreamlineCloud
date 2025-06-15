@@ -54,8 +54,7 @@ public class MainConfig {
 
     @Getter @Setter
     public static class NetworkConfig {
-        int defaultProxyPort;
-        int communicationBridgePort;
+        int backendPort;
         LoadBalancer[] loadBalancers = new LoadBalancer[]{};
     }
 
@@ -71,11 +70,10 @@ public class MainConfig {
         return gson.fromJson(json, MainConfig.class);
     }
 
-    public MainConfig(String defaultJavaPath, int defaultProxyPort, int communicationBridgePort, String fallbackGroup) {
+    public MainConfig(String defaultJavaPath, int backendPort, String fallbackGroup) {
         this.language = "en.json";
         this.defaultJavaPath = defaultJavaPath;
-        this.network.defaultProxyPort = defaultProxyPort;
-        this.network.communicationBridgePort = communicationBridgePort;
+        this.network.backendPort = backendPort;
         this.fallback.fallbackGroup = fallbackGroup;
     }
 

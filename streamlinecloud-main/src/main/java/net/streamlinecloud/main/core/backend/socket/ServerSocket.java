@@ -7,6 +7,7 @@ import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.backend.BackEndMain;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.core.server.CloudServerManager;
@@ -35,7 +36,7 @@ public class ServerSocket {
 
                 String key = ctx.queryParam("key");
 
-                if ( key == null || !key.equals(Cache.i().apiKey)) {
+                if ( key == null || !BackEndMain.additionalKeys.contains(key) && !key.equals(Cache.i().getApiKey()) ) {
                     ctx.send("403");
                     ctx.closeSession();
                     return;
@@ -64,7 +65,7 @@ public class ServerSocket {
                         ctx.send("success");
                         return;
 
-                    } else if (ctx.message().split(":")[1].equals("starting")) {
+                        } else if (ctx.message().split(":")[1].equals("starting")) {
 
                         List<StreamlineGroup> s = subscribedStartingServers.get(ctx.sessionId());
                         s.add(CloudGroupManager.getInstance().getGroupByName(ctx.message().split(":")[2]));
