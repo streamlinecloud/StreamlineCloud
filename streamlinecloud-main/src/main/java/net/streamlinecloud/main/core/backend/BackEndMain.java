@@ -8,17 +8,14 @@ import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.utils.Cache;
 import io.javalin.Javalin;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class BackEndMain {
 
     public static final String mainPath = "/streamline/";
     private static Javalin app;
     public static List<String> publicRoutes = new ArrayList<>();
-    public static List<String> additionalKeys = new ArrayList<>();
+    public static List<BackendSession> customSessions = new ArrayList<>();
     public static Set<String> allowedOrigins = new HashSet<>();
 
     public static void startBE() {

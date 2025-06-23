@@ -25,7 +25,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("org.jline:jline:3.27.1")
     implementation("com.google.code.gson:gson:2.11.0")
-    implementation("io.javalin:javalin:6.5.0")
+    implementation( "io.javalin:javalin:6.5.0")
     implementation("org.java-websocket:Java-WebSocket:1.5.6")
     implementation("com.github.Carleslc.Simple-YAML:Simple-Yaml:1.8.4")
     implementation("org.fusesource.jansi:jansi:2.4.1")
