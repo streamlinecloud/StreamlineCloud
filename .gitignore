@@ -43,3 +43,4 @@ bin/
 .DS_Store
 /streamlinecloud-main/src/test/
 /finished_builds/streamlinecloud-main/streamlinecloud_NODE-alpha-1.0-SNAPSHOT.jar
+/streamlinecloud-main/src/main/resources/streamlinecloud_MC-alpha-1.0.0
