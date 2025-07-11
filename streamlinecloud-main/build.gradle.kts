@@ -32,7 +32,7 @@ dependencies {
     implementation("me.tongfei:progressbar:0.10.1")
     implementation("commons-io:commons-io:2.16.1")
     implementation("org.apache.httpcomponents:httpclient:4.5")
-    implementation("org.json:json:20230227")
+    implementation("org.json:json:20231013")
 
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
