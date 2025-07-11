@@ -58,6 +58,9 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 ## Contributors
 
 Thanks to all the amazing contributors!
+<a href="https://github.com/streamlinecloud/streamlinecloud/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=streamlinecloud/streamlinecloud" />
+</a>
 
-[![Contributors](https://contrib.rocks/image?repo=streamlinecloud/streamlinecloud)](https://github.com/streamlinecloud/streamlinecloud/graphs/contributors)
+Made with [contrib.rocks](https://contrib.rocks).
 
