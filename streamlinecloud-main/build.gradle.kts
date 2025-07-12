@@ -31,7 +31,7 @@ dependencies {
     implementation("org.fusesource.jansi:jansi:2.4.1")
     implementation("me.tongfei:progressbar:0.10.1")
     implementation("commons-io:commons-io:2.16.1")
-    implementation("org.apache.httpcomponents:httpclient:4.5")
+    implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("org.json:json:20231013")
 
     compileOnly("org.projectlombok:lombok:1.18.32")
