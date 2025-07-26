@@ -303,6 +303,9 @@ public class CloudServer extends StreamlineServer {
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
             return false;
+        } catch (NullPointerException e) {
+            StreamlineCloud.logError("We could not find the StreamlineCloudMC plugin");
+            return false;
         }
         return true;
     }
