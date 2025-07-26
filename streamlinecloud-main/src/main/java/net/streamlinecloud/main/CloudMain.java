@@ -3,10 +3,13 @@ package net.streamlinecloud.main;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.command.*;
 import net.streamlinecloud.main.config.MainConfig;
+import net.streamlinecloud.main.config.StreamlineConfig;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.software.SoftwareConfig;
+import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
@@ -75,6 +78,10 @@ public class CloudMain {
         new File(cache.homeFile + "/staticservers").mkdir();
         new File(cache.homeFile + "/temp").mkdir();
         new File(cache.homeFile + "/templates").mkdir();
+
+        new SoftwareManager();
+        SoftwareManager.getInstance().setConfig(new StreamlineConfig(new SoftwareConfig(), cache.homeFile + "/data/software/software.json"));
+        SoftwareManager.getInstance().getConfig().init();
 
         if (cache.isFirstLaunch()) {
             new StreamlineSetup();

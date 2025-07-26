@@ -1,6 +1,8 @@
 package net.streamlinecloud.main.command;
 
+import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 
 public class SoftwareCommand extends CloudCommand {
@@ -33,7 +35,7 @@ public class SoftwareCommand extends CloudCommand {
                 break;
 
             case "add":
-                StreamlineCloud.log("Software command usage");
+                SoftwareManager.getInstance().add(args[2], ServerRuntime.valueOf(args[3]), args[4]);
                 break;
 
             case "delete":
