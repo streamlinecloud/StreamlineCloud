@@ -249,9 +249,9 @@ public class StreamlineCloud {
 
         for (int i = 0; i < length; i++) {
 
-            int zufallsIndex = random.nextInt(letters.length());
-            char zufallsZeichen = letters.charAt(zufallsIndex);
-            builder.append(zufallsZeichen);
+            int randomIndex = random.nextInt(letters.length());
+            char randomCharacter = letters.charAt(randomIndex);
+            builder.append(randomCharacter);
         }
 
         return builder.toString();
