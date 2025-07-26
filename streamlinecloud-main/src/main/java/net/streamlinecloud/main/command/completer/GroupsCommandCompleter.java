@@ -19,12 +19,13 @@ public class GroupsCommandCompleter implements Completer {
             case 2:
                 list.add(new Candidate("group"));
                 list.add(new Candidate("create"));
+                list.add(new Candidate("delete"));
                 break;
 
             case 3:
                 if (words.get(1).equals("create")) {
                     list.add(new Candidate("", "<name>", null, null, null, null, true));
-                } else if (words.get(1).equals("group")) {
+                } else if (words.get(1).equals("group") || words.get(1).equals("delete")) {
                     Cache.i().getActiveGroups().forEach(group -> {
                         if (!group.getName().equals("WITHOUT")) list.add(new Candidate(group.getName()));
                     });

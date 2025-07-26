@@ -210,6 +210,7 @@ public class GroupsCommand extends CloudCommand {
         if (args[1].equals("help")) {
             StreamlineCloud.log("Basics");
             StreamlineCloud.log("- groups create <name> <server/proxy>");
+            StreamlineCloud.log("- groups delete <name>");
             StreamlineCloud.log("Set data:");
             StreamlineCloud.log("- groups group <name> set minOnlineCount <int>");
             StreamlineCloud.log("- groups group <name> set minOnlineSoftware <string>");
