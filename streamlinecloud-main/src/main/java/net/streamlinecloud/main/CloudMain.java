@@ -70,8 +70,7 @@ public class CloudMain {
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
 
         new File(cache.homeFile + "/groups").mkdir();
-        new File(cache.homeFile + "/groups/software").mkdir();
-        new File(cache.homeFile + "/data").mkdir();
+        new File(cache.homeFile + "/data/software").mkdirs();
         new File(cache.homeFile + "/plugins").mkdir();
         new File(cache.homeFile + "/staticservers").mkdir();
         new File(cache.homeFile + "/temp").mkdir();
@@ -118,6 +117,7 @@ public class CloudMain {
         registerCommand(new MultiRootCommand());
         registerCommand(new DownloadCommand());
         registerCommand(new WhitelistCommand());
+        registerCommand(new SoftwareCommand());
 
         if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER));
         Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());

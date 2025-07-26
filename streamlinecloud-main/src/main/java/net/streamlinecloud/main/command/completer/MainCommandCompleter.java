@@ -26,6 +26,8 @@ public class MainCommandCompleter implements Completer {
 
         completers.put("language", new LanguageCommandCompleter());
         completers.put("lang", new LanguageCommandCompleter());
+
+        completers.put("software", new SoftwareCommandCompleter());
     }
 
     @Override
