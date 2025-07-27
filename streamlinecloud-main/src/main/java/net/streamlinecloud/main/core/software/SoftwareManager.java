@@ -44,6 +44,19 @@ public class SoftwareManager {
         getConfig().save();
     }
 
+    public void replace(String name, StreamlineSoftware software) {
+        SoftwareConfig softwareConfig = (SoftwareConfig) config.getData();
+        for (StreamlineSoftware s : softwareConfig.software) {
+            if (s.getName().equals(name)) {
+                s.setCached(software.isCached());
+                s.setName(software.getName());
+                s.setFolder(software.getFolder());
+                s.setType(software.getType());
+            }
+        }
+        getConfig().save();
+    }
+
     public StreamlineSoftware getSoftware(String name ) {
         SoftwareConfig softwareConfig = (SoftwareConfig) config.getData();
         for (StreamlineSoftware software : softwareConfig.software) {
@@ -63,14 +76,8 @@ public class SoftwareManager {
         new File(server.getServerFolder() + "/cache").mkdirs();
         FileUtils.copyDirectory(new File(server.getServerFolder() + "/cache"), new File(Cache.i().getHomeFile() + "/data/software/" + software.getFolder() + "/cache"));
 
-        SoftwareConfig softwareConfig = (SoftwareConfig) config.getData();
-        for (StreamlineSoftware s : softwareConfig.software) {
-            if (s.getName().equals(software.getName())) {
-                s.setCached(true);
-            }
-        }
-
-        getConfig().save();
+        software.setCached(true);
+        replace(softwareName, software);
     }
 
 

@@ -1,12 +1,14 @@
 package net.streamlinecloud.main.command;
 
+import lombok.SneakyThrows;
 import net.streamlinecloud.api.server.ServerRuntime;
+import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class SoftwareCommand extends CloudCommand {
         setDescription("Manage server software");
     }
 
+    @SneakyThrows
     @Override
     public void execute(String[] args) {
 
@@ -94,7 +97,23 @@ public class SoftwareCommand extends CloudCommand {
                 break;
 
             case "clearCache":
-                StreamlineCloud.log("Software command usage");
+                softwareName = args[2];
+                if (softwareName == null || softwareName.isEmpty()) {
+                    StreamlineCloud.log("Please define a target software");
+                    return;
+                }
+
+                StreamlineSoftware software = SoftwareManager.getInstance().getSoftware(softwareName);
+                if (software == null) {
+                    StreamlineCloud.log("The software " + softwareName + " does not exist");
+                    return;
+                }
+
+                software.setCached(false);
+                FileUtils.delete(new File(Cache.i().getHomeFile() + "/data/software/" + software.getFolder() + "/cache"));
+                SoftwareManager.getInstance().replace(softwareName, software);
+
+                StreamlineCloud.log("The cache for " + softwareName + " has been cleared");
                 break;
         }
 
