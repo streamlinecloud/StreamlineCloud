@@ -43,6 +43,7 @@ public class CloudServer extends StreamlineServer {
     Process process;
     List<String> commandQueue = new ArrayList<>();
     final String address = "localhost";
+    File serverFolder;
 
     List<String> customTemplates = new ArrayList<>();
 
@@ -132,6 +133,8 @@ public class CloudServer extends StreamlineServer {
 
         file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid());
         file.mkdirs();
+
+        serverFolder = file;
 
         File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
 
