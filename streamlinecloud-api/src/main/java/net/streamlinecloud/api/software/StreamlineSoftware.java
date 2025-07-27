@@ -12,5 +12,6 @@ public class StreamlineSoftware {
     String name;
     ServerRuntime type;
     String folder;
+    boolean cached;
 
 }

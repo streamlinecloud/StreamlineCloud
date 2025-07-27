@@ -13,6 +13,7 @@ import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
+import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
@@ -75,6 +76,16 @@ public class CloudServer extends StreamlineServer {
 
         if (getGroupDirect().getAutoRestartMinutes() != -1)
             setStopTime(System.currentTimeMillis() + getGroupDirect().getAutoRestartMinutes() * 60 * 1000L);
+
+        if (getGroupDirect().getSoftwareName() == null) {
+            StreamlineCloud.log("The group " + getGroup() + " does not have a software defined");
+            return;
+        }
+
+        if (SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()) == null) {
+            StreamlineCloud.log("The software " + getGroupDirect().getSoftwareName() + " is not installed");
+            return;
+        }
 
         setStaticServer(getGroupDirect().isStaticGroup());
         setServerState(ServerState.STARTING);
@@ -171,6 +182,7 @@ public class CloudServer extends StreamlineServer {
 
             t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
             for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
+            t.add(Cache.i().homeFile.getPath() + "/data/software/" + SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()));
             copyFolder(t, file.getPath());
 
             //Template From Resources
