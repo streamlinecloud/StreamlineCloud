@@ -30,6 +30,11 @@ public interface StreamlineGroupImpl {
     List<String> getTemplates();
 
     /**
+     * @return The name of the server software for this group that is installed into StreamlineCloud
+     */
+    String getSoftwareName();
+
+    /**
      * @return The path to the java executable
      */
     String getJavaExec();

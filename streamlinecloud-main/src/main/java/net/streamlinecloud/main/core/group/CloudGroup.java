@@ -15,12 +15,13 @@ import java.util.List;
 @Getter
 public class CloudGroup extends StreamlineGroup {
 
-    public CloudGroup(String name, int minOnlineCount, List<String> templates, ServerRuntime runtime) {
+    public CloudGroup(String name, int minOnlineCount, List<String> templates, ServerRuntime runtime, String software) {
         setName(name);
         setJavaExec("%default");
         setMinOnlineCount(minOnlineCount);
         setTemplates(templates);
         setRuntime(runtime);
+        setSoftwareName(software);
     }
 
     public void save() throws IOException {

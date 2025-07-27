@@ -13,6 +13,7 @@ public class StreamlineGroup implements StreamlineGroupImpl {
     String name;
     String javaExec;
     List<String> templates;
+    String softwareName;
     ServerRuntime runtime;
     boolean staticGroup = false;
     int serverOnlineCount = 50;

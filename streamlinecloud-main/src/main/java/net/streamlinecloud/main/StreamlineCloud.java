@@ -258,10 +258,11 @@ public class StreamlineCloud {
     }
 
     public static boolean download(String url, String file, CloudGroup.DownloadResponse response) {
+        if (file.startsWith("/")) new File(file).mkdirs();
         File template_dir = new File(System.getProperty("user.dir") + "/templates/" + file);
         Downloader downloader = new Downloader();
         try {
-            downloader.download(new URL(url), new File(template_dir.getAbsolutePath() + "/server.jar"), s1 -> {
+            downloader.download(new URL(url), new File((file.startsWith("/") ? file + "/server.jar" : template_dir.getAbsolutePath() + "/server.jar")), s1 -> {
 
                 StreamlineCloud.log("Server für " + file +"  wurde erfolgreich heruntergeladen!");
                 response.execute(true);

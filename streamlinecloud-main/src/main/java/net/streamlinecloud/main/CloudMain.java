@@ -3,10 +3,13 @@ package net.streamlinecloud.main;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.command.*;
 import net.streamlinecloud.main.config.MainConfig;
+import net.streamlinecloud.main.config.StreamlineConfig;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.software.SoftwareConfig;
+import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
@@ -70,11 +73,15 @@ public class CloudMain {
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
 
         new File(cache.homeFile + "/groups").mkdir();
-        new File(cache.homeFile + "/data").mkdir();
+        new File(cache.homeFile + "/data/software").mkdirs();
         new File(cache.homeFile + "/plugins").mkdir();
         new File(cache.homeFile + "/staticservers").mkdir();
         new File(cache.homeFile + "/temp").mkdir();
         new File(cache.homeFile + "/templates").mkdir();
+
+        new SoftwareManager();
+        SoftwareManager.getInstance().setConfig(new StreamlineConfig(new SoftwareConfig(), cache.homeFile + "/data/software/software.json"));
+        SoftwareManager.getInstance().getConfig().init();
 
         if (cache.isFirstLaunch()) {
             new StreamlineSetup();
@@ -117,8 +124,9 @@ public class CloudMain {
         registerCommand(new MultiRootCommand());
         registerCommand(new DownloadCommand());
         registerCommand(new WhitelistCommand());
+        registerCommand(new SoftwareCommand());
 
-        if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER));
+        if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER, Cache.i().getConfig().getDefaultSoftwareName()));
         Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());
 
     }

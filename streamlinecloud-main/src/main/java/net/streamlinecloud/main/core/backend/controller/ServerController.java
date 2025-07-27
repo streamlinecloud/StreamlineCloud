@@ -12,6 +12,7 @@ import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import org.jetbrains.annotations.NotNull;
@@ -113,6 +114,8 @@ public class ServerController {
                     lb = loadBalancer.getName();
                 }
             }
+
+            SoftwareManager.getInstance().copyCache(cs.getGroupDirect().getSoftwareName(), cs);
 
             if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid())});
             else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid()), new ReplacePaket("%2", lb)});
