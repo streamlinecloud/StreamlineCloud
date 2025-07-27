@@ -32,6 +32,18 @@ public class SoftwareManager {
         config.save();
     }
 
+    @SneakyThrows
+    public void delete(String name) {
+        StreamlineSoftware software = getSoftware(name);
+        if (software == null) return;
+
+        FileUtils.delete(new File(Cache.i().getHomeFile() + "/data/software/" + software.getFolder()));
+
+        SoftwareConfig softwareConfig = (SoftwareConfig) config.getData();
+        softwareConfig.software.removeIf(s -> s.getName().equals(name));
+        getConfig().save();
+    }
+
     public StreamlineSoftware getSoftware(String name ) {
         SoftwareConfig softwareConfig = (SoftwareConfig) config.getData();
         for (StreamlineSoftware software : softwareConfig.software) {

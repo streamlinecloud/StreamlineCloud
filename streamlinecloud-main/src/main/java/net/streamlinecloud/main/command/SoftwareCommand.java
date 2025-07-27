@@ -2,11 +2,15 @@ package net.streamlinecloud.main.command;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SoftwareCommand extends CloudCommand {
 
@@ -62,7 +66,31 @@ public class SoftwareCommand extends CloudCommand {
                 break;
 
             case "delete":
-                StreamlineCloud.log("Software command usage");
+                String softwareName = args[2];
+                if (softwareName == null || softwareName.isEmpty()) {
+                    StreamlineCloud.log("Please define a target software");
+                    return;
+                }
+
+                boolean warn = false;
+                List<String> groups = new ArrayList<>();
+
+                for (CloudGroup activeGroup : Cache.i().getActiveGroups()) {
+                    if (activeGroup.getName().equals(softwareName)) {
+                        warn = true;
+                        groups.add(activeGroup.getName());
+                    }
+                }
+
+                if (warn) {
+                    StreamlineCloud.log("WARNING! The following groups are currently using this software:");
+                    for (String group : groups) StreamlineCloud.log("- " + group);
+                    StreamlineCloud.log("Please make sure this software is not used by any group before you delete it");
+                    return;
+                }
+
+                SoftwareManager.getInstance().delete(softwareName);
+                StreamlineCloud.log("Software " + softwareName + " deleted");
                 break;
 
             case "clearCache":
