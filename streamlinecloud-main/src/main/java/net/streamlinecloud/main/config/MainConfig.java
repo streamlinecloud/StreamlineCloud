@@ -22,6 +22,7 @@ public class MainConfig {
 
     String language;
     String defaultJavaPath;
+    String defaultSoftwareName = "paper";
     FallbackConfig fallback = new FallbackConfig();
     WhitelistConfig whitelist = new WhitelistConfig();
     WebSocketConfig websocket = new WebSocketConfig();

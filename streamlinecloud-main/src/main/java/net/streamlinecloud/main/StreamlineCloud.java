@@ -258,6 +258,7 @@ public class StreamlineCloud {
     }
 
     public static boolean download(String url, String file, CloudGroup.DownloadResponse response) {
+        if (file.startsWith("/")) new File(file).mkdirs();
         File template_dir = new File(System.getProperty("user.dir") + "/templates/" + file);
         Downloader downloader = new Downloader();
         try {

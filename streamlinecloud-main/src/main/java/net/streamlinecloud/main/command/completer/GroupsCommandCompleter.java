@@ -1,6 +1,9 @@
 package net.streamlinecloud.main.command.completer;
 
+import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.software.SoftwareConfig;
+import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.utils.Cache;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
@@ -44,6 +47,12 @@ public class GroupsCommandCompleter implements Completer {
                 break;
 
             case 5:
+                if (words.get(1).equals("create")) {
+                    SoftwareConfig softwareConfig = (SoftwareConfig) SoftwareManager.getInstance().getConfig().getData();
+                    for (StreamlineSoftware software : softwareConfig.software) {
+                        list.add(new Candidate(software.getName()));
+                    }
+                }
                 switch (words.get(3)) {
                     case "set" -> list.add(new Candidate("minOnlineCount"));
                     case "add" -> list.add(new Candidate("template"));

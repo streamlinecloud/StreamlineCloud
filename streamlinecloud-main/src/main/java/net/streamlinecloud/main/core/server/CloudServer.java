@@ -182,7 +182,7 @@ public class CloudServer extends StreamlineServer {
 
             t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
             for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
-            t.add(Cache.i().homeFile.getPath() + "/data/software/" + SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()));
+            t.add(Cache.i().homeFile.getPath() + "/data/software/" + SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()).getFolder());
             copyFolder(t, file.getPath());
 
             //Template From Resources

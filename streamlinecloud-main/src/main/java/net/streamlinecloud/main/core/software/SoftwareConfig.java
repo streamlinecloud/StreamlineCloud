@@ -7,5 +7,5 @@ import java.util.List;
 
 public class SoftwareConfig {
 
-    List<StreamlineSoftware> software = new ArrayList<>();
+    public List<StreamlineSoftware> software = new ArrayList<>();
 }
