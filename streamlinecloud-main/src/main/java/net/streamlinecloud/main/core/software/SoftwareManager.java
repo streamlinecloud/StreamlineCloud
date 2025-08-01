@@ -1,5 +1,7 @@
 package net.streamlinecloud.main.core.software;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -12,6 +14,7 @@ import net.streamlinecloud.main.utils.Utils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +45,8 @@ public class SoftwareManager {
         List<SoftwareCatalogItem> list = new ArrayList<>();
         StreamlineConfig catalogConfig = new StreamlineConfig(list, Cache.i().getHomeFile() + "/data/software/catalog.json");
         catalogConfig.init();
-        catalog = (List<SoftwareCatalogItem>) catalogConfig.getData();
+        Type type = new TypeToken<List<SoftwareCatalogItem>>() {}.getType();
+        catalog = new Gson().fromJson(new Gson().toJson(catalogConfig.getData()), type);
     }
 
     public void add(String name, ServerRuntime runtime, String uri) {

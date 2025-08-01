@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.command.completer;
 
+import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.utils.Cache;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
@@ -21,6 +22,7 @@ public class SoftwareCommandCompleter implements Completer {
                 list.add(new Candidate("add"));
                 list.add(new Candidate("delete"));
                 list.add(new Candidate("clearCache"));
+                list.add(new Candidate("catalog"));
                 break;
             case 3:
                 switch (words.get(1)) {
@@ -34,6 +36,11 @@ public class SoftwareCommandCompleter implements Completer {
                         });
 
                         break;
+
+                    case "catalog":
+                        list.add(new Candidate("list"));
+                        list.add(new Candidate("install"));
+                        break;
                     default:
                         break;
                 }
@@ -42,11 +49,19 @@ public class SoftwareCommandCompleter implements Completer {
                 if (words.get(1).equals("add")) {
                     list.add(new Candidate("server"));
                     list.add(new Candidate("proxy"));
+                } else if (words.get(1).equals("catalog") && words.get(2).equals("install")) {
+                    SoftwareManager.getInstance().getCatalog().forEach(catalog -> {
+                        list.add(new Candidate(catalog.getSoftware()));
+                    });
                 }
                 break;
             case 5:
                 if (words.get(1).equals("add")) {
                     list.add(new Candidate("", "<url/path>", null, "Enter a download url or a location in your file system", null, null, true));
+                } else if (words.get(1).equals("catalog") && words.get(2).equals("install")) {
+                    SoftwareManager.getInstance().getCatalog().forEach(catalog -> {
+                        list.add(new Candidate("", "<version>", null, null, null, null, true));
+                    });
                 }
                 break;
             default:

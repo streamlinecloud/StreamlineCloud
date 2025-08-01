@@ -5,6 +5,7 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.software.SoftwareCatalogItem;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
@@ -114,6 +115,39 @@ public class SoftwareCommand extends CloudCommand {
                 SoftwareManager.getInstance().replace(softwareName, software);
 
                 StreamlineCloud.log("The cache for " + softwareName + " has been cleared");
+                break;
+
+            case "catalog":
+                String catalogArg = args[2];
+
+                if (catalogArg.equals("list")) {
+                    StreamlineCloud.log("This is the full software catalog:");
+                    for (SoftwareCatalogItem item : SoftwareManager.getInstance().getCatalog()) {
+                        StreamlineCloud.log(item.getSoftware() + " - " + item.getVersion());
+                    }
+
+                } else if (catalogArg.equals("install")) {
+
+                    String serverSoftware = args[3];
+                    String version = args[4];
+
+                    if (serverSoftware.isEmpty() || version.isEmpty()) {
+                        StreamlineCloud.log("Please enter a software name and version");
+                        return;
+                    }
+
+                    for (SoftwareCatalogItem item : SoftwareManager.getInstance().getCatalog()) {
+                        if (item.getSoftware().equals(serverSoftware) && item.getVersion().equals(version)) {
+                            runtime = ServerRuntime.SERVER;
+                            if (item.getSoftware().equals("velocity")) runtime = ServerRuntime.PROXY;
+                            SoftwareManager.getInstance().add(item.getSoftware() + "-" + item.getVersion(), runtime, item.getUrl());
+                            StreamlineCloud.log("Installed successful");
+                            return;
+                        }
+                    }
+
+                    StreamlineCloud.log("This software is not available");
+                }
                 break;
         }
 
