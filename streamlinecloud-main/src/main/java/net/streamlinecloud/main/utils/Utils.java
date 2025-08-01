@@ -2,6 +2,7 @@ package net.streamlinecloud.main.utils;
 
 import net.streamlinecloud.main.CloudLauncher;
 import net.streamlinecloud.main.StreamlineCloud;
+import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,5 +50,31 @@ public class Utils {
 
         return null;
     }
+
+    public static void copyResources(File sourceFile, File targetFile) {
+        try {
+            if (!targetFile.exists()) targetFile.createNewFile();
+
+            YamlFile tempYamlFile = new YamlFile(sourceFile);
+            YamlFile serverYamlFile = new YamlFile(targetFile);
+            tempYamlFile.load();
+            serverYamlFile.load();
+
+            for (String key : tempYamlFile.getKeys(true)) {
+                Object value = tempYamlFile.get(key);
+                if (!serverYamlFile.contains(key)) {
+                    serverYamlFile.set(key, value);
+                }
+            }
+
+            serverYamlFile.save();
+            tempYamlFile.deleteFile();
+
+
+        } catch (IOException e) {
+            StreamlineCloud.logError(e.getMessage());
+        }
+    }
+
 
 }

@@ -8,9 +8,14 @@ import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.config.StreamlineConfig;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.utils.Utils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter @Setter
 public class SoftwareManager {
@@ -20,8 +25,24 @@ public class SoftwareManager {
 
     public StreamlineConfig config;
 
+    List<SoftwareCatalogItem> catalog = new ArrayList<>();
+
+    @SneakyThrows
     public SoftwareManager() {
         instance = this;
+
+        if (Cache.i().isFirstLaunch()) {
+            Files.copy(Objects.requireNonNull(Utils.getResourceFile("software_catalog.json", "json")).toPath(), new File(Cache.i().getHomeFile() + "/data/software/catalog.json").toPath());
+        }
+
+        loadCatalog();
+    }
+
+    public void loadCatalog() {
+        List<SoftwareCatalogItem> list = new ArrayList<>();
+        StreamlineConfig catalogConfig = new StreamlineConfig(list, Cache.i().getHomeFile() + "/data/software/catalog.json");
+        catalogConfig.init();
+        catalog = (List<SoftwareCatalogItem>) catalogConfig.getData();
     }
 
     public void add(String name, ServerRuntime runtime, String uri) {

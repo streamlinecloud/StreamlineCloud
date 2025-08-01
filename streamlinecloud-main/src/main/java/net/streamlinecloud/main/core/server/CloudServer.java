@@ -190,9 +190,9 @@ public class CloudServer extends StreamlineServer {
 
             //Template From Resources
             if (getRuntime().equals(ServerRuntime.SERVER)) {
-                copyResources(Utils.getResourceFile("spigot/spigot.yml", "yml"), new File(file.getAbsolutePath() + "/spigot.yml"));
+                Utils.copyResources(Utils.getResourceFile("spigot/spigot.yml", "yml"), new File(file.getAbsolutePath() + "/spigot.yml"));
             } else {
-                copyResources(Utils.getResourceFile("bungee/config.yml", "yml"), new File(file.getAbsolutePath() + "/config.yml"));
+                Utils.copyResources(Utils.getResourceFile("bungee/config.yml", "yml"), new File(file.getAbsolutePath() + "/config.yml"));
             }
 
         } else {
@@ -355,31 +355,6 @@ public class CloudServer extends StreamlineServer {
         Cache.i().getRunningServers().remove(this);
 
         StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid())});
-    }
-
-    private void copyResources(File sourceFile, File targetFile) {
-        try {
-            if (!targetFile.exists()) targetFile.createNewFile();
-
-            YamlFile tempYamlFile = new YamlFile(sourceFile);
-            YamlFile serverYamlFile = new YamlFile(targetFile);
-            tempYamlFile.load();
-            serverYamlFile.load();
-
-            for (String key : tempYamlFile.getKeys(true)) {
-                Object value = tempYamlFile.get(key);
-                if (!serverYamlFile.contains(key)) {
-                    serverYamlFile.set(key, value);
-                }
-            }
-
-            serverYamlFile.save();
-            tempYamlFile.deleteFile();
-
-
-        } catch (IOException e) {
-            StreamlineCloud.logError(e.getMessage());
-        }
     }
 
     public void overflow() {
