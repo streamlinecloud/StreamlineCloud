@@ -72,7 +72,7 @@ public class CloudMain {
 
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
 
-        Utils.runMkdir(new File(cache.homeFile + "/groups").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/groups").mkdirs());
         Utils.runMkdir(new File(cache.homeFile + "/data/software").mkdirs());
         Utils.runMkdir(new File(cache.homeFile + "/plugins").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/staticservers").mkdir());
