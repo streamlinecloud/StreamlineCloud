@@ -11,13 +11,16 @@ public class ConsoleQuestion {
 
     InputType inputType;
     ConsoleInputContinue next;
+    String question;
 
     public ConsoleQuestion(InputType inputType, String question, ConsoleInputContinue next) {
         this.inputType = inputType;
         this.next = next;
+        this.question = question;
+    }
 
+    public void start() {
         StreamlineCloud.log(question);
-
         Cache.i().getConsoleInputs().add(this);
     }
 
@@ -31,12 +34,12 @@ public class ConsoleQuestion {
 
             } catch (NumberFormatException ex) {
 
-                StreamlineCloud.log("Bitte gebe eine gültige Zahl ein!");
+                StreamlineCloud.log("Please enter a valid number!");
                 return;
             }
         } else if (getInputType().equals(ConsoleQuestion.InputType.BOOLEAN)) {
 
-            StreamlineCloud.log("Bitte gebe true (yes) oder false (no) ein");
+            StreamlineCloud.log("Type yes or no");
 
             if (!input.equals("yes") && !input.equals("no")) {
                 return;
