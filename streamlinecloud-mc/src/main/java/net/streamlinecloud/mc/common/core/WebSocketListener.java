@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.mc.SpigotSCP;
 import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.paper.manager.ServerManager;
@@ -35,12 +36,24 @@ public class WebSocketListener implements WebSocket.Listener {
             if (data.toString().equals("heartbeat")) return null;
             if (data.toString().equals("success")) return null;
 
+            if (data.toString().equals("403")) {
+                SpigotSCP.getInstance().getLogger().warning("Got 403 response from server");
+                return null;
+            };
+
             if (data.toString().startsWith("move:")) {
                 serverManager.moveAllPlayersAndStop(data.toString().split(":")[1]);
                 return null;
             }
 
-            StreamlineServer server = new Gson().fromJson(data.toString(), StreamlineServer.class);
+            StreamlineServer server;
+
+            try {
+                server = new Gson().fromJson(data.toString(), StreamlineServer.class);
+            } catch (Exception e) {
+                SpigotSCP.getInstance().getLogger().warning("Got invalid message from server: " + data + " (" + e.getMessage() + ")");
+                return null;
+            }
 
             if (serverManager.getSubscribedServers().removeIf(subscribedServer -> subscribedServer.getUuid().equals(server.getUuid()))) {
                 serverManager.getSubscribedServers().add(server);
