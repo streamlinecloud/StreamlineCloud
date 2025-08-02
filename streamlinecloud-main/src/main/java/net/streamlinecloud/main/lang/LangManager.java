@@ -12,17 +12,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class LangManager {
 
     public LangManager() {
         File langFile = new File(Cache.i().homeFile + "/data/lang");
-        langFile.mkdirs();
+        Utils.runMkdir(langFile.mkdirs());
         try {
 
-            if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/en.json").toPath())) Files.copy(Utils.getResourceFile("en.json", "json").toPath(), new File(Cache.i().homeFile + "/data/lang/en.json").toPath());
-            if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/de.json").toPath())) Files.copy(Utils.getResourceFile("de.json", "json").toPath(), new File(Cache.i().homeFile + "/data/lang/de.json").toPath());
+            if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/en.json").toPath())) Files.copy(Objects.requireNonNull(Utils.getResourceFile("en.json", "json")).toPath(), new File(Cache.i().homeFile + "/data/lang/en.json").toPath());
+            if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/de.json").toPath())) Files.copy(Objects.requireNonNull(Utils.getResourceFile("de.json", "json")).toPath(), new File(Cache.i().homeFile + "/data/lang/de.json").toPath());
 
         } catch (IOException e) {
             throw new RuntimeException(e);

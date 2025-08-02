@@ -72,12 +72,12 @@ public class CloudMain {
 
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
 
-        new File(cache.homeFile + "/groups").mkdir();
-        new File(cache.homeFile + "/data/software").mkdirs();
-        new File(cache.homeFile + "/plugins").mkdir();
-        new File(cache.homeFile + "/staticservers").mkdir();
-        new File(cache.homeFile + "/temp").mkdir();
-        new File(cache.homeFile + "/templates").mkdir();
+        Utils.runMkdir(new File(cache.homeFile + "/groups").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/data/software").mkdirs());
+        Utils.runMkdir(new File(cache.homeFile + "/plugins").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/staticservers").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/temp").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
 
         new SoftwareManager();
         SoftwareManager.getInstance().setConfig(new StreamlineConfig(new SoftwareConfig(), cache.homeFile + "/data/software/software.json"));

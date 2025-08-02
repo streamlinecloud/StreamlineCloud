@@ -5,6 +5,7 @@ import net.streamlinecloud.api.extension.command.CommandManager;
 import net.streamlinecloud.api.extension.event.EventManager;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.utils.Utils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class ExtensionManager {
     private final HashMap<StreamlineExtension, ExtensionConfig> extensionList = new HashMap<>();
     private final File pluginsFolder = new File(System.getProperty("user.dir") + "/plugins");
     public void loadPlugins() {
-        pluginsFolder.mkdirs();
+        Utils.runMkdir(pluginsFolder.mkdirs());
 
 
         if (pluginsFolder.exists() && pluginsFolder.isDirectory()) {
@@ -77,15 +78,14 @@ public class ExtensionManager {
                 StreamlineCloud.log("There are Files that are not Streamline Plugins.");
             }
         } catch (Exception e) {
-            StreamlineCloud.log("There was an error while loading a plugin.");
-            e.printStackTrace();
+            StreamlineCloud.log("There was an error while loading a plugin. (" + e.getMessage() + ")");
         }
     }
 
     public void executeStartup() {
         for (StreamlineExtension streamlineExtension : extensionList.keySet()) {
             File dataFolder = new File(Cache.i().homeFile + "/data/plugin/" + extensionList.get(streamlineExtension).getId());
-            dataFolder.mkdirs();
+            Utils.runMkdir(dataFolder.mkdirs());
             streamlineExtension.initialize(eventManager, commandManager, dataFolder);
         }
     }

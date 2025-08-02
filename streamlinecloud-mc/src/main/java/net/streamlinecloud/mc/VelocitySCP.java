@@ -87,6 +87,7 @@ public class VelocitySCP {
             for (String s : allServers[0]) getProxy().unregisterServer(proxy.getServer(s).get().getServerInfo());
             allServers[0] = new ArrayList<>();
 
+            assert servers != null;
             for (StreamlineServerSnapshot server : servers) {
 
                 if (server.getPort() != 1.0) {
@@ -159,7 +160,7 @@ public class VelocitySCP {
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     public StreamlineServerSnapshot getServerSnapshot(String name) {

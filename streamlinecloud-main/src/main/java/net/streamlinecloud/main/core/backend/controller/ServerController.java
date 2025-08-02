@@ -1,10 +1,9 @@
 package net.streamlinecloud.main.core.backend.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import io.streamlinemc.api.RestUtils.RconData;
+import net.streamlinecloud.api.RestUtils.RconData;
 import net.streamlinecloud.api.packet.StartServerPacket;
 import net.streamlinecloud.api.server.*;
 import net.streamlinecloud.main.StreamlineCloud;
@@ -78,12 +77,6 @@ public class ServerController {
 
     public void getRconDetails(@NotNull Context context) {
         String uuid = context.pathParam("uuid");
-
-        if (uuid == null) {
-            context.result("UUID not found");
-            context.status(201);
-            return;
-        }
 
         if (!Cache.i().getRconDetails().containsKey(uuid)) {
             context.result("UUID not found");

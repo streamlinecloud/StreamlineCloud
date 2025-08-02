@@ -21,6 +21,11 @@ public class Utils {
         }
     }
 
+    public static void runMkdir(boolean result) {
+        if (!result) StreamlineCloud.log("StreamlineCloud has failed to create a file. This could be a permission or file system error");
+
+    }
+
     public static File getResourceFile(String resourcePath, String filetype) {
         InputStream inputStream = CloudLauncher.class.getClassLoader().getResourceAsStream(resourcePath);
 
@@ -53,7 +58,7 @@ public class Utils {
 
     public static void copyResources(File sourceFile, File targetFile) {
         try {
-            if (!targetFile.exists()) targetFile.createNewFile();
+            if (!targetFile.exists()) Utils.runMkdir(targetFile.createNewFile());
 
             YamlFile tempYamlFile = new YamlFile(sourceFile);
             YamlFile serverYamlFile = new YamlFile(targetFile);

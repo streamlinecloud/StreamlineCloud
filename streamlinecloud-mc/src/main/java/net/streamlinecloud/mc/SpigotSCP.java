@@ -21,6 +21,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.net.http.WebSocket;
+import java.util.Objects;
 
 @Getter
 public final class SpigotSCP extends JavaPlugin {
@@ -59,10 +60,10 @@ public final class SpigotSCP extends JavaPlugin {
     }
 
     private void registerCommand() {
-        getCommand("test").setExecutor(new TestCommand());
-        getCommand("serverinfo").setExecutor(new ServerInfoCommand());
-        getCommand("connect").setExecutor(new ConnectCommand());
-        getCommand("streamline").setExecutor(new StreamlineCommand());
+        Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
+        Objects.requireNonNull(getCommand("serverinfo")).setExecutor(new ServerInfoCommand());
+        Objects.requireNonNull(getCommand("connect")).setExecutor(new ConnectCommand());
+        Objects.requireNonNull(getCommand("streamline")).setExecutor(new StreamlineCommand());
     }
 
     private void registerEvents() {

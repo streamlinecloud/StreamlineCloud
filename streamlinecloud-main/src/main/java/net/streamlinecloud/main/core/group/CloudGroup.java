@@ -6,6 +6,7 @@ import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.utils.Cache;
 import lombok.Getter;
+import net.streamlinecloud.main.utils.Utils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -28,7 +29,7 @@ public class CloudGroup extends StreamlineGroup {
 
         File file  = new File(Cache.i().homeFile + "/groups/" + getName() + ".json");
 
-        file.createNewFile();
+        Utils.runMkdir(file.createNewFile());
 
         String json = new Gson().toJson(this, CloudGroup.class);
         JsonWriter writer = new JsonWriter(new FileWriter(file));

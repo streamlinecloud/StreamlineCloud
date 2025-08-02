@@ -46,7 +46,7 @@ public class Downloader {
     static class FileDownloadResponseHandler implements ResponseHandler<File> {
 
         private final File target;
-        Continue next = null;
+        Continue next;
 
         public FileDownloadResponseHandler(File target, Continue next) {
             this.next = next;

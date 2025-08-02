@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Settings;
 import net.streamlinecloud.main.utils.StreamlineSetup;
+import net.streamlinecloud.main.utils.Utils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -82,7 +83,7 @@ public class MainConfig {
     @SneakyThrows
     public static void init() {
 
-        new File(Cache.i().homeFile + "/data").mkdirs();
+        Utils.runMkdir(new File(Cache.i().homeFile + "/data").mkdirs());
 
         File apiKeyFile = new File(Cache.i().homeFile + "/data/apikey.json");
         File configFile = new File(Cache.i().homeFile + "/data/config.json");
@@ -90,7 +91,7 @@ public class MainConfig {
         File[] files = groupsFolder.listFiles();
 
         if (!configFile.exists()) {
-            configFile.createNewFile();
+            Utils.runMkdir(configFile.createNewFile());
             Cache.i().setFirstLaunch(true);
             return;
         }
@@ -100,7 +101,7 @@ public class MainConfig {
         Cache.i().setConfig(config);
 
         if (!apiKeyFile.exists()) {
-            apiKeyFile.createNewFile();
+            Utils.runMkdir(apiKeyFile.createNewFile());
             FileWriter writer = new FileWriter(apiKeyFile);
             writer.write(StreamlineCloud.generateApiKey());
             writer.write("\n#");

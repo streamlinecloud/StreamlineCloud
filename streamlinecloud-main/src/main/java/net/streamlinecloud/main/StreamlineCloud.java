@@ -4,15 +4,13 @@ import net.streamlinecloud.api.StreamlineAPI;
 import net.streamlinecloud.api.extension.event.console.ConsoleMessageEvent;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.ReplacePaket;
-import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.utils.*;
 import net.streamlinecloud.main.core.backend.BackEndMain;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.terminal.Color;
-import net.streamlinecloud.main.utils.MainBuildConfig;
-import net.streamlinecloud.main.utils.Settings;
-import net.streamlinecloud.main.utils.Downloader;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import net.streamlinecloud.main.utils.MainBuildConfig;
 import org.jline.reader.LineReader;
 import org.jline.reader.PrintAboveWriter;
 
@@ -29,7 +27,6 @@ import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 @Getter
 public class StreamlineCloud {
 
-    private static List<String> savedLogs = new ArrayList<>();
     private static final List<Integer> generatedPorts = new ArrayList<>();
     private static final Random random = new Random();
 
@@ -87,7 +84,7 @@ public class StreamlineCloud {
             msg = msg + " (preinit)";
         }
 
-        String s = msg + "§RED";
+        String s;
 
         s = "§RED" + formattedDate + " §8| " + Settings.name + msg + "§RED";
 
@@ -135,7 +132,7 @@ public class StreamlineCloud {
             String formattedDate= format.format(now);
             String fileName = error + "-" + formattedDate;
             File file = new File(System.getProperty("user.dir") + "/data/error/" + fileName + ".txt");
-            new File(System.getProperty("user.dir") + "/data/error").mkdirs();
+            Utils.runMkdir(new File(System.getProperty("user.dir") + "/data/error").mkdirs());
 
             FileWriter fileWriter = new FileWriter(file + ".txt");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -169,12 +166,6 @@ public class StreamlineCloud {
         }
 
         printedErrors.add(error);
-    }
-
-    public static void releaseSavedLogs() {
-
-        for (String log : savedLogs) logIntern(log, new ReplacePaket[]{});
-        savedLogs = new ArrayList<>();
     }
 
     public static void logSingle(String msg) {
@@ -258,7 +249,7 @@ public class StreamlineCloud {
     }
 
     public static boolean download(String url, String file, CloudGroup.DownloadResponse response) {
-        if (file.startsWith("/")) new File(file).mkdirs();
+        if (file.startsWith("/")) Utils.runMkdir(new File(file).mkdirs());
         File template_dir = new File(System.getProperty("user.dir") + "/templates/" + file);
         Downloader downloader = new Downloader();
         try {

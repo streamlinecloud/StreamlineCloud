@@ -56,7 +56,7 @@ public class LoadBalancer {
 
         new Thread(() -> {
             while (true) {
-                int readyChannels = 0;
+                int readyChannels;
                 try {
                     readyChannels = selector.select();
                 } catch (IOException e) {

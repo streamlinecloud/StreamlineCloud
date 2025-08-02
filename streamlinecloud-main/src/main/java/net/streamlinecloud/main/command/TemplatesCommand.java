@@ -6,6 +6,7 @@ import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Downloader;
+import net.streamlinecloud.main.utils.Utils;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -53,7 +54,7 @@ public class TemplatesCommand extends CloudCommand {
                     return;
                 }
 
-                template_dir.mkdirs();
+                Utils.runMkdir(template_dir.mkdirs());
 
                 Downloader downoader = new Downloader();
 

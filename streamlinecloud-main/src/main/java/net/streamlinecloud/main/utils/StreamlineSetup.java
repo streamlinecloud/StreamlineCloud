@@ -128,8 +128,8 @@ public class StreamlineSetup {
                     return;
                 }
 
-                new File(Cache.i().homeFile + "/templates/default/proxy").mkdirs();
-                new File(Cache.i().homeFile + "/templates/default/server").mkdirs();
+                Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/proxy").mkdirs());
+                Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/server").mkdirs());
 
                 StreamlineCloud.log("sl.setup.groupsGenerated");
                 StreamlineCloud.log("sl.setup.downloading");

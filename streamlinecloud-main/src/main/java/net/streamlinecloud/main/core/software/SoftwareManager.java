@@ -53,7 +53,7 @@ public class SoftwareManager {
 
     public StreamlineSoftware add(String name, ServerRuntime runtime, String fileUri) {
         SoftwareConfig softwareConfig = (SoftwareConfig) config.getData();
-        new File(Cache.i().getHomeFile() + "/data/software/" + name).mkdirs();
+        Utils.runMkdir(new File(Cache.i().getHomeFile() + "/data/software/" + name).mkdirs());
         AtomicReference<String> uri = new AtomicReference<>(fileUri);
 
 
@@ -144,7 +144,7 @@ public class SoftwareManager {
         if (software == null) return;
         if (software.isCached()) return;
 
-        new File(server.getServerFolder() + "/cache").mkdirs();
+        Utils.runMkdir(new File(server.getServerFolder() + "/cache").mkdirs());
         FileUtils.copyDirectory(new File(server.getServerFolder() + "/cache"), new File(Cache.i().getHomeFile() + "/data/software/" + software.getFolder() + "/cache"));
 
         software.setCached(true);

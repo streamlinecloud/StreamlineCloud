@@ -25,6 +25,7 @@ public class VersionCommand extends CloudCommand {
         StreamlineCloud.log("Build infos about this node:");
         StreamlineCloud.log("-> Version: §AQUA" + MainBuildConfig.VERSION + " (API: " + StreamlineAPI.getApiVersion() + ")");
         StreamlineCloud.log("-> Build: §AQUA" + MainBuildConfig.BUILD_NUMBER + " (" + MainBuildConfig.BUILD_DATE + ")");
+        StreamlineCloud.log("-> API-Status: " + status);
         StreamlineCloud.log("");
         StreamlineCloud.log("Developed by: §AQUA" + Settings.authors);
         StreamlineCloud.log("");

@@ -39,7 +39,7 @@ public class GroupsCommand extends CloudCommand {
 
                     String name = args[2];
                     String runtimeS = args[3];
-                    ServerRuntime runtime = null;
+                    ServerRuntime runtime;
 
                     if (runtimeS.equalsIgnoreCase("SERVER")) {
                         runtime = ServerRuntime.SERVER;

@@ -84,8 +84,6 @@ public class CloudTerminalRunner extends Thread {
 
                 ConsoleQuestion question = Cache.i().getConsoleInputs().get(0);
                 question.execute(line);
-
-                if (Cache.i().getConsoleInputs().isEmpty()) StreamlineCloud.releaseSavedLogs();
             }
             } catch (UserInterruptException ignore) {
                 System.exit(130); //<--------- ONLY USE THIS AS A LAST RESORT

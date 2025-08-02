@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.utils.Utils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -31,7 +32,7 @@ public class StreamlineConfig {
         File file = new File(getPath());
 
         if (!file.exists()) {
-            file.createNewFile();
+            Utils.runMkdir(file.createNewFile());
             save();
         }
 

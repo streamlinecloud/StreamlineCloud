@@ -2,7 +2,7 @@ package net.streamlinecloud.main.core.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.streamlinemc.api.RestUtils.RconData;
+import net.streamlinecloud.api.RestUtils.RconData;
 import net.streamlinecloud.api.extension.event.server.*;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
@@ -20,11 +20,9 @@ import net.streamlinecloud.main.utils.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.FileUtils;
-import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -120,8 +118,7 @@ public class CloudServer extends StreamlineServer {
             }
         }
 
-        ServerTemplate template;
-        File file = null;
+        File file;
         CloudGroup group = getGroupDirect();
         ServerStartEvent serverStartEvent = eventManager.callEvent(new ServerStartEvent(
                 getName(),
@@ -134,7 +131,7 @@ public class CloudServer extends StreamlineServer {
         if (serverStartEvent.isCancelled()) return;
 
         file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid());
-        file.mkdirs();
+        Utils.runMkdir(file.mkdirs());
 
         serverFolder = file;
 
@@ -147,7 +144,7 @@ public class CloudServer extends StreamlineServer {
             Properties properties = new Properties();
             try {
 
-                propertiesFile.createNewFile();
+                Utils.runMkdir(propertiesFile.createNewFile());
 
                 properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
 
@@ -293,7 +290,7 @@ public class CloudServer extends StreamlineServer {
                         return;
                     }
 
-                    if (getServerState().equals(ServerState.STOPPING)) process.waitFor();
+                    process.waitFor();
 
                 } catch (Exception e) {
                     if (!getServerState().equals(ServerState.STOPPING)) StreamlineCloud.printError("Failed to start server", e);

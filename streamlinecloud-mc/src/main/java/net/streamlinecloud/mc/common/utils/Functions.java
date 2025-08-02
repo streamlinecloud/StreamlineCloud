@@ -31,19 +31,6 @@ public class Functions {
                 wr.write(postData.getBytes(StandardCharsets.UTF_8));
             }
 
-            int responseCode = connection.getResponseCode();
-
-
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-
-                res = response.toString();
-            }
 
             connection.disconnect();
         } catch (Exception e) {

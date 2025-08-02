@@ -127,9 +127,6 @@ public class CloudServerManager {
     }
 
     public String startServerByGroup(CloudGroup cloudGroup, List<String> templates) {
-        List<CloudServer> allServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(cloudGroup));
-        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(cloudGroup)) allServers.add(s);
-
         CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime());
         server.setGroup(cloudGroup.getName());
         server.setCustomTemplates(templates);

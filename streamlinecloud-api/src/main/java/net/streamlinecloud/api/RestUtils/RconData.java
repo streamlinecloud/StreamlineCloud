@@ -1,4 +1,4 @@
-package io.streamlinemc.api.RestUtils;
+package net.streamlinecloud.api.RestUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
