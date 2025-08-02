@@ -1,7 +1,7 @@
 package net.streamlinecloud.mc.paper.manager;
 
 import net.streamlinecloud.api.server.StreamlineServer;
-import net.streamlinecloud.mc.SpigotSCP;
+import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.paper.StreamlinePlayer;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
@@ -52,7 +52,7 @@ public class PlayerManager {
         } catch (IOException e) {
             //Bukkit.getLogger().info("FAILED TO SEND PLAYER " + player.getPlayer().getName() + "(" + player.getPlayer().getUniqueId() + ") send to Server... FOLLOWING ERROR OCCURRED: \n" + e.getMessage());
         }
-        player.getPlayer().sendPluginMessage(SpigotSCP.getInstance(), "BungeeCord", b.toByteArray());
+        player.getPlayer().sendPluginMessage(PaperSCP.getInstance(), "BungeeCord", b.toByteArray());
     }
 
     //GetPlayer

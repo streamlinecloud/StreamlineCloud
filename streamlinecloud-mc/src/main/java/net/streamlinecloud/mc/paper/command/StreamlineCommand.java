@@ -1,7 +1,7 @@
 package net.streamlinecloud.mc.paper.command;
 
 import net.streamlinecloud.api.packet.RemoteCommandPacket;
-import net.streamlinecloud.mc.SpigotSCP;
+import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.core.PluginConfig;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
@@ -17,7 +17,7 @@ public class StreamlineCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         Player player = (Player) sender;
-        PluginConfig config = SpigotSCP.getInstance().getConfigManager().getConfig();
+        PluginConfig config = PaperSCP.getInstance().getConfigManager().getConfig();
 
         if (args.length == 0) {
             player.sendMessage("");

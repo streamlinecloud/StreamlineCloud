@@ -2,7 +2,7 @@ package net.streamlinecloud.mc.common.core.manager;
 
 import com.google.gson.Gson;
 import net.streamlinecloud.api.group.StreamlineGroup;
-import net.streamlinecloud.mc.SpigotSCP;
+import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.utils.Functions;
 import lombok.Getter;
 
@@ -35,7 +35,7 @@ public class AbstractGroupManager implements GroupManagerImpl {
                     StreamlineGroup streamlineGroup = new Gson().fromJson(Functions.get("groups/" + name), StreamlineGroup.class);
                     groups.add(streamlineGroup);
                 } catch (Exception e) {
-                    SpigotSCP.getInstance().getLogger().info("error!" + e.getMessage());
+                    PaperSCP.getInstance().getLogger().info("error!" + e.getMessage());
                     e.printStackTrace();
                 }
 

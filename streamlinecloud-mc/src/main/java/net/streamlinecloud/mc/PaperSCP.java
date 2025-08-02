@@ -24,13 +24,13 @@ import java.net.http.WebSocket;
 import java.util.Objects;
 
 @Getter
-public final class SpigotSCP extends JavaPlugin {
+public final class PaperSCP extends JavaPlugin {
 
     StreamlineCloud streamlineCloud;
     ConfigManager configManager;
 
     @Getter
-    private static SpigotSCP instance;
+    private static PaperSCP instance;
 
     @Override
     public void onEnable() {

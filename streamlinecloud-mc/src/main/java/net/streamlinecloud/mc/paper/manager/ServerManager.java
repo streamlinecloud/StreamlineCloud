@@ -5,7 +5,7 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.ServerUseState;
 import net.streamlinecloud.api.server.StreamlineServer;
-import net.streamlinecloud.mc.SpigotSCP;
+import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.paper.event.ServerDataReceivedEvent;
@@ -14,9 +14,7 @@ import net.streamlinecloud.mc.paper.event.ServerDeletedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class ServerManager extends AbstractServerManager {
@@ -31,14 +29,14 @@ public class ServerManager extends AbstractServerManager {
 
     @Override
     public void moveAllPlayersAndStop(String target) {
-        for (Player player : SpigotSCP.getInstance().getServer().getOnlinePlayers()) {
+        for (Player player : PaperSCP.getInstance().getServer().getOnlinePlayers()) {
             PlayerManager.getInstance().sendPlayer(PlayerManager.getInstance().getPlayer(player.getName()), ServerManager.getInstance().getServer(target));
         }
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(SpigotSCP.getInstance(), new Runnable() {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(PaperSCP.getInstance(), new Runnable() {
             @Override
             public void run() {
-                SpigotSCP.getInstance().getServer().shutdown();
+                PaperSCP.getInstance().getServer().shutdown();
             }
         }, 200L);
     }
@@ -49,32 +47,32 @@ public class ServerManager extends AbstractServerManager {
             player.kickPlayer(message);
         });
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(SpigotSCP.getInstance(), new Runnable() {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(PaperSCP.getInstance(), new Runnable() {
             @Override
             public void run() {
-                SpigotSCP.getInstance().getServer().shutdown();
+                PaperSCP.getInstance().getServer().shutdown();
             }
         }, 100L);
     }
 
     @Override
     public void onSubscribedServerUpdated(StreamlineServer server) {
-        Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(PaperSCP.getInstance(), () -> {
             Bukkit.getPluginManager().callEvent(new ServerDataUpdateEvent(server));
         });
     }
 
     @Override
     public void onSubscribedServerStarted(StreamlineServer server) {
-        Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
-            SpigotSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDataReceivedEvent(server));
+        Bukkit.getScheduler().runTask(PaperSCP.getInstance(), () -> {
+            PaperSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDataReceivedEvent(server));
         });
     }
 
     @Override
     public void onSubscribedServerStopped(StreamlineServer server) {
-        Bukkit.getScheduler().runTask(SpigotSCP.getInstance(), () -> {
-            SpigotSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDeletedEvent(server));
+        Bukkit.getScheduler().runTask(PaperSCP.getInstance(), () -> {
+            PaperSCP.getInstance().getServer().getPluginManager().callEvent(new ServerDeletedEvent(server));
         });
     }
 

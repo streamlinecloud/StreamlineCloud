@@ -1,6 +1,6 @@
 package net.streamlinecloud.mc.paper.task;
 
-import net.streamlinecloud.mc.SpigotSCP;
+import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -25,7 +25,7 @@ public class StopCountdownTask {
                 for (int warning : warnings) if (minutes + 1 == warning) warning(minutes + 1);
 
             }
-        }.runTaskTimerAsynchronously(SpigotSCP.getInstance(), 0L, 20L);
+        }.runTaskTimerAsynchronously(PaperSCP.getInstance(), 0L, 20L);
 
     }
 

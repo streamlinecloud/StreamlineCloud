@@ -1,8 +1,7 @@
 package net.streamlinecloud.mc.paper.command;
 
-import net.streamlinecloud.mc.SpigotSCP;
+import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.core.PluginConfig;
-import net.streamlinecloud.mc.common.utils.InternalSettings;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,7 +16,7 @@ public class ServerInfoCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        PluginConfig config = SpigotSCP.getInstance().getConfigManager().getConfig();
+        PluginConfig config = PaperSCP.getInstance().getConfigManager().getConfig();
 
         if (sender instanceof Player player) {
 
