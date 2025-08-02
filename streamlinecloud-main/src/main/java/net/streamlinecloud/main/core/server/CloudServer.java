@@ -83,6 +83,8 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
+        if (getGroupDirect().getSoftwareName().equals("default")) getGroupDirect().setSoftwareName(Cache.i().getConfig().getDefaultSoftwareName());
+
         if (SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()) == null) {
             StreamlineCloud.log("The software " + getGroupDirect().getSoftwareName() + " is not installed");
             return;

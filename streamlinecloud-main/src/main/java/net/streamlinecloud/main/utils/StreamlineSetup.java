@@ -112,7 +112,7 @@ public class StreamlineSetup {
                         1,
                         List.of(),
                         ServerRuntime.SERVER,
-                        software.getName());
+                        "default");
                 CloudGroup proxy = new CloudGroup(
                         "proxy",
                         1,
