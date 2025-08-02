@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.software.StreamlineSoftware;
+import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.StreamlineConfig;
 import net.streamlinecloud.main.core.server.CloudServer;
 import net.streamlinecloud.main.utils.Cache;
@@ -19,6 +20,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter @Setter
 public class SoftwareManager {
@@ -49,12 +51,56 @@ public class SoftwareManager {
         catalog = new Gson().fromJson(new Gson().toJson(catalogConfig.getData()), type);
     }
 
-    public void add(String name, ServerRuntime runtime, String uri) {
+    public StreamlineSoftware add(String name, ServerRuntime runtime, String fileUri) {
         SoftwareConfig softwareConfig = (SoftwareConfig) config.getData();
-        softwareConfig.software.add(new StreamlineSoftware(name, runtime, uri, false));
+        new File(Cache.i().getHomeFile() + "/data/software/" + name).mkdirs();
+        AtomicReference<String> uri = new AtomicReference<>(fileUri);
+
+
+        if (uri.get().startsWith("http://") || uri.get().startsWith("https://")) {
+            StreamlineCloud.download(uri.get(),Cache.i().getHomeFile() + "/data/software/" + name, success -> {
+            });
+        }
+
+        StreamlineSoftware software = new StreamlineSoftware(name, runtime, name, false);
+        softwareConfig.software.add(software);
 
         config.setData(softwareConfig);
         config.save();
+
+        return software;
+    }
+
+    public StreamlineSoftware add(SoftwareCatalogItem catalogItem) {
+        ServerRuntime runtime = ServerRuntime.SERVER;
+        if (catalogItem.getSoftware().contains("velocity")) runtime = ServerRuntime.PROXY;
+        return add(catalogItem.getSoftware() + "-" + catalogItem.getVersion(), runtime, catalogItem.getUrl());
+    }
+
+    public SoftwareCatalogItem getLatestSoftware(String software) {
+        AtomicReference<SoftwareCatalogItem> result = new AtomicReference<>();
+        SoftwareConfig softwareConfig = (SoftwareConfig) config.getData();
+        for (SoftwareCatalogItem streamlineSoftware : catalog) {
+            if (streamlineSoftware.getSoftware().startsWith(software)) {
+                String ver = streamlineSoftware.getVersion();
+
+                if (result.get() == null) result.set(streamlineSoftware);
+                if (ver == null) continue;
+
+                int i = 0;
+                for (String subVer : ver.split("\\.")) {
+                    try {
+                        if (Integer.parseInt(subVer) > Integer.parseInt(result.get().getVersion().split("\\.")[i])) {
+                            result.set(streamlineSoftware);
+                        }
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                    i++;
+                }
+            }
+        }
+        return result.get();
     }
 
     @SneakyThrows

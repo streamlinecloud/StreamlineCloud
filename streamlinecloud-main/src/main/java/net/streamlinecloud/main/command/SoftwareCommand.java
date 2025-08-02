@@ -58,14 +58,6 @@ public class SoftwareCommand extends CloudCommand {
                     return;
                 }
 
-                new File(Cache.i().getHomeFile() + "/data/software/" + name).mkdirs();
-
-                if (uri[0].startsWith("http://") || uri[0].startsWith("https://")) {
-                    StreamlineCloud.download(uri[0],Cache.i().getHomeFile() + "/data/software/" + name, success -> {
-                        uri[0] = name;
-                    });
-                }
-
                 SoftwareManager.getInstance().add(name, runtime, uri[0]);
                 break;
 

@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.utils;
 
 import net.streamlinecloud.api.server.ServerRuntime;
+import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.MainConfig;
@@ -101,18 +102,23 @@ public class StreamlineSetup {
 
             if (output2.equals("yes")) {
 
+                StreamlineSoftware software = SoftwareManager.getInstance().add(SoftwareManager.getInstance().getLatestSoftware("paper"));
+                StreamlineSoftware proxySoftware = SoftwareManager.getInstance().add(SoftwareManager.getInstance().getLatestSoftware("velocity"));
+
+                Cache.i().getConfig().setDefaultSoftwareName(software.getName());
+
                 CloudGroup lobby = new CloudGroup(
                         "lobby",
                         1,
                         List.of(),
                         ServerRuntime.SERVER,
-                        "paper");
+                        software.getName());
                 CloudGroup proxy = new CloudGroup(
                         "proxy",
                         1,
                         List.of(),
                         ServerRuntime.PROXY,
-                        "velocity");
+                        proxySoftware.getName());
 
                 try {
                     lobby.save();
@@ -128,12 +134,6 @@ public class StreamlineSetup {
                 StreamlineCloud.log("sl.setup.groupsGenerated");
                 StreamlineCloud.log("sl.setup.downloading");
 
-                SoftwareManager.getInstance().add("paper", ServerRuntime.SERVER, "paper-1.21.8");
-                SoftwareManager.getInstance().add("velocity", ServerRuntime.PROXY, "velocity-3.4.0");
-
-                boolean downloadServer = StreamlineCloud.download("https://fill-data.papermc.io/v1/objects/7023e1fe3d8a6d9112fde1618d2b4154890b92a91a25a2b05ba7d09864f4360f/paper-1.21.8-17.jar", Cache.i().getHomeFile() + "/data/software/paper-1.21.8", success -> {});
-                boolean downloadProxy = StreamlineCloud.download("https://fill-data.papermc.io/v1/objects/f82780ce33035ebe3d6ea7981f0e6e8a3e41a64f2080ef5c0f1266fada03cbee/velocity-3.4.0-SNAPSHOT-522.jar", Cache.i().getHomeFile() + "/data/software/velocity-3.4.0", success -> {});
-
                 try {
                     Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
                     Files.writeString(Path.of(Cache.i().homeFile + "/templates/default/proxy/forwarding.secret"), new Random().nextInt(999999999) + "", StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -142,15 +142,6 @@ public class StreamlineSetup {
                 }
 
                 finishSetup();
-
-                if (!downloadServer) {
-
-                    StreamlineCloud.logError("WARNING: We couldn't find server jar files. StreamlineCloud wont work out of the box!");
-
-                    Thread.sleep(5000);
-                    finishSetup();
-
-                }
 
             } else {
                 finishSetup();
@@ -164,6 +155,7 @@ public class StreamlineSetup {
     }
 
     private void finishSetup() {
+        MainConfig.saveConfig();
         StreamlineCloud.log("sl.setup.finished");
         StreamlineCloud.shutDown();
     }
