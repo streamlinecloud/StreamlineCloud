@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Settings;
+import net.streamlinecloud.main.utils.StreamlineSetup;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -115,6 +116,12 @@ public class MainConfig {
         String firstLine = reader.readLine();
         reader.close();
         Cache.i().setApiKey(firstLine);
+
+        if (Cache.i().getConfig() == null) {
+            StreamlineCloud.log("StreamlineCloud couldn't load the config. Loading the setup...");
+            new StreamlineSetup();
+            return;
+        }
 
         Cache.i().setDisabledColors(Cache.i().getConfig().advanced.disableColors);
         Cache.i().setUseLgecyColor(Cache.i().getConfig().advanced.useLegacyColor);
