@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 @Getter
-@Plugin(id = "streamlinecloudplugin", name = "Streamlinecloud", version = "0.2",
-        url = "https://streamlinemc.cloud", description = "Bridge for Streamlinecloud", authors = {"Quinilo", "creperozelot"})
+@Plugin(id = "streamlinecloud", name = "Streamlinecloud", version = "1.0.0",
+        url = "https://streamlinecloud.net/", description = "This plugin needs to be installed on every server powered by StreamlineCloud", authors = {"Quinilo", "creperozelot"})
 public class VelocitySCP {
 
     StreamlineCloud streamlineCloud;

@@ -30,6 +30,11 @@ public class ProxyServerManager extends AbstractServerManager {
     }
 
     @Override
+    public void log(String message) {
+        VelocitySCP.getInstance().getLogger().info(message);
+    }
+
+    @Override
     public void closeServer(String message) {
         VelocitySCP.getInstance().getProxy().getAllPlayers().forEach(player -> {
             player.disconnect(Component.text("(proxy) " + message));

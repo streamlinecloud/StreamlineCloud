@@ -94,7 +94,7 @@ public class ServerSocket {
 
             });
             ws.onError(ctx -> {
-                StreamlineCloud.log("CRITICAL: Socket connection error from " + ctx.sessionId() + " - " + ctx.error() );
+                StreamlineCloud.log("CRITICAL: Socket connection error from " + ctx.sessionId() + " - " + ctx.error());
             });
         });
     }

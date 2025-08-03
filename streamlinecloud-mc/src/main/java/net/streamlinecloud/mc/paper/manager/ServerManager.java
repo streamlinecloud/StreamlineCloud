@@ -42,6 +42,11 @@ public class ServerManager extends AbstractServerManager {
     }
 
     @Override
+    public void log(String message) {
+        PaperSCP.getInstance().getLogger().info(message);
+    }
+
+    @Override
     public void closeServer(String message) {
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.kickPlayer(message);

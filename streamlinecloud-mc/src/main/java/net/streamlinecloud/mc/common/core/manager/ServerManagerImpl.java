@@ -11,6 +11,7 @@ public interface ServerManagerImpl {
     void uploadServerInfo();
     void closeServer(String message);
     void moveAllPlayersAndStop(String target);
+    void log(String message);
     StreamlineServer getServer(UUID uuid);
     StreamlineServer getServer(String name);
 

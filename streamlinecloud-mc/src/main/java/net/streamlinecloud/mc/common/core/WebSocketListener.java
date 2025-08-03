@@ -37,7 +37,7 @@ public class WebSocketListener implements WebSocket.Listener {
             if (data.toString().equals("success")) return null;
 
             if (data.toString().equals("403")) {
-                PaperSCP.getInstance().getLogger().warning("Got 403 response from server");
+                serverManager.log("Got 403 response from server");
                 return null;
             };
 
