@@ -36,7 +36,7 @@ public class ServerSocket {
 
                 String key = ctx.queryParam("key");
 
-                if ( key == null || BackEndMain.customSessions.stream().noneMatch(s -> s.getKey().equals(key))) {
+                if ( key == null || BackEndMain.customSessions.stream().noneMatch(s -> s.getKey().equals(key)) && !key.equals(Cache.i().getApiKey())) {
                     ctx.send("403");
                     ctx.closeSession();
                     return;
