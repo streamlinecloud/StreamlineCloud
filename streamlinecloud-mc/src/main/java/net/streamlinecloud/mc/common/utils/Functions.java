@@ -55,8 +55,6 @@ public class Functions {
         try {
             URL apiUrl = new URL("http://localhost:5378/streamline/" + path);
 
-            System.out.println("GET REQ: " + path);
-
             HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
 
             // Set up the request

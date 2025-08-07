@@ -97,8 +97,6 @@ public class ServerController {
             return;
         }
 
-        StreamlineCloud.log("UPDATE FOR SERVER " + s.getName());
-
         if (cs.getServerState().equals(ServerState.STARTING)) {
 
             String lb = null;
