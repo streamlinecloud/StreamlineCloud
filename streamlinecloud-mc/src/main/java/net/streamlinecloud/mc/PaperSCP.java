@@ -10,13 +10,11 @@ import lombok.Getter;
 import net.streamlinecloud.mc.paper.command.ConnectCommand;
 import net.streamlinecloud.mc.paper.command.ServerInfoCommand;
 import net.streamlinecloud.mc.paper.command.StreamlineCommand;
-import net.streamlinecloud.mc.paper.command.TestCommand;
 import net.streamlinecloud.mc.paper.listener.ConnectionListener;
 import net.streamlinecloud.mc.paper.listener.ServerListener;
 import net.streamlinecloud.mc.paper.manager.PlayerManager;
 import net.streamlinecloud.mc.paper.manager.ServerManager;
 import net.streamlinecloud.mc.paper.task.StopCountdownTask;
-import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -60,7 +58,6 @@ public final class PaperSCP extends JavaPlugin {
     }
 
     private void registerCommand() {
-        Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
         Objects.requireNonNull(getCommand("serverinfo")).setExecutor(new ServerInfoCommand());
         Objects.requireNonNull(getCommand("connect")).setExecutor(new ConnectCommand());
         Objects.requireNonNull(getCommand("streamline")).setExecutor(new StreamlineCommand());

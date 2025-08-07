@@ -83,8 +83,13 @@ public class ProxyConnectionListener {
 
         try {
             assert count != null;
-            ping.onlinePlayers(Integer.parseInt(count.split("-")[0]));
-            ping.maximumPlayers(Integer.parseInt(count.split("-")[1]));
+            try {
+                ping.onlinePlayers(Integer.parseInt(count.split("-")[0]));
+                ping.maximumPlayers(Integer.parseInt(count.split("-")[1]));
+            } catch (NumberFormatException ex) {
+                ping.onlinePlayers(0);
+                ping.maximumPlayers(-1);
+            }
             ping.description(MiniMessage.miniMessage().deserialize("<bold><gradient:#ff4040:#d47979>Powered by StreamlineCloud</gradient></bold>\n<#4dffed>Visit streamlinecloud.net"));
         } finally {
             e.setPing(ping.build());

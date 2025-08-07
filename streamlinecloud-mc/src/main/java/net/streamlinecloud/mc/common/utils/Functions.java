@@ -31,6 +31,18 @@ public class Functions {
                 wr.write(postData.getBytes(StandardCharsets.UTF_8));
             }
 
+            int responseCode = connection.getResponseCode();
+
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+
+                res = response.toString();
+            }
 
             connection.disconnect();
         } catch (Exception e) {
@@ -43,11 +55,12 @@ public class Functions {
         try {
             URL apiUrl = new URL("http://localhost:5378/streamline/" + path);
 
+            System.out.println("GET REQ: " + path);
+
             HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
 
             // Set up the request
             connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
 
             // Set a custom header
             connection.setRequestProperty("auth_key", StaticCache.accessKey);
@@ -64,6 +77,7 @@ public class Functions {
                 }
 
                 connection.disconnect();
+                System.out.println("RES FOR " + path + " is " + response.toString());
                 return response.toString();
 
             }
