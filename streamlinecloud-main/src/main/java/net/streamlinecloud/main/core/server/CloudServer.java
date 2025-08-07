@@ -211,7 +211,7 @@ public class CloudServer extends StreamlineServer {
         }
 
         //Apikey
-        File f = new File(file.getPath() + "/.apikey.json");
+        File f = new File(file.getPath() + "/.apikey");
 
         if (f.exists()) {
             FileUtils.forceDelete(f);

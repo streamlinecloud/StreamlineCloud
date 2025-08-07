@@ -85,7 +85,7 @@ public class MainConfig {
 
         Utils.runMkdir(new File(Cache.i().homeFile + "/data").mkdirs());
 
-        File apiKeyFile = new File(Cache.i().homeFile + "/data/apikey.json");
+        File apiKeyFile = new File(Cache.i().homeFile + "/data/.apikey");
         File configFile = new File(Cache.i().homeFile + "/data/config.json");
         File groupsFolder = new File(Cache.i().homeFile + "/groups");
         File[] files = groupsFolder.listFiles();

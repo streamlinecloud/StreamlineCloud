@@ -90,7 +90,7 @@ public class Functions {
     public static void startup() {
         try {
             StaticCache.plFolder = new File(System.getProperty("user.dir"));
-            File key = new File(StaticCache.plFolder.getAbsolutePath() + "/.apikey.json");
+            File key = new File(StaticCache.plFolder.getAbsolutePath() + "/.apikey");
 
             String keyString = FileUtils.readFileToString(key, Charset.defaultCharset());
 
