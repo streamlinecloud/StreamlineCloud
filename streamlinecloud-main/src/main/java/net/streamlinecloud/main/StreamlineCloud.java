@@ -49,7 +49,7 @@ public class StreamlineCloud {
 
     public static void log(String msg) { logIntern(msg, new ReplacePaket[]{}); }
     public static void log(String msg, ReplacePaket[] packets) { logIntern(msg, packets); }
-    public static void logError(String msg) { logIntern(Settings.name + "§DARK_RED" + msg, new ReplacePaket[]{}); }
+    public static void logError(String msg) { logIntern("§DARK_RED" + msg, new ReplacePaket[]{}); }
 
 
     public static void logImportant(String msg) {
@@ -86,7 +86,7 @@ public class StreamlineCloud {
 
         String s;
 
-        s = "§RED" + formattedDate + " §8| " + Settings.name + msg + "§RED";
+        s = "§8| §RED" + formattedDate + " §8-> §RED" + msg + "§RED";
 
         for (ReplacePaket p : pakets) {
             s = s.replace(p.getTarget(), p.getValue());

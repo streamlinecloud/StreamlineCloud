@@ -14,7 +14,7 @@
   "sl.startup.startingServers": "Starting all servers...",
   "sl.startup.serversStarted": "§GREENAll servers are online!",
 
-  "sl.backend.started": "The §AQUABackend §RED is now online",
+  "sl.backend.started": "Backend listening on port %1",
 
   "sl.server.preparing": "Preparing %1",
   "sl.server.starting": "Starting %1 at %2",

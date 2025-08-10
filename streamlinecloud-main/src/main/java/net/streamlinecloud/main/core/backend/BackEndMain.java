@@ -5,6 +5,7 @@ import net.streamlinecloud.main.core.backend.controller.GroupsController;
 import net.streamlinecloud.main.core.backend.controller.ServerController;
 import net.streamlinecloud.main.core.backend.controller.UtilController;
 import net.streamlinecloud.main.core.backend.socket.ServerSocket;
+import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import io.javalin.Javalin;
 
@@ -58,15 +59,14 @@ public class BackEndMain {
         Cache.i().setServerSocket(new ServerSocket());
 
         Cache.i().getBackend().start(Cache.i().getConfig().getNetwork().getBackendPort());
-        StreamlineCloud.log("sl.backend.started");
+        StreamlineCloud.log("sl.backend.started", new ReplacePaket[]{new ReplacePaket("%1", Cache.i().getConfig().getNetwork().getBackendPort() + "")});
 
 
     }
 
     public static void stop() {
-        StreamlineCloud.log("Shutting down §AQUACommunicationBridge");
         if (app != null) app.stop();
-        StreamlineCloud.log("§AQUACommunicationBridge §REDOffline!");
+        StreamlineCloud.log("Backend offline");
     }
 
 }
