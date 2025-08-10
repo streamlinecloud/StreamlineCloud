@@ -1,4 +1,4 @@
-rootProject.name = "StreamlineMcCloud"
+rootProject.name = "StreamlineCloud"
 include("main")
 include("streamlinecloud-main")
 include("streamlinecloud-api")
