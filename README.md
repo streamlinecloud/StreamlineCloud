@@ -7,20 +7,20 @@
 
 StreamlineCloud is a free and opensource cloud system for paper and velocity based minecraft networks.
 
-![image](https://streamlinecloud.net/slide-3.png)
-
 ## Tags
 
 [![Check, Build and Release](https://github.com/streamlinecloud/StreamlineCloud/actions/workflows/docker-image.yml/badge.svg)](https://github.com/streamlinecloud/StreamlineCloud/actions/workflows/docker-image.yml)
 
 ## Philosophy
-- **Easy to use:** Manage multiple Minecraft servers across different nodes from a single dashboard.
-- **Extensions:** Easily extend functionality with plugins to tailor the system to your needs.
-- **Scalable:** Scale your Minecraft server infrastructure seamlessly as your player base grows.
-- **Opensource:** Intuitive web-based interface for managing and monitoring your Minecraft servers. (Comming Soon)
+- **Easy to use:** Streamline is designed for a user-friendly experience, so everyone can use it without any hassle.
+- **Extensions:** Streamline divides its features into different marketplace so you don't lose performance unnecessarily.
+- **Scalable:** Streamline scales with your project. You can create easily multiple proxy servers.
+- **Opensource:** Streamline is free and opensource for ever.
 
 ## Features
-[streamlinecloud.net/features](https://streamlinecloud.net/features).
+![image](https://raw.githubusercontent.com/streamlinecloud/streamlinecloud/production/img/features-banner.png)
+
+[Visit the StreamlineCLoud website](https://streamlinecloud.net/features).
 
 ## Installation
 
