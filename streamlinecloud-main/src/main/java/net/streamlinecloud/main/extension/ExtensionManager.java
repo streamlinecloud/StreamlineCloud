@@ -86,7 +86,12 @@ public class ExtensionManager {
         for (StreamlineExtension streamlineExtension : extensionList.keySet()) {
             File dataFolder = new File(Cache.i().homeFile + "/data/plugin/" + extensionList.get(streamlineExtension).getId());
             Utils.runMkdir(dataFolder.mkdirs());
-            streamlineExtension.initialize(eventManager, commandManager, dataFolder);
+            try {
+                streamlineExtension.initialize(eventManager, commandManager, dataFolder);
+            } catch (Exception e) {
+                StreamlineCloud.logError("Failed to enable " + extensionList.get(streamlineExtension).name + " - " +  e.getMessage());
+                streamlineExtension.disable();
+            }
         }
     }
 
