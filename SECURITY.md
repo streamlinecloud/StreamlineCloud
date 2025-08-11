@@ -6,14 +6,15 @@ We take security seriously and will provide patches for security vulnerabilities
 
 | Version | Supported          |
 | ------- | ------------------ |
-| Alpha     | :white_check_mark: |
+| BETA      | :white_check_mark: |
+| Alpha     | 🔴 |
 
 ## Reporting a Vulnerability
 
 If you discover a security vulnerability in this project, we appreciate your help in disclosing it to us in a responsible manner. Please follow the steps below:
 
 1. **Do not** create a public issue or disclose the vulnerability in public forums.
-2. Send an email to [security@the-flames.de](mailto:security@the-flames.de) with the details of the vulnerability. Include the following information:
+2. Send an email to [security@streamlinecloud.net](mailto:security@streamlinecloud.net) with the details of the vulnerability. Include the following information:
    - A description of the vulnerability and its potential impact.
    - Steps to reproduce the vulnerability.
    - Any proof-of-concept code.
