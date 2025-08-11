@@ -64,11 +64,20 @@ public class CloudMain {
         Settings.name = "§REDStreamlineCloud §8-> §RED";
         StreamlineCloud.log("Starting StreamlineCloud");
 
-        new CloudServerManager();
-        new CloudGroupManager();
-
         MainConfig.init();
+
         new LangManager();
+        if (Cache.i().getConfig() != null) initLang();
+        StreamlineCloud.log("lang.welcome");
+
+        new SoftwareManager();
+        SoftwareManager.getInstance().setConfig(new StreamlineConfig(new SoftwareConfig(), cache.homeFile + "/data/software/software.json"));
+        SoftwareManager.getInstance().getConfig().init();
+
+        BackEndMain.startBE();
+
+        new CloudGroupManager();
+        new CloudServerManager();
 
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
 
@@ -79,18 +88,10 @@ public class CloudMain {
         Utils.runMkdir(new File(cache.homeFile + "/temp").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
 
-        new SoftwareManager();
-        SoftwareManager.getInstance().setConfig(new StreamlineConfig(new SoftwareConfig(), cache.homeFile + "/data/software/software.json"));
-        SoftwareManager.getInstance().getConfig().init();
-
         if (cache.isFirstLaunch()) {
             new StreamlineSetup();
             return;
         }
-
-        if (Cache.i().getConfig() != null) initLang();
-
-        StreamlineCloud.log("lang.welcome");
 
         if (Cache.i().getConfig().getWebsocket().isUseWebSocket()) {
             Cache.i().setWebSocketClient(new RemoteSocket());
@@ -102,8 +103,6 @@ public class CloudMain {
             StreamlineCloud.log("Changed config value fallbackPlayerSpreading to 'RANDOM'");
             Cache.i().getConfig().getFallback().setFallbackPlayerSpreading("RANDOM");
         }
-
-        BackEndMain.startBE();
 
         for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) loadBalancer.start();
 
