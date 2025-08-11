@@ -1,13 +1,16 @@
 package net.streamlinecloud.main.core.server;
 
 import lombok.Getter;
+import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -27,6 +30,8 @@ public class CloudServerManager {
     public CloudServerManager() {
         instance = this;
         task();
+
+        if (Cache.i().getConfig().getFallback().isDynamicFallbackControl()) fallbackControlTask();
     }
 
     public void task() {
@@ -76,6 +81,40 @@ public class CloudServerManager {
         };
 
         scheduler.scheduleAtFixedRate(runnable, 0, 3, TimeUnit.SECONDS);
+    }
+
+    public void fallbackControlTask() {
+        MainConfig.FallbackConfig config =  Cache.i().getConfig().getFallback();
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        Runnable runnable = () -> {
+
+            CloudServer fallbackServer = getServerByName(config.getFallbackGroup() + "-1");
+            if (fallbackServer == null) return;
+
+            Integer[] count = Utils.getNetworkOnlineCount();
+            int fallbackSize = fallbackServer.getMaxOnlineCount();
+            int puffer = config.getDynamicFallbackPuffer();
+            int online = count[0];
+            int max = count[1];
+
+            if (puffer + online >= max) return;
+            int neededServers = (online + puffer) / fallbackSize;
+
+            CloudGroup fallbackGroup = CloudGroupManager.getInstance().getGroupByName(config.getFallbackGroup());
+            List<CloudServer> fallbackServers = CloudGroupManager.getInstance().getGroupOnlineServers(fallbackGroup);
+
+            if (neededServers > fallbackServers.size()) startServerByGroup(fallbackGroup);
+            if (neededServers < fallbackServers.size()) {
+                CloudServer target = fallbackServers.stream()
+                        .min(Comparator.comparingInt(s -> s.getOnlinePlayers().size()))
+                        .orElse(null);
+
+                target.stop();
+            }
+        };
+
+        scheduler.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
     }
 
     public CloudServer getServerByName(String name) {

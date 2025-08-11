@@ -9,6 +9,7 @@ import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.terminal.CloudTerminalRunner;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Settings;
+import net.streamlinecloud.main.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
@@ -47,15 +48,9 @@ public class UtilController {
     }
 
     public void networkOnlineCount(@NotNull Context context) {
-        AtomicInteger online = new AtomicInteger();
-        AtomicInteger max = new AtomicInteger();
+        Integer[] count = Utils.getNetworkOnlineCount();
 
-        CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName("proxy")).forEach(server -> {
-            online.set(online.get() + server.getOnlinePlayers().size());
-            max.set(max.get() + server.getMaxOnlineCount());
-        });
-
-        context.result(online.intValue() + "-" + max.intValue());
+        context.result(count[0] + "-" + count[1]);
         context.status(200);
     }
 

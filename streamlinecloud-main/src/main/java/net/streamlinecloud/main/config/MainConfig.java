@@ -40,6 +40,7 @@ public class MainConfig {
         String fallbackGroup;
         String fallbackPlayerSpreading = "RANDOM";
         boolean dynamicFallbackControl = false;
+        int dynamicFallbackPuffer = 20;
         String _info = "dynamicFallbackControl starts and stopps the fallbacks based on the network player count. You can set fallbackPlayerSpreading to SPLIT, BUNDLE, RANDOM";
     }
 

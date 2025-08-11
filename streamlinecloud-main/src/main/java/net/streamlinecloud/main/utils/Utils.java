@@ -2,6 +2,7 @@ package net.streamlinecloud.main.utils;
 
 import net.streamlinecloud.main.CloudLauncher;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.File;
@@ -9,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Utils {
 
@@ -24,6 +26,18 @@ public class Utils {
     public static void runMkdir(boolean result) {
         if (Cache.i().isFirstLaunch() && !result) StreamlineCloud.log("StreamlineCloud has failed to create a file. This could be a permission or file system error");
 
+    }
+
+    public static Integer[] getNetworkOnlineCount()  {
+        AtomicInteger online = new AtomicInteger();
+        AtomicInteger max = new AtomicInteger();
+
+        CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName("proxy")).forEach(server -> {
+            online.set(online.get() + server.getOnlinePlayers().size());
+            max.set(max.get() + server.getMaxOnlineCount());
+        });
+
+        return new Integer[]{online.get(), max.get()};
     }
 
     public static File getResourceFile(String resourcePath, String filetype) {
