@@ -135,71 +135,51 @@ public class CloudServer extends StreamlineServer {
 
         serverFolder = file;
 
+        //Eula
+        try {
+            File eula = new File(file.getAbsolutePath() + "/eula.txt");
+            if (!eula.exists()) Files.createFile(eula.toPath());
+            Files.writeString(eula.toPath(), "eula=true");
+        } catch (IOException e) {
+            StreamlineCloud.logError(e.getMessage());
+        }
+
+        //Copy Templates
+        List<String> t = new ArrayList<>();
+        CloudGroup g = CloudGroupManager.getInstance().getGroupByName(getGroup());
+
+        assert g != null;
+        customTemplates.addAll(g.getTemplates());
+
+        t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
+        for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
+        t.add(Cache.i().homeFile.getPath() + "/data/software/" + SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()).getFolder());
+        copyFolder(t, file.getPath());
+
         File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
+        Properties properties = new Properties();
 
-        //Properties
-        if (!propertiesFile.exists()) {
+        if (propertiesFile.exists()) properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
+        else Utils.runMkdir(propertiesFile.createNewFile());
+        String rconpw = StreamlineCloud.generateApiKey();
+        Cache.i().getRconDetails().put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
 
-            //Properties creation
-            Properties properties = new Properties();
-            try {
+        properties.setProperty("server-port", String.valueOf(getPort()));
+        properties.setProperty("online-mode", String.valueOf(false));
+        properties.setProperty("enforce-secure-profile", String.valueOf(false));
+        properties.setProperty("enable-rcon", "true");
+        properties.setProperty("rcon.port", String.valueOf(getPort() + 1));
+        properties.setProperty("rcon.password", rconpw);
 
-                Utils.runMkdir(propertiesFile.createNewFile());
+        properties.store(Files.newBufferedWriter(Path.of(propertiesFile.toURI())), null);
 
-                properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
+        Cache.i().rconDetails.put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
 
-                String rconpw = StreamlineCloud.generateApiKey();
-                Cache.i().getRconDetails().put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
-
-                properties.setProperty("server-port", String.valueOf(getPort()));
-                properties.setProperty("online-mode", String.valueOf(false));
-                properties.setProperty("enforce-secure-profile", String.valueOf(false));
-                properties.setProperty("enable-rcon", "true");
-                properties.setProperty("rcon.port", String.valueOf(getPort() + 1));
-                properties.setProperty("rcon.password", rconpw);
-                properties.setProperty("max-players", String.valueOf(group.getServerOnlineCount()));
-
-                properties.store(Files.newBufferedWriter(Path.of(propertiesFile.toURI())), null);
-
-                Cache.i().rconDetails.put(getRconUuid(), new RconData(getIp(), getPort() + 1, rconpw));
-            } catch (IOException e) {
-                StreamlineCloud.logError(e.getMessage());
-            }
-
-            //Eula
-            try {
-                File eula = new File(file.getAbsolutePath() + "/eula.txt");
-                if (!eula.exists()) Files.createFile(eula.toPath());
-                Files.writeString(eula.toPath(), "eula=true");
-            } catch (IOException e) {
-                StreamlineCloud.logError(e.getMessage());
-            }
-
-            //Copy Templates
-            List<String> t = new ArrayList<>();
-            CloudGroup g = CloudGroupManager.getInstance().getGroupByName(getGroup());
-
-            assert g != null;
-            customTemplates.addAll(g.getTemplates());
-
-            t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
-            for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
-            t.add(Cache.i().homeFile.getPath() + "/data/software/" + SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()).getFolder());
-            copyFolder(t, file.getPath());
-
-            //Template From Resources
-            if (getRuntime().equals(ServerRuntime.SERVER)) {
-                Utils.copyResources(Utils.getResourceFile("spigot/spigot.yml", "yml"), new File(file.getAbsolutePath() + "/spigot.yml"));
-            } else {
-                Utils.copyResources(Utils.getResourceFile("bungee/config.yml", "yml"), new File(file.getAbsolutePath() + "/config.yml"));
-            }
-
+        //Template From Resources
+        if (getRuntime().equals(ServerRuntime.SERVER)) {
+            Utils.copyResources(Utils.getResourceFile("spigot/spigot.yml", "yml"), new File(file.getAbsolutePath() + "/spigot.yml"));
         } else {
-            if (isStaticServer()) {
-                Properties properties = new Properties();
-                properties.load(Files.newBufferedReader(Path.of(propertiesFile.toURI())));
-                setPort(Integer.parseInt(properties.getProperty("server-port")));
-            }
+            Utils.copyResources(Utils.getResourceFile("bungee/config.yml", "yml"), new File(file.getAbsolutePath() + "/config.yml"));
         }
 
         File velocityFile = new File(file.getAbsolutePath() + "/velocity.toml");
