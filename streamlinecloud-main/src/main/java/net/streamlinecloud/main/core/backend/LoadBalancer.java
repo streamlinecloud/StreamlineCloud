@@ -9,10 +9,7 @@ import net.streamlinecloud.main.extension.ExtensionManager;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.*;
 
 public class LoadBalancer {
@@ -162,7 +159,11 @@ public class LoadBalancer {
             }
 
             while (buffer.hasRemaining()) {
-                dstChannel.write(buffer);
+                try {
+                    dstChannel.write(buffer);
+                } catch (NotYetConnectedException e) {
+                    return;
+                }
             }
         } catch (IOException e) {
             pair.close();

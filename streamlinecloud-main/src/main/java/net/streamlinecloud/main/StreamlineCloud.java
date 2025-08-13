@@ -157,7 +157,7 @@ public class StreamlineCloud {
             bufferedWriter.newLine();
             bufferedWriter.write("StreamlineCloud by " + Settings.authors);
             bufferedWriter.newLine();
-            bufferedWriter.write("Need help? https://streamline.jdev.shop");
+            bufferedWriter.write("Need help? https://streamlinecloud.net/");
 
             bufferedWriter.close();
             fileWriter.close();
