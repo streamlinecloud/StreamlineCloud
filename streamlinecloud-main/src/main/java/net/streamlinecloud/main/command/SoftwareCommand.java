@@ -6,6 +6,7 @@ import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.software.SoftwareCatalogItem;
+import net.streamlinecloud.main.core.software.SoftwareConfig;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
@@ -42,7 +43,11 @@ public class SoftwareCommand extends CloudCommand {
                 break;
 
             case "list":
-                StreamlineCloud.log("Software command usage");
+                StreamlineCloud.log("Installed software:");
+                SoftwareConfig config = (SoftwareConfig) SoftwareManager.getInstance().config.getData();
+                for (StreamlineSoftware software : config.software) {
+                    StreamlineCloud.log("- " + software.getName());
+                }
                 break;
 
             case "add":
@@ -115,7 +120,7 @@ public class SoftwareCommand extends CloudCommand {
                 if (catalogArg.equals("list")) {
                     StreamlineCloud.log("This is the full software catalog:");
                     for (SoftwareCatalogItem item : SoftwareManager.getInstance().getCatalog()) {
-                        StreamlineCloud.log(item.getSoftware() + " - " + item.getVersion());
+                        StreamlineCloud.log(item.getSoftware() + " - " + item.getVersion() + " (" + (SoftwareManager.getInstance().getSoftware(item.getSoftware() + "-" + item.getVersion()) == null ? "not installed" : "installed") + ")");
                     }
 
                 } else if (catalogArg.equals("install")) {
