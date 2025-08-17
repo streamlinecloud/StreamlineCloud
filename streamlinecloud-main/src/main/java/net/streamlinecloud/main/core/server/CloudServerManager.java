@@ -29,8 +29,9 @@ public class CloudServerManager {
 
     public CloudServerManager() {
         instance = this;
-        task();
 
+        if (Cache.i().isFirstLaunch()) return;
+        task();
         if (Cache.i().getConfig().getFallback().isDynamicFallbackControl()) fallbackControlTask();
     }
 

@@ -37,6 +37,7 @@ public class SoftwareManager {
         instance = this;
 
         if (Cache.i().isFirstLaunch()) {
+            Utils.runMkdir(new File(Cache.i().getHomeFile() + "/data/software").mkdirs());
             Files.copy(Objects.requireNonNull(Utils.getResourceFile("software_catalog.json", "json")).toPath(), new File(Cache.i().getHomeFile() + "/data/software/catalog.json").toPath());
         }
 

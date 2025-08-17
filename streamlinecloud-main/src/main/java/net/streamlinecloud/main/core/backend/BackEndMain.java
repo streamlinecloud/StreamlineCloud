@@ -21,6 +21,8 @@ public class BackEndMain {
 
     public static void startBE() {
 
+        if (Cache.i().isFirstLaunch()) return;
+
         publicRoutes.add(mainPath + "ping");
 
         app = Javalin.create();
