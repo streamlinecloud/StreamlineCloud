@@ -41,5 +41,8 @@
     <inspection_tool class="JavadocDeclaration" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ADDITIONAL_TAGS" value="notused" />
     </inspection_tool>
+    <inspection_tool class="OptionalAssignedToNull" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="WARN_ON_COMPARISON" value="false" />
+    </inspection_tool>
   </profile>
 </component>

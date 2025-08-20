@@ -88,6 +88,7 @@ public class VelocitySCP {
             allServers[0] = new ArrayList<>();
 
             assert servers != null;
+            servers.removeIf(streamlineServerSnapshot -> streamlineServerSnapshot.getMaxOnlineCount() == -1);
             for (StreamlineServerSnapshot server : servers) {
 
                 if (server.getPort() != 1.0) {

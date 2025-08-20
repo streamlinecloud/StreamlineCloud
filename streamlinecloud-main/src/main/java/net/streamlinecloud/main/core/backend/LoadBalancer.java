@@ -37,7 +37,6 @@ public class LoadBalancer {
     }
 
     private Optional<CloudServer> nextServer() {
-        System.out.println(servers.size());
         return servers.stream()
                 .min(Comparator.comparingInt(ps -> ps.getOnlinePlayers().size()));
     }

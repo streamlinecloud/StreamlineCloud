@@ -27,14 +27,14 @@ public class ProxyConnectionListener {
 
             if (StaticCache.whitelistEnabled) {
                 if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
-                    player.disconnect(Component.text("§cYou are not whitelisted :/ \n\n§8»§l§cStreamlineCloud whitelist"));
+                    player.disconnect(Component.text("§cYou are not whitelisted :/ \n\n§8» §c§lStreamline§b§lCloud"));
                     return;
                 }
             }
 
             Optional<RegisteredServer> server = VelocitySCP.getInstance().searchFallback();
-            if (server.isEmpty()) {
-                player.disconnect(Component.text("§cThere are no fallback servers available\n§8»§l§cStreamlineCloud"));
+            if (server == null || server.isEmpty()) {
+                player.disconnect(Component.text("§cThere are no fallback servers available\n\n§8» §c§lStreamline§b§lCloud"));
                 return;
             }
 
