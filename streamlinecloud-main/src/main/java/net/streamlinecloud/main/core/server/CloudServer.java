@@ -11,6 +11,7 @@ import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
@@ -329,6 +330,10 @@ public class CloudServer extends StreamlineServer {
 
         if (serverDeleteEvent.isCancelled()) {
             return;
+        }
+
+        for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) {
+            loadBalancer.getServers().stream().filter(server -> server.getUuid().equals(getUuid())).findFirst().ifPresent(server -> loadBalancer.getServers().remove(server));
         }
 
         Cache.i().getRunningServers().remove(this);

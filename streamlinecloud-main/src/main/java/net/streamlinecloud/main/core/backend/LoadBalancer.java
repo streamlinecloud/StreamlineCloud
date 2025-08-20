@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.core.backend;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import net.streamlinecloud.api.extension.event.player.PlayerChoseProxyEvent;
 import net.streamlinecloud.main.StreamlineCloud;
@@ -14,7 +15,8 @@ import java.util.*;
 
 public class LoadBalancer {
 
-    transient private List<CloudServer> proxyServers;
+    @Getter
+    transient private List<CloudServer> servers;
     transient private Selector selector;
 
     @Getter
@@ -31,16 +33,17 @@ public class LoadBalancer {
     }
 
     public void registerServer(CloudServer server) {
-        proxyServers.add(server);
+        servers.add(server);
     }
 
     private Optional<CloudServer> nextServer() {
-        return proxyServers.stream()
+        System.out.println(servers.size());
+        return servers.stream()
                 .min(Comparator.comparingInt(ps -> ps.getOnlinePlayers().size()));
     }
 
     public void start() throws IOException {
-        proxyServers = new ArrayList<>();
+        servers = new ArrayList<>();
 
         selector = Selector.open();
 
