@@ -44,6 +44,11 @@
   "sl.command.servers.command.enterCommand": "Please enter a command",
   "sl.command.multiRoot.generate": "",
 
+  "sl.mc.prefix":  "§c§lStreamline§b§lCloud",
+  "sl.mc.notAllowed": "§cYou are not allowed to use this command",
+  "sl.mc.noFallbacks":  "§cCurrently there are no fallback servers available",
+  "sl.mc.notWhitelisted":  "§cYou are not whitelisted",
+
   "sl.error.title": "§IMPORTANTAn error occurred: §RED%0",
   "sl.error.details": "Visit §GREENdata/error/%0 §REDfor more details!",
   "sl.error.again": "§IMPORTANTThe error §RED%0 §IMPORTANT appeared again :(",
