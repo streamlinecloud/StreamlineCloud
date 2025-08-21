@@ -14,4 +14,13 @@ public class CloudLanguage {
         this.name = name;
         this.messages = messages;
     }
+
+    public String get(String key) {
+        for (String s : messages.keySet()) {
+            if (key.equals(s)) {
+                return messages.get(s);
+            }
+        }
+        return "unknown";
+    }
 }

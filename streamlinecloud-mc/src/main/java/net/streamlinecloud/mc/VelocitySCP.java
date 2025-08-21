@@ -12,6 +12,7 @@ import io.leangen.geantyref.TypeToken;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.StreamlineServerSnapshot;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
+import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.common.utils.Utils;
@@ -59,6 +60,13 @@ public class VelocitySCP {
 
         String whitelist = Functions.get("whitelist");
         playerSpreading = Functions.get("fallback-spreading");
+
+        new LangManager();
+        LangManager.getInstance().fetch(new String[]{
+                "sl.mc.prefix",
+                "sl.mc.notAllowed",
+                "sl.mc.noFallbacks",
+                "sl.mc.notWhitelisted"});
 
         assert whitelist != null;
         if (whitelist.equals("false")) {

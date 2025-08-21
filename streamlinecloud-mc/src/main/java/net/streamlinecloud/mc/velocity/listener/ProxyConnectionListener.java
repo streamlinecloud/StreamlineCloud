@@ -12,6 +12,7 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.streamlinecloud.mc.VelocitySCP;
+import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
@@ -27,14 +28,14 @@ public class ProxyConnectionListener {
 
             if (StaticCache.whitelistEnabled) {
                 if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
-                    player.disconnect(Component.text("§cYou are not whitelisted :/ \n\n§8» §c§lStreamline§b§lCloud"));
+                    player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.notWhitelisted") + " \n\n§8» " + LangManager.getInstance().get("sl.mc.prefix")));
                     return;
                 }
             }
 
             Optional<RegisteredServer> server = VelocitySCP.getInstance().searchFallback();
             if (server == null || server.isEmpty()) {
-                player.disconnect(Component.text("§cThere are no fallback servers available\n\n§8» §c§lStreamline§b§lCloud"));
+                player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.noFallbacks") + " \n\n§8» " + LangManager.getInstance().get("sl.mc.prefix")));
                 return;
             }
 
@@ -59,8 +60,8 @@ public class ProxyConnectionListener {
         if (!VelocitySCP.getInstance().getFallbacks().contains(event.getServer().getServerInfo().getName())) {
 
             Optional<RegisteredServer> server = VelocitySCP.getInstance().searchFallback();
-            if (server.isEmpty()) {
-                player.disconnect(Component.text("§cThere are no fallback servers available\n§8»§l§cStreamlineCloud"));
+            if (server == null || server.isEmpty()) {
+                player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.noFallbacks") + " \n\n§8» " + LangManager.getInstance().get("sl.mc.prefix")));
                 return;
             }
 
