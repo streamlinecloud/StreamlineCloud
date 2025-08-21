@@ -17,6 +17,7 @@ import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.common.utils.Utils;
 import lombok.Getter;
+import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
 import net.streamlinecloud.mc.velocity.listener.ProxyConnectionListener;
 import net.streamlinecloud.mc.velocity.manager.ProxyGroupManager;
 import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
@@ -40,10 +41,6 @@ public class VelocitySCP {
     private final Logger logger;
     @Getter
     private static VelocitySCP instance;
-    private String playerSpreading;
-
-    List<String> fallbacks = new ArrayList<>();
-    List<StreamlineServerSnapshot> servers = new ArrayList<>();
 
     @Inject
     public VelocitySCP(ProxyServer proxy, Logger logger) {
@@ -59,9 +56,10 @@ public class VelocitySCP {
         new ProxyGroupManager();
 
         String whitelist = Functions.get("whitelist");
-        playerSpreading = Functions.get("fallback-spreading");
 
         new LangManager();
+        new ProxyFallbackHandler();
+
         LangManager.getInstance().fetch(new String[]{
                 "sl.mc.prefix",
                 "sl.mc.notAllowed",
@@ -76,8 +74,6 @@ public class VelocitySCP {
             StaticCache.whitelist = new Gson().fromJson(whitelist, List.class);
         }
 
-        task();
-
     }
 
     @Subscribe
@@ -85,98 +81,5 @@ public class VelocitySCP {
         proxy.getEventManager().register(this, new ProxyConnectionListener());
     }
 
-    public void task() {
-        final List<String>[] allServers = new List[]{new ArrayList<>()};
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> {
-
-            servers = new Gson().fromJson(Functions.get("servers/allSnapshots"), new TypeToken<List<StreamlineServerSnapshot>>(){}.getType());
-
-            for (String s : allServers[0]) getProxy().unregisterServer(proxy.getServer(s).get().getServerInfo());
-            allServers[0] = new ArrayList<>();
-
-            assert servers != null;
-            servers.removeIf(streamlineServerSnapshot -> streamlineServerSnapshot.getMaxOnlineCount() == -1);
-            for (StreamlineServerSnapshot server : servers) {
-
-                if (server.getPort() != 1.0) {
-                    if (!server.getName().contains("proxy")) {
-                        ServerInfo serverInfo = new ServerInfo(
-                                server.getName(),
-                                new InetSocketAddress("localhost", Integer.parseInt(String.valueOf(server.getPort()).split("\\.")[0]))
-                        );
-
-                        allServers[0].add(server.getName());
-                        proxy.registerServer(serverInfo);
-                    }
-                }
-
-            };
-
-            Utils.servers = servers;
-
-            fallbacks = new Gson().fromJson(Functions.get("servers/fallbackServers"), List.class);
-
-        }, 0, 3, TimeUnit.SECONDS);
-    }
-
-    public Optional<RegisteredServer> searchFallback() {
-        if (fallbacks.isEmpty()) return null;
-
-        switch (playerSpreading) {
-            case "RANDOM" -> {
-                System.out.println("RANDOM");
-                return proxy.getServer(fallbacks.get(new Random().nextInt(fallbacks.size())));
-            }
-            case "SPLIT" -> {
-                System.out.println("SPLIT");
-                AtomicReference<StreamlineServerSnapshot> target = new AtomicReference<>();
-
-                for (String fallback : fallbacks) {
-                    StreamlineServerSnapshot serverSnapshot = getServerSnapshot(fallback);
-
-                    if (target.get() == null) {
-                        if (serverSnapshot.getOnlineCount() != serverSnapshot.getMaxOnlineCount()) target.set(serverSnapshot);
-                    } else {
-                        if (target.get().getOnlineCount() > serverSnapshot.getOnlineCount() && serverSnapshot.getOnlineCount() != serverSnapshot.getMaxOnlineCount()) {
-                            target.set(serverSnapshot);
-                        }
-                    }
-
-                }
-
-                return proxy.getServer(target.get().getName());
-
-            }
-            case "BUNDLE" -> {
-                System.out.println("BUNDLE");
-                AtomicReference<StreamlineServerSnapshot> target = new AtomicReference<>();
-
-                for (String fallback : fallbacks) {
-                    StreamlineServerSnapshot serverSnapshot = getServerSnapshot(fallback);
-
-                    if (target.get() == null) {
-                        if (serverSnapshot.getOnlineCount() != serverSnapshot.getMaxOnlineCount()) target.set(serverSnapshot);
-                    } else {
-                        if (target.get().getOnlineCount() < serverSnapshot.getOnlineCount() && serverSnapshot.getOnlineCount() != serverSnapshot.getMaxOnlineCount())
-                            target.set(serverSnapshot);
-                    }
-
-                }
-
-                return proxy.getServer(target.get().getName());
-
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    public StreamlineServerSnapshot getServerSnapshot(String name) {
-        for (StreamlineServerSnapshot server : servers) {
-            if (server.getName().equals(name)) return server;
-        }
-        return null;
-    }
 
 }

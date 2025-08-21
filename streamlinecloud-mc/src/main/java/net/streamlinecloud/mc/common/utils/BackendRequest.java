@@ -42,8 +42,9 @@ public class BackendRequest {
      * This method is a shorthand for calling {@link #fetch(Consumer)} with an empty consumer.
      * This method is useful for simple requests where no further processing is needed, the response is not needed or to store the response data and use it in another method or class.
      */
-    public void fetch() {
+    public BackendRequest fetch() {
         fetch(backendRequest -> {});
+        return this;
     }
 
     /**

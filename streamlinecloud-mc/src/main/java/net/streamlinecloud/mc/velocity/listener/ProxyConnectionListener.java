@@ -15,6 +15,7 @@ import net.streamlinecloud.mc.VelocitySCP;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
+import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
 import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
 
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class ProxyConnectionListener {
                 }
             }
 
-            Optional<RegisteredServer> server = VelocitySCP.getInstance().searchFallback();
+            Optional<RegisteredServer> server = ProxyFallbackHandler.getInstance().searchFallback();
             if (server == null || server.isEmpty()) {
                 player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.noFallbacks") + " \n\n§8» " + LangManager.getInstance().get("sl.mc.prefix")));
                 return;
@@ -57,9 +58,9 @@ public class ProxyConnectionListener {
     public void onPlayerKicked(KickedFromServerEvent event) {
         Player player = event.getPlayer();
 
-        if (!VelocitySCP.getInstance().getFallbacks().contains(event.getServer().getServerInfo().getName())) {
+        if (!ProxyFallbackHandler.getInstance().getFallbacks().contains(event.getServer().getServerInfo().getName())) {
 
-            Optional<RegisteredServer> server = VelocitySCP.getInstance().searchFallback();
+            Optional<RegisteredServer> server = ProxyFallbackHandler.getInstance().searchFallback();
             if (server == null || server.isEmpty()) {
                 player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.noFallbacks") + " \n\n§8» " + LangManager.getInstance().get("sl.mc.prefix")));
                 return;
