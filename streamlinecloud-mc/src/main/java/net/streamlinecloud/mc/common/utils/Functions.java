@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Functions {
 
+    @Deprecated
     public static void post(Object o, String path) {
         String res = "";
         try {
@@ -51,6 +52,7 @@ public class Functions {
 
     }
 
+    @Deprecated
     public static String get(String path) {
         try {
             URL apiUrl = new URL("http://localhost:5378/streamline/" + path);
