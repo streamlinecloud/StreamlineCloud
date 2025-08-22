@@ -14,10 +14,9 @@ import net.streamlinecloud.main.utils.MainBuildConfig;
 import org.jline.reader.LineReader;
 import org.jline.reader.PrintAboveWriter;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -45,6 +44,26 @@ public class StreamlineCloud {
         if (Cache.i().getConfig().getAdvanced().isEnableRconSupport()) generatedPorts.add(port + 1);
 
         return port;
+    }
+
+    /**
+     * Checks if a port is available.
+     * @param port the port to check in the range of 1-65535
+     * @return true if the port is available, false otherwise.
+     */
+    public static boolean isPortAvailable(int port) {
+        if (port < 1 ||port > 65535) {
+            throw new IllegalArgumentException("Port must be in the range of 1-65535");
+        }
+        try (ServerSocket tcp = new ServerSocket(port); DatagramSocket udp = new DatagramSocket(port)) {
+            tcp.setReuseAddress(true);
+            udp.setReuseAddress(true);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+
+
     }
 
     public static void log(String msg) { logIntern(msg, new ReplacePaket[]{}); }

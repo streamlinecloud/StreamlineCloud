@@ -3,6 +3,7 @@ package net.streamlinecloud.main.core.server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.streamlinecloud.api.RestUtils.RconData;
+import net.streamlinecloud.api.exception.TooManyAttemptsException;
 import net.streamlinecloud.api.extension.event.server.*;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
@@ -91,7 +92,7 @@ public class CloudServer extends StreamlineServer {
 
         setStaticServer(getGroupDirect().isStaticGroup());
         setServerState(ServerState.STARTING);
-        setPort(StreamlineCloud.generateUniquePort());
+        setPort(getFreePort());
 
         if (!isStaticServer()) {
 
@@ -303,6 +304,20 @@ public class CloudServer extends StreamlineServer {
             return false;
         }
         return true;
+    }
+
+    private int getFreePort()   {
+
+        int attempts = 0;
+        int port = -1;
+
+        while (attempts < 10) {
+            port = StreamlineCloud.generateUniquePort();
+            if (StreamlineCloud.isPortAvailable(port)) return port;
+            attempts++;
+        }
+        StreamlineCloud.logError("Failed to find a free port after " + attempts + " attempts. Using port: " + port);
+        throw new TooManyAttemptsException(attempts, this.getClass());
     }
 
     public void addCommand(String command) {
