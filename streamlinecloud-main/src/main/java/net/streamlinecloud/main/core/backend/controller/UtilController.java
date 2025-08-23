@@ -64,7 +64,7 @@ public class UtilController {
             return;
         }
 
-        context.result(new Gson().toJson(Cache.i().config.getWhitelist()));
+        context.result(new Gson().toJson(Cache.i().config.getWhitelist().getWhitelist()));
         context.status(200);
     }
 
