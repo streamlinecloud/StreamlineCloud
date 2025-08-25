@@ -50,6 +50,8 @@ public class PlayerManager {
             out.writeUTF("Connect");
             out.writeUTF(server.getName());
         } catch (IOException e) {
+            player.getPlayer().sendMessage("Failed to connect you to " +  server.getName() + " - " + e.getMessage());
+            e.printStackTrace();
             //Bukkit.getLogger().info("FAILED TO SEND PLAYER " + player.getPlayer().getName() + "(" + player.getPlayer().getUniqueId() + ") send to Server... FOLLOWING ERROR OCCURRED: \n" + e.getMessage());
         }
         player.getPlayer().sendPluginMessage(PaperSCP.getInstance(), "BungeeCord", b.toByteArray());

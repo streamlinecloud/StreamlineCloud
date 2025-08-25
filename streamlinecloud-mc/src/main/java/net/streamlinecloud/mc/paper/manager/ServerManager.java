@@ -29,16 +29,22 @@ public class ServerManager extends AbstractServerManager {
 
     @Override
     public void moveAllPlayersAndStop(String target) {
-        for (Player player : PaperSCP.getInstance().getServer().getOnlinePlayers()) {
-            PlayerManager.getInstance().sendPlayer(PlayerManager.getInstance().getPlayer(player.getName()), ServerManager.getInstance().getServer(target));
-        }
+        Bukkit.getScheduler().runTaskLaterAsynchronously(PaperSCP.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                for (Player player : PaperSCP.getInstance().getServer().getOnlinePlayers()) {
+                    player.sendMessage("MOIVE" + ServerManager.getInstance().getServer(target).getName());
+                    PlayerManager.getInstance().sendPlayer(PlayerManager.getInstance().getPlayer(player.getName()), ServerManager.getInstance().getServer(target));
+                }
+            }
+        }, 200L);
 
         Bukkit.getScheduler().runTaskLaterAsynchronously(PaperSCP.getInstance(), new Runnable() {
             @Override
             public void run() {
                 PaperSCP.getInstance().getServer().shutdown();
             }
-        }, 200L);
+        }, 300L);
     }
 
     @Override

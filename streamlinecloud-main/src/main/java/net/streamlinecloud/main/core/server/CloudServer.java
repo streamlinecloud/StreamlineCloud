@@ -382,7 +382,8 @@ public class CloudServer extends StreamlineServer {
         setRestarting(true);
 
         CloudServerManager serverManager = CloudServerManager.getInstance();
-        CloudServer newServer = new CloudServer(getName(), getRuntime());
+        CloudServer newServer = new CloudServer(getGroup() + "-" + ServerIdGenerator.generateId(), getRuntime());
+        newServer.setGroup(getGroup());
         serverManager.restartingServers.put(newServer, this);
         serverManager.getServersWaitingForStart().add(newServer);
 
