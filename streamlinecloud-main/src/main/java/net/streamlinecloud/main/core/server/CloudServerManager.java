@@ -67,7 +67,6 @@ public class CloudServerManager {
     }
 
 
-
     public void startNextServer() {
         if (!getServersWaitingForStart().isEmpty()) {
             try {
@@ -86,7 +85,7 @@ public class CloudServerManager {
     }
 
     public void fallbackControlTask() {
-        MainConfig.FallbackConfig config =  Cache.i().getConfig().getFallback();
+        MainConfig.FallbackConfig config = Cache.i().getConfig().getFallback();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         Runnable runnable = () -> {
@@ -147,6 +146,7 @@ public class CloudServerManager {
 
     /**
      * This function starts a new server of a group if needed to reach the minOnlineCount of the group
+     *
      * @param group The target group
      */
     private void startServersIfNeeded(CloudGroup group) {
@@ -177,12 +177,25 @@ public class CloudServerManager {
     }
 
     public String startServerByGroup(CloudGroup cloudGroup, List<String> templates) {
-        CloudServer server = new CloudServer(ServerIdGenerator.generateId() + "-" + cloudGroup.getName(), cloudGroup.getRuntime());
+        CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime());
         server.setGroup(cloudGroup.getName());
         server.setCustomTemplates(templates);
         serverRegister.put(server.getName(), server);
         getServersWaitingForStart().add(server);
         return server.getUuid();
+    }
+
+    public int calculateServerNumber(CloudGroup g) {
+
+        ArrayList<Integer> usedNumbers = new ArrayList<>();
+        for (CloudServer server : CloudGroupManager.getInstance().getGroupOnlineServers(g)) {
+            usedNumbers.add(Integer.valueOf(server.getName().split("-")[1]));
+        }
+
+        for (int i = 1; true; i++) {
+            if (!usedNumbers.contains(i)) return i;
+        }
+
     }
 
 }

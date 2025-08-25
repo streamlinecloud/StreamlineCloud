@@ -51,7 +51,7 @@ public class CloudServer extends StreamlineServer {
 
     public CloudServer(String name, ServerRuntime runtime) {
         setRuntime(runtime);
-        setUuid(String.valueOf(UUID.randomUUID()));
+        setUuid(String.valueOf(UUID.randomUUID()).split("-")[0]);
         setName(name);
 
         CloudServerManager.getInstance().getServerRegister().put(getName(), this);
@@ -64,10 +64,6 @@ public class CloudServer extends StreamlineServer {
 
         CloudServerManager.getInstance().getRunningServers().add(this);
         setServerState(ServerState.PREPARING);
-    }
-
-    public String getShortUuid() {
-        return getUuid().split("-")[0];
     }
 
     public void start(File javaExec) throws IOException {
@@ -97,14 +93,14 @@ public class CloudServer extends StreamlineServer {
         if (!isStaticServer()) {
 
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
-                    new ReplacePaket("%1", getName() + "-" + getShortUuid()),
+                    new ReplacePaket("%1", getName() + "-" + getUuid()),
                     new ReplacePaket("%2", "temp/" + getName())
             });
         } else {
 
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
                     new ReplacePaket("%1", getName()),
-                    new ReplacePaket("%2", "staticservers/" + getShortUuid())
+                    new ReplacePaket("%2", "staticservers/" + getUuid())
             });
         }
 
@@ -132,7 +128,7 @@ public class CloudServer extends StreamlineServer {
 
         if (serverStartEvent.isCancelled()) return;
 
-        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid());
+        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
         Utils.runMkdir(file.mkdirs());
 
         serverFolder = file;
@@ -294,8 +290,8 @@ public class CloudServer extends StreamlineServer {
     public boolean deployPlugin() {
         String pluginFileName = "streamlinecloud_MC-alpha-1.0.0";
         try {
-            new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins").mkdirs();
-            Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
+            new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins").mkdirs();
+            Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
             return false;
@@ -374,7 +370,6 @@ public class CloudServer extends StreamlineServer {
         }
 
         CloudServerManager.getInstance().getRunningServers().remove(this);
-
         StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
@@ -382,7 +377,7 @@ public class CloudServer extends StreamlineServer {
         setRestarting(true);
 
         CloudServerManager serverManager = CloudServerManager.getInstance();
-        CloudServer newServer = new CloudServer(getGroup() + "-" + ServerIdGenerator.generateId(), getRuntime());
+        CloudServer newServer = new CloudServer(getGroup() + "-" + CloudServerManager.getInstance().calculateServerNumber(getGroupDirect()), getRuntime());
         newServer.setGroup(getGroup());
         serverManager.restartingServers.put(newServer, this);
         serverManager.getServersWaitingForStart().add(newServer);
