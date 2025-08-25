@@ -188,6 +188,18 @@ public class GroupsCommand extends CloudCommand {
 
                                 }
                             }
+
+                            case "priority" -> {
+                                String prioritySub = args[4];
+                                int priority = 0;
+                                try {
+                                    priority = Integer.parseInt(prioritySub);
+                                } catch (NumberFormatException e) {
+                                    StreamlineCloud.logError("sl.command.groups.priority.nan");
+                                }
+                                group.setPriority(priority);
+                                StreamlineCloud.log("sl.command.groups.priority.success");
+                            }
                         }
 
                         try {

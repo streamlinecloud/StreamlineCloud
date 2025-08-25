@@ -9,10 +9,7 @@ import net.streamlinecloud.main.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -144,20 +141,19 @@ public class CloudServerManager {
 
     private void startServersIfNeeded(CloudGroup g) {
 
-        List<CloudServer> alLServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(g));
-        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(g)) alLServers.add(s);
+        List<CloudServer> allServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(g));
+        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(g)) allServers.add(s);
 
-        if (alLServers.size() < g.getMinOnlineCount()) {
+        if (allServers.size() < g.getMinOnlineCount()) {
 
             startServerByGroup(g);
         }
     }
 
     public void startServersIfNeeded() {
-
-        for (CloudGroup g : Cache.i().getActiveGroups()) {
-
-            List<CloudServer> servers = CloudGroupManager.getInstance().getGroupOnlineServers(g);
+        PriorityQueue<CloudServer> activeGroups = new PriorityQueue<>(Cache.i().getServersWaitingForStart());
+        while (activeGroups.isEmpty()) {
+            CloudGroup g = Cache.i().getActiveGroups().poll();
             startServersIfNeeded(g);
         }
     }

@@ -16,9 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Getter @Setter
 public class Cache {
@@ -32,7 +30,9 @@ public class Cache {
     public List<String> arguments = new ArrayList<>();
     public List<String> dataCache = new ArrayList<>();
     public final List<CloudServer> runningServers = new ArrayList<>();
-    public final List<CloudGroup> activeGroups = new ArrayList<>();
+    public final PriorityQueue<CloudGroup> activeGroups = new PriorityQueue<>(
+            Comparator.comparingInt(CloudGroup::getPriority).reversed()
+    );
     public final List<CloudServer> serversWaitingForStart = new ArrayList<>();
     public List<ConsoleQuestion> consoleInputs = new ArrayList<>();
     public CloudGroup defaultGroup;

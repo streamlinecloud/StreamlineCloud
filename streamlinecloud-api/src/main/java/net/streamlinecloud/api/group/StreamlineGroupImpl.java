@@ -43,4 +43,9 @@ public interface StreamlineGroupImpl {
      * @return The type of the server (SERVER / PROXY / ETC)
      */
     ServerRuntime getRuntime();
+
+    /**
+     * @return The priority as int. lesser important (low int) -> higher important (high int)
+     */
+    int getPriority();
 }
