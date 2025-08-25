@@ -177,25 +177,12 @@ public class CloudServerManager {
     }
 
     public String startServerByGroup(CloudGroup cloudGroup, List<String> templates) {
-        CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime());
+        CloudServer server = new CloudServer(ServerIdGenerator.generateId() + "-" + cloudGroup.getName(), cloudGroup.getRuntime());
         server.setGroup(cloudGroup.getName());
         server.setCustomTemplates(templates);
         serverRegister.put(server.getName(), server);
         getServersWaitingForStart().add(server);
         return server.getUuid();
-    }
-
-    public int calculateServerNumber(CloudGroup g) {
-
-        ArrayList<Integer> usedNumbers = new ArrayList<>();
-        for (CloudServer server : CloudGroupManager.getInstance().getGroupOnlineServers(g)) {
-            usedNumbers.add(Integer.valueOf(server.getName().split("-")[1]));
-        }
-
-        for (int i = 1; true ; i++) {
-            if (!usedNumbers.contains(i)) return i;
-        }
-
     }
 
 }

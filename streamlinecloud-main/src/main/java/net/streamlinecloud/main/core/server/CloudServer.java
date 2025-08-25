@@ -50,13 +50,13 @@ public class CloudServer extends StreamlineServer {
     boolean isRestarting = false;
 
     public CloudServer(String name, ServerRuntime runtime) {
-        setName(name);
         setRuntime(runtime);
         setUuid(String.valueOf(UUID.randomUUID()));
+        setName(name);
 
         CloudServerManager.getInstance().getServerRegister().put(getName(), this);
 
-        ServerPreStartEvent serverPreStartEvent = eventManager.callEvent(new ServerPreStartEvent(name, runtime, getUuid(),ServerState.PREPARING));
+        ServerPreStartEvent serverPreStartEvent = eventManager.callEvent(new ServerPreStartEvent(getName(), runtime, getUuid(),ServerState.PREPARING));
 
         if (serverPreStartEvent.isCancelled()) {
             return;
@@ -324,8 +324,8 @@ public class CloudServer extends StreamlineServer {
 
         SoftwareManager.getInstance().copyCache(getGroupDirect().getSoftwareName(), this);
 
-        if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid())});
-        else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid()), new ReplacePaket("%2", lb)});
+        if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", getName())});
+        else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", getName()), new ReplacePaket("%2", lb)});
     }
 
     private int getFreePort()   {
@@ -375,7 +375,7 @@ public class CloudServer extends StreamlineServer {
 
         CloudServerManager.getInstance().getRunningServers().remove(this);
 
-        StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid())});
+        StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
     public void restart() {
