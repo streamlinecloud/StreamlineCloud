@@ -6,13 +6,11 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -128,6 +126,37 @@ public class CloudServerManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns a list of {@link CloudServer CloudServers} by the given name. <br>
+     * This function support wildcard and is intended to use for wildcards.<br>
+     * Normally it returns only one CloudServer if not used with a wildcard.<br>
+     * Example: <code>lobby-1 or proxy-1</code> would return a list with only one server.<br>
+     * Example: <code>lobby-* or proxy-*</code> would return a list with all servers in a specific group or with a specific naming pattern.<br>
+     * You cannot use <code>*</code> alone. This is intended and disabled for security reasons.<br>
+     * @param name name of the server or wildcard.
+     * @return list of a CloudServer if found otherwise null
+     */
+    public @Nullable List<CloudServer> getServersByName(String name) {
+
+        if (name.endsWith("-*")) {
+
+            List<CloudServer> servers = new ArrayList<>();
+            for (CloudServer runningServer : Cache.i().getRunningServers()) {
+                if (runningServer.getName().contains(name.substring(0, name.length() - 1))) servers.add(runningServer);
+            }
+            if (servers.isEmpty()) return null;
+            return servers;
+
+        } else {
+
+            CloudServer server = getServerByName(name);
+            if (server == null) return null;
+            return Collections.singletonList(server);
+
+        }
+
     }
 
     public CloudServer getServerByUuid(String uuid) {
