@@ -20,7 +20,10 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class CloudServerManager {
 
-    HashMap<CloudServer, CloudServer> overflowServers = new HashMap<>();
+    List<CloudServer> runningServers = new ArrayList<>();
+    List<CloudServer> serversWaitingForStart = new ArrayList<>();
+    HashMap<CloudServer, CloudServer> restartingServers = new HashMap<>();
+    HashMap<String, CloudServer> serverRegister = new HashMap<>();
 
     @Getter
     private static CloudServerManager instance;
@@ -44,35 +47,14 @@ public class CloudServerManager {
             try {
 
                 startServersIfNeeded();
+                startNextServer();
 
-                if (!Cache.i().getServersWaitingForStart().isEmpty()) {
-                    try {
-                        CloudServer server = Cache.i().getServersWaitingForStart().getFirst();
+                if (getServersWaitingForStart().isEmpty() && firstStartup) firstStartup = false;
 
-                        for (String s : Cache.i().getDataCache()) {
-                            if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
-                        }
-
-                        server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
-                        Cache.i().getServersWaitingForStart().remove(server);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if (Cache.i().getServersWaitingForStart().isEmpty()) {
-
-                    if (firstStartup) {
-
-                        firstStartup = false;
-                    }
-
-                }
-
-                for (CloudServer server : new ArrayList<>(Cache.i().getRunningServers())) {
+                for (CloudServer server : new ArrayList<>(getRunningServers())) {
 
                     if (server.getStopTime() == -1) continue;
-                    if (System.currentTimeMillis() >= server.getStopTime() && !server.isInOverflowProcess()) server.overflow();
+                    if (System.currentTimeMillis() >= server.getStopTime() && !server.isRestarting()) server.restart();
 
                 }
 
@@ -82,6 +64,25 @@ public class CloudServerManager {
         };
 
         scheduler.scheduleAtFixedRate(runnable, 0, 3, TimeUnit.SECONDS);
+    }
+
+
+
+    public void startNextServer() {
+        if (!getServersWaitingForStart().isEmpty()) {
+            try {
+                CloudServer server = getServersWaitingForStart().getFirst();
+
+                for (String s : Cache.i().getDataCache()) {
+                    if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
+                }
+
+                server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
+                getServersWaitingForStart().remove(server);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void fallbackControlTask() {
@@ -118,21 +119,23 @@ public class CloudServerManager {
         scheduler.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
     }
 
+    /**
+     * @param name The name of the wanted server (without the uuid) (like just lobby-1)
+     * @return Returns the prioritized server with this name. Could return different servers if the server gets replaced
+     */
     public CloudServer getServerByName(String name) {
 
-        for (CloudServer ser : Cache.i().getRunningServers()) {
+        return serverRegister.getOrDefault(name, null);
 
-            if (ser.getName().equals(name)) {
-
-                return ser;
-            }
-        }
-        return null;
     }
 
+    /**
+     * @param uuid The uuid of the wanted server
+     * @return Returns the unique server with the same uuid
+     */
     public CloudServer getServerByUuid(String uuid) {
 
-        for (CloudServer ser : Cache.i().getRunningServers()) {
+        for (CloudServer ser : getRunningServers()) {
 
             if (ser.getUuid().equals(uuid)) {
 
@@ -142,17 +145,24 @@ public class CloudServerManager {
         return null;
     }
 
-    private void startServersIfNeeded(CloudGroup g) {
+    /**
+     * This function starts a new server of a group if needed to reach the minOnlineCount of the group
+     * @param group The target group
+     */
+    private void startServersIfNeeded(CloudGroup group) {
 
-        List<CloudServer> alLServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(g));
-        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(g)) alLServers.add(s);
+        List<CloudServer> alLServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(group));
+        for (CloudServer s : getServersWaitingForStart()) if (s.getGroupDirect().equals(group)) alLServers.add(s);
 
-        if (alLServers.size() < g.getMinOnlineCount()) {
+        if (alLServers.size() < group.getMinOnlineCount()) {
 
-            startServerByGroup(g);
+            startServerByGroup(group);
         }
     }
 
+    /**
+     * This function executes {@link #startServersIfNeeded(CloudGroup)}) for every active group
+     */
     public void startServersIfNeeded() {
 
         for (CloudGroup g : Cache.i().getActiveGroups()) {
@@ -170,7 +180,8 @@ public class CloudServerManager {
         CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime());
         server.setGroup(cloudGroup.getName());
         server.setCustomTemplates(templates);
-        Cache.i().getServersWaitingForStart().add(server);
+        serverRegister.put(server.getName(), server);
+        getServersWaitingForStart().add(server);
         return server.getUuid();
     }
 

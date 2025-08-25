@@ -126,7 +126,7 @@ public class ServersCommand extends CloudCommand {
             case "list":
 
                 StreamlineCloud.log("Running servers:");
-                for (CloudServer ser : Cache.i().getRunningServers()) {
+                for (CloudServer ser : CloudServerManager.getInstance().getRunningServers()) {
                     StreamlineCloud.log(ser.getName() + "-" + ser.getUuid() + " | " + ser.getServerState() + " - " + ser.getOnlinePlayers().size() + "/" + ser.getMaxOnlineCount() + " | PORT: " + ser.getPort() + " | GROUP: " + ser.getGroupDirect().getName());
                 }
 

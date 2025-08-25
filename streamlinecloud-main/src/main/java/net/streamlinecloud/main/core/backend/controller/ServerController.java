@@ -33,7 +33,7 @@ public class ServerController {
     public void getAllSnapshots(@NotNull Context context) {
         AtomicReference<List<StreamlineServerSnapshot>> snapshots = new AtomicReference<>(new ArrayList<>());
 
-        Cache.i().getRunningServers().forEach(server -> snapshots.get().add(new StreamlineServerSnapshot(server.getName(), server.getUuid(), server.getPort(), server.getOnlinePlayers().size(), server.getMaxOnlineCount())));
+        CloudServerManager.getInstance().getRunningServers().forEach(server -> snapshots.get().add(new StreamlineServerSnapshot(server.getName(), server.getUuid(), server.getPort(), server.getOnlinePlayers().size(), server.getMaxOnlineCount())));
 
         context.result(new Gson().toJson(snapshots.get()));
         context.status(200);
@@ -49,7 +49,7 @@ public class ServerController {
     }
 
     public void serverCount(@NotNull Context context) {
-        context.result(String.valueOf(Cache.i().getRunningServers().size()));
+        context.result(String.valueOf(CloudServerManager.getInstance().getRunningServers().size()));
         context.status(200);
     }
 
@@ -97,24 +97,7 @@ public class ServerController {
             return;
         }
 
-        if (cs.getServerState().equals(ServerState.STARTING)) {
-
-            String lb = null;
-
-            for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) {
-                if (loadBalancer.getGroup().equals(cs.getGroup())) {
-                    loadBalancer.registerServer(cs);
-                    lb = loadBalancer.getName();
-                }
-            }
-
-            SoftwareManager.getInstance().copyCache(cs.getGroupDirect().getSoftwareName(), cs);
-
-            if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid())});
-            else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", cs.getName() + "-" + cs.getShortUuid()), new ReplacePaket("%2", lb)});
-
-            cs.checkOverflow();
-        }
+        if (cs.getServerState().equals(ServerState.STARTING)) cs.setOnline();
 
         cs.setOnlinePlayers(s.getOnlinePlayers());
         cs.setServerState(s.getServerState());
@@ -136,7 +119,7 @@ public class ServerController {
             return;
         }
 
-        server.overflow();
+        server.restart();
 
         context.result("success");
         context.status(200);

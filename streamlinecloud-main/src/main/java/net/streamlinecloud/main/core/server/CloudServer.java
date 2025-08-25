@@ -27,8 +27,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -49,12 +47,14 @@ public class CloudServer extends StreamlineServer {
 
     boolean output = false;
     boolean staticServer = false;
-    boolean inOverflowProcess = false;
+    boolean isRestarting = false;
 
     public CloudServer(String name, ServerRuntime runtime) {
         setName(name);
         setRuntime(runtime);
         setUuid(String.valueOf(UUID.randomUUID()));
+
+        CloudServerManager.getInstance().getServerRegister().put(getName(), this);
 
         ServerPreStartEvent serverPreStartEvent = eventManager.callEvent(new ServerPreStartEvent(name, runtime, getUuid(),ServerState.PREPARING));
 
@@ -62,7 +62,7 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
-        Cache.i().getRunningServers().add(this);
+        CloudServerManager.getInstance().getRunningServers().add(this);
         setServerState(ServerState.PREPARING);
     }
 
@@ -156,7 +156,7 @@ public class CloudServer extends StreamlineServer {
         t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
         for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
         t.add(Cache.i().homeFile.getPath() + "/data/software/" + SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()).getFolder());
-        copyFolder(t, file.getPath());
+        Utils.copyFolder(t, file.getPath());
 
         File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
         Properties properties = new Properties();
@@ -306,6 +306,28 @@ public class CloudServer extends StreamlineServer {
         return true;
     }
 
+    public void setOnline() {
+
+        if (CloudServerManager.getInstance().getRestartingServers().containsKey(this)) {
+            CloudServer oldServer = CloudServerManager.getInstance().getRestartingServers().get(this);
+            Cache.i().getServerSocket().sendTo(oldServer, "move:" + getName());
+        }
+
+        String lb = null;
+
+        for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) {
+            if (loadBalancer.getGroup().equals(getGroup())) {
+                loadBalancer.registerServer(this);
+                lb = loadBalancer.getName();
+            }
+        }
+
+        SoftwareManager.getInstance().copyCache(getGroupDirect().getSoftwareName(), this);
+
+        if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid())});
+        else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid()), new ReplacePaket("%2", lb)});
+    }
+
     private int getFreePort()   {
 
         int attempts = 0;
@@ -351,31 +373,20 @@ public class CloudServer extends StreamlineServer {
             loadBalancer.getServers().stream().filter(server -> server.getUuid().equals(getUuid())).findFirst().ifPresent(server -> loadBalancer.getServers().remove(server));
         }
 
-        Cache.i().getRunningServers().remove(this);
+        CloudServerManager.getInstance().getRunningServers().remove(this);
 
         StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid())});
     }
 
-    public void overflow() {
-        inOverflowProcess = true;
+    public void restart() {
+        setRestarting(true);
 
         CloudServerManager serverManager = CloudServerManager.getInstance();
-        CloudServer newServer = serverManager.getServerByUuid(serverManager.startServerByGroup(getGroupDirect()));
+        CloudServer newServer = new CloudServer(getName(), getRuntime());
+        serverManager.restartingServers.put(newServer, this);
+        serverManager.getServersWaitingForStart().add(newServer);
 
-        serverManager.getOverflowServers().put(newServer, this);
-
-        StreamlineCloud.log("Starting overflow process: " + getName() + "-" + getShortUuid() + " -> " + newServer.getName() + "-" + newServer.getShortUuid());
-    }
-
-    public void checkOverflow() {
-        CloudServerManager serverManager = CloudServerManager.getInstance();
-        serverManager.getOverflowServers().keySet().forEach(server -> {
-           if (server.getUuid().equals(getUuid())) {
-
-               Cache.i().getServerSocket().sendTo(serverManager.getOverflowServers().get(server), "move:" + server.getName());
-
-           }
-        });
+        StreamlineCloud.log("Restarting " + getName());
     }
 
     public void kill() {
@@ -438,46 +449,6 @@ public class CloudServer extends StreamlineServer {
             logs.removeFirst();
         }
         logs.add(str);
-
-    }
-
-    private void copyFolder(List<String> folderPaths, String targetFolder) {
-
-        Set<String> copiedFiles = new HashSet<>();
-
-        for (String folderPath : folderPaths) {
-            try {
-                Path source = Paths.get(folderPath);
-                Path destination = Paths.get(targetFolder);
-
-                Files.walk(source)
-                        .forEach(sourcePath -> {
-                            Path relativePath = source.relativize(sourcePath);
-                            Path destinationPath = destination.resolve(relativePath);
-
-                            if (Files.isDirectory(sourcePath)) {
-                                try {
-                                    Files.createDirectories(destinationPath);
-                                } catch (IOException e) {
-                                    StreamlineCloud.logError(e.getMessage());
-                                }
-                            } else {
-                                if (!copiedFiles.contains(destinationPath.toString())) {
-                                    try {
-                                        Files.createDirectories(destinationPath.getParent());
-                                        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                                        copiedFiles.add(destinationPath.toString());
-                                    } catch (IOException e) {
-                                        StreamlineCloud.logError(e.getMessage());
-                                    }
-                                }
-                            }
-                        });
-            } catch (IOException e) {
-                StreamlineCloud.logError(e.getMessage());
-            }
-
-        }
 
     }
 

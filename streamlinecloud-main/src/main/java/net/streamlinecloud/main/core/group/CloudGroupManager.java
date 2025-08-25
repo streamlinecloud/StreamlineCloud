@@ -2,6 +2,7 @@ package net.streamlinecloud.main.core.group;
 
 import lombok.Getter;
 import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.utils.Cache;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class CloudGroupManager {
 
     public List<CloudServer> getGroupOnlineServers(CloudGroup g) {
         List<CloudServer> onlineServers = new ArrayList<>();
-        for (CloudServer s : Cache.i().getRunningServers()) {
+        for (CloudServer s : CloudServerManager.getInstance().getRunningServers()) {
             if (s.getGroup().equals(g.getName())) {
                 onlineServers.add(s);
             }
