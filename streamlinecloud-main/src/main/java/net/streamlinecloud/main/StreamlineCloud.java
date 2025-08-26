@@ -220,12 +220,6 @@ public class StreamlineCloud {
     public static void shutDown() {
         log("sl.shutdown.shuttingDown");
 
-        Cache.i().getPluginManager().executeStop();
-
-        if (Cache.i().getWebSocketClient() != null) Cache.i().getWebSocketClient().getClient().close();
-
-        BackEndMain.stop();
-
         List<CloudServer> servers = new ArrayList<>(CloudServerManager.getInstance().getRunningServers());
 
         for (CloudServer server : servers) {
@@ -234,6 +228,12 @@ public class StreamlineCloud {
                 else server.kill();
             }
         }
+
+        Cache.i().getPluginManager().executeStop();
+
+        if (Cache.i().getWebSocketClient() != null) Cache.i().getWebSocketClient().getClient().close();
+
+        BackEndMain.stop();
 
         if (Cache.i().isFirstLaunch()) {
             logSingle("");
