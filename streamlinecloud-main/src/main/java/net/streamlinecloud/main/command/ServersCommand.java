@@ -42,17 +42,6 @@ public class ServersCommand extends CloudCommand {
                         String serverSub = args[3];
 
                         switch (serverSub) {
-                            case "screen":
-
-                                if (server.isOutput()) {
-                                    server.disableScreen();
-                                } else {
-                                    if (Cache.i().getCurrentScreenServerName() != null)
-                                        CloudServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
-                                    server.enableScreen();
-                                }
-
-                                break;
                             case "stop":
                                 server.stop();
                                 break;
