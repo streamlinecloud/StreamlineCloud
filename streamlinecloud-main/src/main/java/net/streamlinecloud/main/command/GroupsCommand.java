@@ -132,9 +132,13 @@ public class GroupsCommand extends CloudCommand {
 
                                 String setSub = args[4];
 
-                                if (setSub.equalsIgnoreCase("minOnlineCount") || setSub.equals("moc")) {
-
-                                    if (args.length == 6) {
+                                switch (setSub) {
+                                    case "minOnlineCount":
+                                    case "moc":
+                                        if (args.length != 6) {
+                                            StreamlineCloud.log("Enter a number");
+                                            return;
+                                        }
 
                                         try {
                                             group.setMinOnlineCount(Integer.parseInt(args[5]));
@@ -142,15 +146,35 @@ public class GroupsCommand extends CloudCommand {
                                             StreamlineCloud.log("Please enter a valid number");
                                             return;
                                         }
+                                        break;
 
-                                    } else {
+                                    case "software":
+                                        if (args.length != 6) {
+                                            StreamlineCloud.log("Please enter a software");
+                                            return;
+                                        }
 
-                                        StreamlineCloud.log("Enter a number");
-                                        return;
+                                        group.setSoftwareName(args[5]);
+                                        break;
 
-                                    }
+                                    case "autoRestartMinutes":
+                                    case "arm":
+                                        if (args.length != 6) {
+                                            StreamlineCloud.log("Enter a number");
+                                            return;
+                                        }
+
+                                        try {
+                                            group.setAutoRestartMinutes(Integer.parseInt(args[5]));
+                                        } catch (NumberFormatException e) {
+                                            StreamlineCloud.log("Please enter a valid number");
+                                            return;
+                                        }
+
+                                        break;
 
                                 }
+
                             }
                             case "add" -> {
 
