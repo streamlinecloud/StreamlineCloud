@@ -39,7 +39,7 @@ public class PlayerManager {
             return;
         }
 
-        if (server.getName().equals(StaticCache.serverData.getName())) {
+        if ((server.getName() + "-" + server.getUuid()).equals(StaticCache.serverData.getName() + "-" + StaticCache.serverData.getUuid())) {
             player.getPlayer().sendMessage("§cAlready connected!");
             return;
         }
@@ -48,7 +48,7 @@ public class PlayerManager {
         DataOutputStream out = new DataOutputStream(b);
         try {
             out.writeUTF("Connect");
-            out.writeUTF(server.getName());
+            out.writeUTF(server.getName() + "-" + server.getUuid());
         } catch (IOException e) {
             player.getPlayer().sendMessage("Failed to connect you to " +  server.getName() + " - " + e.getMessage());
             e.printStackTrace();

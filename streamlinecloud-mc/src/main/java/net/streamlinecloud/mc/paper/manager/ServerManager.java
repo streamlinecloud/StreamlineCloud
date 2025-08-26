@@ -33,7 +33,7 @@ public class ServerManager extends AbstractServerManager {
             @Override
             public void run() {
                 for (Player player : PaperSCP.getInstance().getServer().getOnlinePlayers()) {
-                    PlayerManager.getInstance().sendPlayer(PlayerManager.getInstance().getPlayer(player.getName()), ServerManager.getInstance().getServer(target));
+                    PlayerManager.getInstance().sendPlayer(PlayerManager.getInstance().getPlayer(player.getName()), ServerManager.getInstance().getServerByUuid(target));
                 }
             }
         }, 200L);

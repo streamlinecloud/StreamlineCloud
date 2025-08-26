@@ -304,11 +304,6 @@ public class CloudServer extends StreamlineServer {
 
     public void setOnline() {
 
-        if (CloudServerManager.getInstance().getRestartingServers().containsKey(this)) {
-            CloudServer oldServer = CloudServerManager.getInstance().getRestartingServers().get(this);
-            Cache.i().getServerSocket().sendTo(oldServer, "move:" + getName());
-        }
-
         String lb = null;
 
         for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) {
@@ -316,6 +311,17 @@ public class CloudServer extends StreamlineServer {
                 loadBalancer.registerServer(this);
                 lb = loadBalancer.getName();
             }
+        }
+
+        if (CloudServerManager.getInstance().getRestartingServers().containsKey(this)) {
+            CloudServer oldServer = CloudServerManager.getInstance().getRestartingServers().get(this);
+            Cache.i().getServerSocket().sendTo(oldServer, "move:" + getUuid());
+
+            CloudServerManager.getInstance().getRunningServers().remove(oldServer);
+            CloudServerManager.getInstance().getRunningServers().add(this);
+
+            StreamlineCloud.log(getName() + " restarted");
+            return;
         }
 
         SoftwareManager.getInstance().copyCache(getGroupDirect().getSoftwareName(), this);
@@ -374,13 +380,15 @@ public class CloudServer extends StreamlineServer {
     }
 
     public void restart() {
+        if (isRestarting) return;
         setRestarting(true);
 
         CloudServerManager serverManager = CloudServerManager.getInstance();
-        CloudServer newServer = new CloudServer(getGroup() + "-" + CloudServerManager.getInstance().calculateServerNumber(getGroupDirect()), getRuntime());
+        CloudServer newServer = new CloudServer(getName(), getRuntime());
         newServer.setGroup(getGroup());
         serverManager.restartingServers.put(newServer, this);
         serverManager.getServersWaitingForStart().add(newServer);
+        serverManager.getRunningServers().remove(newServer);
 
         StreamlineCloud.log("Restarting " + getName());
     }

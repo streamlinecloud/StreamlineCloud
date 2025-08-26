@@ -135,12 +135,17 @@ public class CloudServerManager {
     public CloudServer getServerByUuid(String uuid) {
 
         for (CloudServer ser : getRunningServers()) {
-
             if (ser.getUuid().equals(uuid)) {
-
                 return ser;
             }
         }
+
+        for (CloudServer ser : getRestartingServers().keySet()) {
+            if (ser.getUuid().equals(uuid)) {
+                return ser;
+            }
+        }
+
         return null;
     }
 
