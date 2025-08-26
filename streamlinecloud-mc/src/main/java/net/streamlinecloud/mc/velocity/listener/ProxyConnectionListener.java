@@ -99,7 +99,7 @@ public class ProxyConnectionListener {
                 ping.onlinePlayers(0);
                 ping.maximumPlayers(-1);
             }
-            ping.description(MiniMessage.miniMessage().deserialize("<bold><gradient:#ff4040:#d47979>Powered by StreamlineCloud</gradient></bold>\n<#4dffed>Visit streamlinecloud.net"));
+            ping.description(MiniMessage.miniMessage().deserialize(LangManager.getInstance().get("sl.mc.motd")));
         } finally {
             e.setPing(ping.build());
         }

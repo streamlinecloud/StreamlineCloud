@@ -45,6 +45,7 @@
   "sl.command.multiRoot.generate": "",
 
   "sl.mc.prefix":  "§c§lStreamline§b§lCloud",
+  "sl.mc.motd": "<bold><gradient:#ff4040:#d47979>Powered by StreamlineCloud</gradient></bold>\n<#4dffed>Visit streamlinecloud.net",
   "sl.mc.notAllowed": "§cYou are not allowed to use this command",
   "sl.mc.noFallbacks":  "§cCurrently there are no fallback servers available",
   "sl.mc.notWhitelisted":  "§cYou are not whitelisted",

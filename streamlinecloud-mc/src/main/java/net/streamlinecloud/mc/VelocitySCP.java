@@ -62,6 +62,7 @@ public class VelocitySCP {
 
         LangManager.getInstance().fetch(new String[]{
                 "sl.mc.prefix",
+                "sl.mc.motd",
                 "sl.mc.notAllowed",
                 "sl.mc.noFallbacks",
                 "sl.mc.notWhitelisted"});
