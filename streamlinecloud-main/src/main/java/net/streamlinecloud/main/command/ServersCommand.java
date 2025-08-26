@@ -122,9 +122,9 @@ public class ServersCommand extends CloudCommand {
             StreamlineCloud.log("- servers start <groupName/name>");
             StreamlineCloud.log("Manage:");
             StreamlineCloud.log("- servers list");
-            StreamlineCloud.log("- servers server <name> stop");
-            StreamlineCloud.log("- servers server <name> kill");
-            StreamlineCloud.log("- servers server <name> restart");
+            StreamlineCloud.log("- servers <name> stop");
+            StreamlineCloud.log("- servers <name> kill");
+            StreamlineCloud.log("- servers <name> restart");
         }
     }
 

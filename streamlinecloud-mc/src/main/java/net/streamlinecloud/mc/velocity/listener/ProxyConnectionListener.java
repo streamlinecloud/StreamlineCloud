@@ -11,8 +11,8 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.streamlinecloud.mc.VelocitySCP;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
+import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
@@ -21,6 +21,9 @@ import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
 import java.util.Optional;
 
 public class ProxyConnectionListener {
+
+    String onlineCount;
+    long lastOnlineCountUpdate = 0;
 
     @Subscribe
     public void onPlayerChooseInitialServer(PlayerChooseInitialServerEvent event) {
@@ -80,14 +83,18 @@ public class ProxyConnectionListener {
 
     private void format(ProxyPingEvent e) {
 
+        if (lastOnlineCountUpdate + 5000 <= System.currentTimeMillis()) {
+            onlineCount = new BackendRequest("network-count").fetch().getResponse();
+            lastOnlineCountUpdate = System.currentTimeMillis();
+        }
+
         final ServerPing.Builder ping = e.getPing().asBuilder();
-        String count = Functions.get("network-count");
 
         try {
-            assert count != null;
+            assert onlineCount != null;
             try {
-                ping.onlinePlayers(Integer.parseInt(count.split("-")[0]));
-                ping.maximumPlayers(Integer.parseInt(count.split("-")[1]));
+                ping.onlinePlayers(Integer.parseInt(onlineCount.split("-")[0]));
+                ping.maximumPlayers(Integer.parseInt(onlineCount.split("-")[1]));
             } catch (NumberFormatException ex) {
                 ping.onlinePlayers(0);
                 ping.maximumPlayers(-1);
