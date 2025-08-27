@@ -11,6 +11,7 @@ import net.streamlinecloud.main.utils.Cache;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class ServersCommand extends CloudCommand {
 
@@ -18,6 +19,11 @@ public class ServersCommand extends CloudCommand {
         setName("servers");
         setAliases(new String[]{"s"});
         setDescription("Manage current online servers");
+    }
+
+    public void sendHelp() {
+        StreamlineCloud.log("Unknown Subcommand");
+        StreamlineCloud.log("-> servers help");
     }
 
     @Override
@@ -56,33 +62,37 @@ public class ServersCommand extends CloudCommand {
                     StreamlineCloud.log("sl.command.server.start.enterName");
                 }
                 break;
+
             case "list":
 
                 StreamlineCloud.log("Running servers:");
                 for (CloudServer ser : CloudServerManager.getInstance().getRunningServers()) {
                     StreamlineCloud.log(ser.getName() + "-" + ser.getUuid() + " | " + ser.getServerState() + " - " + ser.getOnlinePlayers().size() + "/" + ser.getMaxOnlineCount() + " | PORT: " + ser.getPort() + " | GROUP: " + ser.getGroupDirect().getName());
                 }
+
                 break;
 
             default:
-                CloudServer server = CloudServerManager.getInstance().getServerByName(args[1]);
+                List<CloudServer> servers = CloudServerManager.getInstance().getServersByName(args[1]);
 
-                if (server != null) {
+                if (servers != null) {
 
                     String serverSub = args[2];
 
                     switch (serverSub) {
                         case "stop":
-                            server.stop();
+                            servers.forEach(CloudServer::stop);
                             break;
 
-                        case "kill":
-                            server.disableScreen();
-                            server.kill();
-                            break;
+                            case "kill":
+
+                                servers.forEach(server -> {
+                                    server.disableScreen();
+                                    server.kill();
+                                });
 
                         case "restart":
-                            server.restart();
+                            servers.forEach(CloudServer::restart);
                             break;
 
                         case "command":
@@ -90,24 +100,27 @@ public class ServersCommand extends CloudCommand {
                         case "c":
 
                             if (args.length >= 4) {
+                                servers.forEach(server -> {
+                                    if (args.length >= 5) {
 
-                                StringBuilder sb = new StringBuilder();
+                                        StringBuilder sb = new StringBuilder();
 
-                                for (int i = 0; i <= args.length; i++) {
+                                        for (int i = 0; i <= args.length; i++) {
 
-                                    if (i < 4) continue;
+                                            if (i < 4) continue;
 
-                                    sb.append(args[i - 1]).append(" ");
-                                }
+                                            sb.append(args[i - 1]).append(" ");
+                                        }
 
-                                sb.deleteCharAt(sb.length() - 1);
+                                        sb.deleteCharAt(sb.length() - 1);
 
-                                server.addCommand(sb.toString());
+                                        server.addCommand(sb.toString());
+                                    }
+                                });
 
                             } else {
                                 StreamlineCloud.log("sl.command.servers.command.enterCommand");
                             }
-
                             break;
                     }
 
@@ -128,8 +141,5 @@ public class ServersCommand extends CloudCommand {
         }
     }
 
-    public void sendHelp() {
-        StreamlineCloud.log("Unknown Subcommand");
-        StreamlineCloud.log("-> servers help");
-    }
+
 }
