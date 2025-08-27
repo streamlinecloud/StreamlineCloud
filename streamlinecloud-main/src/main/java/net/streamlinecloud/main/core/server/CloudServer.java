@@ -427,6 +427,7 @@ public class CloudServer extends StreamlineServer {
     }
 
     public void disableScreen() {
+        if (!isOutput()) return;
         setOutput(false);
         Cache.i().setCurrentScreenServerName(null);
         StreamlineCloud.log("sl.server.screen.disabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
