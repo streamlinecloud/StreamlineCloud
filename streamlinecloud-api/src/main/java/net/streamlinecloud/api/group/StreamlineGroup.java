@@ -19,5 +19,6 @@ public class StreamlineGroup implements StreamlineGroupImpl {
     int serverOnlineCount = 50;
     int minOnlineCount;
     int autoRestartMinutes = -1;
+    int priority = 0;
 
 }

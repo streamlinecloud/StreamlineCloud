@@ -183,14 +183,14 @@ public class CloudServerManager {
      *
      * @param group The target group
      */
-    private void startServersIfNeeded(CloudGroup group) {
+    private void startServersIfNeeded(CloudGroup g) {
 
-        List<CloudServer> alLServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(group));
-        for (CloudServer s : getServersWaitingForStart()) if (s.getGroupDirect().equals(group)) alLServers.add(s);
+        List<CloudServer> allServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(g));
+        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(g)) allServers.add(s);
 
-        if (alLServers.size() < group.getMinOnlineCount()) {
+        if (allServers.size() < g.getMinOnlineCount()) {
 
-            startServerByGroup(group);
+            startServerByGroup(g);
         }
     }
 
@@ -198,10 +198,9 @@ public class CloudServerManager {
      * This function executes {@link #startServersIfNeeded(CloudGroup)}) for every active group
      */
     public void startServersIfNeeded() {
-
-        for (CloudGroup g : Cache.i().getActiveGroups()) {
-
-            List<CloudServer> servers = CloudGroupManager.getInstance().getGroupOnlineServers(g);
+        PriorityQueue<CloudServer> activeGroups = new PriorityQueue<>(Cache.i().getServersWaitingForStart());
+        while (activeGroups.isEmpty()) {
+            CloudGroup g = Cache.i().getActiveGroups().poll();
             startServersIfNeeded(g);
         }
     }
