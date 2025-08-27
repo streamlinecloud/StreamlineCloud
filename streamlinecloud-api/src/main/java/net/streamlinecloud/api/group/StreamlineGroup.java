@@ -16,7 +16,6 @@ public class StreamlineGroup implements StreamlineGroupImpl {
     String softwareName;
     ServerRuntime runtime;
     boolean staticGroup = false;
-    int serverOnlineCount = 50;
     int minOnlineCount;
     int autoRestartMinutes = -1;
     int priority = 0;
