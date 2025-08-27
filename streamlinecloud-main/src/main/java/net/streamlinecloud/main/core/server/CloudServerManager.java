@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.core.server;
 
 import lombok.Getter;
+import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
@@ -100,13 +101,19 @@ public class CloudServerManager {
             int max = count[1];
 
             if (puffer + online >= max) return;
-            int neededServers = (online + puffer) / fallbackSize;
+            int neededServers = (int) Math.ceil((double) (online + puffer) / fallbackSize);
 
             CloudGroup fallbackGroup = CloudGroupManager.getInstance().getGroupByName(config.getFallbackGroup());
             List<CloudServer> fallbackServers = CloudGroupManager.getInstance().getGroupOnlineServers(fallbackGroup);
 
-            if (neededServers > fallbackServers.size()) startServerByGroup(fallbackGroup);
+            if (neededServers > fallbackServers.size()) {
+                StreamlineCloud.log("DynamicFallbackControl is stopping a fallback server... (needed: " + neededServers + ", online: " + fallbackServers.size() + ")");
+
+                startServerByGroup(fallbackGroup);
+            }
             if (neededServers < fallbackServers.size()) {
+                StreamlineCloud.log("DynamicFallbackControl is stopping a fallback server... (needed: " + neededServers + ", online: " + fallbackServers.size() + ")");
+
                 CloudServer target = fallbackServers.stream()
                         .min(Comparator.comparingInt(s -> s.getOnlinePlayers().size()))
                         .orElse(null);
