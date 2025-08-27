@@ -84,6 +84,10 @@ public class LoadBalancerCommand extends CloudCommand {
 
                 StreamlineCloud.log("The load balancer " + args[2] + " does not exist");
                 break;
+
+            case "help":
+                help();
+                break;
         }
 
     }
