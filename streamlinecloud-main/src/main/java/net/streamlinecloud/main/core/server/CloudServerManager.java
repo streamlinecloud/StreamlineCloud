@@ -179,29 +179,40 @@ public class CloudServerManager {
     }
 
     /**
-     * This function starts a new server of a group if needed to reach the minOnlineCount of the group
+     * Starts a new server of a group if needed to reach the minOnlineCount of the group
      *
      * @param group The target group
      */
-    private void startServersIfNeeded(CloudGroup g) {
+    private void startServersIfNeeded(CloudGroup group) {
+        List<CloudServer> allServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(group));
 
-        List<CloudServer> allServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(g));
-        for (CloudServer s : Cache.i().getServersWaitingForStart()) if (s.getGroupDirect().equals(g)) allServers.add(s);
+        for (CloudServer s : Cache.i().getServersWaitingForStart()) {
+            if (s.getGroupDirect().equals(group)) {
+                allServers.add(s);
+            }
+        }
 
-        if (allServers.size() < g.getMinOnlineCount()) {
-
-            startServerByGroup(g);
+        if (allServers.size() < group.getMinOnlineCount()) {
+            startServerByGroup(group);
         }
     }
 
     /**
-     * This function executes {@link #startServersIfNeeded(CloudGroup)}) for every active group
+     * Executes {@link #startServersIfNeeded(CloudGroup)} for every active group.
+     * Groups are processed by priority.
      */
     public void startServersIfNeeded() {
-        PriorityQueue<CloudServer> activeGroups = new PriorityQueue<>(Cache.i().getServersWaitingForStart());
-        while (activeGroups.isEmpty()) {
-            CloudGroup g = Cache.i().getActiveGroups().poll();
-            startServersIfNeeded(g);
+        if (!Cache.i().getServersWaitingForStart().isEmpty()) {
+            return;
+        }
+
+        PriorityQueue<CloudGroup> groups = new PriorityQueue<>(
+                Comparator.comparingInt(CloudGroup::getPriority).reversed()
+        );
+        groups.addAll(Cache.i().getActiveGroups());
+
+        for (CloudGroup group : groups) {
+            startServersIfNeeded(group);
         }
     }
 

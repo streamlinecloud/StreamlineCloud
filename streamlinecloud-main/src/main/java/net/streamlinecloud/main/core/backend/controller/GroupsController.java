@@ -36,7 +36,6 @@ public class GroupsController {
         StreamlineGroup group = CloudGroupManager.getInstance().getGroupByName(name);
 
         if (group != null) {
-            group.setServerOnlineCount(CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName(group.getName())).size());
             context.result(new Gson().toJson(group, StreamlineGroup.class));
             context.status(200);
         } else {
