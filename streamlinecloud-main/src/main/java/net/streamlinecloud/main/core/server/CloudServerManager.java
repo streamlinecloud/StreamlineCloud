@@ -107,7 +107,7 @@ public class CloudServerManager {
             List<CloudServer> fallbackServers = CloudGroupManager.getInstance().getGroupOnlineServers(fallbackGroup);
 
             if (neededServers > fallbackServers.size()) {
-                StreamlineCloud.log("DynamicFallbackControl is stopping a fallback server... (needed: " + neededServers + ", online: " + fallbackServers.size() + ")");
+                StreamlineCloud.log("DynamicFallbackControl is starting a fallback server... (needed: " + neededServers + ", online: " + fallbackServers.size() + ")");
 
                 startServerByGroup(fallbackGroup);
             }
