@@ -124,6 +124,8 @@ public class CloudMain {
         registerCommand(new DownloadCommand());
         registerCommand(new WhitelistCommand());
         registerCommand(new SoftwareCommand());
+        registerCommand(new ScreenCommand());
+        registerCommand(new LoadBalancerCommand());
 
         if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER, Cache.i().getConfig().getDefaultSoftwareName()));
         Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());

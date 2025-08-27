@@ -52,11 +52,11 @@ public class ProxyFallbackHandler {
                 if (server.getPort() != 1.0) {
                     if (!server.getName().contains("proxy")) {
                         ServerInfo serverInfo = new ServerInfo(
-                                server.getName(),
+                                server.getName() + "-" + server.getUuid(),
                                 new InetSocketAddress("localhost", Integer.parseInt(String.valueOf(server.getPort()).split("\\.")[0]))
                         );
 
-                        allServers[0].add(server.getName());
+                        allServers[0].add(server.getName() + "-" + server.getUuid());
                         VelocitySCP.getInstance().getProxy().registerServer(serverInfo);
                     }
                 }
@@ -64,6 +64,7 @@ public class ProxyFallbackHandler {
             };
 
             Utils.servers = servers;
+            System.out.println("UTILS.SERVERS: " + new Gson().toJson(Utils.servers));
 
             fallbacks = new Gson().fromJson(Functions.get("servers/fallbackServers"), List.class);
 

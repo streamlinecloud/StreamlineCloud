@@ -6,7 +6,7 @@ bind = "0.0.0.0:%port"
 
 # What should be the MOTD? This gets displayed when the player adds your server to
 # their server list. Only MiniMessage format is accepted.
-motd = "This is NOT the way to change the MOTD! Visit https://streamlinecloud.net/docs/branding/motd"
+motd = "This is NOT the way to change the MOTD! Visit https://streamlinecloud.net/docs/advanced_branding"
 
 # What should we display for the maximum number of players? (Velocity does not support a cap
 # on the number of players online.)

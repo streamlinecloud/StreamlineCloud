@@ -28,6 +28,11 @@ public class MainCommandCompleter implements Completer {
         completers.put("lang", new LanguageCommandCompleter());
 
         completers.put("software", new SoftwareCommandCompleter());
+
+        completers.put("screen", new ScreenCommandCompleter());
+
+        completers.put("loadbalancer", new LoadBalancerCommandCompleter());
+        completers.put("lb", new LoadBalancerCommandCompleter());
     }
 
     @Override

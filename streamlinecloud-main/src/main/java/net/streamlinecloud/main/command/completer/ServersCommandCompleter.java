@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.command.completer;
 
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.utils.Cache;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
@@ -18,31 +19,23 @@ public class ServersCommandCompleter implements Completer {
             case 2:
                 list.add(new Candidate("list"));
                 list.add(new Candidate("start"));
-                list.add(new Candidate("startnew"));
-                list.add(new Candidate("server"));
+
+                CloudServerManager.getInstance().getRunningServers().forEach(server -> {
+                    list.add(new Candidate(server.getName()));
+                });
                 break;
             case 3:
                 switch (words.get(1)) {
                     case "start":
-                        list.add(new Candidate("", "<group>", null, null, null, null, true));
-                    case "startnew":
-                        list.add(new Candidate("", "<name>", null, null, null, null, true));
-                        break;
-                    case "server":
-
-                        Cache.i().getRunningServers().forEach(server -> {
-                            list.add(new Candidate(server.getName()));
-                        });
-
+                        list.add(new Candidate("", "<group/name>", null, null, null, null, true));
                         break;
                     default:
+                        list.add(new Candidate("stop"));
+                        list.add(new Candidate("kill"));
+                        list.add(new Candidate("restart"));
+                        list.add(new Candidate("command"));
                         break;
                 }
-                break;
-            case 4:
-                list.add(new Candidate("screen"));
-                list.add(new Candidate("kill"));
-                list.add(new Candidate("command"));
                 break;
             default:
                 break;

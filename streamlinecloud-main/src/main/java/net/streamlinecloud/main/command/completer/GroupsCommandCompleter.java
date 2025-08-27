@@ -54,9 +54,19 @@ public class GroupsCommandCompleter implements Completer {
                     }
                 }
                 switch (words.get(3)) {
-                    case "set" -> list.add(new Candidate("minOnlineCount"));
-                    case "add" -> list.add(new Candidate("template"));
-                    case "list" -> list.add(new Candidate("templates"));
+                    case "set":
+                        list.add(new Candidate("minOnlineCount"));
+                        list.add(new Candidate("software"));
+                        list.add(new Candidate("autoRestartMinutes"));
+                        break;
+
+                    case "add":
+                        list.add(new Candidate("template"));
+                        break;
+
+                    case "list":
+                        list.add(new Candidate("templates"));
+                        break;
                 }
                 break;
         }

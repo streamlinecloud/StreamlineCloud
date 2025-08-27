@@ -27,8 +27,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -49,25 +47,23 @@ public class CloudServer extends StreamlineServer {
 
     boolean output = false;
     boolean staticServer = false;
-    boolean inOverflowProcess = false;
+    boolean isRestarting = false;
 
     public CloudServer(String name, ServerRuntime runtime) {
-        setName(name);
         setRuntime(runtime);
-        setUuid(String.valueOf(UUID.randomUUID()));
+        setUuid(String.valueOf(UUID.randomUUID()).split("-")[0]);
+        setName(name);
 
-        ServerPreStartEvent serverPreStartEvent = eventManager.callEvent(new ServerPreStartEvent(name, runtime, getUuid(),ServerState.PREPARING));
+        CloudServerManager.getInstance().getServerRegister().put(getName(), this);
+
+        ServerPreStartEvent serverPreStartEvent = eventManager.callEvent(new ServerPreStartEvent(getName(), runtime, getUuid(),ServerState.PREPARING));
 
         if (serverPreStartEvent.isCancelled()) {
             return;
         }
 
-        Cache.i().getRunningServers().add(this);
+        CloudServerManager.getInstance().getRunningServers().add(this);
         setServerState(ServerState.PREPARING);
-    }
-
-    public String getShortUuid() {
-        return getUuid().split("-")[0];
     }
 
     public void start(File javaExec) throws IOException {
@@ -97,14 +93,14 @@ public class CloudServer extends StreamlineServer {
         if (!isStaticServer()) {
 
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
-                    new ReplacePaket("%1", getName() + "-" + getShortUuid()),
+                    new ReplacePaket("%1", getName() + "-" + getUuid()),
                     new ReplacePaket("%2", "temp/" + getName())
             });
         } else {
 
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
                     new ReplacePaket("%1", getName()),
-                    new ReplacePaket("%2", "staticservers/" + getShortUuid())
+                    new ReplacePaket("%2", "staticservers/" + getUuid())
             });
         }
 
@@ -132,7 +128,7 @@ public class CloudServer extends StreamlineServer {
 
         if (serverStartEvent.isCancelled()) return;
 
-        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid());
+        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
         Utils.runMkdir(file.mkdirs());
 
         serverFolder = file;
@@ -156,7 +152,7 @@ public class CloudServer extends StreamlineServer {
         t.add(Cache.i().homeFile.getPath() + "/templates/default/" + getRuntime().toString().toLowerCase());
         for (String s : customTemplates) t.add(Cache.i().homeFile.getPath() + "/templates/" + s);
         t.add(Cache.i().homeFile.getPath() + "/data/software/" + SoftwareManager.getInstance().getSoftware(getGroupDirect().getSoftwareName()).getFolder());
-        copyFolder(t, file.getPath());
+        Utils.copyFolder(t, file.getPath());
 
         File propertiesFile = new File(file.getAbsolutePath() + "/server.properties");
         Properties properties = new Properties();
@@ -294,8 +290,8 @@ public class CloudServer extends StreamlineServer {
     public boolean deployPlugin() {
         String pluginFileName = "streamlinecloud_MC-alpha-1.0.0";
         try {
-            new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins").mkdirs();
-            Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getShortUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
+            new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins").mkdirs();
+            Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
             return false;
@@ -304,6 +300,34 @@ public class CloudServer extends StreamlineServer {
             return false;
         }
         return true;
+    }
+
+    public void setOnline() {
+
+        String lb = null;
+
+        for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) {
+            if (loadBalancer.getGroup().equals(getGroup())) {
+                loadBalancer.registerServer(this);
+                lb = loadBalancer.getName();
+            }
+        }
+
+        if (CloudServerManager.getInstance().getRestartingServers().containsKey(this)) {
+            CloudServer oldServer = CloudServerManager.getInstance().getRestartingServers().get(this);
+            Cache.i().getServerSocket().sendTo(oldServer, "move:" + getUuid());
+
+            CloudServerManager.getInstance().getRunningServers().remove(oldServer);
+            CloudServerManager.getInstance().getRunningServers().add(this);
+
+            StreamlineCloud.log(getName() + " restarted");
+            return;
+        }
+
+        SoftwareManager.getInstance().copyCache(getGroupDirect().getSoftwareName(), this);
+
+        if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", getName())});
+        else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", getName()), new ReplacePaket("%2", lb)});
     }
 
     private int getFreePort()   {
@@ -351,31 +375,22 @@ public class CloudServer extends StreamlineServer {
             loadBalancer.getServers().stream().filter(server -> server.getUuid().equals(getUuid())).findFirst().ifPresent(server -> loadBalancer.getServers().remove(server));
         }
 
-        Cache.i().getRunningServers().remove(this);
-
-        StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName() + "-" + getShortUuid())});
+        CloudServerManager.getInstance().getRunningServers().remove(this);
+        StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
-    public void overflow() {
-        inOverflowProcess = true;
+    public void restart() {
+        if (isRestarting) return;
+        setRestarting(true);
 
         CloudServerManager serverManager = CloudServerManager.getInstance();
-        CloudServer newServer = serverManager.getServerByUuid(serverManager.startServerByGroup(getGroupDirect()));
+        CloudServer newServer = new CloudServer(getName(), getRuntime());
+        newServer.setGroup(getGroup());
+        serverManager.restartingServers.put(newServer, this);
+        serverManager.getServersWaitingForStart().add(newServer);
+        serverManager.getRunningServers().remove(newServer);
 
-        serverManager.getOverflowServers().put(newServer, this);
-
-        StreamlineCloud.log("Starting overflow process: " + getName() + "-" + getShortUuid() + " -> " + newServer.getName() + "-" + newServer.getShortUuid());
-    }
-
-    public void checkOverflow() {
-        CloudServerManager serverManager = CloudServerManager.getInstance();
-        serverManager.getOverflowServers().keySet().forEach(server -> {
-           if (server.getUuid().equals(getUuid())) {
-
-               Cache.i().getServerSocket().sendTo(serverManager.getOverflowServers().get(server), "move:" + server.getName());
-
-           }
-        });
+        StreamlineCloud.log("Restarting " + getName());
     }
 
     public void kill() {
@@ -438,46 +453,6 @@ public class CloudServer extends StreamlineServer {
             logs.removeFirst();
         }
         logs.add(str);
-
-    }
-
-    private void copyFolder(List<String> folderPaths, String targetFolder) {
-
-        Set<String> copiedFiles = new HashSet<>();
-
-        for (String folderPath : folderPaths) {
-            try {
-                Path source = Paths.get(folderPath);
-                Path destination = Paths.get(targetFolder);
-
-                Files.walk(source)
-                        .forEach(sourcePath -> {
-                            Path relativePath = source.relativize(sourcePath);
-                            Path destinationPath = destination.resolve(relativePath);
-
-                            if (Files.isDirectory(sourcePath)) {
-                                try {
-                                    Files.createDirectories(destinationPath);
-                                } catch (IOException e) {
-                                    StreamlineCloud.logError(e.getMessage());
-                                }
-                            } else {
-                                if (!copiedFiles.contains(destinationPath.toString())) {
-                                    try {
-                                        Files.createDirectories(destinationPath.getParent());
-                                        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                                        copiedFiles.add(destinationPath.toString());
-                                    } catch (IOException e) {
-                                        StreamlineCloud.logError(e.getMessage());
-                                    }
-                                }
-                            }
-                        });
-            } catch (IOException e) {
-                StreamlineCloud.logError(e.getMessage());
-            }
-
-        }
 
     }
 

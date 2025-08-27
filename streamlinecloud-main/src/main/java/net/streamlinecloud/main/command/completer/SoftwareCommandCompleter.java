@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.command.completer;
 
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.utils.Cache;
 import org.jline.reader.Candidate;
@@ -31,7 +32,7 @@ public class SoftwareCommandCompleter implements Completer {
 
                     case "server":
 
-                        Cache.i().getRunningServers().forEach(server -> {
+                        CloudServerManager.getInstance().getRunningServers().forEach(server -> {
                             list.add(new Candidate(server.getName()));
                         });
 

@@ -59,7 +59,7 @@ public class MainConfig {
     @Getter @Setter
     public static class NetworkConfig {
         int backendPort;
-        LoadBalancer[] loadBalancers = new LoadBalancer[]{};
+        List<LoadBalancer> loadBalancers = new ArrayList<>();
     }
 
     @Getter @Setter

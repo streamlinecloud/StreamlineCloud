@@ -3,6 +3,7 @@ package net.streamlinecloud.main;
 import net.streamlinecloud.api.StreamlineAPI;
 import net.streamlinecloud.api.extension.event.console.ConsoleMessageEvent;
 import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.*;
 import net.streamlinecloud.main.core.backend.BackEndMain;
@@ -219,13 +220,7 @@ public class StreamlineCloud {
     public static void shutDown() {
         log("sl.shutdown.shuttingDown");
 
-        Cache.i().getPluginManager().executeStop();
-
-        if (Cache.i().getWebSocketClient() != null) Cache.i().getWebSocketClient().getClient().close();
-
-        BackEndMain.stop();
-
-        List<CloudServer> servers = new ArrayList<>(Cache.i().getRunningServers());
+        List<CloudServer> servers = new ArrayList<>(CloudServerManager.getInstance().getRunningServers());
 
         for (CloudServer server : servers) {
             if (server.getThread() != null) {
@@ -233,6 +228,12 @@ public class StreamlineCloud {
                 else server.kill();
             }
         }
+
+        Cache.i().getPluginManager().executeStop();
+
+        if (Cache.i().getWebSocketClient() != null) Cache.i().getWebSocketClient().getClient().close();
+
+        BackEndMain.stop();
 
         if (Cache.i().isFirstLaunch()) {
             logSingle("");

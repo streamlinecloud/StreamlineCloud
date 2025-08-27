@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.websocket.WsContext;
 import net.streamlinecloud.api.group.StreamlineGroup;
+import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
@@ -23,7 +24,7 @@ public class ServerSocket {
 
     public HashMap<String, List<StreamlineServer>> servers = new HashMap<>();
     public HashMap<String, List<StreamlineGroup>> subscribedStartingServers = new HashMap<>();
-    public HashMap<StreamlineServer, WsContext> serverSessions = new HashMap<>();
+    public HashMap<String, WsContext> serverSessions = new HashMap<>();
     public Map<String, WsContext> sessionMap = new ConcurrentHashMap<>();
 
     public ServerSocket() {
@@ -36,7 +37,7 @@ public class ServerSocket {
 
                 String key = ctx.queryParam("key");
 
-                if ( key == null || BackEndMain.customSessions.stream().noneMatch(s -> s.getKey().equals(key)) && !key.equals(Cache.i().getApiKey())) {
+                if (key == null || BackEndMain.customSessions.stream().noneMatch(s -> s.getKey().equals(key)) && !key.equals(Cache.i().getApiKey())) {
                     ctx.send("403");
                     ctx.closeSession();
                     return;
@@ -65,7 +66,7 @@ public class ServerSocket {
                         ctx.send("success");
                         return;
 
-                        } else if (ctx.message().split(":")[1].equals("starting")) {
+                    } else if (ctx.message().split(":")[1].equals("starting")) {
 
                         List<StreamlineGroup> s = subscribedStartingServers.get(ctx.sessionId());
                         s.add(CloudGroupManager.getInstance().getGroupByName(ctx.message().split(":")[2]));
@@ -78,7 +79,7 @@ public class ServerSocket {
 
                 } else if (ctx.message().startsWith("iam")) {
 
-                    serverSessions.put(CloudServerManager.getInstance().getServerByUuid(ctx.message().split(":")[1]), ctx);
+                    serverSessions.put(CloudServerManager.getInstance().getServerByUuid(ctx.message().split(":")[1]).getUuid(), ctx);
 
                     ctx.send("success");
                     return;
@@ -93,8 +94,16 @@ public class ServerSocket {
                 sessionMap.remove(ctx.sessionId());
 
             });
-            ws.onError(ctx -> {
-                StreamlineCloud.log("CRITICAL: Socket connection error from " + ctx.sessionId() + " - " + ctx.error());
+            ws.onError(errorContext -> {
+                for (String uuid : serverSessions.keySet()) {
+                    if (serverSessions.get(uuid).sessionId().equals(errorContext.sessionId())) {
+                        StreamlineServer server = CloudServerManager.getInstance().getServerByUuid(uuid);
+                        if (server.getServerState().equals(ServerState.STOPPING) || server.getServerState().equals(ServerState.DELETING)) {
+                            return;
+                        }
+                    }
+                }
+                StreamlineCloud.log("CRITICAL: Socket connection error from " + errorContext.sessionId() + " - " + errorContext.error());
             });
         });
     }
@@ -102,7 +111,7 @@ public class ServerSocket {
     public void sendTo(StreamlineServer server, String message) {
         try {
             serverSessions.forEach((s, ctx) -> {
-                if (s.getUuid().equals(server.getUuid())) {
+                if (s.equals(server.getUuid())) {
                     ctx.send(message);
                 }
             });

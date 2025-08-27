@@ -12,7 +12,7 @@ public interface ServerManagerImpl {
     void closeServer(String message);
     void moveAllPlayersAndStop(String target);
     void log(String message);
-    StreamlineServer getServer(UUID uuid);
+    StreamlineServer getServerByUuid(String uuid);
     StreamlineServer getServer(String name);
 
     void onSubscribedServerUpdated(StreamlineServer server);
