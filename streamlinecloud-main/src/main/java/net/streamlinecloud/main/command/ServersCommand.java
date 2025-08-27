@@ -11,6 +11,7 @@ import net.streamlinecloud.main.utils.Cache;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class ServersCommand extends CloudCommand {
 
@@ -18,6 +19,11 @@ public class ServersCommand extends CloudCommand {
         setName("servers");
         setAliases(new String[]{"s"});
         setDescription("Manage current online servers");
+    }
+
+    public void sendHelp() {
+        StreamlineCloud.log("Unknown Subcommand");
+        StreamlineCloud.log("-> servers help");
     }
 
     @Override
@@ -31,122 +37,109 @@ public class ServersCommand extends CloudCommand {
         String sub = args[1];
 
         switch (sub) {
-            case "server":
-
-                if (args[2] != null) {
-
-                    CloudServer server = CloudServerManager.getInstance().getServerByName(args[2]);
-
-                    if (server != null) {
-
-                        String serverSub = args[3];
-
-                        switch (serverSub) {
-                            case "screen":
-
-                                if (server.isOutput()) {
-                                    server.disableScreen();
-                                } else {
-                                    if (Cache.i().getCurrentScreenServerName() != null)
-                                        CloudServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
-                                    server.enableScreen();
-                                }
-
-                                break;
-                            case "stop":
-                                server.stop();
-                                break;
-
-                            case "kill":
-                                server.disableScreen();
-                                server.kill();
-
-                                break;
-                            case "command":
-                            case "cmd":
-                            case "c":
-
-                                if (args.length >= 5) {
-
-                                    StringBuilder sb = new StringBuilder();
-
-                                    for (int i = 0; i <= args.length; i++) {
-
-                                        if (i < 5) continue;
-
-                                        sb.append(args[i - 1]).append(" ");
-                                    }
-
-                                    sb.deleteCharAt(sb.length() - 1);
-
-                                    server.addCommand(sb.toString());
-
-                                } else {
-                                    StreamlineCloud.log("sl.command.servers.command.enterCommand");
-                                }
-
-                                break;
-                        }
-
-                    } else {
-                        StreamlineCloud.log("sl.command.servers.serverNotFound");
-                    }
-
-                } else {
-                    StreamlineCloud.log("sl.command.servers.enterServerName");
-                }
-
-                break;
             case "start":
 
                 if (args.length == 3) {
 
-                    CloudServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(args[2]));
+                    CloudGroup group = CloudGroupManager.getInstance().getGroupByName(args[2]);
 
-                }  else {
-                    StreamlineCloud.log("sl.command.groups.enterGroup");
-                }
-                break;
-            case "startnew":
+                    if (group == null) {
+                        StreamlineCloud.log("The group " + args[2] + " doesn't exist. Starting a new server with the default template named " + args[2] + "...");
 
-                if (args.length == 3) {
-
-                    CloudServer server = new CloudServer(args[2], ServerRuntime.SERVER);
-                    File javaExec = new File(Cache.i().getConfig().getDefaultJavaPath());
-                    try {
-                        server.start(javaExec);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        CloudServer server = new CloudServer(args[2], ServerRuntime.SERVER);
+                        File javaExec = new File(Cache.i().getConfig().getDefaultJavaPath());
+                        try {
+                            server.start(javaExec);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return;
                     }
 
-                } else {
-                    sendHelp();
+                    CloudServerManager.getInstance().startServerByGroup(group);
+
+                }  else {
+                    StreamlineCloud.log("sl.command.server.start.enterName");
                 }
                 break;
+
             case "list":
 
                 StreamlineCloud.log("Running servers:");
-                for (CloudServer ser : Cache.i().getRunningServers()) {
+                for (CloudServer ser : CloudServerManager.getInstance().getRunningServers()) {
                     StreamlineCloud.log(ser.getName() + "-" + ser.getUuid() + " | " + ser.getServerState() + " - " + ser.getOnlinePlayers().size() + "/" + ser.getMaxOnlineCount() + " | PORT: " + ser.getPort() + " | GROUP: " + ser.getGroupDirect().getName());
                 }
 
+                break;
+
+            default:
+                List<CloudServer> servers = CloudServerManager.getInstance().getServersByName(args[1]);
+
+                if (servers != null) {
+
+                    String serverSub = args[2];
+
+                    switch (serverSub) {
+                        case "stop":
+                            servers.forEach(CloudServer::stop);
+                            break;
+
+                            case "kill":
+
+                                servers.forEach(server -> {
+                                    server.disableScreen();
+                                    server.kill();
+                                });
+
+                        case "restart":
+                            servers.forEach(CloudServer::restart);
+                            break;
+
+                        case "command":
+                        case "cmd":
+                        case "c":
+
+                            if (args.length >= 4) {
+                                servers.forEach(server -> {
+                                    if (args.length >= 5) {
+
+                                        StringBuilder sb = new StringBuilder();
+
+                                        for (int i = 0; i <= args.length; i++) {
+
+                                            if (i < 4) continue;
+
+                                            sb.append(args[i - 1]).append(" ");
+                                        }
+
+                                        sb.deleteCharAt(sb.length() - 1);
+
+                                        server.addCommand(sb.toString());
+                                    }
+                                });
+
+                            } else {
+                                StreamlineCloud.log("sl.command.servers.command.enterCommand");
+                            }
+                            break;
+                    }
+
+                } else {
+                    StreamlineCloud.log("sl.command.servers.serverNotFound");
+                }
                 break;
         }
 
         if (args[1].equals("help")) {
             StreamlineCloud.log("Start:");
-            StreamlineCloud.log("- servers start <groupName>");
-            StreamlineCloud.log("- servers startnew <name>");
+            StreamlineCloud.log("- servers start <groupName/name>");
             StreamlineCloud.log("Manage:");
             StreamlineCloud.log("- servers list");
-            StreamlineCloud.log("- servers server <name> stop");
-            StreamlineCloud.log("- servers server <name> kill");
-            StreamlineCloud.log("- servers server <name> logs");
+            StreamlineCloud.log("- servers <name> stop");
+            StreamlineCloud.log("- servers <name> kill");
+            StreamlineCloud.log("- servers <name> restart");
         }
     }
 
-    public void sendHelp() {
-        StreamlineCloud.log("Unknown Subcommand");
-        StreamlineCloud.log("-> servers help");
-    }
+
 }

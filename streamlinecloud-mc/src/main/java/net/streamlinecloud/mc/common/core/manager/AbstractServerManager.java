@@ -78,7 +78,7 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
     }
 
     public void uploadServerInfo() {
-        StreamlineServer s = getServer(UUID.fromString(StaticCache.serverData.getUuid()));
+        StreamlineServer s = getServerByUuid(StaticCache.serverData.getUuid());
         s.setOnlinePlayers(getLocalServerInfo().getOnlinePlayers());
         s.setMaxOnlineCount(getLocalServerInfo().getMaxOnlineCount());
         s.setServerState(getLocalServerInfo().getServerState());
@@ -88,12 +88,12 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
     }
 
 
-    public StreamlineServer getServer(UUID uuid) {
+    public StreamlineServer getServerByUuid(String uuid) {
         for (StreamlineServer s : subscribedServers) {
-            if (s != null) if (s.getUuid().equals(uuid.toString())) return s;
+            if (s != null) if (s.getUuid().equals(uuid)) return s;
         }
 
-        return new Gson().fromJson(Functions.get("servers/" + uuid.toString()), StreamlineServer.class);
+        return new Gson().fromJson(Functions.get("servers/" + uuid), StreamlineServer.class);
     }
 
     public StreamlineServer getServer(String name) {

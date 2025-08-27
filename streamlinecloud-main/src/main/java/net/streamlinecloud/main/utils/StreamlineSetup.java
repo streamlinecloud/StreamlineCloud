@@ -16,10 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class StreamlineSetup {
 
@@ -62,7 +59,7 @@ public class StreamlineSetup {
                 String javaPath = System.getProperty("java.home")  + "/bin/java";
                 StreamlineCloud.log("Changing the default Java path to " + javaPath);
                 Cache.i().getConfig().setDefaultJavaPath(javaPath);
-                Cache.i().getConfig().getNetwork().setLoadBalancers(new LoadBalancer[]{new LoadBalancer("MainLoadBalancer", "proxy", 25565)});
+                Cache.i().getConfig().getNetwork().setLoadBalancers(List.of(new LoadBalancer("MainLoadBalancer", "proxy", 25565)));
                 next();
 
             } else {

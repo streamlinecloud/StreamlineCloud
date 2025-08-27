@@ -9,6 +9,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -68,6 +75,46 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static void copyFolder(List<String> folderPaths, String targetFolder) {
+
+        Set<String> copiedFiles = new HashSet<>();
+
+        for (String folderPath : folderPaths) {
+            try {
+                Path source = Paths.get(folderPath);
+                Path destination = Paths.get(targetFolder);
+
+                Files.walk(source)
+                        .forEach(sourcePath -> {
+                            Path relativePath = source.relativize(sourcePath);
+                            Path destinationPath = destination.resolve(relativePath);
+
+                            if (Files.isDirectory(sourcePath)) {
+                                try {
+                                    Files.createDirectories(destinationPath);
+                                } catch (IOException e) {
+                                    StreamlineCloud.logError(e.getMessage());
+                                }
+                            } else {
+                                if (!copiedFiles.contains(destinationPath.toString())) {
+                                    try {
+                                        Files.createDirectories(destinationPath.getParent());
+                                        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                                        copiedFiles.add(destinationPath.toString());
+                                    } catch (IOException e) {
+                                        StreamlineCloud.logError(e.getMessage());
+                                    }
+                                }
+                            }
+                        });
+            } catch (IOException e) {
+                StreamlineCloud.logError(e.getMessage());
+            }
+
+        }
+
     }
 
     public static void copyResources(File sourceFile, File targetFile) {
