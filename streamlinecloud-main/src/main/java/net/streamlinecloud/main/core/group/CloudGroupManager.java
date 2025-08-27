@@ -38,4 +38,13 @@ public class CloudGroupManager {
         }
         return null;
     }
+
+    public boolean groupExists(String name) {
+        for (CloudGroup group : Cache.i().getActiveGroups()) {
+            if (group.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
