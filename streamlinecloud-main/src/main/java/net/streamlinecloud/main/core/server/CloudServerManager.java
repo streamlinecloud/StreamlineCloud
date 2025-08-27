@@ -162,7 +162,7 @@ public class CloudServerManager {
         if (name.endsWith("-*")) {
 
             List<CloudServer> servers = new ArrayList<>();
-            for (CloudServer runningServer : Cache.i().getRunningServers()) {
+            for (CloudServer runningServer : CloudServerManager.getInstance().getRunningServers()) {
                 if (runningServer.getName().contains(name.substring(0, name.length() - 1))) servers.add(runningServer);
             }
             if (servers.isEmpty()) return null;
@@ -176,17 +176,6 @@ public class CloudServerManager {
 
         }
 
-    }
-
-    public CloudServer getServerByUuid(String uuid) {
-
-        for (CloudServer ser : getRestartingServers().keySet()) {
-            if (ser.getUuid().equals(uuid)) {
-                return ser;
-            }
-        }
-
-        return null;
     }
 
     /**
