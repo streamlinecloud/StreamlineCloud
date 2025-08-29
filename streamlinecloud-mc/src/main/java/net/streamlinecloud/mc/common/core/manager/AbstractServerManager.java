@@ -98,7 +98,7 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
         return new Gson().fromJson(Functions.get("servers/" + uuid), StreamlineServer.class);
     }
 
-    public StreamlineServer getServer(String name) {
+    public StreamlineServer getServerByName(String name) {
         for (StreamlineServer s : subscribedServers) {
             if (s.getName().equals(name)) return s;
         }
