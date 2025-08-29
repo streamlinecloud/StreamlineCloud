@@ -2,11 +2,13 @@ package net.streamlinecloud.main.core.backend.socket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import io.javalin.websocket.WsContext;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
+import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.backend.BackEndMain;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
@@ -38,7 +40,7 @@ public class ServerSocket {
                 String key = ctx.queryParam("key");
 
                 if (key == null || BackEndMain.customSessions.stream().noneMatch(s -> s.getKey().equals(key)) && !key.equals(Cache.i().getApiKey())) {
-                    ctx.send("403");
+                    ctx.send(new SocketMessage(SocketMessage.SocketMessageType.ERROR, "403").toString());
                     ctx.closeSession();
                     return;
                 }
@@ -51,42 +53,46 @@ public class ServerSocket {
             });
             ws.onMessage(ctx -> {
 
-                // subscribe:server:{serverName}
-                // subscribe:starting:{groupName}
+                SocketMessage message;
 
-                if (ctx.message().startsWith("subscribe")) {
+                try {
+                    message = SocketMessage.fromJson(ctx.message());
+                } catch (JsonSyntaxException e) {
+                    ctx.send(new SocketMessage(SocketMessage.SocketMessageType.ERROR, "400").toString());
+                    return;
+                }
 
-                    if (ctx.message().split(":")[1].equals("server")) {
+                if (!message.getType().isFromClient()) {
+                    ctx.send(new SocketMessage(SocketMessage.SocketMessageType.ERROR, "400").toString());
+                    return;
+                }
+
+                switch (message.getType()) {
+
+                    case SUBSCRIBE_SERVER -> {
 
                         List<StreamlineServer> s = servers.get(ctx.sessionId());
-                        StreamlineServer streamlineServer = CloudServerManager.getInstance().getServerByName(ctx.message().split(":")[2]);
+                        StreamlineServer streamlineServer = CloudServerManager.getInstance().getServerByName(message.getContent());
                         s.add(streamlineServer);
                         servers.replace(ctx.sessionId(), s);
 
-                        ctx.send("success");
-                        return;
+                    }
 
-                    } else if (ctx.message().split(":")[1].equals("starting")) {
+                    case SUBSCRIBE_GROUP -> {
 
                         List<StreamlineGroup> s = subscribedStartingServers.get(ctx.sessionId());
-                        s.add(CloudGroupManager.getInstance().getGroupByName(ctx.message().split(":")[2]));
+                        s.add(CloudGroupManager.getInstance().getGroupByName(message.getContent()));
                         subscribedStartingServers.replace(ctx.sessionId(), s);
-
-                        ctx.send("success");
-                        return;
 
                     }
 
-                } else if (ctx.message().startsWith("iam")) {
+                    case IAM -> {
 
-                    serverSessions.put(CloudServerManager.getInstance().getServerByUuid(ctx.message().split(":")[1]).getUuid(), ctx);
+                        serverSessions.put(CloudServerManager.getInstance().getServerByUuid(message.getContent()).getUuid(), ctx);
 
-                    ctx.send("success");
-                    return;
+                    }
 
                 }
-
-                ctx.send("Something went wrong");
 
             });
             ws.onClose(ctx -> {
@@ -108,11 +114,11 @@ public class ServerSocket {
         });
     }
 
-    public void sendTo(StreamlineServer server, String message) {
+    public void sendTo(StreamlineServer server, SocketMessage message) {
         try {
             serverSessions.forEach((s, ctx) -> {
                 if (s.equals(server.getUuid())) {
-                    ctx.send(message);
+                    ctx.send(message.toString());
                 }
             });
         } catch (Exception e) {
@@ -131,7 +137,7 @@ public class ServerSocket {
                 if (server.getUuid().equals(s.getUuid())) {
                     for (StreamlineServer streamlineServer : Cache.i().getServerSocket().servers.get(session)) {
                         if (streamlineServer.getUuid().equals(s.getUuid())) {
-                            Cache.i().getServerSocket().sessionMap.get(session).send(gson.toJson(s));
+                            Cache.i().getServerSocket().sessionMap.get(session).send(new SocketMessage(SocketMessage.SocketMessageType.SERVER_UPDATE, gson.toJson(s)).toString());
                         }
                     }
                 }
@@ -142,7 +148,7 @@ public class ServerSocket {
     private Runnable createHeartbeatRunnable() {
         return () -> {
             for (String s : sessionMap.keySet().stream().toList()) {
-                sessionMap.get(s).send("heartbeat");
+                sessionMap.get(s).send(new SocketMessage(SocketMessage.SocketMessageType.HEARTBEAT, "").toString());
             }
 
         };

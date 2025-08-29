@@ -2,12 +2,14 @@ package net.streamlinecloud.mc.common.core.manager;
 
 import com.google.gson.Gson;
 import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.mc.common.core.WebSocketListener;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 
 import javax.websocket.*;
+import java.net.Socket;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
@@ -42,7 +44,7 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
             this.socket = webSocket;
             uploadServerInfo();
 
-            webSocket.sendText("iam:" + getLocalServerInfo().getUuid(), true);
+            webSocket.sendText(new SocketMessage(SocketMessage.SocketMessageType.IAM, getLocalServerInfo().getUuid()).toString(), true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,14 +69,14 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
         }
 
         subscribedServers.add(server);
-        socket.sendText("subscribe:server:" + server.getName(), true);
+        socket.sendText(new SocketMessage(SocketMessage.SocketMessageType.SUBSCRIBE_SERVER, server.getName().toLowerCase()).toString(), true);
     }
 
     public void subscribeToGroup(String name) {
         if (subscribedStartingServers.contains(name)) return;
 
         subscribedStartingServers.add(name);
-        socket.sendText("subscribe:starting:" + name, true);
+        socket.sendText(new SocketMessage(SocketMessage.SocketMessageType.SUBSCRIBE_GROUP, name).toString(), true);
     }
 
     public void uploadServerInfo() {

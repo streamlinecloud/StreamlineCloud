@@ -11,6 +11,7 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
+import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
@@ -315,7 +316,7 @@ public class CloudServer extends StreamlineServer {
 
         if (CloudServerManager.getInstance().getRestartingServers().containsKey(this)) {
             CloudServer oldServer = CloudServerManager.getInstance().getRestartingServers().get(this);
-            Cache.i().getServerSocket().sendTo(oldServer, "move:" + getUuid());
+            Cache.i().getServerSocket().sendTo(oldServer, new SocketMessage(SocketMessage.SocketMessageType.MOVE_SERVER, getUuid()));
 
             CloudServerManager.getInstance().getRunningServers().remove(oldServer);
             CloudServerManager.getInstance().getRunningServers().add(this);

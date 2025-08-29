@@ -1,9 +1,11 @@
 package net.streamlinecloud.mc.common.core;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
+import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
@@ -31,44 +33,60 @@ public class WebSocketListener implements WebSocket.Listener {
         try {
             webSocket.request(1);
 
-            System.out.println(data.toString());
-
-            if (data.toString().equals("heartbeat")) return null;
-            if (data.toString().equals("success")) return null;
-
-            if (data.toString().equals("403")) {
-                serverManager.log("Got 403 response from server");
-                return null;
-            };
-
-            if (data.toString().startsWith("move:")) {
-                serverManager.moveAllPlayersAndStop(data.toString().split(":")[1]);
-                return null;
-            }
-
-            StreamlineServer server;
+            SocketMessage message;
 
             try {
-                server = new Gson().fromJson(data.toString(), StreamlineServer.class);
-            } catch (Exception e) {
-                PaperSCP.getInstance().getLogger().warning("Got invalid message from server: " + data + " (" + e.getMessage() + ")");
+                message = SocketMessage.fromJson(data.toString());
+            } catch (JsonSyntaxException e) {
+                serverManager.log("[SOCKET] Got invalid message from server: " + data);
                 return null;
             }
 
-            if (serverManager.getSubscribedServers().removeIf(subscribedServer -> subscribedServer.getUuid().equals(server.getUuid()))) {
-                serverManager.getSubscribedServers().add(server);
+            if (message.getType().equals(SocketMessage.SocketMessageType.ERROR)) {
+                serverManager.log("[SOCKET] Got error from server: " + message.getContent());
+                return null;
+            }
 
-                if (StaticCache.getRuntime().equals(ServerRuntime.SERVER)) {
-                    if (server.getServerState().equals(ServerState.STOPPING))
-                        serverManager.onSubscribedServerStopped(server);
-                    else serverManager.onSubscribedServerUpdated(server);
+            if (message.getType().isFromClient()) {
+                serverManager.log("[SOCKET] Got invalid message type from server: " + message.getType());
+                return null;
+            }
+
+            if (message.getType().equals(SocketMessage.SocketMessageType.HEARTBEAT)) return null;
+            if (message.getType().equals(SocketMessage.SocketMessageType.SUCCESS)) return null;
+
+            if (message.getType().equals(SocketMessage.SocketMessageType.MOVE_SERVER)) {
+
+                serverManager.moveAllPlayersAndStop(message.getContent());
+                return null;
+
+            } else if (message.getType().equals(SocketMessage.SocketMessageType.SERVER_UPDATE)) {
+
+                StreamlineServer server;
+
+                try {
+                    server = new Gson().fromJson(message.getContent(), StreamlineServer.class);
+                } catch (Exception e) {
+                    PaperSCP.getInstance().getLogger().warning("Got invalid message from server: " + data + " (" + e.getMessage() + ")");
+                    return null;
                 }
 
-            } else {
-                serverManager.subscribe(server);
+                if (serverManager.getSubscribedServers().removeIf(subscribedServer -> subscribedServer.getUuid().equals(server.getUuid()))) {
+                    serverManager.getSubscribedServers().add(server);
 
-                if (StaticCache.getRuntime().equals(ServerRuntime.SERVER)) {
-                    serverManager.onSubscribedServerStarted(server);
+                    if (StaticCache.getRuntime().equals(ServerRuntime.SERVER)) {
+                        if (server.getServerState().equals(ServerState.STOPPING))
+                            serverManager.onSubscribedServerStopped(server);
+                        else serverManager.onSubscribedServerUpdated(server);
+                    }
+
+                } else {
+                    serverManager.subscribe(server);
+
+                    if (StaticCache.getRuntime().equals(ServerRuntime.SERVER)) {
+                        serverManager.onSubscribedServerStarted(server);
+                    }
+
                 }
 
             }
