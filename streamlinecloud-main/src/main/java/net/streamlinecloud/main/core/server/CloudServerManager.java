@@ -68,18 +68,20 @@ public class CloudServerManager {
 
     public void startNextServer() {
         if (!getServersWaitingForStart().isEmpty()) {
-            try {
-                CloudServer server = getServersWaitingForStart().getFirst();
+            CloudServer server = getServersWaitingForStart().getFirst();
 
-                for (String s : Cache.i().getDataCache()) {
-                    if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
-                }
-
-                server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
-                getServersWaitingForStart().remove(server);
-            } catch (IOException e) {
-                e.printStackTrace();
+            for (String s : Cache.i().getDataCache()) {
+                if (s.startsWith("blacklistGroup:") && s.endsWith(server.getGroup())) return;
             }
+
+            try {
+                server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
+            } catch (Exception e) {
+                StreamlineCloud.log("Failed to start " + server.getName() + " - " + e.getMessage());
+                getServersWaitingForStart().remove(server);
+                server.kill();
+            }
+            getServersWaitingForStart().remove(server);
         }
     }
 

@@ -112,7 +112,7 @@ public class CloudServer extends StreamlineServer {
         for (String session : Cache.i().getServerSocket().subscribedStartingServers.keySet()) {
             for (StreamlineGroup group : Cache.i().getServerSocket().subscribedStartingServers.get(session)) {
                 if (group.getName().equals(getGroup())) {
-                    Cache.i().getServerSocket().sessionMap.get(session).send(new SocketMessage(SocketMessage.SocketMessageType.SERVER_UPDATE, gson.toJson(this)));
+                    Cache.i().getServerSocket().sessionMap.get(session).send(new SocketMessage(SocketMessage.SocketMessageType.SERVER_UPDATE, gson.toJson(this)).toString());
                 }
             }
         }
