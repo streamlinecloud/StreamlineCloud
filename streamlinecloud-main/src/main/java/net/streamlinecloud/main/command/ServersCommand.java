@@ -90,6 +90,7 @@ public class ServersCommand extends CloudCommand {
                                     server.disableScreen();
                                     server.kill();
                                 });
+                                break;
 
                         case "restart":
                             servers.forEach(CloudServer::restart);
