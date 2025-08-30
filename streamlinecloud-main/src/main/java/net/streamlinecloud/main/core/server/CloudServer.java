@@ -378,6 +378,11 @@ public class CloudServer extends StreamlineServer {
     }
 
     public void restart() {
+        if (isStaticServer()) {
+            StreamlineCloud.log("The restart feature is not compatible with static servers.");
+            return;
+        }
+
         if (isRestarting) return;
         setRestarting(true);
 
