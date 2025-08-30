@@ -26,7 +26,7 @@ public class ServerController {
     public void start(@NotNull Context context) {
         StartServerPacket packet = new Gson().fromJson(context.body(), StartServerPacket.class);
 
-        context.result(CloudServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(packet.getGroup()), Arrays.asList(packet.getTemplates())));
+        context.result(CloudServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(packet.getGroup()), Arrays.asList(packet.getTemplates()), "Rest API"));
         context.status(200);
     }
 

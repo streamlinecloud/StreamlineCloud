@@ -46,7 +46,7 @@ public class ServersCommand extends CloudCommand {
                     if (group == null) {
                         StreamlineCloud.log("The group " + args[2] + " doesn't exist. Starting a new server with the default template named " + args[2] + "...");
 
-                        CloudServer server = new CloudServer(args[2], ServerRuntime.SERVER);
+                        CloudServer server = new CloudServer(args[2], ServerRuntime.SERVER, "User (start command)");
                         File javaExec = new File(Cache.i().getConfig().getDefaultJavaPath());
                         try {
                             server.start(javaExec);
@@ -56,7 +56,7 @@ public class ServersCommand extends CloudCommand {
                         return;
                     }
 
-                    CloudServerManager.getInstance().startServerByGroup(group);
+                    CloudServerManager.getInstance().startServerByGroup(group, "User (start command)");
 
                 }  else {
                     StreamlineCloud.log("sl.command.server.start.enterName");

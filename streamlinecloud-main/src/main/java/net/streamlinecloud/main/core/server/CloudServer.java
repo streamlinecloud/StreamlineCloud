@@ -14,6 +14,7 @@ import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
+import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
@@ -43,6 +44,7 @@ public class CloudServer extends StreamlineServer {
     List<String> commandQueue = new ArrayList<>();
     final String address = "localhost";
     File serverFolder;
+    String startedBy;
 
     List<String> customTemplates = new ArrayList<>();
 
@@ -50,10 +52,11 @@ public class CloudServer extends StreamlineServer {
     boolean staticServer = false;
     boolean isRestarting = false;
 
-    public CloudServer(String name, ServerRuntime runtime) {
+    public CloudServer(String name, ServerRuntime runtime, String startedBy) {
         setRuntime(runtime);
         setUuid(String.valueOf(UUID.randomUUID()).split("-")[0]);
         setName(name);
+        setStartedBy(startedBy);
 
         CloudServerManager.getInstance().getServerRegister().put(getName(), this);
 
@@ -109,13 +112,7 @@ public class CloudServer extends StreamlineServer {
                 .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
                 .create();
 
-        for (String session : Cache.i().getServerSocket().subscribedStartingServers.keySet()) {
-            for (StreamlineGroup group : Cache.i().getServerSocket().subscribedStartingServers.get(session)) {
-                if (group.getName().equals(getGroup())) {
-                    Cache.i().getServerSocket().sessionMap.get(session).send(new SocketMessage(SocketMessage.SocketMessageType.SERVER_UPDATE, gson.toJson(this)).toString());
-                }
-            }
-        }
+        Cache.i().getServerSocket().sendUpdate(this);
 
         File file;
         CloudGroup group = getGroupDirect();
@@ -385,7 +382,7 @@ public class CloudServer extends StreamlineServer {
         setRestarting(true);
 
         CloudServerManager serverManager = CloudServerManager.getInstance();
-        CloudServer newServer = new CloudServer(getName(), getRuntime());
+        CloudServer newServer = new CloudServer(getName(), getRuntime(), "Server restart feature");
         newServer.setGroup(getGroup());
         serverManager.restartingServers.put(newServer, this);
         serverManager.getServersWaitingForStart().add(newServer);

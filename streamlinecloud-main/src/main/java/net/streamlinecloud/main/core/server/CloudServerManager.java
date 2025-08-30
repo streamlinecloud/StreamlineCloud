@@ -77,7 +77,7 @@ public class CloudServerManager {
             try {
                 server.start(new File(server.getGroupDirect().getJavaExec().equals("%default") ? Cache.i().getConfig().getDefaultJavaPath() : server.getGroupDirect().getJavaExec()));
             } catch (Exception e) {
-                StreamlineCloud.log("Failed to start " + server.getName() + " - " + e.getMessage());
+                StreamlineCloud.log("Failed to start " + server.getName() + " - " + e.getMessage() + " - started by " + server.getStartedBy());
                 getServersWaitingForStart().remove(server);
                 server.kill();
             }
@@ -109,7 +109,7 @@ public class CloudServerManager {
             if (neededServers > fallbackServers.size()) {
                 StreamlineCloud.log("DynamicFallbackControl is starting a fallback server... (needed: " + neededServers + ", online: " + fallbackServers.size() + ")");
 
-                startServerByGroup(fallbackGroup);
+                startServerByGroup(fallbackGroup, "Automatic fallback control feature");
             }
             if (neededServers < fallbackServers.size()) {
                 StreamlineCloud.log("DynamicFallbackControl is stopping a fallback server... (needed: " + neededServers + ", online: " + fallbackServers.size() + ")");
@@ -195,7 +195,7 @@ public class CloudServerManager {
         }
 
         if (allServers.size() < group.getMinOnlineCount()) {
-            startServerByGroup(group);
+            startServerByGroup(group, "Autostart (based on group min online count)");
         }
     }
 
@@ -218,12 +218,12 @@ public class CloudServerManager {
         }
     }
 
-    public String startServerByGroup(CloudGroup cloudGroup) {
-        return startServerByGroup(cloudGroup, new ArrayList<>());
+    public String startServerByGroup(CloudGroup cloudGroup, String startedBy) {
+        return startServerByGroup(cloudGroup, new ArrayList<>(), startedBy);
     }
 
-    public String startServerByGroup(CloudGroup cloudGroup, List<String> templates) {
-        CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime());
+    public String startServerByGroup(CloudGroup cloudGroup, List<String> templates, String startedBy) {
+        CloudServer server = new CloudServer(cloudGroup.getName() + "-" + calculateServerNumber(cloudGroup), cloudGroup.getRuntime(), startedBy);
         server.setGroup(cloudGroup.getName());
         server.setCustomTemplates(templates);
         serverRegister.put(server.getName(), server);
