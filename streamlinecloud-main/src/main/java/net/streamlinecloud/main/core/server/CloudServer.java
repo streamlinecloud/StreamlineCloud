@@ -288,8 +288,11 @@ public class CloudServer extends StreamlineServer {
     public boolean deployPlugin() {
         String pluginFileName = "streamlinecloud_MC-alpha-1.0.0";
         try {
-            new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins").mkdirs();
-            Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins/streamlinecloud-mc.jar").toPath());
+            File file;
+            if (isStaticServer()) file = new File(Cache.i().homeFile + "/staticservers/" + getName() + "/plugins");
+            else file = new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins");
+            file.mkdirs();
+            Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), Path.of(file + "/streamlinecloud-mc.jar"));
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
             return false;
