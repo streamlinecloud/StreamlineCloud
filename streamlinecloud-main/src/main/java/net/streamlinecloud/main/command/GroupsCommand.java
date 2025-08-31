@@ -35,7 +35,7 @@ public class GroupsCommand extends CloudCommand {
 
                 if (args.length == 5 || args.length == 6) {
 
-                    boolean staticGroup = (args.length == 6) && args[4].equals("--static");
+                    boolean staticGroup = (args.length == 6) && args[5].equals("--static");
 
                     String name = args[2];
                     String runtimeS = args[3];
@@ -70,7 +70,7 @@ public class GroupsCommand extends CloudCommand {
                     StreamlineCloud.log("sl.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
 
                 } else {
-                    StreamlineCloud.log("syntax: groups create <name> <template> <server/proxy> optional: --static");
+                    StreamlineCloud.log("syntax: - groups create <name> <server/proxy> <software> (optional: --static)");
                 }
 
                 break;
@@ -247,7 +247,7 @@ public class GroupsCommand extends CloudCommand {
 
         if (args[1].equals("help")) {
             StreamlineCloud.log("Basics");
-            StreamlineCloud.log("- groups create <name> <server/proxy> <software>");
+            StreamlineCloud.log("- groups create <name> <server/proxy> <software> (optional: --static)");
             StreamlineCloud.log("- groups delete <name>");
             StreamlineCloud.log("Set data:");
             StreamlineCloud.log("- groups group <name> set minOnlineCount <int>");
