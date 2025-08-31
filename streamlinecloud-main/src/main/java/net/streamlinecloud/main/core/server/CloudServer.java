@@ -318,9 +318,6 @@ public class CloudServer extends StreamlineServer {
             CloudServer oldServer = CloudServerManager.getInstance().getRestartingServers().get(this);
             Cache.i().getServerSocket().sendTo(oldServer, new SocketMessage(SocketMessage.SocketMessageType.MOVE_SERVER, getUuid()));
 
-            CloudServerManager.getInstance().getRunningServers().remove(oldServer);
-            CloudServerManager.getInstance().getRunningServers().add(this);
-
             StreamlineCloud.log(getName() + " restarted");
             return;
         }
@@ -366,6 +363,7 @@ public class CloudServer extends StreamlineServer {
 
         Cache.i().serverSocket.sendUpdate(this);
 
+
         ServerDeleteEvent serverDeleteEvent = eventManager.callEvent(new ServerDeleteEvent(getName(), getUuid()));
 
         if (serverDeleteEvent.isCancelled()) {
@@ -394,7 +392,6 @@ public class CloudServer extends StreamlineServer {
         newServer.setGroup(getGroup());
         serverManager.restartingServers.put(newServer, this);
         serverManager.getServersWaitingForStart().add(newServer);
-        serverManager.getRunningServers().remove(newServer);
 
         StreamlineCloud.log("Restarting " + getName());
     }
