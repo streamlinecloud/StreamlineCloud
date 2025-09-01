@@ -19,6 +19,7 @@ import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.common.utils.Utils;
 import lombok.Getter;
 import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
+import net.streamlinecloud.mc.velocity.command.RefreshWhitelistCommand;
 import net.streamlinecloud.mc.velocity.listener.ProxyConnectionListener;
 import net.streamlinecloud.mc.velocity.manager.ProxyGroupManager;
 import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
@@ -56,8 +57,6 @@ public class VelocitySCP {
         new ProxyServerManager();
         new ProxyGroupManager();
 
-        String whitelist = new BackendRequest("whitelist").fetch().getResponse();
-
         new LangManager();
         new ProxyFallbackHandler();
 
@@ -68,6 +67,19 @@ public class VelocitySCP {
                 "sl.mc.noFallbacks",
                 "sl.mc.notWhitelisted"});
 
+        refreshWhitelist();
+
+    }
+
+    @Subscribe
+    public void onInitialize(ProxyInitializeEvent event) {
+        proxy.getEventManager().register(this, new ProxyConnectionListener());
+        proxy.getCommandManager().register(proxy.getCommandManager().metaBuilder("refreshWhitelist").plugin(this).build(), new RefreshWhitelistCommand());
+    }
+
+    public void refreshWhitelist() {
+        String whitelist = new BackendRequest("whitelist").fetch().getResponse();
+
         assert whitelist != null;
         if (whitelist.equals("false")) {
             StaticCache.whitelistEnabled = false;
@@ -75,12 +87,6 @@ public class VelocitySCP {
             StaticCache.whitelistEnabled = true;
             StaticCache.whitelist = new Gson().fromJson(whitelist, List.class);
         }
-
-    }
-
-    @Subscribe
-    public void onInitialize(ProxyInitializeEvent event) {
-        proxy.getEventManager().register(this, new ProxyConnectionListener());
     }
 
 
