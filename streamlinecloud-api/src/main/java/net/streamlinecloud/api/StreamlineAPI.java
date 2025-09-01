@@ -5,5 +5,5 @@ import lombok.Getter;
 public class StreamlineAPI {
 
     @Getter
-    private static String apiVersion = "BETA_0.4";
+    private static String apiVersion = "BETA_0.5";
 }

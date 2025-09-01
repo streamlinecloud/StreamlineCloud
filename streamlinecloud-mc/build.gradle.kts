@@ -6,9 +6,9 @@ plugins {
     id("java")
 }
 
-group = "io.streamlinemc"
-version = "1.0.0"
-val branch = "alpha"
+group = "net.streamlinecloud"
+version = "0.5"
+val branch = "beta"
 
 repositories {
     mavenCentral()

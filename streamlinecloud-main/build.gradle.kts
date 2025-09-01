@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.streamlinemc"
-version = "0.4"
+version = "0.5"
 val branch = "BETA"
 
 repositories {
