@@ -40,7 +40,7 @@ public class ProxyFallbackHandler {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
 
-            servers = new Gson().fromJson(Functions.get("servers/allSnapshots"), new TypeToken<List<StreamlineServerSnapshot>>(){}.getType());
+            servers = new Gson().fromJson(new BackendRequest("servers/allSnapshots").fetch().getResponse(), new TypeToken<List<StreamlineServerSnapshot>>(){}.getType());
 
             for (String s : allServers[0]) VelocitySCP.getInstance().getProxy().unregisterServer(VelocitySCP.getInstance().getProxy().getServer(s).get().getServerInfo());
             allServers[0] = new ArrayList<>();
@@ -64,9 +64,8 @@ public class ProxyFallbackHandler {
             };
 
             Utils.servers = servers;
-            System.out.println("UTILS.SERVERS: " + new Gson().toJson(Utils.servers));
 
-            fallbacks = new Gson().fromJson(Functions.get("servers/fallbackServers"), List.class);
+            fallbacks = new Gson().fromJson(new BackendRequest("servers/fallbackServers").fetch().getResponse(), List.class);
 
         }, 0, 3, TimeUnit.SECONDS);
     }
@@ -76,11 +75,9 @@ public class ProxyFallbackHandler {
 
         switch (playerSpreading) {
             case "RANDOM" -> {
-                System.out.println("RANDOM");
                 return VelocitySCP.getInstance().getProxy().getServer(fallbacks.get(new Random().nextInt(fallbacks.size())));
             }
             case "SPLIT" -> {
-                System.out.println("SPLIT");
                 AtomicReference<StreamlineServerSnapshot> target = new AtomicReference<>();
 
                 for (String fallback : fallbacks) {
@@ -100,7 +97,6 @@ public class ProxyFallbackHandler {
 
             }
             case "BUNDLE" -> {
-                System.out.println("BUNDLE");
                 AtomicReference<StreamlineServerSnapshot> target = new AtomicReference<>();
 
                 for (String fallback : fallbacks) {

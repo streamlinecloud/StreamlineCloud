@@ -13,6 +13,7 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.StreamlineServerSnapshot;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
+import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.common.utils.Utils;
@@ -55,7 +56,7 @@ public class VelocitySCP {
         new ProxyServerManager();
         new ProxyGroupManager();
 
-        String whitelist = Functions.get("whitelist");
+        String whitelist = new BackendRequest("whitelist").fetch().getResponse();
 
         new LangManager();
         new ProxyFallbackHandler();

@@ -1,8 +1,10 @@
 package net.streamlinecloud.mc.paper.command;
 
+import com.google.gson.Gson;
 import net.streamlinecloud.api.packet.RemoteCommandPacket;
 import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.core.PluginConfig;
+import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import org.bukkit.command.Command;
@@ -46,7 +48,7 @@ public class StreamlineCommand implements CommandExecutor {
             RemoteCommandPacket packet = new RemoteCommandPacket(builder.toString(), StaticCache.serverData.getName(), player.getName());
             player.sendMessage(packet.getCommand());
 
-            Functions.post(packet, "command");
+            new BackendRequest("command").setType(BackendRequest.RestType.POST).withBody(new Gson().toJson(packet)).fetch();
 
         }
 

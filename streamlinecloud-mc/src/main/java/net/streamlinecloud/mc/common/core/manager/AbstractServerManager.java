@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.mc.common.core.WebSocketListener;
+import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
@@ -86,7 +87,7 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
         s.setServerState(getLocalServerInfo().getServerState());
         s.setServerUseState(getLocalServerInfo().getServerUseState());
 
-        Functions.post(s, "servers/update");
+        new BackendRequest("servers/update").setType(BackendRequest.RestType.POST).withBody(new Gson().toJson(s)).fetch();
     }
 
 
@@ -95,7 +96,7 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
             if (s != null) if (s.getUuid().equals(uuid)) return s;
         }
 
-        return new Gson().fromJson(Functions.get("servers/" + uuid), StreamlineServer.class);
+        return new Gson().fromJson(new BackendRequest("servers/" + uuid).fetch().getResponse(), StreamlineServer.class);
     }
 
     public StreamlineServer getServerByName(String name) {
@@ -103,6 +104,6 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
             if (s.getName().equals(name)) return s;
         }
 
-        return new Gson().fromJson(Functions.get("servers/name/" + name), StreamlineServer.class);
+        return new Gson().fromJson(new BackendRequest("servers/name/" + name).fetch().getResponse(), StreamlineServer.class);
     }
 }

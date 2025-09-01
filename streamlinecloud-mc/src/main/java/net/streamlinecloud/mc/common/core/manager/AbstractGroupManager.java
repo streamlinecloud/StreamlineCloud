@@ -3,6 +3,7 @@ package net.streamlinecloud.mc.common.core.manager;
 import com.google.gson.Gson;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.mc.PaperSCP;
+import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.Functions;
 import lombok.Getter;
 
@@ -27,12 +28,12 @@ public class AbstractGroupManager implements GroupManagerImpl {
 
     public void updateGroups() {
         List<String> servers = new ArrayList<>();
-        servers = new Gson().fromJson(Functions.get("groups"), servers.getClass());
+        servers = new Gson().fromJson(new BackendRequest("groups").fetch().getResponse(), servers.getClass());
 
         for (String name : servers) {
             if (!groupExists(name)) {
                 try {
-                    StreamlineGroup streamlineGroup = new Gson().fromJson(Functions.get("groups/" + name), StreamlineGroup.class);
+                    StreamlineGroup streamlineGroup = new Gson().fromJson(new BackendRequest("groups/" + name).fetch().getResponse(), StreamlineGroup.class);
                     groups.add(streamlineGroup);
                 } catch (Exception e) {
                     PaperSCP.getInstance().getLogger().info("error!" + e.getMessage());
