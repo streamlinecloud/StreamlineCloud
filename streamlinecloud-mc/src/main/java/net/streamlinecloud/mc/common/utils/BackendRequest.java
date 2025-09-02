@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.streamlinecloud.mc.PaperSCP;
+import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -155,6 +157,9 @@ public class BackendRequest {
                 }
                 connection.disconnect();
                 response = res.toString();
+
+                //Utils.serverManager.log(restType + " request fetched: " + method + " response: " + response);
+
             }
 
         } catch (Exception e) {

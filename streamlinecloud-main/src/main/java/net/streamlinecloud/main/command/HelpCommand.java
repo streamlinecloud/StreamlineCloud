@@ -18,7 +18,7 @@ public class HelpCommand extends CloudCommand {
     public void execute(String[] args) {
 
         if (args.length == 2) {
-            if (args[1].equals("-toggleDebugMode") || args[1].equals("-tdm")) {
+            if (args[1].equals("-debug")) {
                 if (Cache.i().isDebugMode()) {
                     Cache.i().setDebugMode(false);
                     StreamlineCloud.log("Disabled!");

@@ -8,6 +8,7 @@ import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
+import net.streamlinecloud.mc.common.utils.Utils;
 
 import javax.websocket.*;
 import java.net.Socket;
@@ -49,6 +50,8 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Utils.serverManager = this;
 
         uploadServerInfo();
     }

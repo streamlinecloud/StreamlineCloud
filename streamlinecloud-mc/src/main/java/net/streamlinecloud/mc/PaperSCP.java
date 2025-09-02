@@ -26,6 +26,7 @@ public final class PaperSCP extends JavaPlugin {
 
     StreamlineCloud streamlineCloud;
     ConfigManager configManager;
+    boolean debug = true;
 
     @Getter
     private static PaperSCP instance;
@@ -71,6 +72,10 @@ public final class PaperSCP extends JavaPlugin {
 
     public StaticServerDataPacket getServerData() {
         return StaticCache.serverData;
+    }
+
+    public void debug(String message) {
+        if (debug) getLogger().info(message);
     }
 
 }
