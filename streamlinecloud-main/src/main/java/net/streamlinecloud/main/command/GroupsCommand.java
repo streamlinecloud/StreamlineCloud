@@ -173,6 +173,20 @@ public class GroupsCommand extends CloudCommand {
 
                                         break;
 
+                                    case "priority":
+                                        if (args.length != 6) {
+                                            StreamlineCloud.log("Enter a number");
+                                            return;
+                                        }
+
+                                        try {
+                                            group.setPriority(Integer.parseInt(args[5]));
+                                        } catch (NumberFormatException e) {
+                                            StreamlineCloud.log("Please enter a valid number");
+                                            return;
+                                        }
+                                        break;
+
                                 }
 
                             }

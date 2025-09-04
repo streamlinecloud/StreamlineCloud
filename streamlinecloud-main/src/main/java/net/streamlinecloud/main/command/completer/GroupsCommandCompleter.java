@@ -58,6 +58,7 @@ public class GroupsCommandCompleter implements Completer {
                         list.add(new Candidate("minOnlineCount"));
                         list.add(new Candidate("software"));
                         list.add(new Candidate("autoRestartMinutes"));
+                        list.add(new Candidate("priority"));
                         break;
 
                     case "add":
