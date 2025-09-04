@@ -9,14 +9,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Utils {
@@ -29,6 +27,35 @@ public class Utils {
             return true;
         }
     }
+
+    public static List<Field> getAllFields(Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        while (clazz != null) {
+            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
+    }
+
+    public static void setFieldsFromMap(Object obj, Map<String, Object> values) throws IllegalAccessException, NoSuchFieldException, NumberFormatException {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            for (Map.Entry<String, Object> entry : values.entrySet()) {
+                try {
+                    Field field = clazz.getDeclaredField(entry.getKey());
+                    field.setAccessible(true);
+                    if (field.getType() == int.class) {
+                        field.setInt(obj, Integer.parseInt(entry.getValue().toString()));
+                        return;
+                    }
+                    field.set(obj, entry.getValue());
+                } catch (NoSuchFieldException ignored) {
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+    }
+
 
     public static void runMkdir(boolean result) {
         if (Cache.i().isFirstLaunch() && !result) StreamlineCloud.log("StreamlineCloud has failed to create a file. This could be a permission or file system error");

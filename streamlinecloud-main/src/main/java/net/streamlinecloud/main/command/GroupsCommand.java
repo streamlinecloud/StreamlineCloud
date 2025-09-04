@@ -1,5 +1,8 @@
 package net.streamlinecloud.main.command;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
@@ -8,9 +11,13 @@ import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.utils.Utils;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GroupsCommand extends CloudCommand {
 
@@ -125,6 +132,25 @@ public class GroupsCommand extends CloudCommand {
                             return;
                         }
 
+                        HashMap<String, Object> fields = new HashMap<>();
+
+                        for (Field field : Utils.getAllFields(group.getClass())) {
+                            field.setAccessible(true);
+                            Object value = null;
+                            try {
+                                value = field.get(group);
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
+                            fields.put(field.getName(), value);
+                        }
+
+                        if (args.length == 3) {
+                            StreamlineCloud.log("Information about " + group.getName());
+                            fields.forEach((k, v) -> StreamlineCloud.log(k + ": " + v));
+                            return;
+                        }
+
                         String groupSub = args[3];
 
                         switch (groupSub) {
@@ -133,57 +159,26 @@ public class GroupsCommand extends CloudCommand {
                                 String setSub = args[4];
 
                                 switch (setSub) {
-                                    case "minOnlineCount":
-                                    case "moc":
-                                        if (args.length != 6) {
-                                            StreamlineCloud.log("Enter a number");
-                                            return;
-                                        }
-
-                                        try {
-                                            group.setMinOnlineCount(Integer.parseInt(args[5]));
-                                        } catch (NumberFormatException e) {
-                                            StreamlineCloud.log("Please enter a valid number");
-                                            return;
-                                        }
+                                    case "templates":
+                                    case "name":
                                         break;
 
-                                    case "software":
-                                        if (args.length != 6) {
-                                            StreamlineCloud.log("Please enter a software");
+                                    default:
+                                        if (!fields.containsKey(setSub)) {
+                                            StreamlineCloud.log("Please enter a valid variable");
                                             return;
                                         }
 
-                                        group.setSoftwareName(args[5]);
-                                        break;
-
-                                    case "autoRestartMinutes":
-                                    case "arm":
-                                        if (args.length != 6) {
-                                            StreamlineCloud.log("Enter a number");
-                                            return;
-                                        }
+                                        Map<String, Object> values = Map.of(
+                                                setSub, args[5]
+                                        );
 
                                         try {
-                                            group.setAutoRestartMinutes(Integer.parseInt(args[5]));
+                                            Utils.setFieldsFromMap(group, values);
+                                        } catch (IllegalAccessException | NoSuchFieldException e) {
+                                            throw new RuntimeException(e);
                                         } catch (NumberFormatException e) {
                                             StreamlineCloud.log("Please enter a valid number");
-                                            return;
-                                        }
-
-                                        break;
-
-                                    case "priority":
-                                        if (args.length != 6) {
-                                            StreamlineCloud.log("Enter a number");
-                                            return;
-                                        }
-
-                                        try {
-                                            group.setPriority(Integer.parseInt(args[5]));
-                                        } catch (NumberFormatException e) {
-                                            StreamlineCloud.log("Please enter a valid number");
-                                            return;
                                         }
                                         break;
 
