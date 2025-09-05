@@ -44,11 +44,14 @@
   "sl.command.servers.command.enterCommand": "Please enter a command",
   "sl.command.multiRoot.generate": "",
 
-  "sl.mc.prefix":  "§c§lStreamline§b§lCloud",
+  "sl.mc.prefix":  "§8» §c§lStreamline§b§lCloud §8| §7",
   "sl.mc.motd": "<bold><gradient:#ff4040:#d47979>Powered by StreamlineCloud</gradient></bold>\n<#4dffed>Visit streamlinecloud.net",
   "sl.mc.notAllowed": "§cYou are not allowed to use this command",
   "sl.mc.noFallbacks":  "§cCurrently there are no fallback servers available",
   "sl.mc.notWhitelisted":  "§cYou are not whitelisted",
+  "sl.mc.connectingTo":  "§7Connecting you to %0",
+  "sl.mc.alreadyConnected":  "§cYou are already connected to %0",
+  "sl.mc.serverDoesNotExist":  "§cThis server does not exist",
 
   "sl.error.title": "§IMPORTANTAn error occurred: §RED%0",
   "sl.error.details": "Visit §GREENdata/error/%0 §REDfor more details!",

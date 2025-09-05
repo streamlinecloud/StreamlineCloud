@@ -2,6 +2,11 @@ package net.streamlinecloud.mc;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.velocitypowered.api.command.BrigadierCommand;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
@@ -9,6 +14,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import io.leangen.geantyref.TypeToken;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.StreamlineServerSnapshot;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
@@ -20,6 +27,7 @@ import net.streamlinecloud.mc.common.utils.Utils;
 import lombok.Getter;
 import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
 import net.streamlinecloud.mc.velocity.command.RefreshWhitelistCommand;
+import net.streamlinecloud.mc.velocity.command.ServerCommand;
 import net.streamlinecloud.mc.velocity.listener.ProxyConnectionListener;
 import net.streamlinecloud.mc.velocity.manager.ProxyGroupManager;
 import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
@@ -51,6 +59,14 @@ public class VelocitySCP {
         this.logger = logger;
         instance = this;
 
+        ServerCommand serverCmd = new ServerCommand(proxy);
+        proxy.getCommandManager().register(
+                proxy.getCommandManager().metaBuilder(serverCmd.getCommand())
+                        .aliases("server", "go")
+                        .build(),
+                serverCmd.getCommand()
+        );
+
         StaticCache.setRuntime(ServerRuntime.PROXY);
         Functions.startup();
 
@@ -65,7 +81,10 @@ public class VelocitySCP {
                 "sl.mc.motd",
                 "sl.mc.notAllowed",
                 "sl.mc.noFallbacks",
-                "sl.mc.notWhitelisted"});
+                "sl.mc.notWhitelisted",
+                "sl.mc.connectingTo",
+                "sl.mc.serverDoesNotExist",
+                "sl.mc.alreadyConnected"});
 
         refreshWhitelist();
 

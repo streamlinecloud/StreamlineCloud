@@ -39,7 +39,7 @@ public class ProxyConnectionListener {
 
             Optional<RegisteredServer> server = ProxyFallbackHandler.getInstance().searchFallback();
             if (server == null || server.isEmpty()) {
-                player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.noFallbacks") + " \n\n§8» " + LangManager.getInstance().get("sl.mc.prefix")));
+                player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.noFallbacks") + " \n\n " + LangManager.getInstance().get("sl.mc.prefix")));
                 return;
             }
 
