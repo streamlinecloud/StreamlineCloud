@@ -8,7 +8,6 @@ import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 import net.streamlinecloud.mc.paper.command.ConnectCommand;
-import net.streamlinecloud.mc.paper.command.ServerInfoCommand;
 import net.streamlinecloud.mc.paper.command.StreamlineCommand;
 import net.streamlinecloud.mc.paper.listener.ConnectionListener;
 import net.streamlinecloud.mc.paper.listener.ServerListener;
@@ -59,7 +58,6 @@ public final class PaperSCP extends JavaPlugin {
     }
 
     private void registerCommand() {
-        Objects.requireNonNull(getCommand("serverinfo")).setExecutor(new ServerInfoCommand());
         Objects.requireNonNull(getCommand("connect")).setExecutor(new ConnectCommand());
         Objects.requireNonNull(getCommand("streamline")).setExecutor(new StreamlineCommand());
     }

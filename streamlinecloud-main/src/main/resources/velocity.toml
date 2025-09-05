@@ -118,7 +118,7 @@ show-ping-requests = false
 failover-on-unexpected-server-disconnect = true
 
 # Declares the proxy commands to 1.13+ clients.
-announce-proxy-commands = false
+announce-proxy-commands = true
 
 # Enables the logging of commands
 log-command-executions = false

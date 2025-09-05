@@ -7,8 +7,6 @@ description: This plugin needs to be installed on every server powered by Stream
 website: https://streamlinecloud.net/
 
 commands:
-  serverinfo:
-    description: StreamlineCloud server info
   connect:
     description: Connect command!
   streamline:
