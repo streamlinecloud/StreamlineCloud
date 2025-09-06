@@ -100,7 +100,8 @@ public class CloudTerminalRunner extends Thread {
 
             if (cloudCommand.name().equals(args[0])) {
 
-                cloudCommand.execute(args);
+                executeCommand(cloudCommand, args);
+
             }
 
             if (cloudCommand.aliases() != null) {
@@ -109,7 +110,7 @@ public class CloudTerminalRunner extends Thread {
 
                     if (alias.equals(args[0])) {
 
-                        cloudCommand.execute(args);
+                        executeCommand(cloudCommand, args);
 
                     }
                 }
@@ -123,5 +124,14 @@ public class CloudTerminalRunner extends Thread {
             }
         });
 
+    }
+
+    public static void executeCommand(CloudCommand command, String[] args) {
+        try {
+            command.execute(args);
+        } catch (Exception e) {
+            StreamlineCloud.log("An error occurred while executing this a command. Enable debugs for more details.");
+            if (Cache.i().isDebugMode()) e.printStackTrace();
+        }
     }
 }
