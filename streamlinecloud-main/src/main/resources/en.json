@@ -52,6 +52,7 @@
   "sl.mc.connectingTo":  "§7Connecting you to %0",
   "sl.mc.alreadyConnected":  "§cYou are already connected to %0",
   "sl.mc.serverDoesNotExist":  "§cThis server does not exist",
+  "sl.mc.proxyShutdown": "§cYour proxy is restarting",
 
   "sl.error.title": "§IMPORTANTAn error occurred: §RED%0",
   "sl.error.details": "Visit §GREENdata/error/%0 §REDfor more details!",

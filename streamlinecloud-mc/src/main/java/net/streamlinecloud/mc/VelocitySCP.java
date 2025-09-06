@@ -84,7 +84,8 @@ public class VelocitySCP {
                 "sl.mc.notWhitelisted",
                 "sl.mc.connectingTo",
                 "sl.mc.serverDoesNotExist",
-                "sl.mc.alreadyConnected"});
+                "sl.mc.alreadyConnected",
+                "sl.mc.proxyShutdown"});
 
         refreshWhitelist();
 

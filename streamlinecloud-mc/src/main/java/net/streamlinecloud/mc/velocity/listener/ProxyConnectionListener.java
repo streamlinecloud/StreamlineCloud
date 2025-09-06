@@ -5,12 +5,15 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
+import com.velocitypowered.api.event.proxy.ListenerCloseEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.streamlinecloud.mc.VelocitySCP;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.Functions;
@@ -50,6 +53,13 @@ public class ProxyConnectionListener {
         }
 
         ProxyServerManager.getInstance().uploadServerInfo();
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ListenerCloseEvent event) {
+        VelocitySCP.getInstance().getProxy().getAllPlayers().forEach(player -> {
+            player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.proxyShutdown") + " \n\n " + LangManager.getInstance().get("sl.mc.prefix")));
+        });
     }
 
     @Subscribe
