@@ -48,6 +48,7 @@ public class Cache {
     public String pluginBuildDate = "unknown";
     public long startuptime = 0L;
     public boolean firstLaunch = false;
+    public boolean isStopping = false;
     public Gson gson = new Gson().newBuilder().create();
     public RemoteSocket webSocketClient = null;
     public ExtensionManager pluginManager = new ExtensionManager();

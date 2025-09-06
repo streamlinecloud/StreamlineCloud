@@ -43,6 +43,8 @@ public class CloudServerManager {
 
         Runnable runnable = () -> {
 
+            if (Cache.i().isStopping()) return;
+
             try {
 
                 startServersIfNeeded();

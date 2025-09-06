@@ -1,7 +1,10 @@
 package net.streamlinecloud.main;
 
+import com.google.gson.Gson;
 import net.streamlinecloud.api.StreamlineAPI;
 import net.streamlinecloud.api.extension.event.console.ConsoleMessageEvent;
+import net.streamlinecloud.api.server.ServerRuntime;
+import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
@@ -221,12 +224,19 @@ public class StreamlineCloud {
         log("sl.shutdown.shuttingDown");
 
         List<CloudServer> servers = new ArrayList<>(CloudServerManager.getInstance().getRunningServers());
+        Cache.i().setStopping(true);
 
         for (CloudServer server : servers) {
-            if (server.getThread() != null) {
-                if (server.isStaticServer()) server.stop();
-                else server.kill();
+            if (server.getRuntime().equals(ServerRuntime.PROXY)) {
+                server.stop();
+            } else {
+                if (server.getServerState().equals(ServerState.STARTING)) server.kill();
+                else server.stop();
             }
+        }
+
+        while (!CloudServerManager.getInstance().getRunningServers().isEmpty()) {
+            Thread.sleep(100);
         }
 
         Cache.i().getPluginManager().executeStop();
