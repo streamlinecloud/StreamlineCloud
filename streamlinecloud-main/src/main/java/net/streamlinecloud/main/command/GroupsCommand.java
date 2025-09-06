@@ -164,13 +164,14 @@ public class GroupsCommand extends CloudCommand {
                                         break;
 
                                     default:
-                                        if (args.length != 5) {
-                                            StreamlineCloud.log("Please enter a value");
-                                            return;
-                                        }
 
                                         if (!fields.containsKey(setSub)) {
                                             StreamlineCloud.log("Please enter a valid variable");
+                                            return;
+                                        }
+
+                                        if (args.length != 6) {
+                                            StreamlineCloud.log("Please enter a value");
                                             return;
                                         }
 

@@ -77,6 +77,11 @@ public class ServersCommand extends CloudCommand {
 
                 if (servers != null) {
 
+                    if (args.length != 3) {
+                        StreamlineCloud.log("Please specify an action");
+                        return;
+                    }
+
                     String serverSub = args[2];
 
                     switch (serverSub) {
