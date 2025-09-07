@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import net.streamlinecloud.api.packet.RemoteCommandPacket;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.lang.LangManager;
@@ -69,6 +70,11 @@ public class UtilController {
     }
 
     public void command(@NotNull Context context) {
+        if (Cache.i().getConfig().getAdvanced().isDisableRemoteCommands()) {
+            context.status(200);
+            return;
+        }
+
         RemoteCommandPacket packet = new Gson().fromJson(context.body(), RemoteCommandPacket.class);
 
         StreamlineCloud.log("Remote Command: §YELLOW" + packet.getCommand() + " §RED(from §YELLOW" + packet.getServer() + " §REDby §YELLOW" + packet.getExecutor() + "§RED)");

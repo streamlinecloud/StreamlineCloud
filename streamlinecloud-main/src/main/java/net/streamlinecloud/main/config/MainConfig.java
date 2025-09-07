@@ -64,6 +64,7 @@ public class MainConfig {
 
     @Getter @Setter
     public static class AdvancedConfig {
+        boolean disableRemoteCommands = false;
         boolean disableColors = false;
         boolean useLegacyColor = false;
         boolean enableRconSupport = true;
