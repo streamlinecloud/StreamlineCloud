@@ -7,8 +7,8 @@ plugins {
 }
 
 group = "net.streamlinecloud"
-version = "0.5"
-val branch = "beta"
+version = "1.0"
+val branch = "BETA"
 
 repositories {
     mavenCentral()
@@ -101,7 +101,7 @@ tasks.register("Make MC Project") {
         val copiedJar = project.copy {
             from(jarFile)
             into(bdir)
-            rename(jarFile.asFile.name, "streamlinecloud_MC-$branch-$version.jar")
+            rename(jarFile.asFile.name, "streamlinecloud-mc-$branch-$version.jar")
         }
 
         println("Built Jar File: $bdir")
