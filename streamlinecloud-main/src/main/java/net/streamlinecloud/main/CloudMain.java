@@ -84,7 +84,7 @@ public class CloudMain {
 
         Utils.runMkdir(new File(cache.homeFile + "/groups").mkdirs());
         Utils.runMkdir(new File(cache.homeFile + "/data/software").mkdirs());
-        Utils.runMkdir(new File(cache.homeFile + "/plugins").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/extensions").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/staticservers").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/temp").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
@@ -107,7 +107,7 @@ public class CloudMain {
 
         for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) loadBalancer.start();
 
-        Cache.i().getPluginManager().loadPlugins();
+        Cache.i().getPluginManager().loadExtensions();
         Cache.i().getPluginManager().executeStartup();
 
         CloudServerManager.getInstance().startServersIfNeeded();

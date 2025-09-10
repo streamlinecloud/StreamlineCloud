@@ -25,21 +25,21 @@ public class ExtensionManager {
     public static final EventManager eventManager = new EventManager();
     public static final CommandManager commandManager = new CommandManager();
     private final HashMap<StreamlineExtension, ExtensionConfig> extensionList = new HashMap<>();
-    private final File pluginsFolder = new File(System.getProperty("user.dir") + "/plugins");
-    public void loadPlugins() {
-        Utils.runMkdir(pluginsFolder.mkdirs());
+    private final File extensionsFolder = new File(System.getProperty("user.dir") + "/extensions");
+    public void loadExtensions() {
+        Utils.runMkdir(extensionsFolder.mkdirs());
 
 
-        if (pluginsFolder.exists() && pluginsFolder.isDirectory()) {
-            File[] files = pluginsFolder.listFiles();
+        if (extensionsFolder.exists() && extensionsFolder.isDirectory()) {
+            File[] files = extensionsFolder.listFiles();
 
             if (files != null) {
                 for (File file : files) {
                     if (file.isFile() && file.getName().endsWith(".jar")) {
-                        ExtensionConfig config = extractPluginConfig(file);
+                        ExtensionConfig config = extractextensionConfig(file);
 
                         if (config != null) {
-                            loadPlugin(file, config);
+                            loadExtension(file, config);
                         }
                     }
                 }
@@ -47,9 +47,9 @@ public class ExtensionManager {
         }
     }
 
-    private ExtensionConfig extractPluginConfig(File jarFile) {
+    private ExtensionConfig extractextensionConfig(File jarFile) {
         try (JarFile jar = new JarFile(jarFile)) {
-            JarEntry entry = jar.getJarEntry("plugin.yml");
+            JarEntry entry = jar.getJarEntry("extension.yml");
 
             if (entry != null) {
                 try (InputStream input = jar.getInputStream(entry)) {
@@ -64,27 +64,27 @@ public class ExtensionManager {
         return null;
     }
 
-    private void loadPlugin(File file, ExtensionConfig config) {
+    private void loadExtension(File file, ExtensionConfig config) {
         try {
             URLClassLoader classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
-            Class<?> pluginClass = classLoader.loadClass(config.getMainClass());
+            Class<?> extensionClass = classLoader.loadClass(config.getMainClass());
 
-            if (StreamlineExtension.class.isAssignableFrom(pluginClass)) {
-                StreamlineExtension plugin = (StreamlineExtension) pluginClass.getDeclaredConstructor().newInstance();
-                extensionList.put(plugin, config);
+            if (StreamlineExtension.class.isAssignableFrom(extensionClass)) {
+                StreamlineExtension extension = (StreamlineExtension) extensionClass.getDeclaredConstructor().newInstance();
+                extensionList.put(extension, config);
 
                 StreamlineCloud.log("Enabling " + config.getId() + "_v" + config.getVersion() + " by " + config.getAuthor());
             } else {
-                StreamlineCloud.log("There are Files that are not Streamline Plugins.");
+                StreamlineCloud.log("There are Files that are not Streamline extensions.");
             }
         } catch (Exception e) {
-            StreamlineCloud.log("There was an error while loading a plugin. (" + e.getMessage() + ")");
+            StreamlineCloud.log("There was an error while loading a extension. (" + e.getMessage() + ")");
         }
     }
 
     public void executeStartup() {
         for (StreamlineExtension streamlineExtension : extensionList.keySet()) {
-            File dataFolder = new File(Cache.i().homeFile + "/data/plugin/" + extensionList.get(streamlineExtension).getId());
+            File dataFolder = new File(Cache.i().homeFile + "/data/extension/" + extensionList.get(streamlineExtension).getId());
             Utils.runMkdir(dataFolder.mkdirs());
             try {
                 streamlineExtension.initialize(eventManager, commandManager, dataFolder);
@@ -96,8 +96,8 @@ public class ExtensionManager {
     }
 
     public void executeStop() {
-        for (StreamlineExtension streamlinePlugin : extensionList.keySet()) {
-            streamlinePlugin.disable();
+        for (StreamlineExtension streamlineextension : extensionList.keySet()) {
+            streamlineextension.disable();
         }
     }
 
