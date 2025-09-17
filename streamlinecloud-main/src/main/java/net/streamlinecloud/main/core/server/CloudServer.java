@@ -104,7 +104,7 @@ public class CloudServer extends StreamlineServer {
 
             StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
                     new ReplacePaket("%1", getName()),
-                    new ReplacePaket("%2", "staticservers/" + getUuid())
+                    new ReplacePaket("%2", "static/" + getUuid())
             });
         }
 
@@ -126,7 +126,7 @@ public class CloudServer extends StreamlineServer {
 
         if (serverStartEvent.isCancelled()) return;
 
-        file = isStaticServer() ? new File(Cache.i().homeFile + "/staticservers/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
+        file = isStaticServer() ? new File(Cache.i().homeFile + "/static/" + getName()) : new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid());
         Utils.runMkdir(file.mkdirs());
 
         serverFolder = file;
@@ -289,7 +289,7 @@ public class CloudServer extends StreamlineServer {
         String pluginFileName = "streamlinecloud-mc-BETA-1.0";
         try {
             File file;
-            if (isStaticServer()) file = new File(Cache.i().homeFile + "/staticservers/" + getName() + "/plugins");
+            if (isStaticServer()) file = new File(Cache.i().homeFile + "/static/" + getName() + "/plugins");
             else file = new File(Cache.i().homeFile + "/temp/" + getName() + "-" + getUuid() + "/plugins");
             if (new File(file + "/streamlinecloud-mc.jar").exists()) return true;
             file.mkdirs();

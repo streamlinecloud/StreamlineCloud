@@ -85,7 +85,7 @@ public class CloudMain {
         Utils.runMkdir(new File(cache.homeFile + "/groups").mkdirs());
         Utils.runMkdir(new File(cache.homeFile + "/data/software").mkdirs());
         Utils.runMkdir(new File(cache.homeFile + "/extensions").mkdir());
-        Utils.runMkdir(new File(cache.homeFile + "/staticservers").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/static").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/temp").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
 
