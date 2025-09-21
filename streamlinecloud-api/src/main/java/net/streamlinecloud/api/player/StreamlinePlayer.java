@@ -12,6 +12,7 @@ public class StreamlinePlayer implements StreamlinePlayerImpl {
 
     final UUID uuid;
     final String name;
+    String currentProxy;
     String currentServerId;
 
 }

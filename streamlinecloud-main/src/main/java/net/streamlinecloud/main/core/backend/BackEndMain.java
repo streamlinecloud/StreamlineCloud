@@ -60,7 +60,7 @@ public class BackEndMain {
         app.post("/streamline/servers/update", serverController::update);
 
         app.post("/streamline/register/{uuid}", playerRegisterController::set);
-        app.delete("/streamline/servers/{uuid}", playerRegisterController::delete);
+        app.delete("/streamline/register/{uuid}", playerRegisterController::delete);
 
         app.get("/streamline/servers/name/{name}", serverController::get);
 

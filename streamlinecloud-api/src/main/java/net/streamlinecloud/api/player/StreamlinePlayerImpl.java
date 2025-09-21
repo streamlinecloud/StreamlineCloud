@@ -18,6 +18,16 @@ public interface StreamlinePlayerImpl {
     String getName();
 
     /**
+     * @return Returns the ID of the current proxy server of the player
+     */
+    String getCurrentProxy();
+
+    /**
+     * @param currentProxyId This has to be a valid Server ID
+     */
+    void setCurrentProxy(String currentProxyId);
+
+    /**
      * @return Returns the ID of the current server of the player
      */
     String getCurrentServerId();

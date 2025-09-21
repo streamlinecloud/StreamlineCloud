@@ -1,22 +1,23 @@
 package net.streamlinecloud.mc.velocity.listener;
 
+import com.google.gson.Gson;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.event.proxy.ListenerCloseEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
-import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.streamlinecloud.api.player.StreamlinePlayer;
 import net.streamlinecloud.mc.VelocitySCP;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
-import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
 import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
@@ -30,8 +31,9 @@ public class ProxyConnectionListener {
 
     @Subscribe
     public void onPlayerChooseInitialServer(PlayerChooseInitialServerEvent event) {
+        Player player = event.getPlayer();
+
         try {
-            Player player = event.getPlayer();
 
             if (StaticCache.whitelistEnabled) {
                 if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
@@ -56,6 +58,13 @@ public class ProxyConnectionListener {
     }
 
     @Subscribe
+    public void onServerConnect(ServerConnectedEvent event) {
+        Player player = event.getPlayer();
+
+        new BackendRequest("register/" + player.getUniqueId()).setType(BackendRequest.RestType.POST).withBody(new Gson().toJson(new StreamlinePlayer(player.getUniqueId(), player.getUsername(), StaticCache.serverData.getName(), event.getServer().getServerInfo().getName()))).fetch();
+    }
+
+    @Subscribe
     public void onProxyShutdown(ListenerCloseEvent event) {
         VelocitySCP.getInstance().getProxy().getAllPlayers().forEach(player -> {
             player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.proxyShutdown") + " \n\n " + LangManager.getInstance().get("sl.mc.prefix")));
@@ -65,6 +74,7 @@ public class ProxyConnectionListener {
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
         ProxyServerManager.getInstance().uploadServerInfo();
+        new BackendRequest("register/" + event.getPlayer().getUniqueId()).setType(BackendRequest.RestType.DELETE).fetch();
     }
 
     @Subscribe
