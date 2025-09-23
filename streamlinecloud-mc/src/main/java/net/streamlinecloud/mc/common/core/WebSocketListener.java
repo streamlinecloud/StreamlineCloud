@@ -9,7 +9,7 @@ import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
-import net.streamlinecloud.mc.paper.manager.ServerManager;
+import net.streamlinecloud.mc.paper.manager.PaperServerManager;
 
 import java.net.http.WebSocket;
 import java.util.concurrent.CompletionStage;
@@ -89,6 +89,17 @@ public class WebSocketListener implements WebSocket.Listener {
 
                 }
 
+            } else if (message.getType().toString().startsWith("PLAYER")) {
+
+                if (message.getPlayer() == null) {
+                    serverManager.log("[SOCKET] Got message without a defined player: " + message.getType());
+                    return null;
+                }
+
+                if (message.getType().equals(SocketMessage.SocketMessageType.PLAYER_MESSAGE)) serverManager.sendMessageToPlayer(message.getPlayer().getUuid(), message.getContent());
+                else if (message.getType().equals(SocketMessage.SocketMessageType.PLAYER_CONNECT)) serverManager.connectPlayerToServer(message.getPlayer().getUuid(), message.getContent());
+                else if (message.getType().equals(SocketMessage.SocketMessageType.PLAYER_KICK)) serverManager.kickPlayer(message.getPlayer().getUuid(), message.getContent());
+
             }
 
             return null;
@@ -101,7 +112,7 @@ public class WebSocketListener implements WebSocket.Listener {
     @Override
     public void onError(WebSocket webSocket, Throwable error) {
         System.out.println("WS Error: " + error.getMessage());
-        ServerManager.getInstance().reinit();
+        PaperServerManager.getInstance().reinit();
     }
 
     @Override

@@ -2,6 +2,8 @@ package net.streamlinecloud.mc.common.core.manager;
 
 import net.streamlinecloud.api.server.StreamlineServer;
 
+import java.util.UUID;
+
 public interface ServerManagerImpl {
 
     void subscribe(StreamlineServer server);
@@ -12,6 +14,10 @@ public interface ServerManagerImpl {
     void log(String message);
     StreamlineServer getServerByUuid(String uuid);
     StreamlineServer getServerByName(String name);
+
+    void sendMessageToPlayer(UUID playerUuid, String message);
+    void connectPlayerToServer(UUID playerUuid, String serverId);
+    void kickPlayer(UUID playerUuid, String reason);
 
     void onSubscribedServerUpdated(StreamlineServer server);
     void onSubscribedServerStarted(StreamlineServer server);

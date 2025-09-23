@@ -1,4 +1,4 @@
 package net.streamlinecloud.mc.velocity.manager;
 
-public class ProxyGroupManager {
+public class VelocityGroupManager {
 }

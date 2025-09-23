@@ -14,12 +14,12 @@ import net.streamlinecloud.mc.common.utils.StaticCache;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class ProxyServerManager extends AbstractServerManager {
+public class VelocityServerManager extends AbstractServerManager {
 
     @Getter
     private static AbstractServerManager instance;
 
-    public ProxyServerManager() {
+    public VelocityServerManager() {
         instance = this;
         init();
     }
@@ -32,6 +32,29 @@ public class ProxyServerManager extends AbstractServerManager {
     @Override
     public void log(String message) {
         VelocitySCP.getInstance().getLogger().info(message);
+    }
+
+    @Override
+    public void sendMessageToPlayer(UUID playerUuid, String message) {
+        VelocitySCP.getInstance().getProxy().getPlayer(playerUuid).ifPresent(player -> {
+            player.sendMessage(Component.text(message));
+        });
+    }
+
+    @Override
+    public void connectPlayerToServer(UUID playerUuid, String serverId) {
+        VelocitySCP.getInstance().getProxy().getPlayer(playerUuid).ifPresent(player -> {
+            VelocitySCP.getInstance().getProxy().getServer(serverId).ifPresent(server -> {
+                player.createConnectionRequest(server).fireAndForget();
+            });
+        });
+    }
+
+    @Override
+    public void kickPlayer(UUID playerUuid, String reason) {
+        VelocitySCP.getInstance().getProxy().getPlayer(playerUuid).ifPresent(player -> {
+            player.disconnect(Component.text("(proxy) " + reason));
+        });
     }
 
     @Override

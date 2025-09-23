@@ -20,7 +20,7 @@ import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
-import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
+import net.streamlinecloud.mc.velocity.manager.VelocityServerManager;
 
 import java.util.Optional;
 
@@ -54,7 +54,7 @@ public class ProxyConnectionListener {
             e.printStackTrace();
         }
 
-        ProxyServerManager.getInstance().uploadServerInfo();
+        VelocityServerManager.getInstance().uploadServerInfo();
     }
 
     @Subscribe
@@ -73,7 +73,7 @@ public class ProxyConnectionListener {
 
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
-        ProxyServerManager.getInstance().uploadServerInfo();
+        VelocityServerManager.getInstance().uploadServerInfo();
         new BackendRequest("register/" + event.getPlayer().getUniqueId()).setType(BackendRequest.RestType.DELETE).fetch();
     }
 

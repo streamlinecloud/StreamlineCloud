@@ -17,8 +17,8 @@ import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
 import net.streamlinecloud.mc.velocity.command.RefreshWhitelistCommand;
 import net.streamlinecloud.mc.velocity.command.ServerCommand;
 import net.streamlinecloud.mc.velocity.listener.ProxyConnectionListener;
-import net.streamlinecloud.mc.velocity.manager.ProxyGroupManager;
-import net.streamlinecloud.mc.velocity.manager.ProxyServerManager;
+import net.streamlinecloud.mc.velocity.manager.VelocityGroupManager;
+import net.streamlinecloud.mc.velocity.manager.VelocityServerManager;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -52,8 +52,8 @@ public class VelocitySCP {
         StaticCache.setRuntime(ServerRuntime.PROXY);
         Functions.startup();
 
-        new ProxyServerManager();
-        new ProxyGroupManager();
+        new VelocityServerManager();
+        new VelocityGroupManager();
 
         new LangManager();
         new ProxyFallbackHandler();

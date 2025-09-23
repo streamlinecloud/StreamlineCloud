@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.core.backend.socket;
 
 import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
+import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.CloudTerminalRunner;
 import net.streamlinecloud.main.utils.Cache;

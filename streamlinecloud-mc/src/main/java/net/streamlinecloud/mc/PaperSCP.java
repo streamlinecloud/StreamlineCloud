@@ -2,7 +2,6 @@ package net.streamlinecloud.mc;
 
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
-import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
 import net.streamlinecloud.mc.common.core.manager.ConfigManager;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
@@ -13,8 +12,8 @@ import net.streamlinecloud.mc.paper.command.ConnectCommand;
 import net.streamlinecloud.mc.paper.command.StreamlineCommand;
 import net.streamlinecloud.mc.paper.listener.ConnectionListener;
 import net.streamlinecloud.mc.paper.listener.ServerListener;
-import net.streamlinecloud.mc.paper.manager.PlayerManager;
-import net.streamlinecloud.mc.paper.manager.ServerManager;
+import net.streamlinecloud.mc.paper.manager.PaperPlayerManager;
+import net.streamlinecloud.mc.paper.manager.PaperServerManager;
 import net.streamlinecloud.mc.paper.task.StopCountdownTask;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,8 +50,8 @@ public final class PaperSCP extends JavaPlugin {
 
         configManager = new ConfigManager(getDataFolder());
 
-        new ServerManager();
-        new PlayerManager();
+        new PaperServerManager();
+        new PaperPlayerManager();
 
         new StopCountdownTask();
 
@@ -61,7 +60,7 @@ public final class PaperSCP extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        ServerManager.getInstance().getSocket().sendClose(WebSocket.NORMAL_CLOSURE, "PluginShutdown");
+        PaperServerManager.getInstance().getSocket().sendClose(WebSocket.NORMAL_CLOSURE, "PluginShutdown");
     }
 
     private void registerCommand() {

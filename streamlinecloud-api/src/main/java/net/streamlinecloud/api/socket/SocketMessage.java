@@ -3,13 +3,21 @@ package net.streamlinecloud.api.socket;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import net.streamlinecloud.api.player.StreamlinePlayer;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SocketMessage {
 
+    @NonNull
     SocketMessageType type;
+
+    @NonNull
     String content;
+
+    StreamlinePlayer player;
 
     @Override
     public String toString() {
@@ -30,7 +38,11 @@ public class SocketMessage {
         SUCCESS(false),
         ERROR(false),
         MOVE_SERVER(false),
-        SERVER_UPDATE(false);
+        SERVER_UPDATE(false),
+
+        PLAYER_CONNECT(false),
+        PLAYER_MESSAGE(false),
+        PLAYER_KICK(false);
 
         final boolean fromClient;
 

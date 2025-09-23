@@ -15,14 +15,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
-public class ServerManager extends AbstractServerManager {
+public class PaperServerManager extends AbstractServerManager {
 
     @Getter
     private static AbstractServerManager instance;
 
-    public ServerManager() {
+    public PaperServerManager() {
         instance = this;
         init();
     }
@@ -33,7 +34,7 @@ public class ServerManager extends AbstractServerManager {
             @Override
             public void run() {
                 for (Player player : PaperSCP.getInstance().getServer().getOnlinePlayers()) {
-                    PlayerManager.getInstance().sendPlayer(PlayerManager.getInstance().getPlayer(player.getName()), ServerManager.getInstance().getServerByUuid(target));
+                    PaperPlayerManager.getInstance().sendPlayer(PaperPlayerManager.getInstance().getPlayer(player.getName()), PaperServerManager.getInstance().getServerByUuid(target));
                 }
             }
         }, 200L);
@@ -49,6 +50,20 @@ public class ServerManager extends AbstractServerManager {
     @Override
     public void log(String message) {
         PaperSCP.getInstance().getLogger().info(message);
+    }
+
+    @Override
+    public void sendMessageToPlayer(UUID playerUuid, String message) {
+        Objects.requireNonNull(Bukkit.getPlayer(playerUuid)).sendMessage(message);
+    }
+
+    @Override
+    public void connectPlayerToServer(UUID playerUuid, String serverId) {
+    }
+
+    @Override
+    public void kickPlayer(UUID playerUuid, String reason) {
+        Bukkit.getPlayer(playerUuid).kickPlayer(reason);
     }
 
     @Override

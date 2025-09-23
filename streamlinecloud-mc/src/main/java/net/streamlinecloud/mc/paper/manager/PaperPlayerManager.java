@@ -15,15 +15,15 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
-public class PlayerManager {
+public class PaperPlayerManager {
 
     @Getter
-    private static PlayerManager instance;
+    private static PaperPlayerManager instance;
 
     HashMap<UUID, String> playersMap = new HashMap<>();
     List<StreamlinePlayer> onlinePlayers = new ArrayList<>();
 
-    public PlayerManager() {
+    public PaperPlayerManager() {
         instance = this;
     }
 
