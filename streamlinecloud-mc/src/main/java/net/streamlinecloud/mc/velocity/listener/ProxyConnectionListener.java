@@ -61,7 +61,7 @@ public class ProxyConnectionListener {
     public void onServerConnect(ServerConnectedEvent event) {
         Player player = event.getPlayer();
 
-        new BackendRequest("register/" + player.getUniqueId()).setType(BackendRequest.RestType.POST).withBody(new Gson().toJson(new StreamlinePlayer(player.getUniqueId(), player.getUsername(), StaticCache.serverData.getName(), event.getServer().getServerInfo().getName()))).fetch();
+        new BackendRequest("player/" + player.getUniqueId()).setType(BackendRequest.RestType.POST).withBody(new Gson().toJson(new StreamlinePlayer(player.getUniqueId(), player.getUsername(), StaticCache.serverData.getName(), event.getServer().getServerInfo().getName()))).fetch();
     }
 
     @Subscribe
@@ -74,7 +74,7 @@ public class ProxyConnectionListener {
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
         VelocityServerManager.getInstance().uploadServerInfo();
-        new BackendRequest("register/" + event.getPlayer().getUniqueId()).setType(BackendRequest.RestType.DELETE).fetch();
+        new BackendRequest("player/" + event.getPlayer().getUniqueId()).setType(BackendRequest.RestType.DELETE).fetch();
     }
 
     @Subscribe

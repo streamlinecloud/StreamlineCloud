@@ -9,7 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class PlayerRegisterController {
+public class PlayerController {
+
+    public void get(@NotNull Context ctx) {
+        //TODO: Check if online
+        ctx.result(new Gson().toJson(PlayerRegister.getInstance().get(UUID.fromString(ctx.pathParam("uuid")))));
+        ctx.status(HttpStatus.OK);
+    }
 
     public void set(@NotNull Context context) {
         StreamlinePlayer player;
@@ -24,6 +30,10 @@ public class PlayerRegisterController {
         }
 
         PlayerRegister.getInstance().set(uuid, player);
+    }
+
+    public void action(@NotNull Context context) {
+        //TODO:
     }
 
     public void delete(@NotNull Context context) {

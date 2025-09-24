@@ -2,7 +2,7 @@ package net.streamlinecloud.main.core.backend;
 
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.backend.controller.GroupsController;
-import net.streamlinecloud.main.core.backend.controller.PlayerRegisterController;
+import net.streamlinecloud.main.core.backend.controller.PlayerController;
 import net.streamlinecloud.main.core.backend.controller.ServerController;
 import net.streamlinecloud.main.core.backend.controller.UtilController;
 import net.streamlinecloud.main.core.backend.socket.ServerSocket;
@@ -33,7 +33,7 @@ public class BackEndMain {
         GroupsController groupsController = new GroupsController();
         ServerController serverController = new ServerController();
         UtilController utilController = new UtilController();
-        PlayerRegisterController playerRegisterController = new PlayerRegisterController();
+        PlayerController playerController = new PlayerController();
 
         app.get("/streamline/version", utilController::version);
         app.get("/streamline/ping", utilController::ping);
@@ -55,14 +55,15 @@ public class BackEndMain {
         app.post("/streamline/servers/start", serverController::start);
 
         app.get("/streamline/servers/{uuid}", serverController::get);
+        app.get("/streamline/servers/name/{name}", serverController::get);
         app.get("/streamline/servers/{uuid}/rconDetails", serverController::getRconDetails);
         app.get("/streamline/servers/{uuid}/autoRestart", serverController::autoRestart);
         app.post("/streamline/servers/update", serverController::update);
 
-        app.post("/streamline/register/{uuid}", playerRegisterController::set);
-        app.delete("/streamline/register/{uuid}", playerRegisterController::delete);
-
-        app.get("/streamline/servers/name/{name}", serverController::get);
+        app.get("/streamline/player/{uuid}", playerController::get);
+        app.post("/streamline/player/{uuid}", playerController::set);
+        app.post("/streamline/player/{uuid}/action/{type}", playerController::action);
+        app.delete("/streamline/player/{uuid}", playerController::delete);
 
         Cache.i().setServerSocket(new ServerSocket());
 
