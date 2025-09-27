@@ -28,6 +28,11 @@ public class SocketMessage {
         return new Gson().fromJson(json, SocketMessage.class);
     }
 
+    public SocketMessage setPlayer(StreamlinePlayer player) {
+        this.player = player;
+        return this;
+    }
+
     @Getter
     public enum SocketMessageType {
         SUBSCRIBE_SERVER(true),

@@ -144,7 +144,7 @@ public class CloudServerManager {
     public CloudServer getServerByUuid(String uuid) {
 
         for (CloudServer ser : getRunningServers()) {
-            if (ser.getUuid().equals(uuid)) {
+            if (ser.getUuid().equals(uuid) || (ser.getName() + "-" + ser.getUuid()).equals(uuid)) {
                 return ser;
             }
         }

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import net.streamlinecloud.api.player.StreamlinePlayer;
+import net.streamlinecloud.api.socket.SocketMessage;
+import net.streamlinecloud.main.core.server.CloudServerManager;
 import net.streamlinecloud.main.utils.PlayerRegister;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,8 +14,15 @@ import java.util.UUID;
 public class PlayerController {
 
     public void get(@NotNull Context ctx) {
-        //TODO: Check if online
-        ctx.result(new Gson().toJson(PlayerRegister.getInstance().get(UUID.fromString(ctx.pathParam("uuid")))));
+        StreamlinePlayer player = PlayerRegister.getInstance().get(UUID.fromString(ctx.pathParam("uuid")));
+
+        if (player == null) {
+            ctx.status(HttpStatus.NOT_FOUND);
+            ctx.result("Player not online");
+            return;
+        }
+
+        ctx.result(new Gson().toJson(player));
         ctx.status(HttpStatus.OK);
     }
 
@@ -32,8 +41,25 @@ public class PlayerController {
         PlayerRegister.getInstance().set(uuid, player);
     }
 
-    public void action(@NotNull Context context) {
-        //TODO:
+    public void action(@NotNull Context ctx) {
+        StreamlinePlayer player = PlayerRegister.getInstance().get(UUID.fromString(ctx.pathParam("uuid")));
+        SocketMessage.SocketMessageType type;
+
+        if (player == null) {
+            ctx.status(HttpStatus.NOT_FOUND);
+            ctx.result("Player not online");
+            return;
+        }
+
+        try {
+            type = SocketMessage.SocketMessageType.valueOf(ctx.pathParam("type"));
+        } catch (IllegalArgumentException e) {
+            ctx.status(HttpStatus.BAD_REQUEST);
+            ctx.result("Enum not valid");
+            return;
+        }
+
+        CloudServerManager.getInstance().getServerByUuid(player.getCurrentServerId()).send(new SocketMessage(type, ctx.body()).setPlayer(player));
     }
 
     public void delete(@NotNull Context context) {
