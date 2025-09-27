@@ -59,6 +59,13 @@ public class PlayerController {
             return;
         }
 
+        if (type.equals(SocketMessage.SocketMessageType.PLAYER_CONNECT)) {
+            if (CloudServerManager.getInstance().getServerByUuid(ctx.body()) == null) {
+                ctx.status(HttpStatus.BAD_REQUEST);
+                ctx.result("Server not online");
+            }
+        }
+
         CloudServerManager.getInstance().getServerByUuid(player.getCurrentServerId()).send(new SocketMessage(type, ctx.body()).setPlayer(player));
     }
 

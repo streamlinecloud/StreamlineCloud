@@ -59,6 +59,7 @@ public class PaperServerManager extends AbstractServerManager {
 
     @Override
     public void connectPlayerToServer(UUID playerUuid, String serverId) {
+        PaperPlayerManager.getInstance().sendPlayer(PaperSCP.getInstance().getServer().getPlayer(playerUuid), PaperServerManager.getInstance().getServerByUuid(serverId));
     }
 
     @Override

@@ -96,7 +96,7 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
 
     public StreamlineServer getServerByUuid(String uuid) {
         for (StreamlineServer s : subscribedServers) {
-            if (s != null) if (s.getUuid().equals(uuid)) return s;
+            if (s != null) if (s.getUuid().equals(uuid) || (s.getName() + "_" + s.getUuid()).equals(uuid)) return s;
         }
 
         return new Gson().fromJson(new BackendRequest("servers/" + uuid).fetch().getResponse(), StreamlineServer.class);

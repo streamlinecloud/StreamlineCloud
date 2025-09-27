@@ -5,6 +5,7 @@ import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.paper.StreamlinePlayer;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
+import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -27,20 +28,24 @@ public class PaperPlayerManager {
         instance = this;
     }
 
+    public void sendPlayer(StreamlinePlayer player, StreamlineServer server) {
+        sendPlayer(player.getPlayer(), server);
+    }
+
     /**
      * Sends a player to a server
      * @param player CloudPlayer to send
      * @param server StreamlineServer to send to
      */
-    public void sendPlayer(StreamlinePlayer player, StreamlineServer server) {
+    public void sendPlayer(Player player, StreamlineServer server) {
 
         if (server.getMaxOnlineCount() == -1) {
-            player.getPlayer().sendMessage("§cServer is starting!");
+            player.sendMessage("§cServer is starting!");
             return;
         }
 
         if ((server.getName() + "-" + server.getUuid()).equals(StaticCache.serverData.getName() + "-" + StaticCache.serverData.getUuid())) {
-            player.getPlayer().sendMessage("§cAlready connected!");
+            player.sendMessage("§cAlready connected!");
             return;
         }
 
@@ -50,7 +55,7 @@ public class PaperPlayerManager {
             out.writeUTF("Connect");
             out.writeUTF(server.getName() + "-" + server.getUuid());
         } catch (IOException e) {
-            player.getPlayer().sendMessage("Failed to connect you to " +  server.getName() + " - " + e.getMessage());
+            player.sendMessage("Failed to connect you to " +  server.getName() + " - " + e.getMessage());
             e.printStackTrace();
             //Bukkit.getLogger().info("FAILED TO SEND PLAYER " + player.getPlayer().getName() + "(" + player.getPlayer().getUniqueId() + ") send to Server... FOLLOWING ERROR OCCURRED: \n" + e.getMessage());
         }
