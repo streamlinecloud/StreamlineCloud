@@ -45,6 +45,17 @@ public class PlayerRegister {
     }
 
     /**
+     * @param name The name of the Minecraft profile
+     * @return {@link StreamlinePlayer StreamlinePlayer} or null if not found.
+     */
+    public StreamlinePlayer get(String name) {
+        for (StreamlinePlayer player : playerRegister.values()) {
+            if (player.getName().equals(name)) return player;
+        }
+        return null;
+    }
+
+    /**
      * @param uuid The UUID of the Minecraft profile
      */
     public void delete(UUID uuid) {

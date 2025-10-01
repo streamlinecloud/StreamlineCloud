@@ -26,6 +26,19 @@ public class PlayerController {
         ctx.status(HttpStatus.OK);
     }
 
+    public void getByName(@NotNull Context ctx) {
+        StreamlinePlayer player = PlayerRegister.getInstance().get(ctx.pathParam("name"));
+
+        if (player == null) {
+            ctx.status(HttpStatus.NOT_FOUND);
+            ctx.result("Player not online");
+            return;
+        }
+
+        ctx.result(new Gson().toJson(player));
+        ctx.status(HttpStatus.OK);
+    }
+
     public void set(@NotNull Context context) {
         StreamlinePlayer player;
         UUID uuid;

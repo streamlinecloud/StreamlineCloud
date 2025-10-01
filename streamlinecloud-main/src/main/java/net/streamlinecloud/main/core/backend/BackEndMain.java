@@ -61,6 +61,7 @@ public class BackEndMain {
         app.post("/streamline/servers/update", serverController::update);
 
         app.get("/streamline/player/{uuid}", playerController::get);
+        app.get("streamline/player/byName/{name}", playerController::getByName);
         app.post("/streamline/player/{uuid}", playerController::set);
         app.post("/streamline/player/{uuid}/action/{type}", playerController::action);
         app.delete("/streamline/player/{uuid}", playerController::delete);
