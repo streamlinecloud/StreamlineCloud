@@ -7,7 +7,7 @@ import net.streamlinecloud.main.config.StreamlineConfig;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.core.software.SoftwareConfig;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.LangManager;
@@ -77,7 +77,7 @@ public class CloudMain {
         BackEndMain.startBE();
 
         new CloudGroupManager();
-        new CloudServerManager();
+        new RunningServerManager();
 
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
 
@@ -109,7 +109,7 @@ public class CloudMain {
         Cache.i().getPluginManager().loadExtensions();
         Cache.i().getPluginManager().executeStartup();
 
-        CloudServerManager.getInstance().startServersIfNeeded();
+        RunningServerManager.getInstance().startServersIfNeeded();
 
         registerCommand(new HelpCommand());
         registerCommand(new ShutDownCommand());

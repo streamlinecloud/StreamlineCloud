@@ -2,7 +2,7 @@ package net.streamlinecloud.main.command;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.config.MainConfig;
@@ -67,7 +67,7 @@ public class WhitelistCommand extends CloudCommand {
                 return;
         }
 
-        CloudServerManager.getInstance().getRunningServers().forEach(server -> {
+        RunningServerManager.getInstance().getRunningServers().forEach(server -> {
             if (server.getRuntime().equals(ServerRuntime.PROXY)) server.addCommand("refreshWhitelist");
         });
     }

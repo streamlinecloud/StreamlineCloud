@@ -6,13 +6,9 @@ import io.javalin.http.HttpStatus;
 import net.streamlinecloud.api.RestUtils.RconData;
 import net.streamlinecloud.api.packet.StartServerPacket;
 import net.streamlinecloud.api.server.*;
-import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
-import net.streamlinecloud.main.core.server.CloudServer;
-import net.streamlinecloud.main.core.server.CloudServerManager;
-import net.streamlinecloud.main.core.software.SoftwareManager;
-import net.streamlinecloud.main.lang.ReplacePaket;
+import net.streamlinecloud.main.core.server.RunningServer;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.utils.Cache;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,43 +22,43 @@ public class ServerController {
     public void start(@NotNull Context context) {
         StartServerPacket packet = new Gson().fromJson(context.body(), StartServerPacket.class);
 
-        context.result(CloudServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(packet.getGroup()), Arrays.asList(packet.getTemplates()), "Rest API"));
+        context.result(RunningServerManager.getInstance().startServerByGroup(CloudGroupManager.getInstance().getGroupByName(packet.getGroup()), Arrays.asList(packet.getTemplates()), "Rest API"));
         context.status(200);
     }
 
     public void getAllSnapshots(@NotNull Context context) {
         AtomicReference<List<StreamlineServerSnapshot>> snapshots = new AtomicReference<>(new ArrayList<>());
 
-        CloudServerManager.getInstance().getRunningServers().forEach(server -> snapshots.get().add(new StreamlineServerSnapshot(server.getName(), server.getUuid(), server.getPort(), server.getOnlinePlayers().size(), server.getMaxOnlineCount())));
+        RunningServerManager.getInstance().getRunningServers().forEach(server -> snapshots.get().add(new StreamlineServerSnapshot(server.getName(), server.getUuid(), server.getPort(), server.getOnlinePlayers().size(), server.getMaxOnlineCount())));
 
         context.result(new Gson().toJson(snapshots.get()));
         context.status(200);
     }
 
     public void getFallbackServers(@NotNull Context context) {
-        List<CloudServer> servers = CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName(Cache.i().getConfig().getFallback().getFallbackGroup()));
+        List<RunningServer> servers = CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName(Cache.i().getConfig().getFallback().getFallbackGroup()));
         List<String> names = new ArrayList<>();
-        for (CloudServer s : servers) names.add(s.getName() + "-" + s.getUuid());
+        for (RunningServer s : servers) names.add(s.getName() + "-" + s.getUuid());
 
         context.result(new Gson().toJson(names));
         context.status(200);
     }
 
     public void serverCount(@NotNull Context context) {
-        context.result(String.valueOf(CloudServerManager.getInstance().getRunningServers().size()));
+        context.result(String.valueOf(RunningServerManager.getInstance().getRunningServers().size()));
         context.status(200);
     }
 
     public void get(@NotNull Context context) {
-        CloudServer server = null;
+        RunningServer server = null;
 
         if (context.pathParamMap().containsKey("uuid")) {
             String uuid = context.pathParam("uuid");
-            server = CloudServerManager.getInstance().getServerByUuid(uuid);
+            server = RunningServerManager.getInstance().getServerByUuid(uuid);
 
         } else if (context.pathParamMap().containsKey("name")) {
             String name = context.pathParam("name");
-            server = CloudServerManager.getInstance().getServerByName(name);
+            server = RunningServerManager.getInstance().getServerByName(name);
 
         }
 
@@ -90,7 +86,7 @@ public class ServerController {
 
     public void update(@NotNull Context context) {
         StreamlineServer s = new Gson().fromJson(context.body(), StreamlineServer.class);
-        CloudServer cs = CloudServerManager.getInstance().getServerByName(s.getName());
+        RunningServer cs = RunningServerManager.getInstance().getServerByName(s.getName());
 
         if (cs == null) {
             context.status(201);
@@ -111,7 +107,7 @@ public class ServerController {
 
     public void autoRestart(@NotNull Context context) {
         String uuid = context.pathParam("uuid");
-        CloudServer server = CloudServerManager.getInstance().getServerByUuid(uuid);
+        RunningServer server = RunningServerManager.getInstance().getServerByUuid(uuid);
 
         if (server == null) {
             context.result("serverNotFound");

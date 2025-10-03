@@ -1,10 +1,9 @@
 package net.streamlinecloud.main.core.backend;
 
-import com.google.gson.Gson;
 import lombok.Getter;
 import net.streamlinecloud.api.extension.event.player.PlayerChoseProxyEvent;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.extension.ExtensionManager;
 
 import java.io.*;
@@ -16,7 +15,7 @@ import java.util.*;
 public class LoadBalancer {
 
     @Getter
-    transient private List<CloudServer> servers;
+    transient private List<RunningServer> servers;
     transient private Selector selector;
 
     @Getter
@@ -32,11 +31,11 @@ public class LoadBalancer {
         this.group = group;
     }
 
-    public void registerServer(CloudServer server) {
+    public void registerServer(RunningServer server) {
         servers.add(server);
     }
 
-    private Optional<CloudServer> nextServer() {
+    private Optional<RunningServer> nextServer() {
         return servers.stream()
                 .min(Comparator.comparingInt(ps -> ps.getOnlinePlayers().size()));
     }
@@ -93,7 +92,7 @@ public class LoadBalancer {
             clientChannel.configureBlocking(false);
 
             try {
-                CloudServer target = nextServer().orElse(null);
+                RunningServer target = nextServer().orElse(null);
 
                 if (target == null) {
                     clientChannel.close();

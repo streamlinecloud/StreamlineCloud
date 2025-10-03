@@ -1,7 +1,6 @@
 package net.streamlinecloud.main.command.completer;
 
-import net.streamlinecloud.main.core.server.CloudServerManager;
-import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
@@ -16,7 +15,7 @@ public class ScreenCommandCompleter implements Completer {
         List<String> words = parsedLine.words();
 
         if (words.size() == 2) {
-            CloudServerManager.getInstance().getRunningServers().forEach(server -> {
+            RunningServerManager.getInstance().getRunningServers().forEach(server -> {
                 list.add(new Candidate(server.getName()));
             });
         }

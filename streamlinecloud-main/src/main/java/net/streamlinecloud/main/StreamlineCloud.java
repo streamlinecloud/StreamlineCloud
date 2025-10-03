@@ -1,16 +1,15 @@
 package net.streamlinecloud.main;
 
-import com.google.gson.Gson;
 import net.streamlinecloud.api.StreamlineAPI;
 import net.streamlinecloud.api.extension.event.console.ConsoleMessageEvent;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.main.core.group.CloudGroup;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.*;
 import net.streamlinecloud.main.core.backend.BackEndMain;
-import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.terminal.Color;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -223,10 +222,10 @@ public class StreamlineCloud {
     public static void shutDown() {
         log("sl.shutdown.shuttingDown");
 
-        List<CloudServer> servers = new ArrayList<>(CloudServerManager.getInstance().getRunningServers());
+        List<RunningServer> servers = new ArrayList<>(RunningServerManager.getInstance().getRunningServers());
         Cache.i().setStopping(true);
 
-        for (CloudServer server : servers) {
+        for (RunningServer server : servers) {
             if (server.getRuntime().equals(ServerRuntime.PROXY)) {
                 server.stop();
             } else {
@@ -235,7 +234,7 @@ public class StreamlineCloud {
             }
         }
 
-        while (!CloudServerManager.getInstance().getRunningServers().isEmpty()) {
+        while (!RunningServerManager.getInstance().getRunningServers().isEmpty()) {
             Thread.sleep(100);
         }
 

@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import net.streamlinecloud.api.RestUtils.RconData;
 import net.streamlinecloud.api.exception.TooManyAttemptsException;
 import net.streamlinecloud.api.extension.event.server.*;
-import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
@@ -13,9 +12,7 @@ import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.backend.BackEndMain;
 import net.streamlinecloud.main.core.backend.LoadBalancer;
-import net.streamlinecloud.main.core.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
@@ -36,7 +33,7 @@ import java.util.concurrent.*;
 import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 
 @Getter @Setter
-public class CloudServer extends StreamlineServer {
+public class RunningServer extends StreamlineServer {
 
     long startupTime = Calendar.getInstance().getTimeInMillis();
     List<String> logs = new ArrayList<>();
@@ -53,13 +50,13 @@ public class CloudServer extends StreamlineServer {
     boolean staticServer = false;
     boolean isRestarting = false;
 
-    public CloudServer(String name, ServerRuntime runtime, String startedBy) {
+    public RunningServer(String name, ServerRuntime runtime, String startedBy) {
         setRuntime(runtime);
         setUuid(String.valueOf(UUID.randomUUID()).split("-")[0]);
         setName(name);
         setStartedBy(startedBy);
 
-        CloudServerManager.getInstance().getServerRegister().put(getName(), this);
+        RunningServerManager.getInstance().getServerRegister().put(getName(), this);
 
         ServerPreStartEvent serverPreStartEvent = eventManager.callEvent(new ServerPreStartEvent(getName(), runtime, getUuid(),ServerState.PREPARING));
 
@@ -67,7 +64,7 @@ public class CloudServer extends StreamlineServer {
             return;
         }
 
-        CloudServerManager.getInstance().getRunningServers().add(this);
+        RunningServerManager.getInstance().getRunningServers().add(this);
         setServerState(ServerState.PREPARING);
     }
 
@@ -110,7 +107,7 @@ public class CloudServer extends StreamlineServer {
         }
 
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
+                .registerTypeAdapter(RunningServer.class, new StreamlineServerSerializer())
                 .create();
 
         Cache.i().getServerSocket().sendUpdate(this);
@@ -316,8 +313,8 @@ public class CloudServer extends StreamlineServer {
             }
         }
 
-        if (CloudServerManager.getInstance().getRestartingServers().containsKey(this)) {
-            CloudServer oldServer = CloudServerManager.getInstance().getRestartingServers().get(this);
+        if (RunningServerManager.getInstance().getRestartingServers().containsKey(this)) {
+            RunningServer oldServer = RunningServerManager.getInstance().getRestartingServers().get(this);
             Cache.i().getServerSocket().sendTo(oldServer, new SocketMessage(SocketMessage.SocketMessageType.MOVE_SERVER, getUuid()));
 
             StreamlineCloud.log(getName() + " restarted");
@@ -376,7 +373,7 @@ public class CloudServer extends StreamlineServer {
             loadBalancer.getServers().stream().filter(server -> server.getUuid().equals(getUuid())).findFirst().ifPresent(server -> loadBalancer.getServers().remove(server));
         }
 
-        CloudServerManager.getInstance().getRunningServers().remove(this);
+        RunningServerManager.getInstance().getRunningServers().remove(this);
         StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
@@ -389,8 +386,8 @@ public class CloudServer extends StreamlineServer {
         if (isRestarting) return;
         setRestarting(true);
 
-        CloudServerManager serverManager = CloudServerManager.getInstance();
-        CloudServer newServer = new CloudServer(getName(), getRuntime(), "Server restart feature");
+        RunningServerManager serverManager = RunningServerManager.getInstance();
+        RunningServer newServer = new RunningServer(getName(), getRuntime(), "Server restart feature");
         newServer.setGroup(getGroup());
         serverManager.restartingServers.put(newServer, this);
         serverManager.getServersWaitingForStart().add(newServer);

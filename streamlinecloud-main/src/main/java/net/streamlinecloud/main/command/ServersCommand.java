@@ -4,8 +4,8 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
-import net.streamlinecloud.main.core.server.CloudServer;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServer;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 
@@ -46,7 +46,7 @@ public class ServersCommand extends CloudCommand {
                     if (group == null) {
                         StreamlineCloud.log("The group " + args[2] + " doesn't exist. Starting a new server with the default template named " + args[2] + "...");
 
-                        CloudServer server = new CloudServer(args[2], ServerRuntime.SERVER, "User (start command)");
+                        RunningServer server = new RunningServer(args[2], ServerRuntime.SERVER, "User (start command)");
                         File javaExec = new File(Cache.i().getConfig().getDefaultJavaPath());
                         try {
                             server.start(javaExec);
@@ -56,7 +56,7 @@ public class ServersCommand extends CloudCommand {
                         return;
                     }
 
-                    CloudServerManager.getInstance().startServerByGroup(group, "User (start command)");
+                    RunningServerManager.getInstance().startServerByGroup(group, "User (start command)");
 
                 }  else {
                     StreamlineCloud.log("sl.command.server.start.enterName");
@@ -66,14 +66,14 @@ public class ServersCommand extends CloudCommand {
             case "list":
 
                 StreamlineCloud.log("Running servers:");
-                for (CloudServer ser : CloudServerManager.getInstance().getRunningServers()) {
+                for (RunningServer ser : RunningServerManager.getInstance().getRunningServers()) {
                     StreamlineCloud.log(ser.getName() + "-" + ser.getUuid() + " | " + ser.getServerState() + " - " + ser.getOnlinePlayers().size() + "/" + ser.getMaxOnlineCount() + " | PORT: " + ser.getPort() + " | GROUP: " + ser.getGroupDirect().getName());
                 }
 
                 break;
 
             default:
-                List<CloudServer> servers = CloudServerManager.getInstance().getServersByName(args[1]);
+                List<RunningServer> servers = RunningServerManager.getInstance().getServersByName(args[1]);
 
                 if (servers != null) {
 
@@ -86,7 +86,7 @@ public class ServersCommand extends CloudCommand {
 
                     switch (serverSub) {
                         case "stop":
-                            servers.forEach(CloudServer::stop);
+                            servers.forEach(RunningServer::stop);
                             break;
 
                             case "kill":
@@ -98,7 +98,7 @@ public class ServersCommand extends CloudCommand {
                                 break;
 
                         case "restart":
-                            servers.forEach(CloudServer::restart);
+                            servers.forEach(RunningServer::restart);
                             break;
 
                         case "command":

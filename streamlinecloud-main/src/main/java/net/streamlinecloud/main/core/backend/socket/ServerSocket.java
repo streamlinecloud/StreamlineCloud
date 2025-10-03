@@ -12,8 +12,8 @@ import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.backend.BackEndMain;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
-import net.streamlinecloud.main.core.server.CloudServer;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServer;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.utils.Cache;
 
 import java.util.*;
@@ -72,7 +72,7 @@ public class ServerSocket {
                     case SUBSCRIBE_SERVER -> {
 
                         List<StreamlineServer> s = servers.get(ctx.sessionId());
-                        StreamlineServer streamlineServer = CloudServerManager.getInstance().getServerByName(message.getContent());
+                        StreamlineServer streamlineServer = RunningServerManager.getInstance().getServerByName(message.getContent());
                         s.add(streamlineServer);
                         servers.replace(ctx.sessionId(), s);
 
@@ -88,7 +88,7 @@ public class ServerSocket {
 
                     case IAM -> {
 
-                        serverSessions.put(CloudServerManager.getInstance().getServerByUuid(message.getContent()).getUuid(), ctx);
+                        serverSessions.put(RunningServerManager.getInstance().getServerByUuid(message.getContent()).getUuid(), ctx);
 
                     }
 
@@ -103,7 +103,7 @@ public class ServerSocket {
             ws.onError(errorContext -> {
                 for (String uuid : serverSessions.keySet()) {
                     if (serverSessions.get(uuid).sessionId().equals(errorContext.sessionId())) {
-                        StreamlineServer server = CloudServerManager.getInstance().getServerByUuid(uuid);
+                        StreamlineServer server = RunningServerManager.getInstance().getServerByUuid(uuid);
                         if (server.getServerState().equals(ServerState.STOPPING) || server.getServerState().equals(ServerState.DELETING)) {
                             return;
                         }
@@ -129,7 +129,7 @@ public class ServerSocket {
     public void sendUpdate(StreamlineServer s) {
 
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
+                .registerTypeAdapter(RunningServer.class, new StreamlineServerSerializer())
                 .create();
 
         for (String session : Cache.i().getServerSocket().servers.keySet()) {

@@ -1,12 +1,11 @@
 package net.streamlinecloud.main.command;
 
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.server.CloudServer;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServer;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 
-import java.net.MalformedURLException;
 import java.util.Calendar;
 
 public class UptimeCommand extends CloudCommand {
@@ -30,12 +29,12 @@ public class UptimeCommand extends CloudCommand {
         }
 
 
-            if (CloudServerManager.getInstance().getServerByName(args[1]) == null) {
+            if (RunningServerManager.getInstance().getServerByName(args[1]) == null) {
                 StreamlineCloud.log("Server not found");
                 return;
             }
 
-            CloudServer server = CloudServerManager.getInstance().getServerByName(args[1]);
+            RunningServer server = RunningServerManager.getInstance().getServerByName(args[1]);
 
             long dif_intime = Calendar.getInstance().getTimeInMillis() - server.getStartupTime();
             long dif_insec = dif_intime / 1000 % 60;

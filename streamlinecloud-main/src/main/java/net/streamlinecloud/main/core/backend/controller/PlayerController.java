@@ -5,7 +5,7 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import net.streamlinecloud.api.player.StreamlinePlayer;
 import net.streamlinecloud.api.socket.SocketMessage;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.utils.PlayerRegister;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,13 +73,13 @@ public class PlayerController {
         }
 
         if (type.equals(SocketMessage.SocketMessageType.PLAYER_CONNECT)) {
-            if (CloudServerManager.getInstance().getServerByUuid(ctx.body()) == null) {
+            if (RunningServerManager.getInstance().getServerByUuid(ctx.body()) == null) {
                 ctx.status(HttpStatus.BAD_REQUEST);
                 ctx.result("Server not online");
             }
         }
 
-        CloudServerManager.getInstance().getServerByUuid(player.getCurrentServerId()).send(new SocketMessage(type, ctx.body()).setPlayer(player));
+        RunningServerManager.getInstance().getServerByUuid(player.getCurrentServerId()).send(new SocketMessage(type, ctx.body()).setPlayer(player));
     }
 
     public void delete(@NotNull Context context) {

@@ -9,7 +9,7 @@ import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
-import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.utils.Cache;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,10 +53,10 @@ public class GroupsController {
                 return;
             }
 
-            List<CloudServer> servers = CloudGroupManager.getInstance().getGroupOnlineServers(group);
+            List<RunningServer> servers = CloudGroupManager.getInstance().getGroupOnlineServers(group);
 
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(CloudServer.class, new StreamlineServerSerializer())
+                    .registerTypeAdapter(RunningServer.class, new StreamlineServerSerializer())
                     .create();
 
             List<StreamlineServer> streamlineServers = new ArrayList<>(servers);

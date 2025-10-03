@@ -4,10 +4,10 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-public class CloudServerSerializer implements JsonSerializer<CloudServer> {
+public class RunningServerSerializer implements JsonSerializer<RunningServer> {
 
     @Override
-    public JsonElement serialize(CloudServer src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(RunningServer src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.addProperty("name", src.getName());

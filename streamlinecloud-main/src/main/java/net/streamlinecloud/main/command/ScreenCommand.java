@@ -1,9 +1,8 @@
 package net.streamlinecloud.main.command;
 
-import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.server.CloudServer;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServer;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
 
@@ -23,7 +22,7 @@ public class ScreenCommand extends CloudCommand {
             return;
         }
 
-        CloudServer server = CloudServerManager.getInstance().getServerByName(args[1]);
+        RunningServer server = RunningServerManager.getInstance().getServerByName(args[1]);
 
         if (server == null) {
             StreamlineCloud.log("Server " + args[1] + " not found");
@@ -34,7 +33,7 @@ public class ScreenCommand extends CloudCommand {
             server.disableScreen();
         } else {
             if (Cache.i().getCurrentScreenServerName() != null)
-                CloudServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
+                RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
             server.enableScreen();
         }
     }

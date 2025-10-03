@@ -9,7 +9,7 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.StreamlineConfig;
-import net.streamlinecloud.main.core.server.CloudServer;
+import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
 import org.apache.commons.io.FileUtils;
@@ -140,7 +140,7 @@ public class SoftwareManager {
     }
 
     @SneakyThrows
-    public void copyCache(String softwareName, CloudServer server) {
+    public void copyCache(String softwareName, RunningServer server) {
         StreamlineSoftware software = getSoftware(softwareName);
         if (software == null) return;
         if (software.isCached()) return;

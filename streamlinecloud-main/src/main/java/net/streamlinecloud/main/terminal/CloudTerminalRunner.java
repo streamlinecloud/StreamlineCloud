@@ -1,16 +1,13 @@
 package net.streamlinecloud.main.terminal;
 
-import net.streamlinecloud.api.exception.CommandException;
 import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
-import net.streamlinecloud.main.core.server.CloudServerManager;
+import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import net.streamlinecloud.main.utils.Cache;
 import lombok.SneakyThrows;
-import org.jline.reader.LineReader;
 import org.jline.reader.UserInterruptException;
 
 import java.util.Arrays;
@@ -62,12 +59,12 @@ public class CloudTerminalRunner extends Thread {
 
                         sb.deleteCharAt(sb.length() - 1);
 
-                        CloudServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
+                        RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
                         executeCommands = false;
 
                     } else if (args[0].equals("exit")) {
 
-                        CloudServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
+                        RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
                         executeCommands = false;
                     }
                 }
