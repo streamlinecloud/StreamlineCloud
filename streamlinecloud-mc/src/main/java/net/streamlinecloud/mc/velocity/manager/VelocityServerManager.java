@@ -8,7 +8,7 @@ import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.ServerUseState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.VelocitySCP;
-import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
+import net.streamlinecloud.mc.common.server.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 
 import java.util.HashMap;

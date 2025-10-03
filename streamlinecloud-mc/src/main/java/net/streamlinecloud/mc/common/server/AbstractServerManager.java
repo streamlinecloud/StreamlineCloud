@@ -1,17 +1,16 @@
-package net.streamlinecloud.mc.common.core.manager;
+package net.streamlinecloud.mc.common.server;
 
 import com.google.gson.Gson;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.mc.common.core.WebSocketListener;
+import net.streamlinecloud.mc.common.core.manager.ServerManagerImpl;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
-import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 import net.streamlinecloud.mc.common.utils.Utils;
 
 import javax.websocket.*;
-import java.net.Socket;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
@@ -94,19 +93,19 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
     }
 
 
-    public StreamlineServer getServerByUuid(String uuid) {
+    public RunningServer getServerByUuid(String uuid) {
         for (StreamlineServer s : subscribedServers) {
-            if (s != null) if (s.getUuid().equals(uuid) || (s.getName() + "_" + s.getUuid()).equals(uuid)) return s;
+            if (s != null) if (s.getUuid().equals(uuid) || (s.getName() + "_" + s.getUuid()).equals(uuid)) return new RunningServer(s);
         }
 
-        return new Gson().fromJson(new BackendRequest("servers/" + uuid).fetch().getResponse(), StreamlineServer.class);
+        return new RunningServer(new Gson().fromJson(new BackendRequest("servers/" + uuid).fetch().getResponse(), StreamlineServer.class));
     }
 
-    public StreamlineServer getServerByName(String name) {
+    public RunningServer getServerByName(String name) {
         for (StreamlineServer s : subscribedServers) {
-            if (s.getName().equals(name)) return s;
+            if (s.getName().equals(name)) return new RunningServer(s);
         }
 
-        return new Gson().fromJson(new BackendRequest("servers/name/" + name).fetch().getResponse(), StreamlineServer.class);
+        return new RunningServer(new Gson().fromJson(new BackendRequest("servers/name/" + name).fetch().getResponse(), StreamlineServer.class));
     }
 }

@@ -123,9 +123,40 @@ public class ServerController {
 
     public void stop(@NotNull Context context) {
         String uuid = context.pathParam("uuid");
+
+        RunningServer server = RunningServerManager.getInstance().getServerByUuid(uuid);
+        if (server == null) {
+            context.status(404);
+            return;
+        }
+
+        server.stop();
+        context.status(200);
     }
 
     public void kill(@NotNull Context context) {
         String uuid = context.pathParam("uuid");
+
+        RunningServer server = RunningServerManager.getInstance().getServerByUuid(uuid);
+        if (server == null) {
+            context.status(404);
+            return;
+        }
+
+        server.kill();
+        context.status(200);
+    }
+
+    public void restart(@NotNull Context context) {
+        String uuid = context.pathParam("uuid");
+
+        RunningServer server = RunningServerManager.getInstance().getServerByUuid(uuid);
+        if (server == null) {
+            context.status(404);
+            return;
+        }
+
+        server.restart();
+        context.status(200);
     }
 }

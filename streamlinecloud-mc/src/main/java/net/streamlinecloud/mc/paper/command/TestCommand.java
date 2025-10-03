@@ -1,7 +1,7 @@
 package net.streamlinecloud.mc.paper.command;
 
 import net.streamlinecloud.api.server.StreamlineServer;
-import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
+import net.streamlinecloud.mc.common.server.AbstractServerManager;
 import net.streamlinecloud.mc.paper.manager.PaperServerManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

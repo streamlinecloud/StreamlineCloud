@@ -55,6 +55,9 @@ public class BackEndMain {
         app.post("/streamline/servers/start", serverController::start);
 
         app.get("/streamline/servers/{uuid}", serverController::get);
+        app.post("/streamline/servers/{uuid}/stop", serverController::stop);
+        app.post("/streamline/servers/{uuid}/kill", serverController::kill);
+        app.post("/streamline/servers/{uuid}/restart", serverController::restart);
         app.get("/streamline/servers/name/{name}", serverController::get);
         app.get("/streamline/servers/{uuid}/rconDetails", serverController::getRconDetails);
         app.get("/streamline/servers/{uuid}/autoRestart", serverController::autoRestart);
