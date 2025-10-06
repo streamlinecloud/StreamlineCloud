@@ -76,7 +76,7 @@ public class MainConfig {
     }
 
     public MainConfig(String defaultJavaPath, int backendPort, String fallbackGroup) {
-        this.language = "en.json";
+        this.language = "lang/en.json";
         this.defaultJavaPath = defaultJavaPath;
         this.network.backendPort = backendPort;
         this.fallback.fallbackGroup = fallbackGroup;

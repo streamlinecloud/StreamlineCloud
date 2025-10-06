@@ -22,8 +22,8 @@ public class LangManager {
         Utils.runMkdir(langFile.mkdirs());
         try {
 
-            if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/en.json").toPath())) Files.copy(Objects.requireNonNull(Utils.getResourceFile("en.json", "json")).toPath(), new File(Cache.i().homeFile + "/data/lang/en.json").toPath());
-            if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/de.json").toPath())) Files.copy(Objects.requireNonNull(Utils.getResourceFile("de.json", "json")).toPath(), new File(Cache.i().homeFile + "/data/lang/de.json").toPath());
+            if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/en.json").toPath())) Files.copy(Objects.requireNonNull(Utils.getResourceFile("lang/en.json", "json")).toPath(), new File(Cache.i().homeFile + "/data/lang/en.json").toPath());
+            if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/de.json").toPath())) Files.copy(Objects.requireNonNull(Utils.getResourceFile("lang/de.json", "json")).toPath(), new File(Cache.i().homeFile + "/data/lang/de.json").toPath());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
