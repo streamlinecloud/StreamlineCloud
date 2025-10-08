@@ -1,3 +1,6 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
@@ -132,4 +135,68 @@ tasks.register("Make Main Project") {
 
 tasks.named("Make Main Project") {
     dependsOn("shadowJar")
+}
+
+tasks.register("matchLanguageFiles") {
+    group = "localization"
+    description = "Aligns other language files to en.json template with ordering and spacing"
+
+    doLast {
+        val langDir = file("src/main/resources/lang")
+        val mainLangFile = langDir.resolve("en.json")
+
+        if (!mainLangFile.exists()) {
+            throw GradleException("Main language file not found at: $mainLangFile")
+        }
+
+        val jsonSlurper = JsonSlurper()
+        val templateLines = mainLangFile.readLines()
+        val templateKeys = mutableListOf<String>()
+        val spacingAfter = mutableSetOf<String>() // store keys after which a blank line occurs
+
+        for (i in templateLines.indices) {
+            val line = templateLines[i].trim()
+            val match = Regex("^\"([^\"]+)\"\\s*:").find(line)
+            if (match != null) {
+                val key = match.groupValues[1]
+                templateKeys.add(key)
+
+                if (i + 1 < templateLines.size && templateLines[i + 1].isBlank()) {
+                    spacingAfter.add(key)
+                }
+            }
+        }
+
+        langDir.listFiles { _, name -> name.endsWith(".json") && name != "en.json" }
+            ?.forEach { file ->
+                val content = jsonSlurper.parseText(file.readText(StandardCharsets.UTF_8)) as MutableMap<String, Any?>
+                var changed = false
+
+                val sb = StringBuilder()
+                sb.append("{\n")
+
+                templateKeys.forEachIndexed { idx, key ->
+                    val value = content[key] ?: run {
+                        changed = true
+                        "-"
+                    }
+
+                    val comma = if (idx == templateKeys.size - 1) "" else ","
+                    sb.append("  \"").append(key).append("\": \"").append(value).append("\"").append(comma).append("\n")
+
+                    if (spacingAfter.contains(key)) {
+                        sb.append("\n")
+                    }
+                }
+
+                sb.append("}\n")
+
+                if (changed || file.readText() != sb.toString()) {
+                    file.writeText(sb.toString())
+                    println("Updated language file: ${file.name}")
+                } else {
+                    println("Language file up to date: ${file.name}")
+                }
+            }
+    }
 }
