@@ -6,7 +6,13 @@
 > 
 <a id="readme-top"></a>
 
-<!-- PROJECT LOGO -->
+<div align="center">
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+</div>
+
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
@@ -29,14 +35,6 @@
   </p>
 </div>
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-
-
-
-<!-- ABOUT THE PROJECT -->
 
 ## Philosophy
 - 🌟 **Easy to use:** Streamline is designed for a user-friendly experience, so everyone can use it without any hassle.
