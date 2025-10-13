@@ -4,6 +4,7 @@
   "lang.welcome": "Die Sprache wurde auf Deutsch geändert",
 
   "sl.setup.enterJavaPath": "Bitte gebe den Pfad zu deiner Java Installation ein",
+  "sl.setup.eula": "StreamlineCloud akzeptiert automatisch die Minecraft EULA für jeden Server den du erstellst (Bitte besuche https://www.minecraft.net/en-us/eula) - Gebe 'yes' ein um die EULA zu akzeptieren",
   "sl.setup.generateGroups": "Sollen standart Gruppen erstellt werden?",
   "sl.setup.groupsGenerated": "Die Stardart-Gruppen (lobby & proxy) wurden erstellt",
   "sl.setup.downloading": "Die Datein füt Paper und Velocity für die Minecraft Version 1.20.2 werden heruntergeladen...",
@@ -23,8 +24,8 @@
   "sl.server.online.withLB": "-",
   "sl.server.screen.enabled": "Der Screen von %1 ist nun aktiv!",
   "sl.server.screen.disabled": "Der Screen von %1 ist nicht mehr aktiv!",
-  "sl.server.killing": "Der Server %1 wird gelöscht...",
-  "sl.server.deleted": "Der Server %1 wurde gelöscht",
+  "sl.server.killing": "%1 wird gelöscht...",
+  "sl.server.deleted": "Server %1 wurde gelöscht",
 
   "sl.group.downloadFinished": "Die Datein wurden erfolgreich heruntergeladen",
   "sl.group.downloadFailed": "Der Download der Datei ist fehlgeschlagen",
@@ -45,10 +46,10 @@
   "sl.command.multiRoot.generate": "Um eine StreamlineCloud-Instanz mit diesem Cloud System zu verbinden gebe diesen Befehl in die konsole der anderen Instanz ein:",
 
   "sl.mc.prefix": "§8» §c§lStreamline§b§lCloud §8| §7",
-  "sl.mc.motd": "<bold><gradient:#ff4040:#d47979>Gehostet mit StreamlineCloud</gradient></bold>\n<#4dffed>Visit streamlinecloud.net",
+  "sl.mc.motd": "<bold><gradient:#ff4040:#d47979>Gehostet mit StreamlineCloud</gradient></bold><#4dffed>Visit streamlinecloud.net",
   "sl.mc.notAllowed": "§cDu bist nicht berechtigt diesen Befehl zu benutzen",
   "sl.mc.noFallbacks": "§cAkutell sind keine Fallnack-Server verfügbar",
-  "sl.mc.notWhitelisted": "§cDu bist nicht der Whitelist",
+  "sl.mc.notWhitelisted": "§cDu bist nicht auf der Whitelist",
   "sl.mc.connectingTo": "§7Verbinde dich zu %0",
   "sl.mc.alreadyConnected": "§cDu bist bereits verbunden mit %0",
   "sl.mc.serverDoesNotExist": "§cDieser Server existiert nicht",

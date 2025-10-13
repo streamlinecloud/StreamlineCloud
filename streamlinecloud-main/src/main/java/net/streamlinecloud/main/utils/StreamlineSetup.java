@@ -70,7 +70,7 @@ public class StreamlineSetup {
         /*
         EULA ADVICE
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "StreamlineCloud automatically accepts the Minecraft EULA for each server you create (Please visit https://www.minecraft.net/en-us/eula) - Type yes if you accept the EULA", output -> {
+        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "el.setup.eula", output -> {
             if (output.equals("yes")) {
                 StreamlineCloud.log("EULA accepted");
                 next();

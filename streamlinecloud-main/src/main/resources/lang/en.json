@@ -4,6 +4,7 @@
   "lang.welcome": "The language was changed to English",
 
   "sl.setup.enterJavaPath": "Please enter the path to your Java installation",
+  "sl.setup.eula": "StreamlineCloud automatically accepts the Minecraft EULA for each server you create (Please visit https://www.minecraft.net/en-us/eula) - Type yes if you accept the EULA",
   "sl.setup.generateGroups": "Should we generate a default setup so you are ready to go?",
   "sl.setup.groupsGenerated": "The groups Lobby and Proxy were created",
   "sl.setup.downloading": "Downloading the Paper and Velocity servers for Minecraft 1.20.2...",
