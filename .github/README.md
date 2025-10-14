@@ -26,7 +26,7 @@
   <p align="center">
     StreamlineCloud is a free and opensource cloud system for paper and velocity based minecraft networks.
     <br />
-    <a href="https://streamlinecloud.net/docs" target="_blank"><strong>Explore the docs »</strong></a>
+    <a href="https://streamlinecloud.net/ " target="_blank"><strong>Project website »</strong></a>
     <br />
     <br />
     <a href="https://streamlinecloud.net/download">Download</a>
@@ -39,8 +39,8 @@
 
 
 ## Philosophy
-- 🌟 **Easy to use:** Streamline is designed for a user-friendly experience, so everyone can use it without any hassle.
-- 🧩 **Extensions:** Streamline divides its features into different marketplace so you don't lose performance unnecessarily.
+- 🙂 **Easy to use:** Streamline is designed for a user-friendly experience, so everyone can use it without any hassle.
+- 🔌 **Extensions:** Streamline divides its features into different marketplace so you don't lose performance unnecessarily.
 - ⚡ **Scalable:** Streamline scales with your project. You can create easily multiple proxy servers.
 - 🔓 **Opensource:** Streamline is free and opensource for ever.
 

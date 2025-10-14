@@ -56,8 +56,8 @@ public class StreamlineSetup {
                 CloudMain.getInstance().initLang();
                 StreamlineCloud.log("lang.welcome");
 
-                String javaPath = System.getProperty("java.home")  + "/bin/java";
-                StreamlineCloud.log("Changing the default Java path to " + javaPath);
+                String javaPath = System.getProperty("java.home") + "/bin/java";
+                StreamlineCloud.log("sl.setup.changingPath", new ReplacePaket[]{new ReplacePaket("%0", javaPath)});
                 Cache.i().getConfig().setDefaultJavaPath(javaPath);
                 Cache.i().getConfig().getNetwork().setLoadBalancers(List.of(new LoadBalancer("MainLoadBalancer", "proxy", 25565)));
                 next();
@@ -70,9 +70,9 @@ public class StreamlineSetup {
         /*
         EULA ADVICE
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "el.setup.eula", output -> {
+        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.eula", output -> {
             if (output.equals("yes")) {
-                StreamlineCloud.log("EULA accepted");
+                StreamlineCloud.log("sl.setup.eulaAccepted");
                 next();
             } else if (output.equals("no")) {
                 StreamlineCloud.shutDown();
@@ -82,13 +82,13 @@ public class StreamlineSetup {
         /*
         WHITELIST
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "Do you want to enable the whitelist", output1 -> {
+        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.enableWhitelist", output1 -> {
             if (output1.equals("yes")) {
                 Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
-                StreamlineCloud.log("Whitelist enabled. You can use the whitelist command to add / remove players");
+                StreamlineCloud.log("sl.setup.whitelistEnabled");
             }
             MainConfig.saveConfig();
-            StreamlineCloud.log("Config generated");
+            StreamlineCloud.log("sl.setup.configGenerated");
             next();
         }));
 
@@ -103,6 +103,8 @@ public class StreamlineSetup {
                 StreamlineSoftware proxySoftware = SoftwareManager.getInstance().add(SoftwareManager.getInstance().getLatestSoftware("velocity"));
 
                 Cache.i().getConfig().setDefaultSoftwareName(software.getName());
+                StreamlineCloud.logSingle("");
+                StreamlineCloud.log("sl.setup.downloaded", new ReplacePaket[]{new ReplacePaket("%0", software.getName()), new ReplacePaket("%1", proxySoftware.getName())});
 
                 CloudGroup lobby = new CloudGroup(
                         "lobby",
@@ -129,7 +131,6 @@ public class StreamlineSetup {
                 Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/server").mkdirs());
 
                 StreamlineCloud.log("sl.setup.groupsGenerated");
-                StreamlineCloud.log("sl.setup.downloading");
 
                 try {
                     Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());

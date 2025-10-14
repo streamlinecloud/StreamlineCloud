@@ -39,9 +39,8 @@ public class ConsoleQuestion {
             }
         } else if (getInputType().equals(ConsoleQuestion.InputType.BOOLEAN)) {
 
-            StreamlineCloud.log("Type yes or no");
-
             if (!input.equals("yes") && !input.equals("no")) {
+                StreamlineCloud.log("Type yes or no");
                 return;
             }
         }
