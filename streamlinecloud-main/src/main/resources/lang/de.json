@@ -52,7 +52,7 @@
   "sl.mc.prefix": "§8» §c§lStreamline§b§lCloud §8| §7",
   "sl.mc.motd": "<bold><gradient:#ff4040:#d47979>Gehostet mit StreamlineCloud</gradient></bold><#4dffed>Visit streamlinecloud.net",
   "sl.mc.notAllowed": "§cDu bist nicht berechtigt diesen Befehl zu benutzen",
-  "sl.mc.noFallbacks": "§cAkutell sind keine Fallnack-Server verfügbar",
+  "sl.mc.noFallbacks": "§cAkutell sind keine Fallback-Server verfügbar",
   "sl.mc.notWhitelisted": "§cDu bist nicht auf der Whitelist",
   "sl.mc.connectingTo": "§7Verbinde dich zu %0",
   "sl.mc.alreadyConnected": "§cDu bist bereits verbunden mit %0",

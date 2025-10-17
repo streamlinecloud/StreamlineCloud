@@ -17,7 +17,7 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/streamlinecloud/streamlinecloud">
     <img src="../.img/logo.png" alt="Logo" width="240" height="240">
   </a>
 

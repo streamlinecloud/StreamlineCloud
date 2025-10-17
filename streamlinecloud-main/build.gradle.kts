@@ -1,4 +1,4 @@
-import groovy.json.JsonOutput
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import groovy.json.JsonSlurper
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
@@ -11,7 +11,7 @@ plugins {
     id("java")
 }
 
-group = "io.streamlinemc"
+group = "net.streamlinecloud"
 version = "1.0"
 val branch = "BETA"
 
@@ -76,7 +76,7 @@ tasks.register("generateBuildConfig") {
     }
 }
 
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+tasks.withType<ShadowJar> {
     archiveClassifier.set("")
     configurations.forEach { configuration ->
         from(configuration)
@@ -103,7 +103,7 @@ tasks {
     }
 }
 
-tasks.register("Make Main Project") {
+tasks.register("makeMainProject") {
     dependsOn("generateBuildConfig")
 
     group = "StreamlineCloud"
@@ -114,7 +114,7 @@ tasks.register("Make Main Project") {
         bdir.deleteRecursively()
     }
 
-    val jarTask = tasks.getByName<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar")
+    val jarTask = tasks.getByName<ShadowJar>("shadowJar")
     val jarFile = jarTask.archiveFile.get()
 
     doLast {
@@ -133,8 +133,36 @@ tasks.register("Make Main Project") {
 
 }
 
-tasks.named("Make Main Project") {
+tasks.named("makeMainProject") {
+    dependsOn("copyStreamlineMc")
     dependsOn("shadowJar")
+}
+
+tasks.named("compileJava") {
+    dependsOn(":streamlinecloud-api:shadowJar")
+}
+
+tasks.named("processResources") {
+    dependsOn("copyStreamlineMc")
+}
+
+tasks.register<Copy>("copyStreamlineMc") {
+    group = "StreamlineCloud"
+    description = "Copies the streamlinecloud-mc plugin into the main project"
+
+    println("Copying StreamlineCloud-MC")
+
+    val destResources = project.layout.projectDirectory.file("src/main/resources")
+    dependsOn(":streamlinecloud-mc:makeMcProject")
+
+    from(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc/streamlinecloud-mc.jar"))
+    into(destResources)
+
+    rename { "streamlinecloud-mc" }
+
+    doLast {
+        println("Copied ${destResources.asFile.absolutePath}")
+    }
 }
 
 tasks.register("matchLanguageFiles") {

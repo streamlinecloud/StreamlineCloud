@@ -20,8 +20,8 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.register("Make All Products") {
+tasks.register("Make All") {
     group = "StreamlineCloud"
 
-    dependsOn(":streamlinecloud-api:Make API Project", ":streamlinecloud-main:Make MAIN Project", ":streamlinecloud-mc:Make MC Project")
+    dependsOn(":streamlinecloud-api:makeApiProject", ":streamlinecloud-mc:makeMcProject", ":streamlinecloud-main:makeMainProject")
 }

@@ -284,7 +284,7 @@ public class RunningServer extends StreamlineServer {
     }
 
     public boolean deployPlugin() {
-        String pluginFileName = "streamlinecloud-mc-BETA-1.0";
+        String pluginFileName = "streamlinecloud-mc";
         try {
             File file;
             if (isStaticServer()) file = new File(Cache.i().homeFile + "/static/" + getName() + "/plugins");

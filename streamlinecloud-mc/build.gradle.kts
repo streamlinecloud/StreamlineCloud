@@ -81,7 +81,7 @@ tasks {
     }
 }
 
-tasks.register("Make MC Project") {
+tasks.register("makeMcProject") {
     group = "StreamlineCloud"
 
     val bdir = project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc")
@@ -101,7 +101,7 @@ tasks.register("Make MC Project") {
         val copiedJar = project.copy {
             from(jarFile)
             into(bdir)
-            rename(jarFile.asFile.name, "streamlinecloud-mc-$branch-$version.jar")
+            rename(jarFile.asFile.name, "streamlinecloud-mc.jar")
         }
 
         println("Built Jar File: $bdir")
@@ -110,7 +110,7 @@ tasks.register("Make MC Project") {
 
 }
 
-tasks.named("Make MC Project") {
+tasks.named("makeMcProject") {
     dependsOn("shadowJar")
 }
 
