@@ -10,6 +10,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
+import me.tongfei.progressbar.ProgressBarStyle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -53,23 +55,34 @@ public class Downloader {
         }
 
         public void startProgressbar(HttpResponse httpResponse) {
-            ProgressBar progressBar = new ProgressBar("Downloading file... ",httpResponse.getEntity().getContentLength());
 
-            ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+            try (
+                    ProgressBar progressBar = ProgressBar.builder()
+                            .setStyle(ProgressBarStyle.builder()
+                                    //.colorCode((byte) 31)
+                                    .leftBracket("[")
+                                    .rightBracket("]")
+                                    .block('=')
+                                    .rightSideFractionSymbol('=')
+                                    .build()
+                            )
+                            .build()
+                    ) {
+                ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 
-            scheduledExecutorService.scheduleAtFixedRate(() -> {
+                scheduledExecutorService.scheduleAtFixedRate(() -> {
+                    if (target.length() >= httpResponse.getEntity().getContentLength()) {
+                        scheduledExecutorService.shutdownNow();
 
-                if (target.length() >= httpResponse.getEntity().getContentLength()) {
-                    scheduledExecutorService.shutdownNow();
-
-                    if (next != null) {
-                        next.execute("s");
+                        if (next != null) {
+                            next.execute("s");
+                        }
                     }
-                }
 
-                progressBar.stepTo(target.length());
+                    progressBar.stepTo(target.length());
+                }, 0, 500, TimeUnit.MICROSECONDS);
 
-            }, 0, 500, TimeUnit.MILLISECONDS);
+            }
 
         }
 
