@@ -4,7 +4,7 @@
   "lang.welcome": "Die Sprache wurde auf Deutsch geändert",
 
   "sl.setup.changingPath": "Der default Java Pfad wird zu %0 geändert",
-  "sl.setup.eula": "StreamlineCloud akzeptiert automatisch die Minecraft EULA für jeden Server den du erstellst (Bitte besuche https://www.minecraft.net/en-us/eula) - Gebe 'yes' ein um die EULA zu akzeptieren",
+  "sl.setup.eula": "StreamlineCloud akzeptiert automatisch die Minecraft EULA für jeden Server den du erstellst (Bitte lese https://www.minecraft.net/en-us/eula) - Gebe 'yes' ein um die EULA zu akzeptieren",
   "sl.setup.eulaAccepted": "EULA akzeptiert",
   "sl.setup.enableWhitelist": "Möchtest du die Whitelist aktivieren?",
   "sl.setup.whitelistEnabled": "Whitelist aktiviert. Du kannst den whitelist Befehl nutzen um Spieler hinzuzufügen oder zu entfernen.",
@@ -21,15 +21,15 @@
 
   "sl.backend.started": "Das §AQUABackend §RED ist Online!",
 
-  "sl.server.preparing": "Der Server %1 wird vorbereitet",
-  "sl.server.starting": "Der Server %1 wird in %2 gestartet",
+  "sl.server.preparing": "%1 wird vorbereitet",
+  "sl.server.starting": "%1 wird in %2 gestartet",
   "sl.server.jarNotFound": "§DARK_RED Der Server %0 hat keine server.jar gefunden. Benutze den 'download' Command oder Kopiere eine Serverdatei in das Template. Die Gruppe %1 startet bis zu einem Neustart von StreamlineCloud keine Server mehr automatisch ",
-  "sl.server.online": "Der Server %1 ist nun online",
-  "sl.server.online.withLB": "-",
+  "sl.server.online": "%1 ist nun online",
+  "sl.server.online.withLB": "%1 ist online auf %2",
   "sl.server.screen.enabled": "Der Screen von %1 ist nun aktiv!",
   "sl.server.screen.disabled": "Der Screen von %1 ist nicht mehr aktiv!",
   "sl.server.killing": "%1 wird gelöscht...",
-  "sl.server.deleted": "Server %1 wurde gelöscht",
+  "sl.server.deleted": "%1 wurde gelöscht",
 
   "sl.group.downloadFinished": "Die Datein wurden erfolgreich heruntergeladen",
   "sl.group.downloadFailed": "Der Download der Datei ist fehlgeschlagen",
