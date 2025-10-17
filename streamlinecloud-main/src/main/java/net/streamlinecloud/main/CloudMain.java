@@ -25,6 +25,7 @@ import org.slf4j.simple.SimpleLogger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class CloudMain {
 
         Cache cache = new Cache();
         cache.setStartuptime(Calendar.getInstance().getTimeInMillis());
+
+        if (Arrays.asList(args).contains("-debug")) Cache.i().setDebugMode(true);
 
         for (String arg : args) {
             if (Cache.i().getArguments().contains(arg)) continue;

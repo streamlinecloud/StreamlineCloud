@@ -81,6 +81,12 @@ public class StreamlineCloud {
         logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{});
     }
 
+    public static void logDebug(String msg) {
+        if (Cache.i().isDebugMode()) {
+            log(msg);
+        }
+    }
+
     private static void logIntern(String msg, ReplacePaket[] pakets) {
 
         Date now = new Date();
