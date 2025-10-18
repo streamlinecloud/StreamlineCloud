@@ -1,5 +1,6 @@
 package net.streamlinecloud.main;
 
+import io.javalin.util.JavalinBindException;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.command.*;
 import net.streamlinecloud.main.config.MainConfig;
@@ -14,6 +15,7 @@ import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
 import net.streamlinecloud.main.core.backend.BackEndMain;
+import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.terminal.CloudTerminal;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import lombok.Getter;
@@ -77,7 +79,13 @@ public class CloudMain {
         SoftwareManager.getInstance().setConfig(new StreamlineConfig(new SoftwareConfig(), cache.homeFile + "/data/software/software.json"));
         SoftwareManager.getInstance().getConfig().init();
 
-        BackEndMain.startBE();
+        try {
+            BackEndMain.startBE();
+        } catch (JavalinBindException ignored) {
+            StreamlineCloud.log("sl.error.portAlreadyInUse", new ReplacePaket[]{new ReplacePaket("%0", Cache.i().getConfig().getNetwork().getBackendPort() + "")});
+            StreamlineCloud.shutDown();
+            return;
+        }
 
         new CloudGroupManager();
         new RunningServerManager();

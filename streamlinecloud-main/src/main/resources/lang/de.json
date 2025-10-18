@@ -62,6 +62,7 @@
   "sl.error.title": "§IMPORTANTEin Fehler ist aufgetreten: §RED%0",
   "sl.error.details": "Siehe für mehr Detais in §GREENdata/error/%0 §REDnach!",
   "sl.error.again": "§IMPORTANTDer Fehler §RED%0 §IMPORTANTist nochmal aufgetreten",
+  "sl.error.portAlreadyInUse": "Port %0 ist bereits in verwendung! StreamlineCloud wird gestoppt...",
 
   "sl.shutdown.shuttingDown": "StreamlineCloud wird gestoppt...",
 

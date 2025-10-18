@@ -62,6 +62,7 @@
   "sl.error.title": "§IMPORTANTAn error occurred: §RED%0",
   "sl.error.details": "Visit §GREENdata/error/%0 §REDfor more details!",
   "sl.error.again": "§IMPORTANTThe error §RED%0 §IMPORTANT appeared again :(",
+  "sl.error.portAlreadyInUse": "Port %0 already in use! Shutting down...",
 
   "sl.shutdown.shuttingDown": "Stopping StreamlineCloud...",
 

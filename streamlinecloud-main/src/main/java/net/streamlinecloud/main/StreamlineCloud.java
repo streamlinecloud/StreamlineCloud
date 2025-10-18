@@ -228,20 +228,24 @@ public class StreamlineCloud {
     public static void shutDown() {
         log("sl.shutdown.shuttingDown");
 
-        List<RunningServer> servers = new ArrayList<>(RunningServerManager.getInstance().getRunningServers());
-        Cache.i().setStopping(true);
+        if (RunningServerManager.getInstance() != null) {
 
-        for (RunningServer server : servers) {
-            if (server.getRuntime().equals(ServerRuntime.PROXY)) {
-                server.stop();
-            } else {
-                if (server.getServerState().equals(ServerState.STARTING)) server.kill();
-                else server.stop();
+            List<RunningServer> servers = new ArrayList<>(RunningServerManager.getInstance().getRunningServers());
+            Cache.i().setStopping(true);
+
+            for (RunningServer server : servers) {
+                if (server.getRuntime().equals(ServerRuntime.PROXY)) {
+                    server.stop();
+                } else {
+                    if (server.getServerState().equals(ServerState.STARTING)) server.kill();
+                    else server.stop();
+                }
             }
-        }
 
-        while (!RunningServerManager.getInstance().getRunningServers().isEmpty()) {
-            Thread.sleep(100);
+            while (!RunningServerManager.getInstance().getRunningServers().isEmpty()) {
+                Thread.sleep(100);
+            }
+
         }
 
         Cache.i().getPluginManager().executeStop();
