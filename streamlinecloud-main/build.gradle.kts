@@ -133,6 +133,94 @@ tasks.register("makeMainProject") {
 
 }
 
+tasks.register("startTest") {
+    group = "Testing"
+    description = "Starts or resumes a StreamlineCloud main instance for testing."
+
+    dependsOn("makeMainProject")
+
+    doLast {
+        val rootDir = rootProject.layout.projectDirectory.asFile
+        val buildDir = File(rootDir, "finished_builds/streamlinecloud-main")
+        val testSystemRoot = File(rootDir, "testSystem")
+        val testDir = File(testSystemRoot, "main")
+
+        if (!testDir.exists()) {
+            println("→ No existing test system found, creating new one...")
+            testDir.mkdirs()
+
+            val latestJar = buildDir.listFiles()
+                ?.filter { it.extension == "jar" }
+                ?.maxByOrNull { it.lastModified() }
+                ?: throw GradleException("Cannot start StreamlineCloud: no JAR found in ${buildDir.path}")
+
+            println("→ Copying ${latestJar.name} to ${testDir.path}")
+            latestJar.copyTo(File(testDir, "streamlinecloud_test.jar"))
+        } else {
+            println("→ Existing test system found: ${testDir.path}")
+        }
+
+        val jarFile = File(testDir, "streamlinecloud_test.jar")
+        if (!jarFile.exists()) {
+            throw GradleException("No streamlinecloud_test.jar found in ${testDir.path}")
+        }
+
+        println("→ Starting StreamlineCloud Main instance...")
+
+        val os = System.getProperty("os.name").lowercase()
+        val javaPath = File(System.getProperty("java.home"), "bin/java").absolutePath
+
+        val command = when {
+            os.contains("win") -> listOf(
+                "cmd", "/c",
+                "start", "cmd", "/k", "\"\"$javaPath\" -jar \"${jarFile.absolutePath}\"\""
+            )
+
+            os.contains("linux") -> {
+                // Try common terminal emulators
+                val terminals = listOf("x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "xterm", "kgx")
+                val terminal = terminals.find { Runtime.getRuntime().exec(arrayOf("which", it)).waitFor() == 0 }
+                    ?: error("No supported terminal found! Install one of: ${terminals.joinToString()}")
+
+                listOf(
+                    "bash", "-c",
+                    "$terminal -e 'bash -c \"\\\"$javaPath\\\" -jar \\\"${jarFile.absolutePath}\\\"; exec bash\"'"
+                )
+            }
+
+            else -> error("Unsupported OS: $os")
+        }
+
+
+        println("→ Opening new console window...")
+        ProcessBuilder(command)
+            .directory(testDir)
+            .start()
+
+        println("StreamlineCloud started in: ${testDir.path}")
+    }
+}
+
+tasks.register("rebuildTest") {
+    group = "Testing"
+    description = "Deletes and recreates the test system environment."
+
+    dependsOn("makeMainProject")
+
+    doLast {
+        val rootDir = rootProject.layout.projectDirectory.asFile
+        val testSystemRoot = File(rootDir, "testSystem")
+
+        if (testSystemRoot.exists()) {
+            println("→ Deleting old test system: ${testSystemRoot.path}")
+            testSystemRoot.deleteRecursively()
+        }
+
+        testSystemRoot.mkdirs()
+        println("Test system cleaned and ready for rebuild.")
+    }
+}
+
 tasks.named("makeMainProject") {
     dependsOn("copyStreamlineMc")
     dependsOn("shadowJar")
