@@ -221,6 +221,26 @@ tasks.register("rebuildTest") {
     }
 }
 
+tasks.register<Copy>("updateTest") {
+    group = "Testing"
+    description = "Builds the project and updates the test system environment."
+    dependsOn("makeMainProject")
+
+    println("Copying StreamlineCloud-MAIN")
+
+    val destResources = project.layout.projectDirectory.file("../testSystem/main")
+
+    from(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-main/streamlinecloud_MAIN-$branch-$version.jar"))
+    into(destResources)
+
+    rename { "streamlinecloud_test.jar" }
+
+    doLast {
+        println("Copied ${destResources.asFile.absolutePath}")
+    }
+}
+
+
 tasks.named("makeMainProject") {
     dependsOn("copyStreamlineMc")
     dependsOn("shadowJar")
