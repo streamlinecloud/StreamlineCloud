@@ -1,3 +1,4 @@
+
 plugins {
     id("java")
 }
@@ -20,7 +21,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.register("Make All") {
+tasks.register("makeAll") {
     group = "StreamlineCloud"
 
     dependsOn(":streamlinecloud-api:makeApiProject", ":streamlinecloud-mc:makeMcProject", ":streamlinecloud-main:makeMainProject")
