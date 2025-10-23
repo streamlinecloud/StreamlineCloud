@@ -82,7 +82,7 @@ public class CloudMain {
         try {
             BackEndMain.startBE();
         } catch (JavalinBindException ignored) {
-            StreamlineCloud.log("sl.error.portAlreadyInUse", new ReplacePaket[]{new ReplacePaket("%0", Cache.i().getConfig().getNetwork().getBackendPort() + "")});
+            StreamlineCloud.log("sc.error.portAlreadyInUse", new ReplacePaket[]{new ReplacePaket("%0", Cache.i().getConfig().getNetwork().getBackendPort() + "")});
             StreamlineCloud.shutDown();
             return;
         }

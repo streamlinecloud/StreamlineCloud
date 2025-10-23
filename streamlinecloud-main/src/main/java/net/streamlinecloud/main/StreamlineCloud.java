@@ -141,11 +141,11 @@ public class StreamlineCloud {
     public static void printError(String error, Exception e) {
 
         if (printedErrors.contains(error)) {
-            StreamlineCloud.log("sl.error.again", new ReplacePaket[]{new ReplacePaket("%0", error)});
+            StreamlineCloud.log("sc.error.again", new ReplacePaket[]{new ReplacePaket("%0", error)});
             return;
         }
 
-        StreamlineCloud.log("sl.error.title", new ReplacePaket[]{new ReplacePaket("%0", error)});
+        StreamlineCloud.log("sc.error.title", new ReplacePaket[]{new ReplacePaket("%0", error)});
 
         if (e != null) {
 
@@ -190,7 +190,7 @@ public class StreamlineCloud {
             bufferedWriter.close();
             fileWriter.close();
 
-            StreamlineCloud.log("sl.error.details", new ReplacePaket[]{new ReplacePaket("%0", fileName + ".txt")});
+            StreamlineCloud.log("sc.error.details", new ReplacePaket[]{new ReplacePaket("%0", fileName + ".txt")});
         }
 
         printedErrors.add(error);
@@ -226,7 +226,7 @@ public class StreamlineCloud {
 
     @SneakyThrows
     public static void shutDown() {
-        log("sl.shutdown.shuttingDown");
+        log("sc.shutdown.shuttingDown");
 
         if (RunningServerManager.getInstance() != null) {
 
@@ -261,7 +261,7 @@ public class StreamlineCloud {
             logSingle("Please start StreamlineCloud again.");
             logSingle("");
         } else {
-            log("sl.thanksForUsing");
+            log("sc.thanksForUsing");
         }
 
         CloudMain.getInstance().getTerminal().close();
@@ -298,7 +298,7 @@ public class StreamlineCloud {
                 response.execute(true);
             });
         } catch (Exception e) {
-            StreamlineCloud.log("sl.group.downloadFailed");
+            StreamlineCloud.log("sc.group.downloadFailed");
             response.execute(false);
             return false;
         }

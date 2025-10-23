@@ -57,7 +57,7 @@ public class StreamlineSetup {
                 StreamlineCloud.log("lang.welcome");
 
                 String javaPath = System.getProperty("java.home") + "/bin/java";
-                StreamlineCloud.log("sl.setup.changingPath", new ReplacePaket[]{new ReplacePaket("%0", javaPath)});
+                StreamlineCloud.log("sc.setup.changingPath", new ReplacePaket[]{new ReplacePaket("%0", javaPath)});
                 Cache.i().getConfig().setDefaultJavaPath(javaPath);
                 Cache.i().getConfig().getNetwork().setLoadBalancers(List.of(new LoadBalancer("MainLoadBalancer", "proxy", 25565)));
                 next();
@@ -70,9 +70,9 @@ public class StreamlineSetup {
         /*
         EULA ADVICE
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.eula", output -> {
+        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sc.setup.eula", output -> {
             if (output.equals("yes")) {
-                StreamlineCloud.log("sl.setup.eulaAccepted");
+                StreamlineCloud.log("sc.setup.eulaAccepted");
                 next();
             } else if (output.equals("no")) {
                 StreamlineCloud.shutDown();
@@ -82,20 +82,20 @@ public class StreamlineSetup {
         /*
         WHITELIST
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.enableWhitelist", output1 -> {
+        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sc.setup.enableWhitelist", output1 -> {
             if (output1.equals("yes")) {
                 Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
-                StreamlineCloud.log("sl.setup.whitelistEnabled");
+                StreamlineCloud.log("sc.setup.whitelistEnabled");
             }
             MainConfig.saveConfig();
-            StreamlineCloud.log("sl.setup.configGenerated");
+            StreamlineCloud.log("sc.setup.configGenerated");
             next();
         }));
 
         /*
         DEFAULT SETUP
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sl.setup.generateGroups", output2 -> {
+        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sc.setup.generateGroups", output2 -> {
 
             if (output2.equals("yes")) {
 
@@ -104,7 +104,7 @@ public class StreamlineSetup {
 
                 Cache.i().getConfig().setDefaultSoftwareName(software.getName());
                 StreamlineCloud.logSingle("");
-                StreamlineCloud.log("sl.setup.downloaded", new ReplacePaket[]{new ReplacePaket("%0", software.getName()), new ReplacePaket("%1", proxySoftware.getName())});
+                StreamlineCloud.log("sc.setup.downloaded", new ReplacePaket[]{new ReplacePaket("%0", software.getName()), new ReplacePaket("%1", proxySoftware.getName())});
 
                 CloudGroup lobby = new CloudGroup(
                         "lobby",
@@ -123,14 +123,14 @@ public class StreamlineSetup {
                     lobby.save();
                     proxy.save();
                 } catch (IOException e) {
-                    StreamlineCloud.log("sl.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", e.getMessage())});
+                    StreamlineCloud.log("sc.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", e.getMessage())});
                     return;
                 }
 
                 Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/proxy").mkdirs());
                 Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/server").mkdirs());
 
-                StreamlineCloud.log("sl.setup.groupsGenerated");
+                StreamlineCloud.log("sc.setup.groupsGenerated");
 
                 try {
                     Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
@@ -154,7 +154,7 @@ public class StreamlineSetup {
 
     private void finishSetup() {
         MainConfig.saveConfig();
-        StreamlineCloud.log("sl.setup.finished");
+        StreamlineCloud.log("sc.setup.finished");
         StreamlineCloud.shutDown();
     }
 

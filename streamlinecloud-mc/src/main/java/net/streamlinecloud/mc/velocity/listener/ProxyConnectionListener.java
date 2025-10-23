@@ -37,14 +37,14 @@ public class ProxyConnectionListener {
 
             if (StaticCache.whitelistEnabled) {
                 if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
-                    player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.notWhitelisted") + " \n\n§8» " + LangManager.getInstance().get("sl.mc.prefix")));
+                    player.disconnect(Component.text(LangManager.getInstance().get("sc.mc.notWhitelisted") + " \n\n§8» " + LangManager.getInstance().get("sc.mc.prefix")));
                     return;
                 }
             }
 
             Optional<RegisteredServer> server = ProxyFallbackHandler.getInstance().searchFallback();
             if (server == null || server.isEmpty()) {
-                player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.noFallbacks") + " \n\n " + LangManager.getInstance().get("sl.mc.prefix")));
+                player.disconnect(Component.text(LangManager.getInstance().get("sc.mc.noFallbacks") + " \n\n " + LangManager.getInstance().get("sc.mc.prefix")));
                 return;
             }
 
@@ -67,7 +67,7 @@ public class ProxyConnectionListener {
     @Subscribe
     public void onProxyShutdown(ListenerCloseEvent event) {
         VelocitySCP.getInstance().getProxy().getAllPlayers().forEach(player -> {
-            player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.proxyShutdown") + " \n\n " + LangManager.getInstance().get("sl.mc.prefix")));
+            player.disconnect(Component.text(LangManager.getInstance().get("sc.mc.proxyShutdown") + " \n\n " + LangManager.getInstance().get("sc.mc.prefix")));
         });
     }
 
@@ -85,7 +85,7 @@ public class ProxyConnectionListener {
 
             Optional<RegisteredServer> server = ProxyFallbackHandler.getInstance().searchFallback();
             if (server == null || server.isEmpty()) {
-                player.disconnect(Component.text(LangManager.getInstance().get("sl.mc.noFallbacks") + " \n\n§8» " + LangManager.getInstance().get("sl.mc.prefix")));
+                player.disconnect(Component.text(LangManager.getInstance().get("sc.mc.noFallbacks") + " \n\n§8» " + LangManager.getInstance().get("sc.mc.prefix")));
                 return;
             }
 
@@ -119,7 +119,7 @@ public class ProxyConnectionListener {
                 ping.onlinePlayers(0);
                 ping.maximumPlayers(-1);
             }
-            ping.description(MiniMessage.miniMessage().deserialize(LangManager.getInstance().get("sl.mc.motd")));
+            ping.description(MiniMessage.miniMessage().deserialize(LangManager.getInstance().get("sc.mc.motd")));
         } finally {
             e.setPing(ping.build());
         }

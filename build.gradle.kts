@@ -3,7 +3,7 @@ plugins {
     id("java")
 }
 
-group = "de.theflames"
+group = "net.streamlinecloud"
 version = "1.0-SNAPSHOT"
 
 repositories {

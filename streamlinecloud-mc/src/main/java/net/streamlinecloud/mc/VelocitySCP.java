@@ -59,15 +59,15 @@ public class VelocitySCP {
         new ProxyFallbackHandler();
 
         LangManager.getInstance().fetch(new String[]{
-                "sl.mc.prefix",
-                "sl.mc.motd",
-                "sl.mc.notAllowed",
-                "sl.mc.noFallbacks",
-                "sl.mc.notWhitelisted",
-                "sl.mc.connectingTo",
-                "sl.mc.serverDoesNotExist",
-                "sl.mc.alreadyConnected",
-                "sl.mc.proxyShutdown"});
+                "sc.mc.prefix",
+                "sc.mc.motd",
+                "sc.mc.notAllowed",
+                "sc.mc.noFallbacks",
+                "sc.mc.notWhitelisted",
+                "sc.mc.connectingTo",
+                "sc.mc.serverDoesNotExist",
+                "sc.mc.alreadyConnected",
+                "sc.mc.proxyShutdown"});
 
         refreshWhitelist();
 

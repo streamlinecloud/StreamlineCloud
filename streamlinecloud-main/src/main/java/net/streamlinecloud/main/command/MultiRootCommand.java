@@ -14,7 +14,7 @@ public class MultiRootCommand extends CloudCommand {
 
     @Override
     public void execute(String[] args) {
-        StreamlineCloud.log("sl.command.multiRoot.generate");
+        StreamlineCloud.log("sc.command.multiRoot.generate");
         StreamlineCloud.log("§GREENmultiroot setup localhost:" + Cache.i().getConfig().getNetwork().getBackendPort() + ";" + Cache.i().getApiKey());
     }
 }

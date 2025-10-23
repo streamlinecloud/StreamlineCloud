@@ -50,7 +50,7 @@ public class GroupsCommand extends CloudCommand {
                         runtime = ServerRuntime.PROXY;
 
                     } else {
-                        StreamlineCloud.log("sl.command.groups.crate.enterValidRuntime");
+                        StreamlineCloud.log("sc.command.groups.crate.enterValidRuntime");
                         return;
                     }
 
@@ -65,12 +65,12 @@ public class GroupsCommand extends CloudCommand {
                     try {
                         group.save();
                     } catch (IOException e) {
-                        StreamlineCloud.log("sl.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", e.getMessage())});
+                        StreamlineCloud.log("sc.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", e.getMessage())});
                         return;
                     }
 
                     Cache.i().getActiveGroups().add(group);
-                    StreamlineCloud.log("sl.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
+                    StreamlineCloud.log("sc.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
 
                 } else {
                     StreamlineCloud.log("syntax: - groups create <name> <server/proxy> <software> (optional: --static)");
@@ -86,24 +86,24 @@ public class GroupsCommand extends CloudCommand {
                     if (group != null) {
 
                         group.delete();
-                        StreamlineCloud.log("sl.command.groups.delete.deleted", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
+                        StreamlineCloud.log("sc.command.groups.delete.deleted", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
 
                     } else {
 
-                        StreamlineCloud.log("sl.command.groups.notFound", new ReplacePaket[]{new ReplacePaket("%1", args[2])});
+                        StreamlineCloud.log("sc.command.groups.notFound", new ReplacePaket[]{new ReplacePaket("%1", args[2])});
 
                     }
 
                 } else {
 
-                    StreamlineCloud.log("sl.command.groups.enterGroup");
+                    StreamlineCloud.log("sc.command.groups.enterGroup");
 
                 }
 
                 break;
             case "list":
 
-                StreamlineCloud.log("sl.command.groups.list.title");
+                StreamlineCloud.log("sc.command.groups.list.title");
 
                 for (CloudGroup g : Cache.i().getActiveGroups()) {
                     StreamlineCloud.log(g.getName() + " - online: " + CloudGroupManager.getInstance().getGroupOnlineServers(g).size() + " - minOnline: " + g.getMinOnlineCount());
@@ -113,7 +113,7 @@ public class GroupsCommand extends CloudCommand {
             case "group":
 
                 if (args.length == 2) {
-                    StreamlineCloud.log("sl.command.groups.enterGroup");
+                    StreamlineCloud.log("sc.command.groups.enterGroup");
                     return;
                 }
 
@@ -194,7 +194,7 @@ public class GroupsCommand extends CloudCommand {
                                 if (addSub.equals("template") || addSub.equals("t")) {
 
                                     group.getTemplates().add(args[5]);
-                                    StreamlineCloud.log("sl.command.groups.templateAdded", new ReplacePaket[]{new ReplacePaket("%0", args[5]), new ReplacePaket("%1", group.getName())});
+                                    StreamlineCloud.log("sc.command.groups.templateAdded", new ReplacePaket[]{new ReplacePaket("%0", args[5]), new ReplacePaket("%1", group.getName())});
 
                                     try {
                                         group.save();
@@ -211,9 +211,9 @@ public class GroupsCommand extends CloudCommand {
                                 if (listSub.equals("templates")) {
 
                                     if (group.getTemplates().isEmpty()) {
-                                        StreamlineCloud.log("sl.command.groups.list.templates.empty");
+                                        StreamlineCloud.log("sc.command.groups.list.templates.empty");
                                     } else {
-                                        StreamlineCloud.log("sl.command.groups.list.templates.title",
+                                        StreamlineCloud.log("sc.command.groups.list.templates.title",
                                                 new ReplacePaket[]{new ReplacePaket("%0", group.getName())});
                                     }
 
@@ -230,10 +230,10 @@ public class GroupsCommand extends CloudCommand {
                                 try {
                                     priority = Integer.parseInt(prioritySub);
                                 } catch (NumberFormatException e) {
-                                    StreamlineCloud.logError("sl.command.groups.priority.nan");
+                                    StreamlineCloud.logError("sc.command.groups.priority.nan");
                                 }
                                 group.setPriority(priority);
-                                StreamlineCloud.log("sl.command.groups.priority.success");
+                                StreamlineCloud.log("sc.command.groups.priority.success");
                             }
                         }
 
@@ -245,7 +245,7 @@ public class GroupsCommand extends CloudCommand {
 
                     } else {
 
-                        StreamlineCloud.log("sl.command.groups.notFound", new ReplacePaket[]{new ReplacePaket("%1", args[2])});
+                        StreamlineCloud.log("sc.command.groups.notFound", new ReplacePaket[]{new ReplacePaket("%1", args[2])});
 
                     }
 

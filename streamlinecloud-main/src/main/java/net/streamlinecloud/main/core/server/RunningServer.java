@@ -94,13 +94,13 @@ public class RunningServer extends StreamlineServer {
 
         if (!isStaticServer()) {
 
-            StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
+            StreamlineCloud.log("sc.server.starting", new ReplacePaket[]{
                     new ReplacePaket("%1", getName() + "-" + getUuid()),
                     new ReplacePaket("%2", "temp/" + getName())
             });
         } else {
 
-            StreamlineCloud.log("sl.server.starting", new ReplacePaket[]{
+            StreamlineCloud.log("sc.server.starting", new ReplacePaket[]{
                     new ReplacePaket("%1", getName()),
                     new ReplacePaket("%2", "static/" + getUuid())
             });
@@ -196,7 +196,7 @@ public class RunningServer extends StreamlineServer {
 
         if (!new File(file.getPath() + "/server.jar").exists()) {
 
-            StreamlineCloud.log("sl.server.jarNotFound", new ReplacePaket[]{
+            StreamlineCloud.log("sc.server.jarNotFound", new ReplacePaket[]{
                     new ReplacePaket("%0", getName()),
                     new ReplacePaket("%1", getGroup()),
             });
@@ -323,8 +323,8 @@ public class RunningServer extends StreamlineServer {
 
         SoftwareManager.getInstance().copyCache(getGroupDirect().getSoftwareName(), this);
 
-        if (lb == null) StreamlineCloud.log("sl.server.online", new ReplacePaket[]{new ReplacePaket("%1", getName())});
-        else StreamlineCloud.log("sl.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", getName()), new ReplacePaket("%2", lb)});
+        if (lb == null) StreamlineCloud.log("sc.server.online", new ReplacePaket[]{new ReplacePaket("%1", getName())});
+        else StreamlineCloud.log("sc.server.online.withLB", new ReplacePaket[]{new ReplacePaket("%1", getName()), new ReplacePaket("%2", lb)});
     }
 
     private int getFreePort()   {
@@ -374,7 +374,7 @@ public class RunningServer extends StreamlineServer {
         }
 
         RunningServerManager.getInstance().getRunningServers().remove(this);
-        StreamlineCloud.log("sl.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
+        StreamlineCloud.log("sc.server.deleted", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
     public void restart() {
@@ -425,7 +425,7 @@ public class RunningServer extends StreamlineServer {
         }
         setOutput(true);
         Cache.i().setCurrentScreenServerName(getName());
-        StreamlineCloud.log("sl.server.screen.enabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
+        StreamlineCloud.log("sc.server.screen.enabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
     public void send(SocketMessage message) {
@@ -436,7 +436,7 @@ public class RunningServer extends StreamlineServer {
         if (!isOutput()) return;
         setOutput(false);
         Cache.i().setCurrentScreenServerName(null);
-        StreamlineCloud.log("sl.server.screen.disabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
+        StreamlineCloud.log("sc.server.screen.disabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
     public CloudGroup getGroupDirect() {

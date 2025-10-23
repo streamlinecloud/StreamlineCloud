@@ -41,8 +41,8 @@ public class ServerCommand {
 
     private int execute(CommandContext<CommandSource> ctx) {
         String target = ctx.getArgument("target", String.class);
-        String prefix = LangManager.getInstance().get("sl.mc.prefix");
-        ctx.getSource().sendMessage(Component.text(prefix + LangManager.getInstance().get("sl.mc.connectingTo").replace("%0", target)));
+        String prefix = LangManager.getInstance().get("sc.mc.prefix");
+        ctx.getSource().sendMessage(Component.text(prefix + LangManager.getInstance().get("sc.mc.connectingTo").replace("%0", target)));
 
         Player player = (Player) ctx.getSource();
         List<RegisteredServer> matches = new ArrayList<>();
@@ -52,7 +52,7 @@ public class ServerCommand {
         }
 
         if (matches.isEmpty()) {
-            player.sendMessage(Component.text(prefix + LangManager.getInstance().get("sl.mc.serverDoesNotExist")));
+            player.sendMessage(Component.text(prefix + LangManager.getInstance().get("sc.mc.serverDoesNotExist")));
             return 0;
         }
 
@@ -65,7 +65,7 @@ public class ServerCommand {
         Optional<RegisteredServer> toConnect = matches.stream().findFirst();
 
         if (player.getCurrentServer().get().getServer().getServerInfo().getName().equals(toConnect.get().getServerInfo().getName())) {
-            player.sendMessage(Component.text(prefix + LangManager.getInstance().get("sl.mc.alreadyConnected").replace("%0", toConnect.get().getServerInfo().getName())));
+            player.sendMessage(Component.text(prefix + LangManager.getInstance().get("sc.mc.alreadyConnected").replace("%0", toConnect.get().getServerInfo().getName())));
             return 0;
         }
         player.createConnectionRequest(toConnect.get()).fireAndForget();

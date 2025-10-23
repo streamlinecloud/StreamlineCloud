@@ -72,7 +72,7 @@ public class BackEndMain {
         Cache.i().setServerSocket(new ServerSocket());
 
         Cache.i().getBackend().start(Cache.i().getConfig().getNetwork().getBackendPort());
-        StreamlineCloud.log("sl.backend.started", new ReplacePaket[]{new ReplacePaket("%1", Cache.i().getConfig().getNetwork().getBackendPort() + "")});
+        StreamlineCloud.log("sc.backend.started", new ReplacePaket[]{new ReplacePaket("%1", Cache.i().getConfig().getNetwork().getBackendPort() + "")});
 
 
     }

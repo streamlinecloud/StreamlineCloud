@@ -22,7 +22,7 @@ public class StreamlineCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         Player player = (Player) sender;
-        String prefix = LangManager.getInstance().get("sl.mc.prefix");
+        String prefix = LangManager.getInstance().get("sc.mc.prefix");
         PluginConfig config = PaperSCP.getInstance().getConfigManager().getConfig();
 
         if (args.length == 0) {
@@ -35,7 +35,7 @@ public class StreamlineCommand implements CommandExecutor {
         }
 
         if (!player.hasPermission(config.getPermissions().getServerInfo())) {
-            player.sendMessage(prefix + LangManager.getInstance().get("sl.mc.notAllowed"));
+            player.sendMessage(prefix + LangManager.getInstance().get("sc.mc.notAllowed"));
             return false;
         }
 

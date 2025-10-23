@@ -45,8 +45,8 @@ public final class PaperSCP extends JavaPlugin {
 
         new LangManager();
         LangManager.getInstance().fetch(new String[]{
-                "sl.mc.prefix",
-                "sl.mc.notAllowed"});
+                "sc.mc.prefix",
+                "sc.mc.notAllowed"});
 
         configManager = new ConfigManager(getDataFolder());
 

@@ -59,7 +59,7 @@ public class ServersCommand extends CloudCommand {
                     RunningServerManager.getInstance().startServerByGroup(group, "User (start command)");
 
                 }  else {
-                    StreamlineCloud.log("sl.command.server.start.enterName");
+                    StreamlineCloud.log("sc.command.server.start.enterName");
                 }
                 break;
 
@@ -125,13 +125,13 @@ public class ServersCommand extends CloudCommand {
                                 });
 
                             } else {
-                                StreamlineCloud.log("sl.command.servers.command.enterCommand");
+                                StreamlineCloud.log("sc.command.servers.command.enterCommand");
                             }
                             break;
                     }
 
                 } else {
-                    StreamlineCloud.log("sl.command.servers.serverNotFound");
+                    StreamlineCloud.log("sc.command.servers.serverNotFound");
                 }
                 break;
         }
