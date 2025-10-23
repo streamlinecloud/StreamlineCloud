@@ -14,10 +14,12 @@
   "sc.setup.downloaded": "Paper-%0 und Velocity-%1 server heruntergeladen",
   "sc.setup.downloadFailed": "§IMPORTANTDer Download ist fehlgeschlagen!",
   "sc.setup.finished": "Setup abgeschlossen. Starte neu...",
-  "sc.ready": "§RED-> Das Setup ist nun abgeschlossen und §GREENStreamlineCloud kann un benutzt werden. §REDStarte dazu die Cloud einfach neu!",
 
   "sc.startup.startingServers": "Starte alle Server...",
   "sc.startup.serversStarted": "§GREENAlle Server sind nun online!",
+
+  "sc.ready": "§RED-> Das Setup ist nun abgeschlossen und §GREENStreamlineCloud kann un benutzt werden. §REDStarte dazu die Cloud einfach neu!",
+  "sc.ctrlC": "Drücke Strg+C noch einmal um zu beenden.",
 
   "sc.backend.started": "Das §AQUABackend §RED ist Online!",
 

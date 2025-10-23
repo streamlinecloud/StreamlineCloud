@@ -4,6 +4,7 @@ import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.RunningServerManager;
+import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import net.streamlinecloud.main.utils.Cache;
@@ -19,10 +20,10 @@ import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 public class CloudTerminalRunner extends Thread {
 
     private final CloudTerminal terminal;
+    private long lastTimeCtrlCPressed = 0;
 
     public CloudTerminalRunner(CloudTerminal terminal) {
         this.terminal = terminal;
-
         this.setDaemon(false);
         this.setName("StreamlineTerminalRunner");
         this.setPriority(1);
@@ -38,11 +39,9 @@ public class CloudTerminalRunner extends Thread {
             try {
                 line = terminal.getLineReader().readLine(Color.translate("§REDuser §8-> "));
 
-
                 if (line == null) break;
 
                 if (Cache.i().getConsoleInputs().isEmpty()) {
-
                     String[] args = line.split(" ");
                     boolean executeCommands = true;
 
@@ -65,7 +64,6 @@ public class CloudTerminalRunner extends Thread {
                             executeCommands = false;
 
                         } else if (args[0].equals("exit")) {
-
                             RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
                             executeCommands = false;
                         }
@@ -80,15 +78,24 @@ public class CloudTerminalRunner extends Thread {
                     }
 
                 } else {
-
                     ConsoleQuestion question = Cache.i().getConsoleInputs().get(0);
                     question.execute(line);
                 }
+
             } catch (UserInterruptException ignore) {
-                System.exit(130); //<--------- ONLY USE THIS AS A LAST RESORT
-                //terminal.runHardStop();
+
+                if (System.currentTimeMillis() - lastTimeCtrlCPressed > 1000 * 3) {
+                    StreamlineCloud.log("sc.ctrlC");
+                    lastTimeCtrlCPressed = System.currentTimeMillis();
+
+                } else {
+                    StreamlineCloud.shutDown();
+
+                }
+
             } catch (EndOfFileException e) {
                 StreamlineCloud.logError("(Terminal) End of file reached.");
+
             }
         }
 
@@ -96,21 +103,15 @@ public class CloudTerminalRunner extends Thread {
 
     @SneakyThrows
     public static void executeCommand(String[] args) {
-
         for (CloudCommand cloudCommand : CloudMain.getInstance().getCommandMap()) {
-
             if (cloudCommand.name().equals(args[0])) {
-
                 executeCommand(cloudCommand, args);
 
             }
 
             if (cloudCommand.aliases() != null) {
-
                 for (String alias : cloudCommand.aliases()) {
-
                     if (alias.equals(args[0])) {
-
                         executeCommand(cloudCommand, args);
 
                     }
@@ -130,9 +131,11 @@ public class CloudTerminalRunner extends Thread {
     public static void executeCommand(CloudCommand command, String[] args) {
         try {
             command.execute(args);
+
         } catch (Exception e) {
             StreamlineCloud.log("An error occurred while executing this a command. Enable debugs for more details.");
             if (Cache.i().isDebugMode()) e.printStackTrace();
+
         }
     }
 }
