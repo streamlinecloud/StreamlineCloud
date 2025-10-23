@@ -19,7 +19,7 @@ public class LangManager {
 
     public LangManager() {
         File langFile = new File(Cache.i().homeFile + "/data/lang");
-        Utils.runMkdir(langFile.mkdirs());
+        Utils.runMkdir(langFile.mkdir());
         try {
 
             if (!Files.exists(new File(Cache.i().homeFile + "/data/lang/en.json").toPath())) Files.copy(Objects.requireNonNull(Utils.getResourceFile("lang/en.json", "json")).toPath(), new File(Cache.i().homeFile + "/data/lang/en.json").toPath());

@@ -122,7 +122,7 @@ public class MainConfig {
 
         if (Cache.i().getConfig() == null) {
             StreamlineCloud.log("StreamlineCloud couldn't load the config. Loading the setup...");
-            new StreamlineSetup();
+            Cache.i().setFirstLaunch(true);
             return;
         }
 

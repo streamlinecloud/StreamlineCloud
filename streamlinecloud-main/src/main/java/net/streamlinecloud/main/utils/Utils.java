@@ -58,7 +58,7 @@ public class Utils {
 
 
     public static void runMkdir(boolean result) {
-        if (Cache.i().isFirstLaunch() && !result) StreamlineCloud.log("StreamlineCloud has failed to create a file. This could be a permission or file system error");
+        if (Cache.i().isFirstLaunch() && !result) StreamlineCloud.logDebug("StreamlineCloud has failed to create a file. This could be a permission or file system error");
 
     }
 

@@ -16,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +37,10 @@ public class SoftwareManager {
     public SoftwareManager() {
         instance = this;
 
-        if (Cache.i().isFirstLaunch()) {
+        try {
             Utils.runMkdir(new File(Cache.i().getHomeFile() + "/data/software").mkdirs());
             Files.copy(Objects.requireNonNull(Utils.getResourceFile("software_catalog.json", "json")).toPath(), new File(Cache.i().getHomeFile() + "/data/software/catalog.json").toPath());
-        }
+        } catch (FileAlreadyExistsException ignored) {}
 
         loadCatalog();
     }
