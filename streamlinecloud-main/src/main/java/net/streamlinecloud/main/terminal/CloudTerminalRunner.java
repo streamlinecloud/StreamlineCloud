@@ -8,6 +8,7 @@ import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import net.streamlinecloud.main.utils.Cache;
 import lombok.SneakyThrows;
+import org.jline.reader.EndOfFileException;
 import org.jline.reader.UserInterruptException;
 
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 public class CloudTerminalRunner extends Thread {
 
     private final CloudTerminal terminal;
+
     public CloudTerminalRunner(CloudTerminal terminal) {
         this.terminal = terminal;
 
@@ -37,54 +39,56 @@ public class CloudTerminalRunner extends Thread {
                 line = terminal.getLineReader().readLine(Color.translate("§REDuser §8-> "));
 
 
-            if (line == null) break;
+                if (line == null) break;
 
-            if (Cache.i().getConsoleInputs().isEmpty()) {
+                if (Cache.i().getConsoleInputs().isEmpty()) {
 
-                String[] args = line.split(" ");
-                boolean executeCommands = true;
+                    String[] args = line.split(" ");
+                    boolean executeCommands = true;
 
-                if (Cache.i().getCurrentScreenServerName() != null) {
+                    if (Cache.i().getCurrentScreenServerName() != null) {
 
-                    if (args[0].equals("cmd") || args[0].equals("c") || args[0].equals("command")) {
+                        if (args[0].equals("cmd") || args[0].equals("c") || args[0].equals("command")) {
 
-                        StringBuilder sb = new StringBuilder();
+                            StringBuilder sb = new StringBuilder();
 
-                        for (int i = 0; i <= args.length; i++) {
+                            for (int i = 0; i <= args.length; i++) {
 
-                            if (i < 2) continue;
+                                if (i < 2) continue;
 
-                            sb.append(args[i - 1]).append(" ");
+                                sb.append(args[i - 1]).append(" ");
+                            }
+
+                            sb.deleteCharAt(sb.length() - 1);
+
+                            RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
+                            executeCommands = false;
+
+                        } else if (args[0].equals("exit")) {
+
+                            RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
+                            executeCommands = false;
                         }
-
-                        sb.deleteCharAt(sb.length() - 1);
-
-                        RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
-                        executeCommands = false;
-
-                    } else if (args[0].equals("exit")) {
-
-                        RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
-                        executeCommands = false;
                     }
-                }
 
 
-                if (executeCommands) {
-                    ExecuteCommandEvent executeCommandEvent = eventManager.callEvent(new ExecuteCommandEvent(args[0], Arrays.stream(args).skip(1).toArray(String[]::new), null));
-                    if (!executeCommandEvent.isCancelled()) {
-                        executeCommand(args);
+                    if (executeCommands) {
+                        ExecuteCommandEvent executeCommandEvent = eventManager.callEvent(new ExecuteCommandEvent(args[0], Arrays.stream(args).skip(1).toArray(String[]::new), null));
+                        if (!executeCommandEvent.isCancelled()) {
+                            executeCommand(args);
+                        }
                     }
+
+                } else {
+
+                    ConsoleQuestion question = Cache.i().getConsoleInputs().get(0);
+                    question.execute(line);
                 }
-
-            } else {
-
-                ConsoleQuestion question = Cache.i().getConsoleInputs().get(0);
-                question.execute(line);
-            }
             } catch (UserInterruptException ignore) {
                 System.exit(130); //<--------- ONLY USE THIS AS A LAST RESORT
                 //terminal.runHardStop();
+            } catch (EndOfFileException e) {
+                StreamlineCloud.logError("(Terminal) End of file reached.");
             }
         }
 

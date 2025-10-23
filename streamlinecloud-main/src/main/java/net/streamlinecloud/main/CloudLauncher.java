@@ -18,7 +18,7 @@ public class CloudLauncher {
     public static void main(String[] args) throws InterruptedException {
 
         new CloudMain(args);
-    }
 
+    }
 
 }
