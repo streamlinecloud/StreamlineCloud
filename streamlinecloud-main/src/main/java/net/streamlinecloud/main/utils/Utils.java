@@ -3,6 +3,8 @@ package net.streamlinecloud.main.utils;
 import net.streamlinecloud.main.CloudLauncher;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
+import net.streamlinecloud.main.core.template.Template;
+import org.apache.commons.io.FileUtils;
 import org.simpleyaml.configuration.file.YamlFile;
 
 import java.io.File;
@@ -10,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -166,6 +169,25 @@ public class Utils {
 
         } catch (IOException e) {
             StreamlineCloud.logError(e.getMessage());
+        }
+    }
+
+    public static String getVelocitySecret() {
+        File file = new File(Cache.i().getHomeFile() + Cache.i().getConfig().getVelocitySecret());
+        try {
+            return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void replaceFileVariable(File file, String key, String value) {
+        try {
+            String str = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+            str = str.replace("${" + key + "}", value);
+            FileUtils.writeStringToFile(file, str, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
