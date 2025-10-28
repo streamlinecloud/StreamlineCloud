@@ -5,7 +5,7 @@ import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.MainConfig;
-import net.streamlinecloud.main.core.backend.LoadBalancer;
+import net.streamlinecloud.main.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.ReplacePaket;

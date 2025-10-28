@@ -1,6 +1,5 @@
-package net.streamlinecloud.main.core.backend;
+package net.streamlinecloud.main.backend;
 
-import com.google.gson.Gson;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.utils.Cache;
 

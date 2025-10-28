@@ -1,4 +1,4 @@
-package net.streamlinecloud.main.core.backend.socket;
+package net.streamlinecloud.main.backend.socket;
 
 import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.api.socket.SocketMessage;

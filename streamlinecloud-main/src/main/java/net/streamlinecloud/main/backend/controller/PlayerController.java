@@ -1,4 +1,4 @@
-package net.streamlinecloud.main.core.backend.controller;
+package net.streamlinecloud.main.backend.controller;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;

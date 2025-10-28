@@ -1,4 +1,4 @@
-package net.streamlinecloud.main.core.backend.socket;
+package net.streamlinecloud.main.backend.socket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,7 +10,7 @@ import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.backend.BackEndMain;
+import net.streamlinecloud.main.backend.BackEndMain;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.core.server.RunningServerManager;
