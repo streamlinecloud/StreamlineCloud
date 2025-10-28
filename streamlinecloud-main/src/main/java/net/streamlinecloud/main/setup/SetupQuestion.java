@@ -1,26 +1,56 @@
 package net.streamlinecloud.main.setup;
 
 import lombok.Getter;
+import lombok.Setter;
+import net.streamlinecloud.api.extension.event.EventListener;
+import net.streamlinecloud.api.extension.event.StreamlineEvent;
+import net.streamlinecloud.api.extension.event.console.ConsoleInputEvent;
+import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.terminal.input.ConsoleInputContinue;
-import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.extension.ExtensionManager;
 
-@Getter
-public class SetupQuestion {
+@Getter @Setter
+public class SetupQuestion implements EventListener {
 
     InputType inputType;
-    ConsoleInputContinue next;
+    Validator validator;
+    Continue continueAction;
     String question;
 
-    public SetupQuestion(InputType inputType, String question, ConsoleInputContinue next) {
+    private static SetupQuestion current = null;
+
+    public SetupQuestion(InputType inputType, String question, Validator validator) {
         this.inputType = inputType;
-        this.next = next;
+        this.validator = validator;
         this.question = question;
+
+        ExtensionManager.eventManager.registerListener(this);
+    }
+
+    public SetupQuestion() {
+        ExtensionManager.eventManager.registerListener(this);
+    }
+
+    public void start(Continue continueAction) {
+        if (current != null) {
+            StreamlineCloud.log("Please wait for the current question to be answered!");
+            return;
+        }
+
+        current = this;
+        this.continueAction = continueAction;
+
+        //CloudMain.getInstance().getTerminal().getRunner().setRestricted(true);
+        StreamlineCloud.log(question);
     }
 
     public void start() {
-        StreamlineCloud.log(question);
-        //Cache.i().getConsoleInputs().add(this);
+        start(result -> {});
+    }
+
+    @StreamlineEvent
+    public void onConsoleInput(ConsoleInputEvent event) {
+        execute(event.getInput());
     }
 
     public void execute(String input)  {
@@ -45,8 +75,15 @@ public class SetupQuestion {
         }
 
         try {
-            getNext().execute(input);
-            //Cache.i().getConsoleInputs().remove(this);
+            if (validator.execute(input)) {
+                continueAction.execute(input);
+                current = null;
+                CloudMain.getInstance().getTerminal().getRunner().setRestricted(false);
+            } else {
+                StreamlineCloud.log("Invalid input!");
+                StreamlineCloud.log(question);
+            }
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -56,5 +93,13 @@ public class SetupQuestion {
         STRING,
         INT,
         BOOLEAN
+    }
+
+    public interface Continue {
+        void execute(String result);
+    }
+
+    public interface Validator {
+        boolean execute(String output) throws InterruptedException;
     }
 }

@@ -16,7 +16,12 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
 import net.streamlinecloud.main.backend.BackEndMain;
 import net.streamlinecloud.main.lang.ReplacePaket;
+import net.streamlinecloud.main.setup.SetupQuestion;
 import net.streamlinecloud.main.setup.StreamlineSetup;
+import net.streamlinecloud.main.setup.question.DefaultSetupQuestion;
+import net.streamlinecloud.main.setup.question.EulaQuestion;
+import net.streamlinecloud.main.setup.question.LangQuestion;
+import net.streamlinecloud.main.setup.question.WhitelistQuestion;
 import net.streamlinecloud.main.terminal.CloudTerminal;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import lombok.Getter;
@@ -101,7 +106,12 @@ public class CloudMain {
         Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
 
         if (cache.isFirstLaunch()) {
-            new StreamlineSetup();
+            new StreamlineSetup(new SetupQuestion[]{
+                    new LangQuestion(),
+                    new EulaQuestion(),
+                    new WhitelistQuestion(),
+                    new DefaultSetupQuestion()
+            });
             return;
         }
 
