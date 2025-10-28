@@ -9,6 +9,7 @@ import net.streamlinecloud.main.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
+import net.streamlinecloud.main.setup.question.LangQuestion;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
 
@@ -21,10 +22,10 @@ import java.util.*;
 
 public class StreamlineSetup {
 
-    List<SetupQuestion> questions = new ArrayList<>();
+    List<SetupQuestion> questions;
     int current = 0;
 
-    public StreamlineSetup() {
+    public StreamlineSetup(SetupQuestion[] questions) {
         StreamlineCloud.logSingle("");
         StreamlineCloud.logSingle("StreamlineCloud");
         StreamlineCloud.logSingle("""
@@ -40,117 +41,20 @@ public class StreamlineSetup {
 
         Cache.i().setConfig(new MainConfig("", 5378, "lobby"));
 
-        addQuestions();
+        this.questions = Arrays.asList(questions);
         next();
-
-    }
-
-    public void addQuestions() {
-        /*
-        SETUP LANG
-        */
-        questions.add(new SetupQuestion(SetupQuestion.InputType.STRING, "Set up language / Gebe eine Sprache ein [en/de]", output -> {
-
-            if (output.contains("en") || output.contains("de")) {
-
-                Cache.i().getConfig().setLanguage(output + ".json");
-                CloudMain.getInstance().initLang();
-                StreamlineCloud.log("lang.welcome");
-
-                String javaPath = System.getProperty("java.home") + "/bin/java";
-                StreamlineCloud.log("sc.setup.changingPath", new ReplacePaket[]{new ReplacePaket("%0", javaPath)});
-                Cache.i().getConfig().setDefaultJavaPath(javaPath);
-                Cache.i().getConfig().getNetwork().setLoadBalancers(List.of(new LoadBalancer("MainLoadBalancer", "proxy", 25565)));
-                next();
-
-            } else {
-                new StreamlineSetup();
-            }
-        }));
-
-        /*
-        EULA ADVICE
-        */
-        questions.add(new SetupQuestion(SetupQuestion.InputType.BOOLEAN, "sc.setup.eula", output -> {
-            if (output.equals("yes")) {
-                StreamlineCloud.log("sc.setup.eulaAccepted");
-                next();
-            } else if (output.equals("no")) {
-                StreamlineCloud.shutDown();
-            }
-        }));
-
-        /*
-        WHITELIST
-        */
-        questions.add(new SetupQuestion(SetupQuestion.InputType.BOOLEAN, "sc.setup.enableWhitelist", output1 -> {
-            if (output1.equals("yes")) {
-                Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
-                StreamlineCloud.log("sc.setup.whitelistEnabled");
-            }
-            MainConfig.saveConfig();
-            StreamlineCloud.log("sc.setup.configGenerated");
-            next();
-        }));
-
-        /*
-        DEFAULT SETUP
-        */
-        questions.add(new SetupQuestion(SetupQuestion.InputType.BOOLEAN, "sc.setup.generateGroups", output2 -> {
-
-            if (output2.equals("yes")) {
-
-                StreamlineSoftware software = SoftwareManager.getInstance().add(SoftwareManager.getInstance().getLatestSoftware("paper"));
-                StreamlineSoftware proxySoftware = SoftwareManager.getInstance().add(SoftwareManager.getInstance().getLatestSoftware("velocity"));
-
-                Cache.i().getConfig().setDefaultSoftwareName(software.getName());
-                StreamlineCloud.logSingle("");
-                StreamlineCloud.log("sc.setup.downloaded", new ReplacePaket[]{new ReplacePaket("%0", software.getName()), new ReplacePaket("%1", proxySoftware.getName())});
-
-                CloudGroup lobby = new CloudGroup(
-                        "lobby",
-                        1,
-                        List.of(),
-                        ServerRuntime.SERVER,
-                        "default");
-                CloudGroup proxy = new CloudGroup(
-                        "proxy",
-                        1,
-                        List.of(),
-                        ServerRuntime.PROXY,
-                        proxySoftware.getName());
-
-                try {
-                    lobby.save();
-                    proxy.save();
-                } catch (IOException e) {
-                    StreamlineCloud.log("sc.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", e.getMessage())});
-                    return;
-                }
-
-                Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/proxy").mkdirs());
-                Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/server").mkdirs());
-
-                StreamlineCloud.log("sc.setup.groupsGenerated");
-
-                try {
-                    Files.copy(Objects.requireNonNull(Utils.getResourceFile("velocity.toml", "")).toPath(), new File(Cache.i().homeFile + "/templates/default/proxy/velocity.toml").toPath());
-                    Files.writeString(Path.of(Cache.i().homeFile + "/templates/default/proxy/forwarding.secret"), StreamlineCloud.generateApiKey(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-                finishSetup();
-
-            } else {
-                finishSetup();
-            }
-        }));
     }
 
     public void next() {
-        questions.get(current).start();
-        current++;
+        if (this.questions.isEmpty()) {
+            finishSetup();
+            return;
+        }
+
+        questions.getFirst().start(result -> {
+            questions.removeFirst();
+            next();
+        });
     }
 
     private void finishSetup() {
