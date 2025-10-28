@@ -1,12 +1,13 @@
 package net.streamlinecloud.main.terminal;
 
+import lombok.Getter;
+import net.streamlinecloud.api.extension.event.console.ConsoleInputEvent;
 import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.RunningServerManager;
-import net.streamlinecloud.main.lang.ReplacePaket;
+import net.streamlinecloud.main.extension.ExtensionManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
-import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import net.streamlinecloud.main.utils.Cache;
 import lombok.SneakyThrows;
 import org.jline.reader.EndOfFileException;
@@ -19,6 +20,8 @@ import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 
 public class CloudTerminalRunner extends Thread {
 
+    @Getter
+    private boolean restricted = false;
     private final CloudTerminal terminal;
     private long lastTimeCtrlCPressed = 0;
 
@@ -41,45 +44,43 @@ public class CloudTerminalRunner extends Thread {
 
                 if (line == null) break;
 
-                if (Cache.i().getConsoleInputs().isEmpty()) {
-                    String[] args = line.split(" ");
-                    boolean executeCommands = true;
+                String[] args = line.split(" ");
+                boolean executeCommands = true;
 
-                    if (Cache.i().getCurrentScreenServerName() != null) {
+                ExtensionManager.eventManager.callEvent(new ConsoleInputEvent(line));
 
-                        if (args[0].equals("cmd") || args[0].equals("c") || args[0].equals("command")) {
+                if (restricted) continue;
 
-                            StringBuilder sb = new StringBuilder();
+                if (Cache.i().getCurrentScreenServerName() != null) {
 
-                            for (int i = 0; i <= args.length; i++) {
+                    if (args[0].equals("cmd") || args[0].equals("c") || args[0].equals("command")) {
 
-                                if (i < 2) continue;
+                        StringBuilder sb = new StringBuilder();
 
-                                sb.append(args[i - 1]).append(" ");
-                            }
+                        for (int i = 0; i <= args.length; i++) {
 
-                            sb.deleteCharAt(sb.length() - 1);
+                            if (i < 2) continue;
 
-                            RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
-                            executeCommands = false;
-
-                        } else if (args[0].equals("exit")) {
-                            RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
-                            executeCommands = false;
+                            sb.append(args[i - 1]).append(" ");
                         }
+
+                        sb.deleteCharAt(sb.length() - 1);
+
+                        RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
+                        executeCommands = false;
+
+                    } else if (args[0].equals("exit")) {
+                        RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
+                        executeCommands = false;
                     }
+                }
 
 
-                    if (executeCommands) {
-                        ExecuteCommandEvent executeCommandEvent = eventManager.callEvent(new ExecuteCommandEvent(args[0], Arrays.stream(args).skip(1).toArray(String[]::new), null));
-                        if (!executeCommandEvent.isCancelled()) {
-                            executeCommand(args);
-                        }
+                if (executeCommands) {
+                    ExecuteCommandEvent executeCommandEvent = eventManager.callEvent(new ExecuteCommandEvent(args[0], Arrays.stream(args).skip(1).toArray(String[]::new), null));
+                    if (!executeCommandEvent.isCancelled()) {
+                        executeCommand(args);
                     }
-
-                } else {
-                    ConsoleQuestion question = Cache.i().getConsoleInputs().get(0);
-                    question.execute(line);
                 }
 
             } catch (UserInterruptException ignore) {
@@ -138,4 +139,12 @@ public class CloudTerminalRunner extends Thread {
 
         }
     }
+
+    public void setRestricted(boolean restricted) {
+        this.restricted = restricted;
+
+        if (!restricted) {
+        }
+    }
+
 }

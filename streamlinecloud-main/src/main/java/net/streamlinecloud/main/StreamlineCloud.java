@@ -129,10 +129,7 @@ public class StreamlineCloud {
             Cache.i().getWebSocketClient().getClient().send("MESSAGE streamline/output " + Color.translate(s));
         }
 
-
-        PrintWriter writer = new PrintWriter(new PrintAboveWriter(lineReader));
-        writer.println(Color.translate(s));
-        writer.flush();
+        CloudMain.getInstance().getTerminal().log(s);
 
 
     }

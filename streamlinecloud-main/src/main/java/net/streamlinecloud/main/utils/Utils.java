@@ -3,7 +3,6 @@ package net.streamlinecloud.main.utils;
 import net.streamlinecloud.main.CloudLauncher;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
-import net.streamlinecloud.main.core.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.simpleyaml.configuration.file.YamlFile;
 

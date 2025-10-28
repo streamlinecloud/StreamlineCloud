@@ -5,12 +5,16 @@ import net.streamlinecloud.main.command.completer.MainCommandCompleter;
 import lombok.Getter;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.PrintAboveWriter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -22,6 +26,7 @@ public class CloudTerminal {
     private final LineReader lineReader;
     @Getter
     private final CloudTerminalRunner runner;
+    private List<String> savedLogs = new ArrayList<>();
 
     private boolean isInterrupted = false;
 
@@ -59,6 +64,17 @@ public class CloudTerminal {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void log(String msg) {
+        if (runner.isRestricted()) {
+            savedLogs.add(msg);
+            return;
+        }
+
+        PrintWriter writer = new PrintWriter(new PrintAboveWriter(lineReader));
+        writer.println(Color.translate(msg));
+        writer.flush();
     }
 
     public void close() {

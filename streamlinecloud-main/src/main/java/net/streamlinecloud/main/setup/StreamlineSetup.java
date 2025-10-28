@@ -1,4 +1,4 @@
-package net.streamlinecloud.main.utils;
+package net.streamlinecloud.main.setup;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.software.StreamlineSoftware;
@@ -9,7 +9,8 @@ import net.streamlinecloud.main.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
-import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
+import net.streamlinecloud.main.utils.Cache;
+import net.streamlinecloud.main.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.*;
 
 public class StreamlineSetup {
 
-    List<ConsoleQuestion> questions = new ArrayList<>();
+    List<SetupQuestion> questions = new ArrayList<>();
     int current = 0;
 
     public StreamlineSetup() {
@@ -48,7 +49,7 @@ public class StreamlineSetup {
         /*
         SETUP LANG
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.STRING, "Set up language / Gebe eine Sprache ein [en/de]", output -> {
+        questions.add(new SetupQuestion(SetupQuestion.InputType.STRING, "Set up language / Gebe eine Sprache ein [en/de]", output -> {
 
             if (output.contains("en") || output.contains("de")) {
 
@@ -70,7 +71,7 @@ public class StreamlineSetup {
         /*
         EULA ADVICE
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sc.setup.eula", output -> {
+        questions.add(new SetupQuestion(SetupQuestion.InputType.BOOLEAN, "sc.setup.eula", output -> {
             if (output.equals("yes")) {
                 StreamlineCloud.log("sc.setup.eulaAccepted");
                 next();
@@ -82,7 +83,7 @@ public class StreamlineSetup {
         /*
         WHITELIST
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sc.setup.enableWhitelist", output1 -> {
+        questions.add(new SetupQuestion(SetupQuestion.InputType.BOOLEAN, "sc.setup.enableWhitelist", output1 -> {
             if (output1.equals("yes")) {
                 Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
                 StreamlineCloud.log("sc.setup.whitelistEnabled");
@@ -95,7 +96,7 @@ public class StreamlineSetup {
         /*
         DEFAULT SETUP
         */
-        questions.add(new ConsoleQuestion(ConsoleQuestion.InputType.BOOLEAN, "sc.setup.generateGroups", output2 -> {
+        questions.add(new SetupQuestion(SetupQuestion.InputType.BOOLEAN, "sc.setup.generateGroups", output2 -> {
 
             if (output2.equals("yes")) {
 

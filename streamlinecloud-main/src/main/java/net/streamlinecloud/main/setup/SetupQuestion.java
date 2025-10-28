@@ -1,19 +1,18 @@
-package net.streamlinecloud.main.terminal.input;
+package net.streamlinecloud.main.setup;
 
-import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.utils.Cache;
 import lombok.Getter;
-
-import java.io.IOException;
+import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.terminal.input.ConsoleInputContinue;
+import net.streamlinecloud.main.utils.Cache;
 
 @Getter
-public class ConsoleQuestion {
+public class SetupQuestion {
 
     InputType inputType;
     ConsoleInputContinue next;
     String question;
 
-    public ConsoleQuestion(InputType inputType, String question, ConsoleInputContinue next) {
+    public SetupQuestion(InputType inputType, String question, ConsoleInputContinue next) {
         this.inputType = inputType;
         this.next = next;
         this.question = question;
@@ -21,12 +20,12 @@ public class ConsoleQuestion {
 
     public void start() {
         StreamlineCloud.log(question);
-        Cache.i().getConsoleInputs().add(this);
+        //Cache.i().getConsoleInputs().add(this);
     }
 
     public void execute(String input)  {
 
-        if (getInputType().equals(ConsoleQuestion.InputType.INT)) {
+        if (getInputType().equals(InputType.INT)) {
 
             try {
 
@@ -37,7 +36,7 @@ public class ConsoleQuestion {
                 StreamlineCloud.log("Please enter a valid number!");
                 return;
             }
-        } else if (getInputType().equals(ConsoleQuestion.InputType.BOOLEAN)) {
+        } else if (getInputType().equals(InputType.BOOLEAN)) {
 
             if (!input.equals("yes") && !input.equals("no")) {
                 StreamlineCloud.log("Type yes or no");
@@ -47,7 +46,7 @@ public class ConsoleQuestion {
 
         try {
             getNext().execute(input);
-            Cache.i().getConsoleInputs().remove(this);
+            //Cache.i().getConsoleInputs().remove(this);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -58,5 +57,4 @@ public class ConsoleQuestion {
         INT,
         BOOLEAN
     }
-
 }

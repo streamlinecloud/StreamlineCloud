@@ -16,6 +16,7 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
 import net.streamlinecloud.main.backend.BackEndMain;
 import net.streamlinecloud.main.lang.ReplacePaket;
+import net.streamlinecloud.main.setup.StreamlineSetup;
 import net.streamlinecloud.main.terminal.CloudTerminal;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import lombok.Getter;

@@ -11,7 +11,6 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
 import net.streamlinecloud.main.extension.ExtensionManager;
 import net.streamlinecloud.main.core.server.RunningServer;
-import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,7 +33,6 @@ public class Cache {
             Comparator.comparingInt(CloudGroup::getPriority).reversed()
     );
     public final List<RunningServer> serversWaitingForStart = new ArrayList<>();
-    public List<ConsoleQuestion> consoleInputs = new ArrayList<>();
     public CloudGroup defaultGroup;
     public String apiKey;
     public MainConfig config;
