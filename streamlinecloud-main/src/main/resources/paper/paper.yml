@@ -1,0 +1,5 @@
+settings:
+  velocity-support:
+    enabled: true
+    secret: ${velocity_secret}
+    online-mode: true

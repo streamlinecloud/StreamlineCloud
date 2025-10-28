@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -171,7 +172,20 @@ public class RunningServer extends StreamlineServer {
 
         //Template From Resources
         if (getRuntime().equals(ServerRuntime.SERVER)) {
+
+            File paperYml = new File(file.getAbsolutePath() + "/paper.yml");
+            File paperGlobalYml = new File(file.getAbsolutePath() + "/paper/config/paper-global.yml");
+
             Utils.copyResources(Utils.getResourceFile("spigot/spigot.yml", "yml"), new File(file.getAbsolutePath() + "/spigot.yml"));
+            Utils.copyResources(Utils.getResourceFile("paper/paper.yml", "yml"), paperYml);
+
+            boolean success = new File(file.getAbsolutePath() + "/paper/config").mkdirs();
+            if (!success) throw new FileSystemException("Could not create config folder");
+            Utils.copyResources(Utils.getResourceFile("paper/config/paper-global.yml", "yml"), paperGlobalYml);
+
+            Utils.replaceFileVariable(paperYml, "velocity_secret", Utils.getVelocitySecret());
+            Utils.replaceFileVariable(paperGlobalYml, "velocity_secret", Utils.getVelocitySecret());
+
         } else {
             Utils.copyResources(Utils.getResourceFile("bungee/config.yml", "yml"), new File(file.getAbsolutePath() + "/config.yml"));
         }
