@@ -45,43 +45,16 @@ public class CloudTerminalRunner extends Thread {
                 if (line == null) break;
 
                 String[] args = line.split(" ");
-                boolean executeCommands = true;
 
                 ExtensionManager.eventManager.callEvent(new ConsoleInputEvent(line));
 
                 if (restricted) continue;
 
-                if (Cache.i().getCurrentScreenServerName() != null) {
-
-                    if (args[0].equals("cmd") || args[0].equals("c") || args[0].equals("command")) {
-
-                        StringBuilder sb = new StringBuilder();
-
-                        for (int i = 0; i <= args.length; i++) {
-
-                            if (i < 2) continue;
-
-                            sb.append(args[i - 1]).append(" ");
-                        }
-
-                        sb.deleteCharAt(sb.length() - 1);
-
-                        RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).addCommand(sb.toString());
-                        executeCommands = false;
-
-                    } else if (args[0].equals("exit")) {
-                        RunningServerManager.getInstance().getServerByName(Cache.i().getCurrentScreenServerName()).disableScreen();
-                        executeCommands = false;
-                    }
+                ExecuteCommandEvent executeCommandEvent = eventManager.callEvent(new ExecuteCommandEvent(args[0], Arrays.stream(args).skip(1).toArray(String[]::new), null));
+                if (!executeCommandEvent.isCancelled()) {
+                    executeCommand(args);
                 }
 
-
-                if (executeCommands) {
-                    ExecuteCommandEvent executeCommandEvent = eventManager.callEvent(new ExecuteCommandEvent(args[0], Arrays.stream(args).skip(1).toArray(String[]::new), null));
-                    if (!executeCommandEvent.isCancelled()) {
-                        executeCommand(args);
-                    }
-                }
 
             } catch (UserInterruptException ignore) {
 
