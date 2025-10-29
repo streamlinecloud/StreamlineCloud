@@ -9,6 +9,8 @@ import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.extension.ExtensionManager;
 
+import java.util.UUID;
+
 @Getter @Setter
 public class SetupQuestion implements EventListener {
 
@@ -16,32 +18,35 @@ public class SetupQuestion implements EventListener {
     Validator validator;
     Continue continueAction;
     String question;
+    private UUID uuid;
 
-    private static SetupQuestion current = null;
+    static UUID current = null;
 
     public SetupQuestion(InputType inputType, String question, Validator validator) {
         this.inputType = inputType;
         this.validator = validator;
         this.question = question;
-
-        ExtensionManager.eventManager.registerListener(this);
     }
 
     public SetupQuestion() {
-        ExtensionManager.eventManager.registerListener(this);
     }
 
     public void start(Continue continueAction) {
+        this.uuid = UUID.randomUUID();
+        System.out.println(current);
         if (current != null) {
             StreamlineCloud.log("Please wait for the current question to be answered!");
             return;
         }
 
-        current = this;
+        ExtensionManager.eventManager.registerListener(this);
+
+        current = uuid;
+        System.out.println(current);
         this.continueAction = continueAction;
 
-        //CloudMain.getInstance().getTerminal().getRunner().setRestricted(true);
         StreamlineCloud.log(question);
+        CloudMain.getInstance().getTerminal().getRunner().setRestricted(true);
     }
 
     public void start() {
@@ -76,9 +81,9 @@ public class SetupQuestion implements EventListener {
 
         try {
             if (validator.execute(input)) {
-                continueAction.execute(input);
-                current = null;
                 CloudMain.getInstance().getTerminal().getRunner().setRestricted(false);
+                current = null;
+                continueAction.execute(input);
             } else {
                 StreamlineCloud.log("Invalid input!");
                 StreamlineCloud.log(question);

@@ -105,6 +105,9 @@ public class CloudMain {
         Utils.runMkdir(new File(cache.homeFile + "/temp").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
 
+        Cache.i().getPluginManager().loadExtensions();
+        Cache.i().getPluginManager().executeStartup();
+
         if (cache.isFirstLaunch()) {
             new StreamlineSetup(new SetupQuestion[]{
                     new LangQuestion(),
@@ -127,9 +130,6 @@ public class CloudMain {
         }
 
         for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) loadBalancer.start();
-
-        Cache.i().getPluginManager().loadExtensions();
-        Cache.i().getPluginManager().executeStartup();
 
         RunningServerManager.getInstance().startServersIfNeeded();
 

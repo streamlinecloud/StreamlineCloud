@@ -46,13 +46,13 @@ public class StreamlineSetup {
     }
 
     public void next() {
-        if (this.questions.isEmpty()) {
+        if (current >= questions.size()) {
             finishSetup();
             return;
         }
 
-        questions.getFirst().start(result -> {
-            questions.removeFirst();
+        questions.get(current).start(result -> {
+            current++;
             next();
         });
     }
