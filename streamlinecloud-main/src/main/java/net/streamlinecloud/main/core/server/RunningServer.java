@@ -180,7 +180,7 @@ public class RunningServer extends StreamlineServer {
             Utils.copyResources(Utils.getResourceFile("paper/paper.yml", "yml"), paperYml);
 
             boolean success = new File(file.getAbsolutePath() + "/paper/config").mkdirs();
-            if (!success) throw new FileSystemException("Could not create config folder");
+            if (!success) StreamlineCloud.log("Could not create paper config folder. If this is a static server you can ignore this message.");
             Utils.copyResources(Utils.getResourceFile("paper/config/paper-global.yml", "yml"), paperGlobalYml);
 
             Utils.replaceFileVariable(paperYml, "velocity_secret", Utils.getVelocitySecret());
