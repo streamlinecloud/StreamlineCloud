@@ -174,7 +174,7 @@ public class RunningServer extends StreamlineServer {
         if (getRuntime().equals(ServerRuntime.SERVER)) {
 
             File paperYml = new File(file.getAbsolutePath() + "/paper.yml");
-            File paperGlobalYml = new File(file.getAbsolutePath() + "/paper/config/paper-global.yml");
+            File paperGlobalYml = new File(file.getAbsolutePath() + "/config/paper-global.yml");
 
             Utils.copyResources(Utils.getResourceFile("spigot/spigot.yml", "yml"), new File(file.getAbsolutePath() + "/spigot.yml"));
             Utils.copyResources(Utils.getResourceFile("paper/paper.yml", "yml"), paperYml);
