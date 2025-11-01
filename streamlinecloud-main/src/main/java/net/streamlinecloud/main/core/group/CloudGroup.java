@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @Getter
-public class CloudGroup extends StreamlineGroup {
+public class CloudGroup extends StreamlineGroup implements Cloneable {
 
     public CloudGroup(String name, int minOnlineCount, List<String> templates, ServerRuntime runtime, String software) {
         setName(name);
@@ -54,5 +54,14 @@ public class CloudGroup extends StreamlineGroup {
 
         void execute(boolean success);
 
+    }
+
+    @Override
+    public CloudGroup clone() {
+        try {
+            return (CloudGroup) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

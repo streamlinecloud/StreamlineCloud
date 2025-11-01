@@ -40,6 +40,7 @@ public class StreamlineSetup {
         StreamlineCloud.logSingle("");
 
         Cache.i().setConfig(new MainConfig("", 5378, "lobby"));
+        Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/server").mkdirs());
 
         this.questions = Arrays.asList(questions);
         next();
