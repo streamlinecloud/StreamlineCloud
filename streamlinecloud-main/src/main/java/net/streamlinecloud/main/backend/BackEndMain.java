@@ -1,11 +1,11 @@
-package net.streamlinecloud.main.core.backend;
+package net.streamlinecloud.main.backend;
 
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.backend.controller.GroupsController;
-import net.streamlinecloud.main.core.backend.controller.PlayerController;
-import net.streamlinecloud.main.core.backend.controller.ServerController;
-import net.streamlinecloud.main.core.backend.controller.UtilController;
-import net.streamlinecloud.main.core.backend.socket.ServerSocket;
+import net.streamlinecloud.main.backend.controller.GroupsController;
+import net.streamlinecloud.main.backend.controller.PlayerController;
+import net.streamlinecloud.main.backend.controller.ServerController;
+import net.streamlinecloud.main.backend.controller.UtilController;
+import net.streamlinecloud.main.backend.socket.ServerSocket;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import io.javalin.Javalin;

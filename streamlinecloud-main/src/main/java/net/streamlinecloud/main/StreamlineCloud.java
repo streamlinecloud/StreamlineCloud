@@ -8,7 +8,7 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.*;
-import net.streamlinecloud.main.core.backend.BackEndMain;
+import net.streamlinecloud.main.backend.BackEndMain;
 import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.terminal.Color;
 import lombok.Getter;
@@ -129,10 +129,7 @@ public class StreamlineCloud {
             Cache.i().getWebSocketClient().getClient().send("MESSAGE streamline/output " + Color.translate(s));
         }
 
-
-        PrintWriter writer = new PrintWriter(new PrintAboveWriter(lineReader));
-        writer.println(Color.translate(s));
-        writer.flush();
+        CloudMain.getInstance().getTerminal().log(s);
 
 
     }

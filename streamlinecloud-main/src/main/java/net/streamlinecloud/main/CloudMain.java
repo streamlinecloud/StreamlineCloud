@@ -5,8 +5,8 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.command.*;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.config.StreamlineConfig;
-import net.streamlinecloud.main.core.backend.LoadBalancer;
-import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
+import net.streamlinecloud.main.backend.LoadBalancer;
+import net.streamlinecloud.main.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.core.software.SoftwareConfig;
@@ -14,8 +14,14 @@ import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
-import net.streamlinecloud.main.core.backend.BackEndMain;
+import net.streamlinecloud.main.backend.BackEndMain;
 import net.streamlinecloud.main.lang.ReplacePaket;
+import net.streamlinecloud.main.setup.SetupQuestion;
+import net.streamlinecloud.main.setup.StreamlineSetup;
+import net.streamlinecloud.main.setup.question.DefaultSetupQuestion;
+import net.streamlinecloud.main.setup.question.EulaQuestion;
+import net.streamlinecloud.main.setup.question.LangQuestion;
+import net.streamlinecloud.main.setup.question.WhitelistQuestion;
 import net.streamlinecloud.main.terminal.CloudTerminal;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import lombok.Getter;
@@ -99,8 +105,16 @@ public class CloudMain {
         Utils.runMkdir(new File(cache.homeFile + "/temp").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
 
+        Cache.i().getPluginManager().loadExtensions();
+        Cache.i().getPluginManager().executeStartup();
+
         if (cache.isFirstLaunch()) {
-            new StreamlineSetup();
+            new StreamlineSetup(new SetupQuestion[]{
+                    new LangQuestion(),
+                    new EulaQuestion(),
+                    new WhitelistQuestion(),
+                    new DefaultSetupQuestion()
+            });
             return;
         }
 
@@ -116,9 +130,6 @@ public class CloudMain {
         }
 
         for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) loadBalancer.start();
-
-        Cache.i().getPluginManager().loadExtensions();
-        Cache.i().getPluginManager().executeStartup();
 
         RunningServerManager.getInstance().startServersIfNeeded();
 
@@ -137,6 +148,8 @@ public class CloudMain {
         registerCommand(new SoftwareCommand());
         registerCommand(new ScreenCommand());
         registerCommand(new LoadBalancerCommand());
+        registerCommand(new SendToScreenCommand());
+        registerCommand(new ExitCommand());
 
         if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER, Cache.i().getConfig().getDefaultSoftwareName()));
         Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());

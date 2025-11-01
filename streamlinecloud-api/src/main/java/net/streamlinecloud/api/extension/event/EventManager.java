@@ -1,7 +1,5 @@
 package net.streamlinecloud.api.extension.event;
 
-import net.streamlinecloud.api.exception.ListenerException;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -9,7 +7,7 @@ import java.util.List;
 
 public class EventManager {
 
-    private final List<EventListener> listeners = new ArrayList<>();
+    private List<EventListener> listeners = new ArrayList<>();
 
     /**
      * Register a listener
@@ -30,6 +28,7 @@ public class EventManager {
     }
 
     public <T extends Event> T callEvent(T event) {
+        List<EventListener> listeners = new ArrayList<>(this.listeners);
         for (EventListener listener : listeners) {
             for (Method method : listener.getClass().getMethods()) {
                 if (method.isAnnotationPresent(StreamlineEvent.class)) {
@@ -40,7 +39,7 @@ public class EventManager {
                                 return event; // Return early if event is cancelled
                             }
                         } catch (InvocationTargetException | IllegalAccessException e) {
-                            throw new ListenerException(e.getMessage(), new Throwable("Error in listener " + listener.getClass().getName() + " method " + method.getName()));
+                            e.printStackTrace();
                         }
                     }
                 }

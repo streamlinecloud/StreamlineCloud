@@ -1,4 +1,4 @@
-package net.streamlinecloud.main.core.backend;
+package net.streamlinecloud.main.backend;
 
 import lombok.Getter;
 import lombok.Setter;

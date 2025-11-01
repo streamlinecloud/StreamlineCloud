@@ -52,7 +52,7 @@
   "sc.command.multiRoot.generate": "Um eine StreamlineCloud-Instanz mit diesem Cloud System zu verbinden gebe diesen Befehl in die konsole der anderen Instanz ein:",
 
   "sc.mc.prefix": "§8» §c§lStreamline§b§lCloud §8| §7",
-  "sc.mc.motd": "<bold><gradient:#ff4040:#d47979>Gehostet mit StreamlineCloud</gradient></bold><#4dffed>Visit streamlinecloud.net",
+  "sc.mc.motd": "<bold><gradient:#ff4040:#d47979>Gehostet mit StreamlineCloud</gradient></bold>\n<#4dffed>Besuche streamlinecloud.net",
   "sc.mc.notAllowed": "§cDu bist nicht berechtigt diesen Befehl zu benutzen",
   "sc.mc.noFallbacks": "§cAkutell sind keine Fallback-Server verfügbar",
   "sc.mc.notWhitelisted": "§cDu bist nicht auf der Whitelist",

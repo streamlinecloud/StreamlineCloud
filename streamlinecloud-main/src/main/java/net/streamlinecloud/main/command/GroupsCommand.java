@@ -62,15 +62,9 @@ public class GroupsCommand extends CloudCommand {
                             args[4]);
                     group.setStaticGroup(staticGroup);
 
-                    try {
-                        group.save();
-                    } catch (IOException e) {
-                        StreamlineCloud.log("sc.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", e.getMessage())});
-                        return;
-                    }
-
-                    Cache.i().getActiveGroups().add(group);
-                    StreamlineCloud.log("sc.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
+                    if (CloudGroupManager.getInstance().create(group))
+                        StreamlineCloud.log("sc.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
+                    else StreamlineCloud.log("sc.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
 
                 } else {
                     StreamlineCloud.log("syntax: - groups create <name> <server/proxy> <software> (optional: --static)");

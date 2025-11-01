@@ -5,13 +5,12 @@ import com.google.gson.Gson;
 import io.javalin.Javalin;
 import net.streamlinecloud.api.RestUtils.RconData;
 import net.streamlinecloud.main.config.MainConfig;
-import net.streamlinecloud.main.core.backend.socket.RemoteSocket;
-import net.streamlinecloud.main.core.backend.socket.ServerSocket;
+import net.streamlinecloud.main.backend.socket.RemoteSocket;
+import net.streamlinecloud.main.backend.socket.ServerSocket;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
 import net.streamlinecloud.main.extension.ExtensionManager;
 import net.streamlinecloud.main.core.server.RunningServer;
-import net.streamlinecloud.main.terminal.input.ConsoleQuestion;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,7 +33,6 @@ public class Cache {
             Comparator.comparingInt(CloudGroup::getPriority).reversed()
     );
     public final List<RunningServer> serversWaitingForStart = new ArrayList<>();
-    public List<ConsoleQuestion> consoleInputs = new ArrayList<>();
     public CloudGroup defaultGroup;
     public String apiKey;
     public MainConfig config;
