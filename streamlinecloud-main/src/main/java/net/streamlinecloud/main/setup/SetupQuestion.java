@@ -3,6 +3,7 @@ package net.streamlinecloud.main.setup;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamlinecloud.api.extension.event.EventListener;
+import net.streamlinecloud.api.extension.event.EventManager;
 import net.streamlinecloud.api.extension.event.StreamlineEvent;
 import net.streamlinecloud.api.extension.event.console.ConsoleInputEvent;
 import net.streamlinecloud.main.CloudMain;
@@ -33,7 +34,6 @@ public class SetupQuestion implements EventListener {
 
     public void start(Continue continueAction) {
         this.uuid = UUID.randomUUID();
-        System.out.println(current);
         if (current != null) {
             StreamlineCloud.log("Please wait for the current question to be answered!");
             return;
@@ -42,7 +42,6 @@ public class SetupQuestion implements EventListener {
         ExtensionManager.eventManager.registerListener(this);
 
         current = uuid;
-        System.out.println(current);
         this.continueAction = continueAction;
 
         StreamlineCloud.log(question);
@@ -82,6 +81,7 @@ public class SetupQuestion implements EventListener {
         try {
             if (validator.execute(input)) {
                 CloudMain.getInstance().getTerminal().getRunner().setRestricted(false);
+                ExtensionManager.eventManager.unregisterListener(this);
                 current = null;
                 continueAction.execute(input);
             } else {

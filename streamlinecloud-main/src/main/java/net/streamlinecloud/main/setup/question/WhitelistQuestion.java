@@ -8,7 +8,7 @@ import net.streamlinecloud.main.utils.Cache;
 public class WhitelistQuestion extends SetupQuestion {
 
     public WhitelistQuestion() {
-        super(InputType.STRING, "sc.setup.enableWhitelist", output -> {
+        super(InputType.BOOLEAN, "sc.setup.enableWhitelist", output -> {
             if (output.equals("yes")) {
                 Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
                 StreamlineCloud.log("sc.setup.whitelistEnabled");
