@@ -1,5 +1,7 @@
 package net.streamlinecloud.main.lang;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
@@ -11,13 +13,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+@Getter
 public class LangManager {
 
+    @Getter
+    private static LangManager instance;
+
+    @Setter
+    CloudLanguage currentLanguage = null;
+    List<CloudLanguage> languages = new ArrayList<>();
+
     public LangManager() {
+        instance = this;
+
         File langFile = new File(Cache.i().homeFile + "/data/lang");
         Utils.runMkdir(langFile.mkdir());
         try {
@@ -34,14 +48,14 @@ public class LangManager {
             try (Stream<Path> paths = Files.walk(Paths.get(langFile.getPath()))) {
                 paths
                         .filter(Files::isRegularFile)
-                        .forEach(LangManager::readLangFile);
+                        .forEach(this::readLangFile);
             }
         } catch (Exception e) {
             StreamlineCloud.log(e.getMessage());
         }
     }
 
-    public static void readLangFile(Path file) {
+    public void readLangFile(Path file) {
         try (BufferedReader reader = Files.newBufferedReader(file)) {
             StringBuilder content = new StringBuilder();
             String line;
@@ -56,7 +70,7 @@ public class LangManager {
                 config.put(key, configJson.getString(key));
             }
 
-            Cache.i().getLanguages().add(new CloudLanguage(file.getFileName().toString(), config));
+            languages.add(new CloudLanguage(file.getFileName().toString(), config));
         } catch (IOException e) {
             StreamlineCloud.log(e.getMessage());
         }

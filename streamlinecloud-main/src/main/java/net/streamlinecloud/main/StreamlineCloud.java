@@ -4,8 +4,10 @@ import net.streamlinecloud.api.StreamlineAPI;
 import net.streamlinecloud.api.extension.event.console.ConsoleMessageEvent;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
+import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.server.RunningServerManager;
+import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.*;
 import net.streamlinecloud.main.backend.BackEndMain;
@@ -94,9 +96,9 @@ public class StreamlineCloud {
         String formattedDate= format.format(now);
         LineReader lineReader = CloudMain.getInstance().getTerminal().getLineReader();
 
-        if (Cache.i().getCurrentLanguage() != null) {
+        if (LangManager.getInstance().getCurrentLanguage() != null) {
 
-            String replace = Cache.i().getCurrentLanguage().getMessages().get(msg);
+            String replace = LangManager.getInstance().getCurrentLanguage().getMessages().get(msg);
 
             if (replace != null) {
 
@@ -104,7 +106,7 @@ public class StreamlineCloud {
 
             } else {
 
-                String replaceEn = Cache.i().getLanguages().get(1).getMessages().get(msg);
+                String replaceEn = LangManager.getInstance().getLanguages().get(1).getMessages().get(msg);
                 if (replaceEn != null) msg = replaceEn;
             }
         } else {
@@ -146,7 +148,7 @@ public class StreamlineCloud {
 
         if (e != null) {
 
-            long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartuptime();
+            long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartUptime();
             long dif_insec = dif_intime / 1000 % 60;
             long dif_inmin = (dif_intime / (1000 * 60)) % 60;
             long dif_inhour = (dif_intime / (1000 * 60 * 60)) % 24;
@@ -228,7 +230,7 @@ public class StreamlineCloud {
         if (RunningServerManager.getInstance() != null) {
 
             List<RunningServer> servers = new ArrayList<>(RunningServerManager.getInstance().getRunningServers());
-            Cache.i().setStopping(true);
+            Cache.i().setStreamlineState(StreamlineState.STOPPING);
 
             for (RunningServer server : servers) {
                 if (server.getRuntime().equals(ServerRuntime.PROXY)) {

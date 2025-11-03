@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.core.group;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.RunningServer;
@@ -14,14 +15,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+@Getter
 public class CloudGroupManager {
 
     @Getter
     private static CloudGroupManager instance;
+
+    final PriorityQueue<CloudGroup> activeGroups = new PriorityQueue<>(
+            Comparator.comparingInt(CloudGroup::getPriority).reversed()
+    );
+
+    @Setter
+    CloudGroup defaultGroup;
 
     public CloudGroupManager() {
         instance = this;
@@ -68,13 +75,13 @@ public class CloudGroupManager {
             }
         }
 
-        Cache.i().getActiveGroups().add(group);
+        CloudGroupManager.getInstance().getActiveGroups().add(group);
         return true;
     }
 
     public CloudGroup getGroupByName(String name) {
 
-        for (CloudGroup group : Cache.i().getActiveGroups()) {
+        for (CloudGroup group : CloudGroupManager.getInstance().getActiveGroups()) {
 
             if (group.getName().equals(name)) {
 
@@ -85,7 +92,7 @@ public class CloudGroupManager {
     }
 
     public boolean groupExists(String name) {
-        for (CloudGroup group : Cache.i().getActiveGroups()) {
+        for (CloudGroup group : CloudGroupManager.getInstance().getActiveGroups()) {
             if (group.getName().equals(name)) {
                 return true;
             }

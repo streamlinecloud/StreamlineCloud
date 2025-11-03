@@ -2,6 +2,7 @@ package net.streamlinecloud.main;
 
 import io.javalin.util.JavalinBindException;
 import net.streamlinecloud.api.server.ServerRuntime;
+import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.main.command.*;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.config.StreamlineConfig;
@@ -49,7 +50,8 @@ public class CloudMain {
     public CloudMain(String[] args) {
 
         Cache cache = new Cache();
-        cache.setStartuptime(Calendar.getInstance().getTimeInMillis());
+        cache.setStartUptime(Calendar.getInstance().getTimeInMillis());
+        cache.setStreamlineState(StreamlineState.INITIALIZING);
 
         if (Arrays.asList(args).contains("-debug")) Cache.i().setDebugMode(true);
 
@@ -59,6 +61,8 @@ public class CloudMain {
         }
 
         System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
+
+        new LangManager();
 
         instance = this;
         terminal = new CloudTerminal();
@@ -75,9 +79,10 @@ public class CloudMain {
         Settings.name = "§REDStreamlineCloud §8-> §RED";
         StreamlineCloud.log("Starting StreamlineCloud");
 
+        new CloudGroupManager();
+
         MainConfig.init();
 
-        new LangManager();
         if (Cache.i().getConfig() != null) initLang();
         StreamlineCloud.log("lang.welcome");
 
@@ -93,7 +98,6 @@ public class CloudMain {
             return;
         }
 
-        new CloudGroupManager();
         new RunningServerManager();
 
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
@@ -151,19 +155,21 @@ public class CloudMain {
         registerCommand(new SendToScreenCommand());
         registerCommand(new ExitCommand());
 
-        if (Cache.i().getConfig() != null) Cache.i().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER, Cache.i().getConfig().getDefaultSoftwareName()));
-        Cache.i().getActiveGroups().add(Cache.i().getDefaultGroup());
+        if (Cache.i().getConfig() != null) CloudGroupManager.getInstance().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER, Cache.i().getConfig().getDefaultSoftwareName()));
+        CloudGroupManager.getInstance().getActiveGroups().add(CloudGroupManager.getInstance().getDefaultGroup());
+
+        Cache.i().setStreamlineState(StreamlineState.RUNNING);
 
     }
 
     public void initLang() {
-        for (CloudLanguage lang : Cache.i().getLanguages()) {
-            if (lang.getName().equals(Cache.i().getConfig().getLanguage())) Cache.i().setCurrentLanguage(lang);
+        for (CloudLanguage lang : LangManager.getInstance().getLanguages()) {
+            if (lang.getName().equals(Cache.i().getConfig().getLanguage())) LangManager.getInstance().setCurrentLanguage(lang);
         }
 
-        if (Cache.i().getCurrentLanguage() == null) {
+        if (LangManager.getInstance().getCurrentLanguage() == null) {
             StreamlineCloud.log("Lang " + Cache.i().getConfig().getLanguage() + " is invalid. Loading en.json");
-            Cache.i().setCurrentLanguage(Cache.i().getLanguages().getFirst());
+            LangManager.getInstance().setCurrentLanguage(LangManager.getInstance().getLanguages().getFirst());
         }
     }
 

@@ -5,6 +5,7 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareCatalogItem;
 import net.streamlinecloud.main.core.software.SoftwareConfig;
 import net.streamlinecloud.main.core.software.SoftwareManager;
@@ -76,7 +77,7 @@ public class SoftwareCommand extends CloudCommand {
                 boolean warn = false;
                 List<String> groups = new ArrayList<>();
 
-                for (CloudGroup activeGroup : Cache.i().getActiveGroups()) {
+                for (CloudGroup activeGroup : CloudGroupManager.getInstance().getActiveGroups()) {
                     if (activeGroup.getName().equals(softwareName)) {
                         warn = true;
                         groups.add(activeGroup.getName());

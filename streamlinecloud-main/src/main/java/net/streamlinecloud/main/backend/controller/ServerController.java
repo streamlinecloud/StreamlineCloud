@@ -3,7 +3,7 @@ package net.streamlinecloud.main.backend.controller;
 import com.google.gson.Gson;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import net.streamlinecloud.api.RestUtils.RconData;
+import net.streamlinecloud.api.rest.RconData;
 import net.streamlinecloud.api.packet.StartServerPacket;
 import net.streamlinecloud.api.server.*;
 import net.streamlinecloud.main.core.group.CloudGroupManager;

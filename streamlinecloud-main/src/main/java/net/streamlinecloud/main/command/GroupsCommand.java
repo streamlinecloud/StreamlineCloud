@@ -99,7 +99,7 @@ public class GroupsCommand extends CloudCommand {
 
                 StreamlineCloud.log("sc.command.groups.list.title");
 
-                for (CloudGroup g : Cache.i().getActiveGroups()) {
+                for (CloudGroup g : CloudGroupManager.getInstance().getActiveGroups()) {
                     StreamlineCloud.log(g.getName() + " - online: " + CloudGroupManager.getInstance().getGroupOnlineServers(g).size() + " - minOnline: " + g.getMinOnlineCount());
                 }
 
@@ -117,7 +117,7 @@ public class GroupsCommand extends CloudCommand {
 
                     if (group != null) {
 
-                        if (group.getName().equals(Cache.i().getDefaultGroup().getName())) {
+                        if (group.getName().equals(CloudGroupManager.getInstance().getDefaultGroup().getName())) {
                             StreamlineCloud.log("Nice try!");
                             return;
                         }

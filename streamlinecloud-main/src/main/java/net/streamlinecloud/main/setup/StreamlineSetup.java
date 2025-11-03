@@ -2,6 +2,7 @@ package net.streamlinecloud.main.setup;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.software.StreamlineSoftware;
+import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.MainConfig;
@@ -26,6 +27,8 @@ public class StreamlineSetup {
     int current = 0;
 
     public StreamlineSetup(SetupQuestion[] questions) {
+        Cache.i().setStreamlineState(StreamlineState.SETUP);
+
         StreamlineCloud.logSingle("");
         StreamlineCloud.logSingle("StreamlineCloud");
         StreamlineCloud.logSingle("""

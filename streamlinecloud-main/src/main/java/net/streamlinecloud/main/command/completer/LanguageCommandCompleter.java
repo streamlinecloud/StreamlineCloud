@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.command.completer;
 
+import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.utils.Cache;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
@@ -21,7 +22,7 @@ public class LanguageCommandCompleter implements Completer {
                 break;
 
             case 3:
-                Cache.i().getLanguages().forEach(lang -> {
+                LangManager.getInstance().getLanguages().forEach(lang -> {
                     list.add(new Candidate(lang.getName()));
                 });
                 break;

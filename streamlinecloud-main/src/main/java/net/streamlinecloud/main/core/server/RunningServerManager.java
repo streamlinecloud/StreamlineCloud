@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.core.server;
 
 import lombok.Getter;
+import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.group.CloudGroup;
@@ -42,7 +43,7 @@ public class RunningServerManager {
 
         Runnable runnable = () -> {
 
-            if (Cache.i().isStopping()) return;
+            if (Cache.i().getStreamlineState().equals(StreamlineState.STOPPING)) return;
 
             try {
 
@@ -189,7 +190,7 @@ public class RunningServerManager {
     private void startServersIfNeeded(CloudGroup group) {
         List<RunningServer> allServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(group));
 
-        for (RunningServer s : Cache.i().getServersWaitingForStart()) {
+        for (RunningServer s : RunningServerManager.getInstance().getServersWaitingForStart()) {
             if (s.getGroupDirect().equals(group)) {
                 allServers.add(s);
             }
@@ -205,14 +206,14 @@ public class RunningServerManager {
      * Groups are processed by priority.
      */
     public void startServersIfNeeded() {
-        if (!Cache.i().getServersWaitingForStart().isEmpty()) {
+        if (!RunningServerManager.getInstance().getServersWaitingForStart().isEmpty()) {
             return;
         }
 
         PriorityQueue<CloudGroup> groups = new PriorityQueue<>(
                 Comparator.comparingInt(CloudGroup::getPriority).reversed()
         );
-        groups.addAll(Cache.i().getActiveGroups());
+        groups.addAll(CloudGroupManager.getInstance().getActiveGroups());
 
         for (CloudGroup group : groups) {
             startServersIfNeeded(group);

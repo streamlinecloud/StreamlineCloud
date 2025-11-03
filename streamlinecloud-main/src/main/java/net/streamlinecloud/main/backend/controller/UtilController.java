@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import net.streamlinecloud.api.packet.RemoteCommandPacket;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.terminal.CloudTerminalRunner;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Settings;
@@ -26,7 +27,7 @@ public class UtilController {
     }
 
     public void uptime(@NotNull Context context) {
-        long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartuptime();
+        long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartUptime();
         long dif_inmin = (dif_intime / (1000 * 60)) % 60;
         long dif_inhour = (dif_intime / (1000 * 60 * 60)) % 24;
 
@@ -83,7 +84,7 @@ public class UtilController {
             HashMap<String, String> translations = new HashMap<>();
 
             for (String key : messages) {
-                translations.put(key, Cache.i().getCurrentLanguage().get(key));
+                translations.put(key, LangManager.getInstance().getCurrentLanguage().get(key));
             }
 
             context.result(new Gson().toJson(translations));

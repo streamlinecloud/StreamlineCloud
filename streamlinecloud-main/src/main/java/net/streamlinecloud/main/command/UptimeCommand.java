@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.command;
 
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
@@ -19,7 +20,7 @@ public class UptimeCommand extends CloudCommand {
     public void execute(String[] args) {
 
         if (args.length == 1){
-            long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartuptime();
+            long dif_intime = Calendar.getInstance().getTimeInMillis() - Cache.i().getStartUptime();
             long dif_insec = dif_intime / 1000 % 60;
             long dif_inmin = (dif_intime / (1000 * 60)) % 60;
             long dif_inhour = (dif_intime / (1000 * 60 * 60)) % 24;

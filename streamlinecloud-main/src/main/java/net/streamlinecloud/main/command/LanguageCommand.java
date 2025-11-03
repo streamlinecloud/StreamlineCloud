@@ -25,18 +25,18 @@ public class LanguageCommand extends CloudCommand {
             switch (sub) {
                 case "list" -> {
                     StreamlineCloud.log("Langs:");
-                    for (CloudLanguage langs : Cache.i().getLanguages())
+                    for (CloudLanguage langs : LangManager.getInstance().getLanguages())
                         StreamlineCloud.log(langs.getMessages().get("lang.name") + " (" + langs.getName() + ")");
                 }
                 case "set" -> {
 
-                    if (Cache.i().getLanguages().stream().noneMatch(l -> l.getName().equals(args[2]))) {
+                    if (LangManager.getInstance().getLanguages().stream().noneMatch(l -> l.getName().equals(args[2]))) {
                         StreamlineCloud.log("Language " + args[2] + " invalid");
                         return;
                     }
 
-                    CloudLanguage language = Cache.i().getLanguages().stream().filter(l -> l.getName().equals(args[2])).findFirst().get();
-                    Cache.i().setCurrentLanguage(language);
+                    CloudLanguage language = LangManager.getInstance().getLanguages().stream().filter(l -> l.getName().equals(args[2])).findFirst().get();
+                    LangManager.getInstance().setCurrentLanguage(language);
                     Cache.i().getConfig().setLanguage(language.getName());
                     MainConfig.saveConfig();
 

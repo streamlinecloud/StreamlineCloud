@@ -47,7 +47,7 @@ public class CloudGroup extends StreamlineGroup implements Cloneable {
             throw new RuntimeException(e);
         }
 
-        Cache.i().getActiveGroups().remove(this);
+        CloudGroupManager.getInstance().getActiveGroups().remove(this);
     }
 
     public interface DownloadResponse {

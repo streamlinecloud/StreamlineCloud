@@ -10,7 +10,7 @@ public class Color {
             return remove(output);
         }
 
-        if (Cache.i().getArguments().contains("--useLegacyColor") || Cache.i().isUseLgecyColor()) {
+        if (Cache.i().getArguments().contains("--useLegacyColor") || Cache.i().isUseLegacyColor()) {
             for (LegacyColorCodes value : LegacyColorCodes.values()) {
                 output = output.replace("§" + value.getIndex(), value.getAnsi());
                 output = output.replace("§" + value.name().toUpperCase(), value.getAnsi());

@@ -2,7 +2,7 @@ package net.streamlinecloud.main.core.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.streamlinecloud.api.RestUtils.RconData;
+import net.streamlinecloud.api.rest.RconData;
 import net.streamlinecloud.api.exception.TooManyAttemptsException;
 import net.streamlinecloud.api.extension.event.server.*;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
@@ -25,7 +25,6 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -72,7 +71,7 @@ public class RunningServer extends StreamlineServer {
     public void start(File javaExec) throws IOException {
 
         if (getGroup() == null)
-            setGroup(Cache.i().getDefaultGroup().getName());
+            setGroup(CloudGroupManager.getInstance().getDefaultGroup().getName());
 
         if (getGroupDirect().getAutoRestartMinutes() != -1)
             setStopTime(System.currentTimeMillis() + getGroupDirect().getAutoRestartMinutes() * 60 * 1000L);

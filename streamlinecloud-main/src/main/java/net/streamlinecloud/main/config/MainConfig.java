@@ -7,6 +7,7 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Settings;
 import net.streamlinecloud.main.utils.Utils;
@@ -127,12 +128,12 @@ public class MainConfig {
         }
 
         Cache.i().setDisabledColors(Cache.i().getConfig().advanced.disableColors);
-        Cache.i().setUseLgecyColor(Cache.i().getConfig().advanced.useLegacyColor);
+        Cache.i().setUseLegacyColor(Cache.i().getConfig().advanced.useLegacyColor);
 
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    Cache.i().getActiveGroups().add(readGroup(file.getName()));
+                    CloudGroupManager.getInstance().getActiveGroups().add(readGroup(file.getName()));
                 }
             }
         } else {

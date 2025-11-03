@@ -24,7 +24,7 @@ public class GroupsController {
     public void getAll(@NotNull Context context) {
         List<String> groups = new ArrayList<>();
 
-        Cache.i().getActiveGroups().forEach(g -> groups.add(g.getName()));
+        CloudGroupManager.getInstance().getActiveGroups().forEach(g -> groups.add(g.getName()));
 
         context.result(new Gson().toJson(groups));
         context.status(200);
