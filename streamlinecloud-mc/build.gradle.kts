@@ -86,7 +86,6 @@ tasks.register("makeMcProject") {
 
     val bdir = project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc")
 
-
     if (bdir.exists()) {
         bdir.deleteRecursively()
     }

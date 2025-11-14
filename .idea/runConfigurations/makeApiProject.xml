@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Make Streamlinecloud API" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="makeApiProject" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
-      <option name="externalProjectPath" value="$PROJECT_DIR$/streamlinecloud-api" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
       <option name="scriptParameters" value="" />
       <option name="taskDescriptions">
@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="&quot;Make API Project&quot;" />
+          <option value="makeApiProject" />
         </list>
       </option>
       <option name="vmOptions" />
