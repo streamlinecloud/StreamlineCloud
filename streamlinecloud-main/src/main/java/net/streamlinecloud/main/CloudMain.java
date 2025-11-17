@@ -62,6 +62,13 @@ public class CloudMain {
 
         System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
+        Utils.runMkdir(new File(cache.homeFile + "/groups").mkdirs());
+        Utils.runMkdir(new File(cache.homeFile + "/data/software").mkdirs());
+        Utils.runMkdir(new File(cache.homeFile + "/extensions").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/static").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/temp").mkdir());
+        Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
+
         new LangManager();
 
         instance = this;
@@ -101,13 +108,6 @@ public class CloudMain {
         new RunningServerManager();
 
         if (new File(cache.homeFile + "/temp").exists()) FileUtils.forceDelete(new File(cache.homeFile + "/temp"));
-
-        Utils.runMkdir(new File(cache.homeFile + "/groups").mkdirs());
-        Utils.runMkdir(new File(cache.homeFile + "/data/software").mkdirs());
-        Utils.runMkdir(new File(cache.homeFile + "/extensions").mkdir());
-        Utils.runMkdir(new File(cache.homeFile + "/static").mkdir());
-        Utils.runMkdir(new File(cache.homeFile + "/temp").mkdir());
-        Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
 
         Cache.i().getPluginManager().loadExtensions();
         Cache.i().getPluginManager().executeStartup();

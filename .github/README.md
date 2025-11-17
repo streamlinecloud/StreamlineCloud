@@ -40,9 +40,9 @@
 
 ## Philosophy
 - 🙂 **Easy to use:** Streamline is designed for a user-friendly experience, so everyone can use it without any hassle.
-- 🔌 **Extensions:** Streamline divides its features into different marketplace so you don't lose performance unnecessarily.
-- ⚡ **Scalable:** Streamline scales with your project. You can create easily multiple proxy servers.
-- 🔓 **Opensource:** Streamline is free and opensource for ever.
+- 🔌 **Extensions:** Streamline divides its features into different extensions so you don't lose performance unnecessarily.
+- ⚡ **Scalable:** Streamline scales with your project. You can easily create multiple proxy servers.
+- 🔓 **Opensource:** Streamline is free and opensource forever.
 
 <!-- USAGE EXAMPLES -->
 ## Read the docs
