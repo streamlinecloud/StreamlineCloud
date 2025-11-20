@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class CloudTerminal {
+public class
+CloudTerminal {
 
     @Getter
     private final Terminal terminal;
@@ -31,7 +32,6 @@ public class CloudTerminal {
     private boolean isInterrupted = false;
 
     public CloudTerminal() {
-
         System.setProperty("jansi.passthrough", "true");
 
         try {
@@ -78,7 +78,6 @@ public class CloudTerminal {
     }
 
     public void close() {
-
         try {
             this.runner.interrupt();
             this.terminal.close();

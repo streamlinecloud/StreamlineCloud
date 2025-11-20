@@ -4,11 +4,12 @@ plugins {
     kotlin("jvm") version "1.8.21"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
+    id("maven-publish")
 }
 
 group = "net.streamlinecloud"
-version = "1.0"
-val branch = "BETA"
+val version: String by rootProject
+val branch: String by rootProject
 
 repositories {
     mavenCentral()
@@ -44,6 +45,25 @@ dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
 }
 
+publishing {
+    repositories {
+        maven {
+            name = "streamlinecloud-repo"
+            url = uri("https://maven.pkg.github.com/streamlinecloud/StreamlineCloud")
+            credentials {
+                username = (project.findProperty("gpr.user") ?: System.getenv("USERNAME")) as String?
+                password = (project.findProperty("gpr.key") ?: System.getenv("TOKEN")) as String?
+            }
+        }
+    }
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+            version = "$branch-$version"
+        }
+    }
+}
+
 val targetJavaVersion = 17
 java {
     val javaVersion = JavaVersion.toVersion(targetJavaVersion)
@@ -52,6 +72,8 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
     }
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks.withType<JavaCompile> {
@@ -80,6 +102,7 @@ tasks {
         dependsOn("shadowJar")
     }
 }
+
 
 tasks.register("makeMcProject") {
     group = "StreamlineCloud"
@@ -111,5 +134,9 @@ tasks.register("makeMcProject") {
 
 tasks.named("makeMcProject") {
     dependsOn("shadowJar")
+}
+
+tasks.shadowJar {
+    archiveClassifier.set("")
 }
 

@@ -2,11 +2,12 @@ plugins {
     kotlin("jvm") version "1.8.21"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("java")
+    id("maven-publish")
 }
 
 group = "net.streamlinecloud"
-version = "1.0"
-val branch = "BETA"
+val version: String by rootProject
+val branch: String by rootProject
 
 repositories {
     mavenCentral()
@@ -25,6 +26,30 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "streamlinecloud-repo"
+            url = uri("https://maven.pkg.github.com/streamlinecloud/StreamlineCloud")
+            credentials {
+                username = (project.findProperty("gpr.user") ?: System.getenv("USERNAME")) as String?
+                password = (project.findProperty("gpr.key") ?: System.getenv("TOKEN")) as String?
+            }
+        }
+    }
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+            version = "$branch-$version"
+        }
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks.test {
@@ -72,4 +97,8 @@ tasks.register("makeApiProject") {
 
 tasks.named("makeApiProject") {
     dependsOn("shadowJar")
+}
+
+tasks.shadowJar {
+    archiveClassifier.set("")
 }

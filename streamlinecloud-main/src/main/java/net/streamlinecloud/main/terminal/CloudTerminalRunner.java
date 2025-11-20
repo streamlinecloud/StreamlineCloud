@@ -61,6 +61,7 @@ public class CloudTerminalRunner extends Thread {
                 if (System.currentTimeMillis() - lastTimeCtrlCPressed > 1000 * 3) {
                     StreamlineCloud.log("sc.ctrlC");
                     lastTimeCtrlCPressed = System.currentTimeMillis();
+                    return;
 
                 } else {
                     StreamlineCloud.shutDown();

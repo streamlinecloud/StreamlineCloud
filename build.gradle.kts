@@ -4,7 +4,8 @@ plugins {
 }
 
 group = "net.streamlinecloud"
-version = "1.0-SNAPSHOT"
+val version: String by rootProject
+val branch: String by rootProject
 
 repositories {
     mavenCentral()
