@@ -16,24 +16,6 @@ body:
       value: "A bug happened!"
     validations:
       required: true
-  - type: dropdown
-    id: version
-    attributes:
-      label: Version
-      description: Which version of StreamlineCloud are you running?
-      options:
-        - BETA_QC_0.2 (Default)
-      default: 0
-    validations:
-      required: true
-  - type: dropdown
-    id: browsers
-    attributes:
-      label: On which OS is StreamlineCloud running?
-      options:
-        - Linux
-        - Windows
-        - MacOS
   - type: textarea
     id: logs
     attributes:
@@ -43,8 +25,8 @@ body:
   - type: checkboxes
     id: terms
     attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com). 
+      label: Important
+      description: Make sure the issue appeared on the newest version of StreamlineCloud and you are running it on Linux. Wo dont provide support for MacOS or Windows!
       options:
-        - label: I agree to follow this project's Code of Conduct
+        - label: Understood
           required: true
