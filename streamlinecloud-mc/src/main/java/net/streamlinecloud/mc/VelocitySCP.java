@@ -5,9 +5,11 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
+import net.streamlinecloud.mc.common.core.manager.ConfigManager;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.Functions;
@@ -20,6 +22,7 @@ import net.streamlinecloud.mc.velocity.listener.ProxyConnectionListener;
 import net.streamlinecloud.mc.velocity.manager.VelocityGroupManager;
 import net.streamlinecloud.mc.velocity.manager.VelocityServerManager;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,15 +34,18 @@ public class VelocitySCP {
     StreamlineCloud streamlineCloud;
     private final ProxyServer proxy;
     private final Logger logger;
+    private final ConfigManager configManager;
     @Getter
     private static VelocitySCP instance;
 
     @Inject
-    public VelocitySCP(ProxyServer proxy, Logger logger) {
+    public VelocitySCP(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
 
         this.proxy = proxy;
         this.logger = logger;
         instance = this;
+        
+        this.configManager = new ConfigManager(dataDirectory.toFile());
 
         ServerCommand serverCmd = new ServerCommand(proxy);
         proxy.getCommandManager().register(
@@ -67,7 +73,8 @@ public class VelocitySCP {
                 "sc.mc.connectingTo",
                 "sc.mc.serverDoesNotExist",
                 "sc.mc.alreadyConnected",
-                "sc.mc.proxyShutdown"});
+                "sc.mc.proxyShutdown",
+                "sc.mc.noPermission"});
 
         refreshWhitelist();
 

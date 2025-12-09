@@ -40,11 +40,25 @@ public class ServerCommand {
     }
 
     private int execute(CommandContext<CommandSource> ctx) {
-        String target = ctx.getArgument("target", String.class);
+        CommandSource source = ctx.getSource();
+        
+        // Check if source is a player
+        if (!(source instanceof Player)) {
+            return 0;
+        }
+        
+        Player player = (Player) source;
         String prefix = LangManager.getInstance().get("sc.mc.prefix");
+        
+        // Check permission
+        if (!player.hasPermission(VelocitySCP.getInstance().getConfigManager().getConfig().getPermissions().getSwitchServer())) {
+            player.sendMessage(Component.text(prefix + LangManager.getInstance().get("sc.mc.noPermission")));
+            return 0;
+        }
+        
+        String target = ctx.getArgument("target", String.class);
         ctx.getSource().sendMessage(Component.text(prefix + LangManager.getInstance().get("sc.mc.connectingTo").replace("%0", target)));
 
-        Player player = (Player) ctx.getSource();
         List<RegisteredServer> matches = new ArrayList<>();
 
         for (RegisteredServer server : VelocitySCP.getInstance().getProxy().getAllServers()) {
