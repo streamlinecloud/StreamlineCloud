@@ -57,7 +57,7 @@ public class ServerCommand {
         }
         
         String target = ctx.getArgument("target", String.class);
-        ctx.getSource().sendMessage(Component.text(prefix + LangManager.getInstance().get("sc.mc.connectingTo").replace("%0", target)));
+        player.sendMessage(Component.text(prefix + LangManager.getInstance().get("sc.mc.connectingTo").replace("%0", target)));
 
         List<RegisteredServer> matches = new ArrayList<>();
 
