@@ -231,7 +231,16 @@ public class RunningServer extends StreamlineServer {
 
             Thread jarThread = new Thread(() -> {
                 try {
-                    ProcessBuilder processBuilder = new ProcessBuilder(javaExec.getAbsolutePath(), "-jar", finalFile + "/server.jar", "nogui");
+                    ProcessBuilder processBuilder = new ProcessBuilder(
+                        javaExec.getAbsolutePath(), 
+                        "-jar", 
+                        "-Xms" + getGroupDirect().getMimimumHeap() + "m", 
+                        "-Xmx" + getGroupDirect().getMaximumHeap() + "m", 
+                        finalFile + "/server.jar", 
+                        "nogui"
+                    );
+                    
+                    
                     processBuilder.redirectErrorStream(true); // Combine stderr and stdout
                     processBuilder.directory(finalFile);
                     Process process = processBuilder.start();

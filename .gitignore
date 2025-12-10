@@ -3,8 +3,10 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 finished_builds/*
 streamlinecloud-main/src/main/resources/streamlinecloud-mc
+/streamlinecloud-main/src/test/
 !**/src/main/**/build/
 !**/src/test/**/build/
+/testSystem/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -42,7 +44,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-/streamlinecloud-main/src/test/
-/finished_builds/streamlinecloud-main/streamlinecloud_NODE-alpha-1.0-SNAPSHOT.jar
-/streamlinecloud-main/src/main/resources/streamlinecloud_MC-alpha-1.0.0
-/testSystem/
+script/osx_startTest.command
