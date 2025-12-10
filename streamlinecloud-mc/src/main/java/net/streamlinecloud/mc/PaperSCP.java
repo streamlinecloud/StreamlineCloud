@@ -13,6 +13,7 @@ import net.streamlinecloud.mc.paper.listener.ServerListener;
 import net.streamlinecloud.mc.paper.manager.PaperPlayerManager;
 import net.streamlinecloud.mc.paper.manager.PaperServerManager;
 import net.streamlinecloud.mc.paper.task.StopCountdownTask;
+import net.streamlinecloud.mc.velocity.command.HubCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,7 +60,6 @@ public final class PaperSCP extends JavaPlugin {
     }
 
     private void registerCommand() {
-        Objects.requireNonNull(getCommand("connect")).setExecutor(new ConnectCommand());
         Objects.requireNonNull(getCommand("streamline")).setExecutor(new StreamlineCommand());
     }
 

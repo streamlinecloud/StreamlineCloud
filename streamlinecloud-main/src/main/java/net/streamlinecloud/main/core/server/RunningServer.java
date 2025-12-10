@@ -234,7 +234,7 @@ public class RunningServer extends StreamlineServer {
                     ProcessBuilder processBuilder = new ProcessBuilder(
                         javaExec.getAbsolutePath(), 
                         "-jar", 
-                        "-Xms" + getGroupDirect().getMimimumHeap() + "m", 
+                        "-Xms" + getGroupDirect().getMinimumHeap() + "m",
                         "-Xmx" + getGroupDirect().getMaximumHeap() + "m", 
                         finalFile + "/server.jar", 
                         "nogui"

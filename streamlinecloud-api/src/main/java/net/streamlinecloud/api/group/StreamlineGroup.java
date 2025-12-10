@@ -19,7 +19,7 @@ public class StreamlineGroup implements StreamlineGroupImpl {
     int minOnlineCount;
     int autoRestartMinutes = -1;
     int priority = 0;
-    int mimimumHeap = 512;
+    int minimumHeap = 512;
     int maximumHeap = 1024;
 
 }

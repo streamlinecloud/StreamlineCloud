@@ -7,7 +7,7 @@ description: This plugin needs to be installed on every server powered by Stream
 website: https://streamlinecloud.net/
 
 commands:
-  connect:
-    description: Connect command!
   streamline:
     description: Streamline your server!
+  hub:
+    description: Connects you to a fallback server!

@@ -14,6 +14,7 @@ import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
+import net.streamlinecloud.mc.velocity.command.HubCommand;
 import net.streamlinecloud.mc.velocity.command.RefreshWhitelistCommand;
 import net.streamlinecloud.mc.velocity.command.ServerCommand;
 import net.streamlinecloud.mc.velocity.listener.ProxyConnectionListener;
@@ -77,6 +78,7 @@ public class VelocitySCP {
     public void onInitialize(ProxyInitializeEvent event) {
         proxy.getEventManager().register(this, new ProxyConnectionListener());
         proxy.getCommandManager().register(proxy.getCommandManager().metaBuilder("refreshWhitelist").plugin(this).build(), new RefreshWhitelistCommand());
+        proxy.getCommandManager().register(proxy.getCommandManager().metaBuilder("hub").plugin(this).build(), new HubCommand());
     }
 
     public void refreshWhitelist() {
