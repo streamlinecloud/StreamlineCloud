@@ -28,6 +28,9 @@ public class ServerCommand {
                 .then(
                         BrigadierCommand.requiredArgumentBuilder("target", StringArgumentType.word())
                                 .suggests((context, builder) -> {
+                                    if (!(context instanceof Player) || !((Player) context).hasPermission("streamlinecloud.command.server")) {
+                                        return builder.buildFuture();
+                                    }
                                     getServerSuggestions(proxy)
                                             .forEach(builder::suggest);
                                     return builder.buildFuture();
@@ -40,11 +43,16 @@ public class ServerCommand {
     }
 
     private int execute(CommandContext<CommandSource> ctx) {
+        Player player = (Player) ctx.getSource();
+        if (!player.hasPermission("streamlinecloud.command.server")) {
+            player.sendMessage(Component.text(LangManager.getInstance().get("sc.mc.prefix") + LangManager.getInstance().get("sc.mc.notAllowed")));
+            return 0;
+        }
+
         String target = ctx.getArgument("target", String.class);
         String prefix = LangManager.getInstance().get("sc.mc.prefix");
         ctx.getSource().sendMessage(Component.text(prefix + LangManager.getInstance().get("sc.mc.connectingTo").replace("%0", target)));
 
-        Player player = (Player) ctx.getSource();
         List<RegisteredServer> matches = new ArrayList<>();
 
         for (RegisteredServer server : VelocitySCP.getInstance().getProxy().getAllServers()) {
