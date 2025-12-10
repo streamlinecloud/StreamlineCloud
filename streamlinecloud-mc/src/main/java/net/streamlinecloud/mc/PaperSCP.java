@@ -7,7 +7,6 @@ import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
-import net.streamlinecloud.mc.paper.command.ConnectCommand;
 import net.streamlinecloud.mc.paper.command.StreamlineCommand;
 import net.streamlinecloud.mc.paper.listener.ConnectionListener;
 import net.streamlinecloud.mc.paper.listener.ServerListener;
