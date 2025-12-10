@@ -5,10 +5,7 @@ import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public class Functions {
 

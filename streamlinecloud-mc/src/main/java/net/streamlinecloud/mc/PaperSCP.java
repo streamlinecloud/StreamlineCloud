@@ -3,7 +3,6 @@ package net.streamlinecloud.mc;
 import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
-import net.streamlinecloud.mc.common.core.manager.ConfigManager;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
@@ -25,7 +24,6 @@ import java.util.Objects;
 public final class PaperSCP extends JavaPlugin {
 
     StreamlineCloud streamlineCloud;
-    ConfigManager configManager;
     boolean debug = true;
 
     @Getter
@@ -47,8 +45,6 @@ public final class PaperSCP extends JavaPlugin {
         LangManager.getInstance().fetch(new String[]{
                 "sc.mc.prefix",
                 "sc.mc.notAllowed"});
-
-        configManager = new ConfigManager(getDataFolder());
 
         new PaperServerManager();
         new PaperPlayerManager();

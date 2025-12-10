@@ -3,7 +3,6 @@ package net.streamlinecloud.mc.paper.command;
 import com.google.gson.Gson;
 import net.streamlinecloud.api.packet.RemoteCommandPacket;
 import net.streamlinecloud.mc.PaperSCP;
-import net.streamlinecloud.mc.common.core.PluginConfig;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.StaticCache;
@@ -23,7 +22,6 @@ public class StreamlineCommand implements CommandExecutor {
 
         Player player = (Player) sender;
         String prefix = LangManager.getInstance().get("sc.mc.prefix");
-        PluginConfig config = PaperSCP.getInstance().getConfigManager().getConfig();
 
         if (args.length == 0) {
             player.sendMessage("");
@@ -34,7 +32,7 @@ public class StreamlineCommand implements CommandExecutor {
             return true;
         }
 
-        if (!player.hasPermission(config.getPermissions().getServerInfo())) {
+        if (!player.hasPermission("streamlinecloud.command.serverInfo")) {
             player.sendMessage(prefix + LangManager.getInstance().get("sc.mc.notAllowed"));
             return false;
         }

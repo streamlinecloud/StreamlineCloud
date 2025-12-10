@@ -1,6 +1,5 @@
 package net.streamlinecloud.main.utils;
 
-
 import com.google.gson.Gson;
 import io.javalin.Javalin;
 import net.streamlinecloud.api.rest.RconData;
