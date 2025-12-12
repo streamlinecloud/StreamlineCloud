@@ -12,6 +12,7 @@ import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.streamlinecloud.mc.VelocitySCP;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
+import net.streamlinecloud.mc.common.utils.StaticCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class ServerCommand {
                 .then(
                         BrigadierCommand.requiredArgumentBuilder("target", StringArgumentType.word())
                                 .suggests((context, builder) -> {
-                                    if (!(context instanceof Player) || !((Player) context).hasPermission("streamlinecloud.command.server")) {
+                                    if (!(context instanceof Player) || !((Player) context).hasPermission("streamlinecloud.command.server") || !StaticCache.whitelist.contains(((Player) context).getGameProfile().getName())) {
                                         return builder.buildFuture();
                                     }
                                     getServerSuggestions(proxy)
@@ -44,7 +45,7 @@ public class ServerCommand {
 
     private int execute(CommandContext<CommandSource> ctx) {
         Player player = (Player) ctx.getSource();
-        if (!player.hasPermission("streamlinecloud.command.server")) {
+        if (!player.hasPermission("streamlinecloud.command.server") || StaticCache.whitelist.contains(player.getGameProfile().getName())) {
             player.sendMessage(Component.text(LangManager.getInstance().get("sc.mc.prefix") + LangManager.getInstance().get("sc.mc.notAllowed")));
             return 0;
         }
