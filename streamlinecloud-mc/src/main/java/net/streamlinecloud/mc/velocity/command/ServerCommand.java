@@ -1,5 +1,6 @@
 package net.streamlinecloud.mc.velocity.command;
 
+import com.google.gson.Gson;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -29,7 +30,7 @@ public class ServerCommand {
                 .then(
                         BrigadierCommand.requiredArgumentBuilder("target", StringArgumentType.word())
                                 .suggests((context, builder) -> {
-                                    if (!(context instanceof Player) || !((Player) context).hasPermission("streamlinecloud.command.server") || !StaticCache.whitelist.contains(((Player) context).getGameProfile().getName())) {
+                                    if (!(context.getSource() instanceof Player) || !(context.getSource()).hasPermission("streamlinecloud.command.server") && !StaticCache.whitelist.contains(((Player) context.getSource()).getGameProfile().getName())) {
                                         return builder.buildFuture();
                                     }
                                     getServerSuggestions(proxy)
@@ -45,7 +46,7 @@ public class ServerCommand {
 
     private int execute(CommandContext<CommandSource> ctx) {
         Player player = (Player) ctx.getSource();
-        if (!player.hasPermission("streamlinecloud.command.server") || StaticCache.whitelist.contains(player.getGameProfile().getName())) {
+        if (!player.hasPermission("streamlinecloud.command.server") && !StaticCache.whitelist.contains(player.getGameProfile().getName())) {
             player.sendMessage(Component.text(LangManager.getInstance().get("sc.mc.prefix") + LangManager.getInstance().get("sc.mc.notAllowed")));
             return 0;
         }
