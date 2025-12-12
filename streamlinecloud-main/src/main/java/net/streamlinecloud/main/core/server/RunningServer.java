@@ -11,6 +11,7 @@ import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.api.socket.SocketMessage;
+import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
@@ -446,6 +447,7 @@ public class RunningServer extends StreamlineServer {
             StreamlineCloud.logSingle(log);
         }
         setOutput(true);
+        CloudMain.getInstance().getTerminal().getRunner().setScreenIndicator(getName());
         Cache.i().setCurrentScreenServerName(getName());
         StreamlineCloud.log("sc.server.screen.enabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
@@ -457,6 +459,7 @@ public class RunningServer extends StreamlineServer {
     public void disableScreen() {
         if (!isOutput()) return;
         setOutput(false);
+        CloudMain.getInstance().getTerminal().getRunner().setScreenIndicator("");
         Cache.i().setCurrentScreenServerName(null);
         StreamlineCloud.log("sc.server.screen.disabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }

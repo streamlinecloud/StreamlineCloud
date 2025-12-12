@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.terminal;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.streamlinecloud.api.extension.event.console.ConsoleInputEvent;
 import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.main.CloudMain;
@@ -18,12 +19,15 @@ import java.util.Arrays;
 import static net.streamlinecloud.main.extension.ExtensionManager.commandManager;
 import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
 
+@Getter
 public class CloudTerminalRunner extends Thread {
 
-    @Getter
     private boolean restricted = false;
     private final CloudTerminal terminal;
     private long lastTimeCtrlCPressed = 0;
+
+    @Setter
+    public String screenIndicator;
 
     public CloudTerminalRunner(CloudTerminal terminal) {
         this.terminal = terminal;
@@ -38,10 +42,8 @@ public class CloudTerminalRunner extends Thread {
     public void run() {
         String line;
         while (true) {
-
             try {
-                line = terminal.getLineReader().readLine(Color.translate("§REDuser §8-> "));
-
+                line = terminal.getLineReader().readLine(Color.translate("§RED" + (screenIndicator == null || screenIndicator.isEmpty() ? "StreamlineCloud" : screenIndicator) + " §8-> "));
                 if (line == null) break;
 
                 String[] args = line.split(" ");
@@ -57,7 +59,6 @@ public class CloudTerminalRunner extends Thread {
 
 
             } catch (UserInterruptException ignore) {
-
                 if (System.currentTimeMillis() - lastTimeCtrlCPressed > 1000 * 3) {
                     StreamlineCloud.log("sc.ctrlC");
                     lastTimeCtrlCPressed = System.currentTimeMillis();
@@ -72,6 +73,7 @@ public class CloudTerminalRunner extends Thread {
                 StreamlineCloud.logError("(Terminal) End of file reached.");
 
             }
+
         }
 
     }
