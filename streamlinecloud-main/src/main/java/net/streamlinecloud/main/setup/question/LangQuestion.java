@@ -15,7 +15,11 @@ public class LangQuestion extends SetupQuestion {
         setInputType(InputType.STRING);
         setQuestion("Set up language / Gebe eine Sprache ein [en/de]");
         setValidator(output -> {
-            if (output.contains("en") || output.contains("de")) {
+            if (output.equalsIgnoreCase("en") || output.equalsIgnoreCase("de")) {
+
+                if (output.equalsIgnoreCase("de")) {
+                    StreamlineCloud.log("ACHTUNG: Bitte beachte, dass die deutsche Version von StreamlineCloud noch nicht vollständig ist. An meheren Stellen können englische Texte auftauchen. Wir arbeiten weiterhin an einer vollständigen deutschen Übersetzung. Danke für deine Geduld!");
+                }
 
                 Cache.i().getConfig().setLanguage(output + ".json");
                 CloudMain.getInstance().initLang();
