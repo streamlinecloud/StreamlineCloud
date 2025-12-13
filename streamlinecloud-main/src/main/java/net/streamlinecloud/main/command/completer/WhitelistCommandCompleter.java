@@ -27,7 +27,7 @@ public class WhitelistCommandCompleter implements Completer {
             case 3:
                 if (words.get(1).equals("add"))
                     list.add(new Candidate("", "<mcName>", null, null, null, null, true));
-                else Cache.i().getConfig().getWhitelist().getWhitelist().forEach(whitelist -> {
+                else Cache.i().getConfig().getWhitelist().getWhitelistedPlayers().forEach(whitelist -> {
                     list.add(new Candidate(whitelist, whitelist, null, null, null, null, true));
                 });
                 break;

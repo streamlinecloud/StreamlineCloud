@@ -1,6 +1,8 @@
 package net.streamlinecloud.main.command;
 
+import com.google.gson.Gson;
 import net.streamlinecloud.api.server.ServerRuntime;
+import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.setup.SetupQuestion;
@@ -74,7 +76,8 @@ public class WhitelistCommand extends CloudCommand {
         }
 
         RunningServerManager.getInstance().getRunningServers().forEach(server -> {
-            if (server.getRuntime().equals(ServerRuntime.PROXY)) server.addCommand("refreshWhitelist");
+            if (!server.getRuntime().equals(ServerRuntime.PROXY)) return;
+            server.send(new SocketMessage(SocketMessage.SocketMessageType.WHITELIST_UPDATE, new Gson().toJson(Cache.i().getConfig().getWhitelist())));
         });
     }
 
