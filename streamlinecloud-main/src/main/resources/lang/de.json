@@ -5,7 +5,6 @@
 
   "sc.setup.changingPath": "Der default Java Pfad wird zu %0 geändert",
   "sc.setup.eula": "StreamlineCloud akzeptiert automatisch die Minecraft EULA für jeden Server den du erstellst (Bitte lese https://www.minecraft.net/en-us/eula) - Gebe 'yes' ein um die EULA zu akzeptieren",
-  "sc.setup.eulaAccepted": "EULA akzeptiert",
   "sc.setup.enableWhitelist": "Möchtest du die Whitelist aktivieren?",
   "sc.setup.whitelistEnabled": "Whitelist aktiviert. Du kannst den whitelist Befehl nutzen um Spieler hinzuzufügen oder zu entfernen.",
   "sc.setup.generateGroups": "Sollen standart Gruppen erstellt werden?",

@@ -18,15 +18,13 @@ public class LangQuestion extends SetupQuestion {
             if (output.equalsIgnoreCase("en") || output.equalsIgnoreCase("de")) {
 
                 if (output.equalsIgnoreCase("de")) {
-                    StreamlineCloud.log("ACHTUNG: Bitte beachte, dass die deutsche Version von StreamlineCloud noch nicht vollständig ist. An meheren Stellen können englische Texte auftauchen. Wir arbeiten weiterhin an einer vollständigen deutschen Übersetzung. Danke für deine Geduld!");
+                    StreamlineCloud.log("§DARK_REDACHTUNG: Bitte beachte, dass die deutsche Version von StreamlineCloud noch nicht vollständig ist. An meheren Stellen können englische Texte auftauchen. Wir arbeiten weiterhin an einer vollständigen deutschen Übersetzung. Danke für deine Geduld!");
                 }
 
                 Cache.i().getConfig().setLanguage(output + ".json");
                 CloudMain.getInstance().initLang();
-                StreamlineCloud.log("lang.welcome");
 
                 String javaPath = System.getProperty("java.home") + "/bin/java";
-                StreamlineCloud.log("sc.setup.changingPath", new ReplacePaket[]{new ReplacePaket("%0", javaPath)});
                 Cache.i().getConfig().setDefaultJavaPath(javaPath);
                 Cache.i().getConfig().getNetwork().setLoadBalancers(List.of(new LoadBalancer("MainLoadBalancer", "proxy", 25565)));
 
