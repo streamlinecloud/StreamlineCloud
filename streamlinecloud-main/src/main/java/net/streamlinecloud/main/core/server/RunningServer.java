@@ -336,10 +336,6 @@ public class RunningServer extends StreamlineServer {
             }
         }
 
-        if (getRuntime().equals(ServerRuntime.PROXY)) {
-            send(new SocketMessage(SocketMessage.SocketMessageType.WHITELIST_UPDATE, new Gson().toJson(Cache.i().getConfig().getWhitelist())));
-        }
-
         if (RunningServerManager.getInstance().getRestartingServers().containsKey(this)) {
             RunningServer oldServer = RunningServerManager.getInstance().getRestartingServers().get(this);
             Cache.i().getServerSocket().sendTo(oldServer, new SocketMessage(SocketMessage.SocketMessageType.MOVE_SERVER, getUuid()));

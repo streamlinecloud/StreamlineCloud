@@ -52,13 +52,16 @@ public class WhitelistCommand extends CloudCommand {
                 Cache.i().getConfig().getWhitelist().getWhitelistedPlayers().forEach(user -> {
                     StreamlineCloud.log("- " + user + (Cache.i().getConfig().getWhitelist().getPrivilegedPlayers().contains(user) ? " (privileged)" : ""));
                 });
-                break;
+                return;
 
             case "add":
                 Cache.i().getConfig().getWhitelist().getWhitelistedPlayers().add(args[2]);
                 new PrivilegedQuestion().start(result -> {
-                    if (result.equals("yes")) Cache.i().getConfig().getWhitelist().getPrivilegedPlayers().add(args[2]);
-                    StreamlineCloud.log("Privileged the user");
+                    if (result.equals("yes")) {
+                        Cache.i().getConfig().getWhitelist().getPrivilegedPlayers().add(args[2]);
+                        StreamlineCloud.log("Privileged the user");
+                        update();
+                    }
                 });
                 StreamlineCloud.log("Added " + args[2] + " to the whitelist");
                 MainConfig.saveConfig();
@@ -75,6 +78,10 @@ public class WhitelistCommand extends CloudCommand {
                 return;
         }
 
+        update();
+    }
+
+    public void update() {
         RunningServerManager.getInstance().getRunningServers().forEach(server -> {
             if (!server.getRuntime().equals(ServerRuntime.PROXY)) return;
             server.send(new SocketMessage(SocketMessage.SocketMessageType.WHITELIST_UPDATE, new Gson().toJson(Cache.i().getConfig().getWhitelist())));
