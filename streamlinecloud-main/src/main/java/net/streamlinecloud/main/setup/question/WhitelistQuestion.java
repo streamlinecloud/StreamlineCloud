@@ -10,7 +10,7 @@ public class WhitelistQuestion extends SetupQuestion {
     public WhitelistQuestion() {
         super(InputType.BOOLEAN, "sc.setup.enableWhitelist", output -> {
             if (output.equals("yes")) {
-                Cache.i().getConfig().getWhitelist().setWhitelistEnabled(true);
+                Cache.i().getConfig().getWhitelist().setEnabled(true);
                 StreamlineCloud.log("sc.setup.whitelistEnabled");
             }
             MainConfig.saveConfig();

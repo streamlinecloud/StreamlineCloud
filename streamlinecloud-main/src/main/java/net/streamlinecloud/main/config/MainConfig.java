@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.config;
 
 import com.google.gson.Gson;
+import net.streamlinecloud.api.packet.WhitelistConfigurationPacket;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
@@ -27,7 +28,7 @@ public class MainConfig {
     String defaultSoftwareName = "paper";
     String velocitySecret = "/templates/default/proxy/forwarding.secret";
     FallbackConfig fallback = new FallbackConfig();
-    WhitelistConfig whitelist = new WhitelistConfig();
+    WhitelistConfigurationPacket whitelist = new WhitelistConfigurationPacket(false, new ArrayList<>(), new ArrayList<>());
     WebSocketConfig websocket = new WebSocketConfig();
     NetworkConfig network = new NetworkConfig();
     AdvancedConfig advanced = new AdvancedConfig();
@@ -43,12 +44,6 @@ public class MainConfig {
         boolean dynamicFallbackControl = false;
         int dynamicFallbackPuffer = 20;
         String _info = "dynamicFallbackControl starts and stopps the fallbacks based on the network player count. You can set fallbackPlayerSpreading to SPLIT, BUNDLE, RANDOM";
-    }
-
-    @Getter @Setter
-    public static class WhitelistConfig {
-        boolean whitelistEnabled = false;
-        List<String> whitelist = new ArrayList<>();
     }
 
     @Getter @Setter
