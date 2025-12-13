@@ -196,12 +196,8 @@ public class StreamlineCloud {
     }
 
     public static void logSingle(String msg) {
+        CloudMain.getInstance().getTerminal().log("§WHITE" + msg);
 
-        LineReader lineReader = CloudMain.getInstance().getTerminal().getLineReader();
-        PrintWriter writer = new PrintWriter(new PrintAboveWriter(lineReader));
-
-        writer.println(Color.translate(msg));
-        writer.flush();
     }
 
     public static void serverLog(String server, String msg) {
