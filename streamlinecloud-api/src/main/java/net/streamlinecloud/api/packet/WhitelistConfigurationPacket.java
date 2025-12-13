@@ -1,10 +1,17 @@
 package net.streamlinecloud.api.packet;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 /**
  * This class contains all information about the whitelist
  */
+
+@Getter @Setter
+@AllArgsConstructor
 public class WhitelistConfigurationPacket {
 
     /**
