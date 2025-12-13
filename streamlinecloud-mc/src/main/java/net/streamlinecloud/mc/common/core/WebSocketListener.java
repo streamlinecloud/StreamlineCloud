@@ -2,6 +2,7 @@ package net.streamlinecloud.mc.common.core;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import net.streamlinecloud.api.packet.WhitelistConfigurationPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.StreamlineServer;
@@ -100,6 +101,9 @@ public class WebSocketListener implements WebSocket.Listener {
                 else if (message.getType().equals(SocketMessage.SocketMessageType.PLAYER_CONNECT)) serverManager.connectPlayerToServer(message.getPlayer().getUuid(), message.getContent());
                 else if (message.getType().equals(SocketMessage.SocketMessageType.PLAYER_KICK)) serverManager.kickPlayer(message.getPlayer().getUuid(), message.getContent());
 
+            } else if (message.getType().equals(SocketMessage.SocketMessageType.WHITELIST_UPDATE)) {
+                StaticCache.whitelist = new Gson().fromJson(message.getContent(), WhitelistConfigurationPacket.class);
+                serverManager.log("[SOCKET] Whitelist updated");
             }
 
             return null;

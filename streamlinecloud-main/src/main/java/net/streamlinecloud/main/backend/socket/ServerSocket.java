@@ -50,6 +50,9 @@ public class ServerSocket {
                 servers.put(ctx.sessionId(), new ArrayList<>());
                 subscribedStartingServers.put(ctx.sessionId(), new ArrayList<>());
 
+
+                ctx.send(new SocketMessage(SocketMessage.SocketMessageType.WHITELIST_UPDATE, new Gson().toJson(Cache.i().getConfig().getWhitelist())).toString());
+
             });
             ws.onMessage(ctx -> {
 

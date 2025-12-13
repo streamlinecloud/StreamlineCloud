@@ -54,13 +54,13 @@ public class UtilController {
     }
 
     public void whitelist(@NotNull Context context) {
-        if (!Cache.i().config.getWhitelist().isWhitelistEnabled()) {
+        if (!Cache.i().config.getWhitelist().isEnabled()) {
             context.result("false");
             context.status(200);
             return;
         }
 
-        context.result(new Gson().toJson(Cache.i().config.getWhitelist().getWhitelist()));
+        context.result(new Gson().toJson(Cache.i().config.getWhitelist().getWhitelistedPlayers()));
         context.status(200);
     }
 

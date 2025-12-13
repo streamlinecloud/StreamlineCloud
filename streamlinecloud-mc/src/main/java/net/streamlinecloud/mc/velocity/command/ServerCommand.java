@@ -30,7 +30,7 @@ public class ServerCommand {
                 .then(
                         BrigadierCommand.requiredArgumentBuilder("target", StringArgumentType.word())
                                 .suggests((context, builder) -> {
-                                    if (!(context.getSource() instanceof Player) || !(context.getSource()).hasPermission("streamlinecloud.command.server") && !StaticCache.whitelist.contains(((Player) context.getSource()).getGameProfile().getName())) {
+                                    if (!(context.getSource() instanceof Player) || !(context.getSource()).hasPermission("streamlinecloud.command.server") && !StaticCache.whitelist.getPrivilegedPlayers().contains(((Player) context.getSource()).getGameProfile().getName())) {
                                         return builder.buildFuture();
                                     }
                                     getServerSuggestions(proxy)
@@ -46,7 +46,7 @@ public class ServerCommand {
 
     private int execute(CommandContext<CommandSource> ctx) {
         Player player = (Player) ctx.getSource();
-        if (!player.hasPermission("streamlinecloud.command.server") && !StaticCache.whitelist.contains(player.getGameProfile().getName())) {
+        if (!player.hasPermission("streamlinecloud.command.server") && !StaticCache.whitelist.getPrivilegedPlayers().contains(player.getGameProfile().getName())) {
             player.sendMessage(Component.text(LangManager.getInstance().get("sc.mc.prefix") + LangManager.getInstance().get("sc.mc.notAllowed")));
             return 0;
         }
