@@ -19,6 +19,7 @@ public class SetupQuestion implements EventListener {
     Validator validator;
     Continue continueAction;
     String question;
+    String oldScreenIndicator;
     private UUID uuid;
 
     static UUID current = null;
@@ -38,6 +39,13 @@ public class SetupQuestion implements EventListener {
             StreamlineCloud.log("Please wait for the current question to be answered!");
             return;
         }
+        oldScreenIndicator = CloudMain.getInstance().getTerminal().getRunner().getScreenIndicator();
+
+        CloudMain.getInstance().getTerminal().getRunner().setScreenIndicator("Question: " +
+                (inputType.equals(InputType.BOOLEAN) ? "yes/no" :
+                        inputType.equals(InputType.STRING) ? "text" :
+                                inputType.equals(InputType.INT) ? "number" : "")
+        );
 
         ExtensionManager.eventManager.registerListener(this);
 
@@ -63,7 +71,7 @@ public class SetupQuestion implements EventListener {
 
             try {
 
-                int i = Integer.parseInt(input);
+                Integer.parseInt(input);
 
             } catch (NumberFormatException ex) {
 
@@ -80,6 +88,7 @@ public class SetupQuestion implements EventListener {
 
         try {
             if (validator.execute(input)) {
+                CloudMain.getInstance().getTerminal().getRunner().setScreenIndicator(oldScreenIndicator);
                 CloudMain.getInstance().getTerminal().getRunner().setRestricted(false);
                 ExtensionManager.eventManager.unregisterListener(this);
                 current = null;
