@@ -35,8 +35,8 @@ public class ProxyConnectionListener {
 
         try {
 
-            if (StaticCache.whitelistEnabled) {
-                if (!StaticCache.whitelist.contains(player.getGameProfile().getName())) {
+            if (StaticCache.whitelist.isEnabled()) {
+                if (!StaticCache.whitelist.getWhitelistedPlayers().contains(player.getGameProfile().getName())) {
                     player.disconnect(Component.text(LangManager.getInstance().get("sc.mc.notWhitelisted") + " \n\n§8» " + LangManager.getInstance().get("sc.mc.prefix")));
                     return;
                 }

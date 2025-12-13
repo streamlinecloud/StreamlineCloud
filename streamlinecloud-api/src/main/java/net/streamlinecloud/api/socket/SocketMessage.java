@@ -44,6 +44,7 @@ public class SocketMessage {
         ERROR(false),
         MOVE_SERVER(false),
         SERVER_UPDATE(false),
+        WHITELIST_UPDATE(false),
 
         PLAYER_CONNECT(false),
         PLAYER_MESSAGE(false),
