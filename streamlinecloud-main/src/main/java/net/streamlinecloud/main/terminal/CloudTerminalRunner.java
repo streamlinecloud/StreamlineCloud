@@ -120,6 +120,8 @@ public class CloudTerminalRunner extends Thread {
         this.restricted = restricted;
 
         if (!restricted) {
+            getTerminal().getSavedLogs().forEach(StreamlineCloud::logSingle);
+            getTerminal().getSavedLogs().removeAll(getTerminal().getSavedLogs());
         }
     }
 

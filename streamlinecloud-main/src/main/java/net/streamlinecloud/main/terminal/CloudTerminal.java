@@ -27,6 +27,7 @@ CloudTerminal {
     private final LineReader lineReader;
     @Getter
     private final CloudTerminalRunner runner;
+    @Getter
     private List<String> savedLogs = new ArrayList<>();
 
     private boolean isInterrupted = false;
