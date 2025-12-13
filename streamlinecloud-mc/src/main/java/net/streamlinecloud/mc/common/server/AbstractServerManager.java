@@ -1,5 +1,6 @@
 package net.streamlinecloud.mc.common.server;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.socket.SocketMessage;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import net.streamlinecloud.mc.common.utils.Utils;
 
 import javax.websocket.*;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
@@ -107,5 +109,13 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
         }
 
         return new RunningServer(new Gson().fromJson(new BackendRequest("servers/name/" + name).fetch().getResponse(), StreamlineServer.class));
+    }
+
+    @Override
+    public StreamlineServer[] getServersByGroup(String groupName) {
+        String res = new BackendRequest("groups/" + groupName + "/servers").fetch().getResponse();
+        Type type = new TypeToken<List<StreamlineServer>>() {} .getType();
+        List<StreamlineServer> servers = new Gson().fromJson(res, type);
+        return (StreamlineServer[]) servers.toArray();
     }
 }
