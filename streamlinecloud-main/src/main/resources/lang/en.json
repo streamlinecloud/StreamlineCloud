@@ -7,7 +7,7 @@
   "sc.setup.eula": "StreamlineCloud automatically accepts the Minecraft EULA for each server you create (Please visit https://www.minecraft.net/en-us/eula) - Type yes if you accept the EULA",
   "sc.setup.enableWhitelist": "Do you want to enable the whitelist?",
   "sc.setup.whitelistEnabled": "Whitelist enabled. You can use the whitelist command to add / remove players",
-  "sc.setup.generateGroups": "Should we generate a default setup so you are ready to go?",
+  "sc.setup.generateGroups": "Should we generate a default setup with proxy and lobby servers so you are ready to go?",
   "sc.setup.configGenerated": "Config generated",
   "sc.setup.groupsGenerated": "The groups Lobby and Proxy were created",
   "sc.setup.downloaded": "Downloaded Paper-%0 and Velocity-%1 servers",

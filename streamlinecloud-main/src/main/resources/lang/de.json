@@ -7,7 +7,7 @@
   "sc.setup.eula": "StreamlineCloud akzeptiert automatisch die Minecraft EULA für jeden Server den du erstellst (Bitte lese https://www.minecraft.net/en-us/eula) - Gebe 'yes' ein um die EULA zu akzeptieren",
   "sc.setup.enableWhitelist": "Möchtest du die Whitelist aktivieren?",
   "sc.setup.whitelistEnabled": "Whitelist aktiviert. Du kannst den whitelist Befehl nutzen um Spieler hinzuzufügen oder zu entfernen.",
-  "sc.setup.generateGroups": "Sollen standart Gruppen erstellt werden?",
+  "sc.setup.generateGroups": "Sollen wir ein standart Setup mit Proxy und Lobby Servern generieren?",
   "sc.setup.configGenerated": "Config generiert",
   "sc.setup.groupsGenerated": "Die Stardart-Gruppen (lobby & proxy) wurden erstellt",
   "sc.setup.downloaded": "Paper-%0 und Velocity-%1 server heruntergeladen",
