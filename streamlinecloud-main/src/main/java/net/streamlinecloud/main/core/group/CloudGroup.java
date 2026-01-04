@@ -1,6 +1,7 @@
 package net.streamlinecloud.main.core.group;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerRuntime;
@@ -31,7 +32,7 @@ public class CloudGroup extends StreamlineGroup implements Cloneable {
 
         Utils.runMkdir(file.createNewFile());
 
-        String json = new Gson().toJson(this, CloudGroup.class);
+        String json = new GsonBuilder().setPrettyPrinting().create().toJson(this, CloudGroup.class);
         JsonWriter writer = new JsonWriter(new FileWriter(file));
         writer.jsonValue(json);
         writer.flush();
