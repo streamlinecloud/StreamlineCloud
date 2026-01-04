@@ -28,7 +28,7 @@ public class MainConfig {
     String defaultSoftwareName = "paper";
     String velocitySecret = "/templates/default/proxy/forwarding.secret";
     FallbackConfig fallback = new FallbackConfig();
-    WhitelistConfigurationPacket whitelist = new WhitelistConfigurationPacket(false, new ArrayList<>(), new ArrayList<>());
+    WhitelistConfigurationPacket whitelist = new WhitelistConfigurationPacket(false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     WebSocketConfig websocket = new WebSocketConfig();
     NetworkConfig network = new NetworkConfig();
     AdvancedConfig advanced = new AdvancedConfig();

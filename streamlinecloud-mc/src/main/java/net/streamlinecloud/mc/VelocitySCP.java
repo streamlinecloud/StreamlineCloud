@@ -61,6 +61,7 @@ public class VelocitySCP {
                 "sc.mc.notAllowed",
                 "sc.mc.noFallbacks",
                 "sc.mc.notWhitelisted",
+                "sc.mc.maintenance",
                 "sc.mc.connectingTo",
                 "sc.mc.serverDoesNotExist",
                 "sc.mc.alreadyConnected",

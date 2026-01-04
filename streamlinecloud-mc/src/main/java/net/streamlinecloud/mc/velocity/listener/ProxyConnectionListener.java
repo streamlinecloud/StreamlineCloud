@@ -60,6 +60,11 @@ public class ProxyConnectionListener {
     @Subscribe
     public void onServerConnect(ServerConnectedEvent event) {
         Player player = event.getPlayer();
+        System.out.println(event.getServer().getServerInfo().getName());
+        if (StaticCache.whitelist.getMaintenanceServers().contains(event.getServer().getServerInfo().getName())) {
+            player.disconnect(Component.text(LangManager.getInstance().get("sc.mc.maintenance")));
+            return;
+        }
 
         new BackendRequest("player/" + player.getUniqueId()).setType(BackendRequest.RestType.POST).withBody(new Gson().toJson(new StreamlinePlayer(player.getUniqueId(), player.getUsername(), StaticCache.serverData.getName(), event.getServer().getServerInfo().getName()))).fetch();
     }

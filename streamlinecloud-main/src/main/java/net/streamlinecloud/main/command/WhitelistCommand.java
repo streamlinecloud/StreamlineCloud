@@ -1,14 +1,15 @@
 package net.streamlinecloud.main.command;
 
 import com.google.gson.Gson;
+import net.streamlinecloud.api.packet.WhitelistConfigurationPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.setup.SetupQuestion;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;
-import net.streamlinecloud.main.config.MainConfig;
 
 public class WhitelistCommand extends CloudCommand {
 
@@ -22,26 +23,31 @@ public class WhitelistCommand extends CloudCommand {
     public void execute(String[] args) {
 
         if (args.length == 1) {
-            StreamlineCloud.log("whitelist add <name>");
-            StreamlineCloud.log("whitelist remove <name>");
+            StreamlineCloud.log("whitelist list");
             StreamlineCloud.log("whitelist enable");
             StreamlineCloud.log("whitelist disable");
+            StreamlineCloud.log("whitelist add <name>");
+            StreamlineCloud.log("whitelist remove <name>");
+            StreamlineCloud.log("whitelist add-maintenance <name>");
+            StreamlineCloud.log("whitelist remove-maintenance <name>");
             return;
         }
+
+        WhitelistConfigurationPacket whitelist = Cache.i().getConfig().getWhitelist();
 
         switch (args[1]) {
 
             case "enable":
-                if (!Cache.i().getConfig().getWhitelist().isEnabled()) {
-                    Cache.i().getConfig().getWhitelist().setEnabled(true);
+                if (!whitelist.isEnabled()) {
+                    whitelist.setEnabled(true);
                     StreamlineCloud.log("Whitelist enabled");
                     MainConfig.saveConfig();
                 }
                 break;
 
             case "disable":
-                if (Cache.i().getConfig().getWhitelist().isEnabled()) {
-                    Cache.i().getConfig().getWhitelist().setEnabled(false);
+                if (whitelist.isEnabled()) {
+                    whitelist.setEnabled(false);
                     StreamlineCloud.log("Whitelist disabled");
                     MainConfig.saveConfig();
                 }
@@ -49,16 +55,21 @@ public class WhitelistCommand extends CloudCommand {
 
             case "list":
                 StreamlineCloud.log("Whitelist:");
-                Cache.i().getConfig().getWhitelist().getWhitelistedPlayers().forEach(user -> {
-                    StreamlineCloud.log("- " + user + (Cache.i().getConfig().getWhitelist().getPrivilegedPlayers().contains(user) ? " (privileged)" : ""));
+                whitelist.getWhitelistedPlayers().forEach(user -> {
+                    StreamlineCloud.log("- " + user + (whitelist.getPrivilegedPlayers().contains(user) ? " (privileged)" : ""));
+                });
+                StreamlineCloud.log("");
+                StreamlineCloud.log("Maintenance servers:");
+                whitelist.getMaintenanceServers().forEach(sever -> {
+                    StreamlineCloud.log("- " + sever);
                 });
                 return;
 
             case "add":
-                Cache.i().getConfig().getWhitelist().getWhitelistedPlayers().add(args[2]);
+                whitelist.getWhitelistedPlayers().add(args[2]);
                 new PrivilegedQuestion().start(result -> {
                     if (result.equals("yes")) {
-                        Cache.i().getConfig().getWhitelist().getPrivilegedPlayers().add(args[2]);
+                        whitelist.getPrivilegedPlayers().add(args[2]);
                         StreamlineCloud.log("Privileged the user");
                         update();
                     }
@@ -68,9 +79,21 @@ public class WhitelistCommand extends CloudCommand {
                 break;
 
             case "remove":
-                Cache.i().getConfig().getWhitelist().getWhitelistedPlayers().remove(args[2]);
-                Cache.i().getConfig().getWhitelist().getPrivilegedPlayers().remove(args[2]);
+                whitelist.getWhitelistedPlayers().remove(args[2]);
+                whitelist.getPrivilegedPlayers().remove(args[2]);
                 StreamlineCloud.log("Removed " + args[2] + " from the whitelist");
+                MainConfig.saveConfig();
+                break;
+
+            case "add-maintenance":
+                whitelist.getMaintenanceServers().add(args[2]);
+                StreamlineCloud.log("Added " + args[2] + " to the maintenance list");
+                MainConfig.saveConfig();
+                break;
+
+            case "remove-maintenance":
+                whitelist.getMaintenanceServers().remove(args[2]);
+                StreamlineCloud.log("Removed " + args[2] + " from the maintenance list");
                 MainConfig.saveConfig();
                 break;
 

@@ -55,6 +55,7 @@
   "sc.mc.notAllowed": "§cYou are not allowed to use this command",
   "sc.mc.noFallbacks":  "§cCurrently there are no fallback servers available",
   "sc.mc.notWhitelisted":  "§cYou are not whitelisted",
+  "sc.mc.maintenance": "§cThe server you are trying to connect to is maintenance. Please try again later.",
   "sc.mc.connectingTo":  "§7Connecting you to %0",
   "sc.mc.alreadyConnected":  "§cYou are already connected to %0",
   "sc.mc.serverDoesNotExist":  "§cThis server does not exist",

@@ -14,7 +14,7 @@ public class StaticCache {
 
     public static String accessKey = null;
     public static File plFolder;
-    public static WhitelistConfigurationPacket whitelist = new WhitelistConfigurationPacket(false, new ArrayList<>(), new ArrayList<>());
+    public static WhitelistConfigurationPacket whitelist = new WhitelistConfigurationPacket(false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
     @Getter @Setter
     private static ServerRuntime runtime;
