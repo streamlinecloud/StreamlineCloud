@@ -111,7 +111,7 @@ public class WhitelistCommand extends CloudCommand {
         });
     }
 
-    class PrivilegedQuestion extends SetupQuestion {
+    static class PrivilegedQuestion extends SetupQuestion {
 
         public PrivilegedQuestion() {
             super(InputType.BOOLEAN, "Do you want to privilege the user? Privileged users can use the /server command.", output -> true);

@@ -22,14 +22,27 @@ public class WhitelistCommandCompleter implements Completer {
                 list.add(new Candidate("list", "list", null, null, null, null, true));
                 list.add(new Candidate("enable", "enable", null, null, null, null, true));
                 list.add(new Candidate("disable", "disable", null, null, null, null, true));
+                list.add(new Candidate("add-maintenance", "add-maintenance", null, null, null, null, true));
+                list.add(new Candidate("remove-maintenance", "remove-maintenance", null, null, null, null, true));
                 break;
 
             case 3:
-                if (words.get(1).equals("add"))
-                    list.add(new Candidate("", "<mcName>", null, null, null, null, true));
-                else Cache.i().getConfig().getWhitelist().getWhitelistedPlayers().forEach(whitelist -> {
-                    list.add(new Candidate(whitelist, whitelist, null, null, null, null, true));
-                });
+                switch (words.get(1)) {
+                    case "add" ->
+                            list.add(new Candidate("", "<mcName>", null, null, null, null, true));
+
+                    case "add-maintenance" ->
+                            list.add(new Candidate("", "<serverName/groupName-*>", null, null, null, null, true));
+
+                    case "remove-maintenance" ->
+                            Cache.i().getConfig().getWhitelist().getMaintenanceServers().forEach(server -> {
+                                list.add(new Candidate(server, server, null, null, null, null, true));
+                            });
+
+                    default -> Cache.i().getConfig().getWhitelist().getWhitelistedPlayers().forEach(whitelist -> {
+                        list.add(new Candidate(whitelist, whitelist, null, null, null, null, true));
+                    });
+                }
                 break;
 
         }
