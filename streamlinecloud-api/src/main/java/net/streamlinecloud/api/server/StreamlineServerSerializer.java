@@ -13,6 +13,7 @@ public class StreamlineServerSerializer implements JsonSerializer<StreamlineServ
         jsonObject.addProperty("name", src.getName());
         jsonObject.addProperty("ip", src.getIp());
         jsonObject.addProperty("port", src.getPort());
+        jsonObject.addProperty("onlinePlayers",  new Gson().toJson(src.getOnlinePlayers()));
         jsonObject.addProperty("maxOnlineCount", src.getMaxOnlineCount());
         jsonObject.addProperty("serverUseState", src.getServerUseState().toString());
         jsonObject.addProperty("serverState", src.getServerState().toString());

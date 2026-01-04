@@ -11,6 +11,7 @@ import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 import net.streamlinecloud.mc.common.utils.Utils;
 
+import javax.print.attribute.standard.PresentationDirection;
 import javax.websocket.*;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -114,8 +115,10 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
     @Override
     public StreamlineServer[] getServersByGroup(String groupName) {
         String res = new BackendRequest("groups/" + groupName + "/servers").fetch().getResponse();
-        Type type = new TypeToken<List<StreamlineServer>>() {} .getType();
-        List<StreamlineServer> servers = new Gson().fromJson(res, type);
-        return (StreamlineServer[]) servers.toArray();
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<StreamlineServer>>() {}.getType();
+        List<StreamlineServer> servers = gson.fromJson(res, listType);
+        StreamlineServer[] array = servers.toArray(new StreamlineServer[0]);
+        return array;
     }
 }

@@ -60,8 +60,8 @@ public class ProxyConnectionListener {
     @Subscribe
     public void onServerConnect(ServerConnectedEvent event) {
         Player player = event.getPlayer();
-        System.out.println(event.getServer().getServerInfo().getName());
-        if (StaticCache.whitelist.getMaintenanceServers().contains(event.getServer().getServerInfo().getName())) {
+        if (StaticCache.whitelist.getMaintenanceServers().stream().anyMatch(
+                server -> event.getServer().getServerInfo().getName().startsWith(server.replace("*", "")))) {
             player.disconnect(Component.text(LangManager.getInstance().get("sc.mc.maintenance")));
             return;
         }
