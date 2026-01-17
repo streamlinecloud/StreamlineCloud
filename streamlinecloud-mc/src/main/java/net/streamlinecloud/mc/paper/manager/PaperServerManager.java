@@ -6,7 +6,7 @@ import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.server.ServerUseState;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.mc.PaperSCP;
-import net.streamlinecloud.mc.common.server.AbstractServerManager;
+import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import net.streamlinecloud.mc.paper.event.ServerDataReceivedEvent;
 import net.streamlinecloud.mc.paper.event.ServerDataUpdateEvent;

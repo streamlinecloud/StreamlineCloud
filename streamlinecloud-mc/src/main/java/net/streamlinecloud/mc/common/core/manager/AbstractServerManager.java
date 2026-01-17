@@ -1,17 +1,16 @@
-package net.streamlinecloud.mc.common.server;
+package net.streamlinecloud.mc.common.core.manager;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.mc.common.core.WebSocketListener;
-import net.streamlinecloud.mc.common.core.manager.ServerManagerImpl;
+import net.streamlinecloud.mc.common.server.RunningServer;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 import net.streamlinecloud.mc.common.utils.Utils;
 
-import javax.print.attribute.standard.PresentationDirection;
 import javax.websocket.*;
 import java.lang.reflect.Type;
 import java.net.URI;

@@ -1,7 +1,7 @@
 package net.streamlinecloud.mc.common.utils;
 
 import net.streamlinecloud.api.server.StreamlineServerSnapshot;
-import net.streamlinecloud.mc.common.server.AbstractServerManager;
+import net.streamlinecloud.mc.common.core.manager.AbstractServerManager;
 
 import java.util.List;
 
