@@ -2,6 +2,7 @@ package net.streamlinecloud.mc.common.core.manager;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.server.StreamlineServer;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.mc.common.core.WebSocketListener;
@@ -10,12 +11,16 @@ import net.streamlinecloud.mc.common.utils.BackendRequest;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 import net.streamlinecloud.mc.common.utils.Utils;
+import org.apache.commons.io.FileUtils;
 
 import javax.websocket.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +43,23 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
     WebSocket socket;
 
     public void init() {
+        StaticCache.plFolder = new File(System.getProperty("user.dir"));
+        File key = new File(StaticCache.plFolder.getAbsolutePath() + "/.apikey");
 
+        String keyString = null;
+        try {
+            keyString = FileUtils.readFileToString(key, Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        StaticCache.accessKey = keyString.split(",_,")[0];
+        StaticCache.serverData = new Gson().fromJson(keyString.split(",_,")[1], StaticServerDataPacket.class);
+
+        connectSocket();
+    }
+
+    private void connectSocket() {
         try {
             URI uri = URI.create("ws://localhost:5378/socket/server?key=" + StaticCache.accessKey);
             HttpClient client = HttpClient.newHttpClient();
@@ -57,7 +78,7 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
         uploadServerInfo();
     }
 
-    public void reinit() {
+    public void reconnectSocket() {
         reInits++;
 
         if (reInits == 5) {
@@ -65,7 +86,7 @@ public abstract class AbstractServerManager implements ServerManagerImpl {
             return;
         }
 
-        init();
+        connectSocket();
     }
 
     public void subscribe(StreamlineServer server) {

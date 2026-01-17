@@ -21,15 +21,21 @@ import net.streamlinecloud.mc.velocity.manager.VelocityServerManager;
 import java.util.logging.Logger;
 
 @Getter
-@Plugin(id = "streamlinecloud", name = "Streamlinecloud", version = "1.0.0",
-        url = "https://streamlinecloud.net/", description = "This plugin needs to be installed on every server powered by StreamlineCloud", authors = {"Quinilo", "creperozelot"})
+@Plugin(id = "streamlinecloud",
+        name = "Streamlinecloud",
+        version = "1.0.0",
+        url = "https://streamlinecloud.net/",
+        description = "This plugin needs to be installed on every server powered by StreamlineCloud",
+        authors = {"Quinilo", "creperozelot"}
+)
 public class VelocitySCP {
+
+    @Getter
+    private static VelocitySCP instance;
 
     StreamlineCloud streamlineCloud;
     private final ProxyServer proxy;
     private final Logger logger;
-    @Getter
-    private static VelocitySCP instance;
 
     @Inject
     public VelocitySCP(ProxyServer proxy, Logger logger) {

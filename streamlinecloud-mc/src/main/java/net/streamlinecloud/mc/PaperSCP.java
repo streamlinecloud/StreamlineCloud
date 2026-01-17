@@ -23,11 +23,11 @@ import java.util.Objects;
 @Getter
 public final class PaperSCP extends JavaPlugin {
 
-    StreamlineCloud streamlineCloud;
-    boolean debug = true;
-
     @Getter
     private static PaperSCP instance;
+
+    StreamlineCloud streamlineCloud;
+    boolean debug = true;
 
     @Override
     public void onEnable() {

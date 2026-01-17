@@ -77,6 +77,7 @@ public class ProxyFallbackHandler {
             case "RANDOM" -> {
                 return VelocitySCP.getInstance().getProxy().getServer(fallbacks.get(new Random().nextInt(fallbacks.size())));
             }
+
             case "SPLIT" -> {
                 AtomicReference<StreamlineServerSnapshot> target = new AtomicReference<>();
 
@@ -96,6 +97,7 @@ public class ProxyFallbackHandler {
                 return VelocitySCP.getInstance().getProxy().getServer(target.get().getName());
 
             }
+
             case "BUNDLE" -> {
                 AtomicReference<StreamlineServerSnapshot> target = new AtomicReference<>();
 
