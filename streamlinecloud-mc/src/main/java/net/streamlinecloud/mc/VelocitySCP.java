@@ -8,7 +8,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
-import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 import net.streamlinecloud.mc.velocity.ProxyFallbackHandler;
@@ -53,7 +52,6 @@ public class VelocitySCP {
         );
 
         StaticCache.setRuntime(ServerRuntime.PROXY);
-        Functions.startup();
 
         new VelocityServerManager();
         new VelocityGroupManager();

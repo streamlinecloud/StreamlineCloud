@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.mc.PaperSCP;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
-import net.streamlinecloud.mc.common.utils.Functions;
 import lombok.Getter;
 
 import java.util.ArrayList;

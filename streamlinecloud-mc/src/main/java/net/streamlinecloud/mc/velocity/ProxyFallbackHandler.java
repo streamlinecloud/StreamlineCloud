@@ -8,7 +8,6 @@ import lombok.Getter;
 import net.streamlinecloud.api.server.StreamlineServerSnapshot;
 import net.streamlinecloud.mc.VelocitySCP;
 import net.streamlinecloud.mc.common.utils.BackendRequest;
-import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.Utils;
 
 import java.net.InetSocketAddress;

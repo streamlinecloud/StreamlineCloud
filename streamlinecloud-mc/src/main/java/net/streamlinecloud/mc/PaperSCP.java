@@ -4,7 +4,6 @@ import net.streamlinecloud.api.packet.StaticServerDataPacket;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.mc.common.core.StreamlineCloud;
 import net.streamlinecloud.mc.common.core.manager.LangManager;
-import net.streamlinecloud.mc.common.utils.Functions;
 import net.streamlinecloud.mc.common.utils.StaticCache;
 import lombok.Getter;
 import net.streamlinecloud.mc.paper.command.StreamlineCommand;
@@ -13,7 +12,6 @@ import net.streamlinecloud.mc.paper.listener.ServerListener;
 import net.streamlinecloud.mc.paper.manager.PaperPlayerManager;
 import net.streamlinecloud.mc.paper.manager.PaperServerManager;
 import net.streamlinecloud.mc.paper.task.StopCountdownTask;
-import net.streamlinecloud.mc.velocity.command.HubCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,15 +37,13 @@ public final class PaperSCP extends JavaPlugin {
         registerEvents();
         registerCommand();
 
-        Functions.startup();
+        new PaperServerManager();
+        new PaperPlayerManager();
 
         new LangManager();
         LangManager.getInstance().fetch(new String[]{
                 "sc.mc.prefix",
                 "sc.mc.notAllowed"});
-
-        new PaperServerManager();
-        new PaperPlayerManager();
 
         new StopCountdownTask();
 

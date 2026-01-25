@@ -198,8 +198,8 @@ public class RunningServer extends StreamlineServer {
             Files.write(velocityFile.toPath(), content.getBytes());
         }
 
-        //Apikey
         File f = new File(file.getPath() + "/.apikey");
+        System.out.println(f.getAbsolutePath());
 
         if (f.exists()) {
             FileUtils.forceDelete(f);
@@ -274,10 +274,10 @@ public class RunningServer extends StreamlineServer {
                             if ((line = inputReader.readLine()) != null) {
                                 addLog(line);
                                 if (output) {
-                                    IncommingServerMessageEvent incommingEvent = eventManager.callEvent(
+                                    IncommingServerMessageEvent incomingEvent = eventManager.callEvent(
                                             new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line)
                                     );
-                                    if (!incommingEvent.isCancelled()) {
+                                    if (!incomingEvent.isCancelled()) {
                                         StreamlineCloud.logSingle(getName() + " " + line);
                                     }
                                 }

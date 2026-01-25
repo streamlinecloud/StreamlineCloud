@@ -116,7 +116,7 @@ public class WebSocketListener implements WebSocket.Listener {
     @Override
     public void onError(WebSocket webSocket, Throwable error) {
         System.out.println("WS Error: " + error.getMessage());
-        PaperServerManager.getInstance().reinit();
+        PaperServerManager.getInstance().reconnectSocket();
     }
 
     @Override
