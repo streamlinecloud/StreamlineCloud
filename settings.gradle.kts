@@ -1,5 +1,5 @@
 rootProject.name = "StreamlineCloud"
-include("main")
-include("streamlinecloud-main")
+include("streamlinecloud-node")
 include("streamlinecloud-api")
 include("streamlinecloud-mc")
+include("streamlinecloud-launcher")
