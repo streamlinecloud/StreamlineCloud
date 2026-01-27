@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("jvm") version "1.8.21"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
     id("maven-publish")
 }
@@ -69,7 +69,7 @@ tasks {
 }
 
 tasks.named<ShadowJar>("shadowJar") {
-    group = "StreamlineCloud"
+    group = "net.streamlinecloud"
 
     destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-api"))
     archiveFileName.set("streamlinecloud-api-$branch-$version.jar")

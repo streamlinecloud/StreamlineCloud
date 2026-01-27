@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "net.streamlinecloud"
@@ -20,7 +20,7 @@ dependencies {
 }
 
 tasks.named<ShadowJar>("shadowJar") {
-    group = "StreamlineCloud"
+    group = "net.streamlinecloud"
 
     destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-launcher"))
     archiveFileName.set("streamlinecloud-launcher-$branch-$version.jar")

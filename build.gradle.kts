@@ -23,11 +23,13 @@ tasks.test {
 }
 
 tasks.register("compileAll") {
-    group = "StreamlineCloud"
+    group = "net.streamlinecloud"
 
     dependsOn(":streamlinecloud-api:shadowJar",
+        ":streamlinecloud-api:shadowJar",
         ":streamlinecloud-mc:shadowJar",
         ":streamlinecloud-node:shadowJar",
-        ":streamlinecloud-launcher:shadowJar"
+        ":streamlinecloud-launcher:shadowJar",
+        ":streamlinecloud-broker:bootJar"
     )
 }

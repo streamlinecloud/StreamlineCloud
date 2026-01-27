@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 plugins {
     kotlin("jvm") version "1.8.21"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
 }
 
@@ -73,25 +73,14 @@ tasks.register("generateBuildConfig") {
         )
     }
 }
-
-tasks.withType<ShadowJar> {
-    archiveClassifier.set("")
-    configurations.forEach { configuration ->
-        from(configuration)
-    }
-}
-
 sourceSets {
     getByName("main").java.srcDir("$buildDir/generated-src")
 }
 
 val mainClass = "net.streamlinecloud.main.CloudLauncher"
 
-tasks.jar {
-    manifest {
-        dependsOn("generateBuildConfig")
-        attributes["Main-Class"] = mainClass
-    }
+tasks.named("compileJava") {
+    dependsOn("generateBuildConfig")
 }
 
 tasks {
@@ -103,6 +92,8 @@ tasks {
 
 tasks.named<ShadowJar>("shadowJar") {
     group = "StreamlineCloud"
+
+    dependsOn("generateBuildConfig")
 
     destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-node"))
     archiveFileName.set("streamlinecloud-node-$branch-$version.jar")
@@ -240,7 +231,7 @@ tasks.named("processResources") {
 }
 
 tasks.register<Copy>("copyStreamlineMc") {
-    group = "StreamlineCloud"
+    group = "net.streamlinecloud"
     description = "Copies the streamlinecloud-mc plugin into the main project"
 
     println("Copying StreamlineCloud-MC")

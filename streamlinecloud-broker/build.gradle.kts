@@ -28,3 +28,17 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    group = "net.streamlinecloud"
+
+    destinationDirectory.set(project.rootProject.layout.projectDirectory.dir("finished_builds/streamlinecloud-broker"))
+
+    archiveFileName.set("streamlinecloud-broker-$branch-$version.jar")
+}
+
+tasks.register("prepareKotlinBuildScriptModel") {
+    group = "IDE compatibility"
+    // no actions needed — exists only so IDE import doesn't fail
+}
+
