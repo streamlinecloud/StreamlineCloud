@@ -64,26 +64,6 @@ publishing {
     }
 }
 
-val targetJavaVersion = 17
-java {
-    val javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
-    }
-    withJavadocJar()
-    withSourcesJar()
-}
-
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
-        options.release.set(targetJavaVersion)
-    }
-}
-
 tasks.processResources {
     val props = mapOf("version" to project.version)
     inputs.properties(props)
@@ -102,7 +82,6 @@ tasks {
         dependsOn("shadowJar")
     }
 }
-
 
 tasks.named<ShadowJar>("shadowJar") {
     group = "net.streamlinecloud"

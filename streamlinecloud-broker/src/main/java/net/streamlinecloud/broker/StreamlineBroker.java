@@ -1,5 +1,6 @@
 package net.streamlinecloud.broker;
 
+import net.streamlinecloud.api.server.StreamlineServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

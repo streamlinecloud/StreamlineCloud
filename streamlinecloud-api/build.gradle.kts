@@ -58,10 +58,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
-    archiveClassifier.set("")
-}
-
 tasks {
     build {
         dependsOn("shadowJar")
