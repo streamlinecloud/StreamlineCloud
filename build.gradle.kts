@@ -22,8 +22,12 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.register("makeAll") {
+tasks.register("compileAll") {
     group = "StreamlineCloud"
 
-    dependsOn(":streamlinecloud-api:makeApiProject", ":streamlinecloud-mc:makeMcProject", ":streamlinecloud-main:makeMainProject")
+    dependsOn(":streamlinecloud-api:shadowJar",
+        ":streamlinecloud-mc:shadowJar",
+        ":streamlinecloud-node:shadowJar",
+        ":streamlinecloud-launcher:shadowJar"
+    )
 }

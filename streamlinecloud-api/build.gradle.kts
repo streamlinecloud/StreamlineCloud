@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin("jvm") version "1.8.21"
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -66,37 +68,11 @@ tasks {
     }
 }
 
-tasks.register("makeApiProject") {
+tasks.named<ShadowJar>("shadowJar") {
     group = "StreamlineCloud"
 
-    val bdir = project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-api")
-
-    if (bdir.exists()) {
-        bdir.deleteRecursively()
-    }
-
-    val jarTask = tasks.getByName<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar")
-    val jarFile = jarTask.archiveFile.get()
-
-
-    doLast {
-
-        bdir.mkdirs()
-
-        val copiedJar = project.copy {
-            from(jarFile)
-            into(bdir)
-            rename(jarFile.asFile.name, "streamlinecloud_API-$branch-$version.jar")
-        }
-
-        println("Built Jar File: $bdir")
-
-    }
-
-}
-
-tasks.named("makeApiProject") {
-    dependsOn("shadowJar")
+    destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-api"))
+    archiveFileName.set("streamlinecloud-api-$branch-$version.jar")
 }
 
 tasks.shadowJar {

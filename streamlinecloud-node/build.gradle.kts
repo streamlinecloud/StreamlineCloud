@@ -21,7 +21,6 @@ repositories {
 }
 
 dependencies {
-
     implementation(kotlin("stdlib"))
 
     implementation("org.slf4j:slf4j-simple:2.0.9")
@@ -46,7 +45,6 @@ dependencies {
     implementation(project(":streamlinecloud-api"))
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-
 
 }
 
@@ -103,34 +101,11 @@ tasks {
     }
 }
 
-tasks.register("makeMainProject") {
-    dependsOn("generateBuildConfig")
-
+tasks.named<ShadowJar>("shadowJar") {
     group = "StreamlineCloud"
 
-    val bdir = project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-main")
-
-    if (bdir.exists()) {
-        bdir.deleteRecursively()
-    }
-
-    val jarTask = tasks.getByName<ShadowJar>("shadowJar")
-    val jarFile = jarTask.archiveFile.get()
-
-    doLast {
-
-        bdir.mkdirs()
-
-        val copiedJar = project.copy {
-            from(jarFile)
-            into(bdir)
-            rename(jarFile.asFile.name, "streamlinecloud_MAIN-$branch-$version.jar")
-        }
-
-        println("Built Jar File: $bdir")
-
-    }
-
+    destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-node"))
+    archiveFileName.set("streamlinecloud-node-$branch-$version.jar")
 }
 
 tasks.register("updateAndStartTest") {
@@ -144,7 +119,7 @@ tasks.register("startTest") {
     group = "Testing"
     description = "Starts or resumes a StreamlineCloud main instance for testing."
 
-    dependsOn("makeMainProject")
+    dependsOn("compile")
 
     doLast {
         val rootDir = rootProject.layout.projectDirectory.asFile
@@ -256,12 +231,6 @@ tasks.register<Copy>("updateTest") {
     }
 }
 
-
-tasks.named("makeMainProject") {
-    dependsOn("copyStreamlineMc")
-    dependsOn("shadowJar")
-}
-
 tasks.named("compileJava") {
     dependsOn(":streamlinecloud-api:shadowJar")
 }
@@ -277,7 +246,7 @@ tasks.register<Copy>("copyStreamlineMc") {
     println("Copying StreamlineCloud-MC")
 
     val destResources = project.layout.projectDirectory.file("src/main/resources")
-    dependsOn(":streamlinecloud-mc:makeMcProject")
+    dependsOn(":streamlinecloud-mc:shadowJar")
 
     from(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc/streamlinecloud-mc.jar"))
     into(destResources)

@@ -104,36 +104,11 @@ tasks {
 }
 
 
-tasks.register("makeMcProject") {
+tasks.named<ShadowJar>("shadowJar") {
     group = "StreamlineCloud"
 
-    val bdir = project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc")
-
-    if (bdir.exists()) {
-        bdir.deleteRecursively()
-    }
-
-    val jarTask = tasks.getByName<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar")
-    val jarFile = jarTask.archiveFile.get()
-
-    doLast {
-
-        bdir.mkdirs()
-
-        val copiedJar = project.copy {
-            from(jarFile)
-            into(bdir)
-            rename(jarFile.asFile.name, "streamlinecloud-mc.jar")
-        }
-
-        println("Built Jar File: $bdir")
-
-    }
-
-}
-
-tasks.named("makeMcProject") {
-    dependsOn("shadowJar")
+    destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc"))
+    archiveFileName.set("streamlinecloud-mc-$branch-$version.jar")
 }
 
 tasks.shadowJar {
