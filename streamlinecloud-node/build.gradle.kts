@@ -239,7 +239,7 @@ tasks.register<Copy>("copyStreamlineMc") {
     val destResources = project.layout.projectDirectory.file("src/main/resources")
     dependsOn(":streamlinecloud-mc:shadowJar")
 
-    from(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc/streamlinecloud-mc.jar"))
+    from(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-mc/streamlinecloud-mc-$branch-$version.jar"))
     into(destResources)
 
     rename { "streamlinecloud-mc" }
