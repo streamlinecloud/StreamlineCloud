@@ -57,6 +57,14 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+## Sub-Modules
+Each module has its own README.
+- StreamlineCloud API
+- StreamlineCloud Broker
+- StreamlineCloud Node
+- StreamlineCloud MC
+- StreamlineCloud Launcher
+
 ## Contributors
 <a href="https://github.com/streamlinecloud/streamlinecloud/graphs/contributors">
   <br>
