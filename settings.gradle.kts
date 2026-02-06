@@ -3,4 +3,6 @@ include("streamlinecloud-node")
 include("streamlinecloud-api")
 include("streamlinecloud-mc")
 include("streamlinecloud-launcher")
-include("streamlinecloud-broker")
+include("streamlinecloud-backend")
+
+project(":streamlinecloud-backend").name = "streamlinecloud-backend"

@@ -30,6 +30,6 @@ tasks.register("compileAll") {
         ":streamlinecloud-mc:shadowJar",
         ":streamlinecloud-node:shadowJar",
         ":streamlinecloud-launcher:shadowJar",
-        ":streamlinecloud-broker:bootJar"
+        ":streamlinecloud-backend:bootJar"
     )
 }

@@ -60,7 +60,7 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 ## Sub-Modules
 Each module has its own README.
 - StreamlineCloud API
-- StreamlineCloud Broker
+- StreamlineCloud Backend
 - StreamlineCloud Node
 - StreamlineCloud MC
 - StreamlineCloud Launcher

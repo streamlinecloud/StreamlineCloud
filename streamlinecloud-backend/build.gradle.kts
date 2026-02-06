@@ -1,5 +1,6 @@
 plugins {
-    java
+    kotlin("jvm") version "2.2.21"
+    kotlin("plugin.spring") version "2.2.21"
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -7,7 +8,6 @@ plugins {
 group = "net.streamlinecloud"
 val version: String by rootProject
 val branch: String by rootProject
-
 
 java {
     toolchain {
@@ -21,21 +21,25 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("tools.jackson.module:jackson-module-kotlin")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation(project(":streamlinecloud-api"))
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
+    }
 }
 
 tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     group = "net.streamlinecloud"
 
-    destinationDirectory.set(project.rootProject.layout.projectDirectory.dir("finished_builds/streamlinecloud-broker"))
+    destinationDirectory.set(project.rootProject.layout.projectDirectory.dir("finished_builds/streamlinecloud-backend"))
 
-    archiveFileName.set("streamlinecloud-broker-$branch-$version.jar")
+    archiveFileName.set("streamlinecloud-backend-$branch-$version.jar")
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {
@@ -43,3 +47,6 @@ tasks.register("prepareKotlinBuildScriptModel") {
     // no actions needed — exists only so IDE import doesn't fail
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}

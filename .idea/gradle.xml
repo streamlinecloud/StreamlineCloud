@@ -5,26 +5,11 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="corretto-21" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/streamlinecloud-api" />
-            <option value="$PROJECT_DIR$/streamlinecloud-broker" />
-            <option value="$PROJECT_DIR$/streamlinecloud-launcher" />
-            <option value="$PROJECT_DIR$/streamlinecloud-mc" />
-            <option value="$PROJECT_DIR$/streamlinecloud-node" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/streamlinecloud-broker" />
-        <option name="gradleJvm" value="corretto-21" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/streamlinecloud-api" />
-            <option value="$PROJECT_DIR$/streamlinecloud-broker" />
+            <option value="$PROJECT_DIR$/streamlinecloud-backend" />
             <option value="$PROJECT_DIR$/streamlinecloud-launcher" />
             <option value="$PROJECT_DIR$/streamlinecloud-mc" />
             <option value="$PROJECT_DIR$/streamlinecloud-node" />
