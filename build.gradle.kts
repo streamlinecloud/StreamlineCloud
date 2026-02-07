@@ -1,25 +1,26 @@
 
 plugins {
-    id("java")
+    kotlin("multiplatform") version "2.3.10" apply false
+    kotlin("jvm")           version "2.3.10" apply false
+    kotlin("plugin.spring") version "2.3.10" apply false
+
+    id("org.springframework.boot") version "4.0.2" apply false
+    id("io.spring.dependency-management") version "1.1.7" apply false
 }
 
 group = "net.streamlinecloud"
 val version: String by rootProject
 val branch: String by rootProject
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+    }
 }
 
 dependencies {
-    implementation("commons-io:commons-io:2.16.1")
 
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-}
-
-tasks.test {
-    useJUnitPlatform()
 }
 
 tasks.register("compileAll") {

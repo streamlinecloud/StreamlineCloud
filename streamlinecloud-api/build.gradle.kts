@@ -1,7 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.8.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
     id("maven-publish")
@@ -11,13 +10,8 @@ group = "net.streamlinecloud"
 val version: String by rootProject
 val branch: String by rootProject
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
 
-    implementation(kotlin("stdlib"))
     implementation("com.google.code.gson:gson:2.11.0")
 
     compileOnly("org.projectlombok:lombok:1.18.32")

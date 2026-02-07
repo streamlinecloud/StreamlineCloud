@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="streamlinecloud-launcher-jvm-1.1.0">
+    <output-path>$PROJECT_DIR$/streamlinecloud-launcher/build/libs</output-path>
+    <root id="archive" name="streamlinecloud-launcher-jvm-1.1.0.jar">
+      <element id="module-output" name="StreamlineCloud.streamlinecloud-launcher.jvmMain" />
+    </root>
+  </artifact>
+</component>

@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 plugins {
-    kotlin("jvm") version "1.8.21"
+    kotlin("jvm")
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
 }
