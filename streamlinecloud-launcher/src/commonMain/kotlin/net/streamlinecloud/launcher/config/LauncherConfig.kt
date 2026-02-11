@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 class LauncherConfig(
 
-    var launcherVersion: String,
+    var configVersion: String,
     var installedVersion: String,
     var installedBranch: String,
 
