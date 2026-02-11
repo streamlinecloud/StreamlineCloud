@@ -2,6 +2,7 @@ package net.streamlinecloud.launcher
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import net.streamlinecloud.launcher.util.Cli
 import net.streamlinecloud.launcher.cli.Question
 import net.streamlinecloud.launcher.cli.runWithSpinner
 import net.streamlinecloud.launcher.config.ConfigManager
@@ -52,10 +53,10 @@ class Launcher {
         if (installBackend) download = !checkForJar("streamlinecloud-backend-*.jar")
 
         if (download) {
-            if (Question("Required JAR files are missing. Do you want to download the newest version").ask()) {
+            if (Question("Required JAR files are missing. Do you want to download the latest version").ask()) {
                 println("Download not implemented yet")
             } else {
-                println("[!] Quitting the launcher because of missing JAR files")
+                Cli.warn("Quitting the launcher because of missing JAR files")
                 return
             }
         }

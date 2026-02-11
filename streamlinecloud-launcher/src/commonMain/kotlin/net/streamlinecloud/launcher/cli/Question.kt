@@ -1,9 +1,11 @@
 package net.streamlinecloud.launcher.cli
 
+import net.streamlinecloud.launcher.util.Ansi
+
 class Question (var question: String) {
 
     fun ask(): Boolean {
-        println("[?] $question [yes/no]")
+        println("[?] ${Ansi.RED}$question [yes/no]${Ansi.RESET}")
 
         fun check(input: String): Boolean {
             return if (input.startsWith("y")) true

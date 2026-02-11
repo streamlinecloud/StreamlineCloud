@@ -1,6 +1,7 @@
 package net.streamlinecloud.launcher.cli
 
 import kotlinx.coroutines.*
+import net.streamlinecloud.launcher.util.Cli
 
 object Console {
     fun flush() { /* nothing: println/print flush automatically in Kotlin stdlib */ }
