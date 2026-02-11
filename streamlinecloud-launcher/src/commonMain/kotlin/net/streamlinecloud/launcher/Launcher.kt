@@ -5,6 +5,7 @@ import kotlinx.coroutines.runBlocking
 import net.streamlinecloud.launcher.cli.Question
 import net.streamlinecloud.launcher.cli.runWithSpinner
 import net.streamlinecloud.launcher.config.ConfigManager
+import net.streamlinecloud.launcher.util.FileUtils
 
 class Launcher {
 
@@ -46,8 +47,23 @@ class Launcher {
     fun setup() {
         println("Starting setup...")
 
-        var installBackend = Question("Do you want to create a standalone setup, otherwise this installation will be part of an existing node").ask()
-        var download = false
+        val installBackend = Question("Do you want to create a standalone setup, otherwise this installation will be part of an existing node").ask()
+        var download = !checkForJar("streamlinecloud-node-*.jar")
+        if (installBackend) download = !checkForJar("streamlinecloud-backend-*.jar")
+
+        if (download) {
+            if (Question("Required JAR files are missing. Do you want to download the newest version").ask()) {
+                println("Download not implemented yet")
+            } else {
+                println("[!] Quitting the launcher because of missing JAR files")
+                return
+            }
+        }
+    }
+
+    fun checkForJar(name: String): Boolean {
+        if (!FileUtils.exists("jar")) return false;
+        return true
     }
     
 }
