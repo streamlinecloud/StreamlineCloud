@@ -30,4 +30,18 @@ object FileUtils {
         }
     }
 
+    fun delete(pathStr: String) {
+        val path: Path = pathStr.toPath()
+        if (fs.exists(path)) {
+            fs.delete(path)
+        }
+    }
+
+    fun deleteRecursively(pathStr: String) {
+        val path: Path = pathStr.toPath()
+        if (fs.exists(path)) {
+            fs.deleteRecursively(path)
+        }
+    }
+
 }
