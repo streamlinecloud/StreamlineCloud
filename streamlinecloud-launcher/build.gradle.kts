@@ -77,21 +77,21 @@ tasks.register<Copy>("packageNativeLinuxX64") {
     dependsOn("linkReleaseExecutableLinuxX64")
     from(layout.buildDirectory.file("bin/linuxX64/releaseExecutable/streamlinecloud-launcher.kexe"))
     into(nativeOutRoot)
-    rename { _ -> "streamlinecloud-launcher-LINUX_X64" }
+    rename { _ -> "streamlinecloud-launcher-LINUX" }
 }
 
 tasks.register<Copy>("packageNativeLinuxArm64") {
     dependsOn("linkReleaseExecutableLinuxArm64")
     from(layout.buildDirectory.file("bin/linuxArm64/releaseExecutable/streamlinecloud-launcher.kexe"))
     into(nativeOutRoot)
-    rename { _ -> "streamlinecloud-launcher-LINUX_ARM64" }
+    rename { _ -> "streamlinecloud-launcher-LINUX-ARM" }
 }
 
 tasks.register<Copy>("packageNativeMingwX64") {
     dependsOn("linkReleaseExecutableMingwX64")
     from(layout.buildDirectory.file("bin/mingwX64/releaseExecutable/streamlinecloud-launcher.exe"))
     into(nativeOutRoot)
-    rename { _ -> "streamlinecloud-launcher-WIN_X64" }
+    rename { _ -> "streamlinecloud-launcher-WIN.exe" }
 }
 
 tasks.register("packageAllNative") {
@@ -102,7 +102,7 @@ tasks.register("packageAllNative") {
 tasks.register<ShadowJar>("shadowJar") {
     group = "net.streamlinecloud"
     destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-launcher"))
-    archiveFileName.set("streamlinecloud-launcher-$branch-$version.jar")
+    archiveFileName.set("streamlinecloud-launcher.jar")
 
     manifest {
         attributes["Main-Class"] = "net.streamlinecloud.launcher.MainKt"

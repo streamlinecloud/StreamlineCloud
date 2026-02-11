@@ -1,6 +1,7 @@
 package net.streamlinecloud.launcher.cli
 
 import kotlinx.coroutines.*
+import net.streamlinecloud.launcher.util.Ansi
 import net.streamlinecloud.launcher.util.Cli
 
 object Console {
@@ -24,7 +25,7 @@ suspend fun <T> runWithSpinner(
             var i = 0
             while (isActive) {
                 val frame = frames[i % frames.size]
-                print("\r$frame $message")
+                print("\r[$frame] ${Ansi.RED}$message${Ansi.RESET}")
                 Console.flush()
                 i++
                 delay(frameDelayMs)

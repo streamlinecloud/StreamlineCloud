@@ -34,3 +34,56 @@ tasks.register("compileAll") {
         ":streamlinecloud-backend:bootJar"
     )
 }
+
+tasks.register<Copy>("packageLauncher") {
+    group = "net.streamlinecloud"
+
+    dependsOn(
+        ":compileAll",
+        ":copyLauncherReadme",
+        ":streamlinecloud-launcher:packageAllNative",
+    )
+
+    into(layout.projectDirectory.dir("finished_builds/streamlinecloud-launcher/jar"))
+
+    from(
+        rootProject.projectDir.resolve(
+            "finished_builds/streamlinecloud-node/streamlinecloud-node-$branch-$version.jar"
+        )
+    ) {
+        rename { "streamlinecloud-node.jar" }
+    }
+
+    from(
+        rootProject.projectDir.resolve(
+            "finished_builds/streamlinecloud-backend/streamlinecloud-backend-$branch-$version.jar"
+        )
+    ) {
+        rename { "streamlinecloud-backend.jar" }
+    }
+}
+
+tasks.register<Copy>("copyLauncherReadme") {
+    into(layout.projectDirectory.dir("finished_builds/streamlinecloud-launcher"))
+
+    from(
+        rootProject.projectDir.resolve(
+            "streamlinecloud-launcher/README_INSTALLATION.md"
+        )
+    ) {
+        rename { "README.md" }
+    }
+}
+
+tasks.register<Zip>("packageLauncherZipRelease") {
+    group = "net.streamlinecloud"
+
+    from(layout.projectDirectory.dir("finished_builds/streamlinecloud-launcher")) {
+        into("streamlinecloud-$branch-$version")
+    }
+
+    archiveFileName.set("streamlinecloud-$branch-$version.zip")
+    destinationDirectory.set(layout.projectDirectory.dir("finished_builds"))
+
+    dependsOn("packageLauncher")
+}

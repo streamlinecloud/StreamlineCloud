@@ -60,10 +60,10 @@ class Launcher {
         runBlocking {
             try {
                 val result = runWithSpinner("Setup completed, restarting...") {
-                    delay(3000)
-                    "restarted"
+                    delay(2000)
+                    "Restarted"
                 }
-                println(result)
+                Cli.info(result)
                 launch()
             } catch (e: Exception) {
                 println("Error: ${e.message}")
