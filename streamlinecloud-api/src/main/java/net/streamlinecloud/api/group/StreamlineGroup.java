@@ -1,5 +1,8 @@
 package net.streamlinecloud.api.group;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamlinecloud.api.server.ServerRuntime;
@@ -8,8 +11,11 @@ import java.util.List;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "streamline_groups")
 public class StreamlineGroup implements StreamlineGroupImpl {
 
+    @Id
     String name;
     String javaExec;
     List<String> templates;

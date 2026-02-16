@@ -13,6 +13,7 @@ val branch: String by rootProject
 dependencies {
 
     implementation("com.google.code.gson:gson:2.11.0")
+    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
 
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
