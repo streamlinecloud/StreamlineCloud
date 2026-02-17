@@ -1,18 +1,22 @@
 package net.streamlinecloud.api.node;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "streamline_nodes")
 public class StreamlineNode {
 
-    UUID uuid;
+    @Id
+    String uuid;
     boolean main;
-    Map<Boolean, String> key;
+    String key;
 
 }

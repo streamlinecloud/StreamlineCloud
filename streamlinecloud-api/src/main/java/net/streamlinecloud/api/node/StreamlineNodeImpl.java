@@ -1,6 +1,5 @@
 package net.streamlinecloud.api.node;
 
-import java.util.Map;
 import java.util.UUID;
 
 public interface StreamlineNodeImpl {
@@ -18,7 +17,7 @@ public interface StreamlineNodeImpl {
 
     /**
      * @return Returns the api key for the node.
-     * The boolean defines if the key is hashed or not.
+     * The key saved by the backend is hashed.
      */
-    Map<Boolean, String> getKey();
+    String getKey();
 }
