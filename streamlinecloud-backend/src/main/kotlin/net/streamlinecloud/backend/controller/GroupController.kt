@@ -3,7 +3,6 @@ package net.streamlinecloud.backend.controller
 import net.streamlinecloud.api.group.StreamlineGroup
 import net.streamlinecloud.backend.repository.GroupRepository
 import org.springframework.http.HttpStatus
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
