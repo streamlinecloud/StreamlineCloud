@@ -1,4 +1,6 @@
 .gradle
+.kotlin
+streamlinecloud.db
 build/
 !gradle/wrapper/gradle-wrapper.jar
 finished_builds/*
