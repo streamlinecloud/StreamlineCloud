@@ -61,6 +61,7 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 Each module has its own README.
 - StreamlineCloud API
 - StreamlineCloud Backend
+- StreamlineCloud Client
 - StreamlineCloud Node
 - StreamlineCloud MC
 - StreamlineCloud Launcher
