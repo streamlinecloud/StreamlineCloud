@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/streamlinecloud-api" />
             <option value="$PROJECT_DIR$/streamlinecloud-backend" />
+            <option value="$PROJECT_DIR$/streamlinecloud-client" />
             <option value="$PROJECT_DIR$/streamlinecloud-launcher" />
             <option value="$PROJECT_DIR$/streamlinecloud-mc" />
             <option value="$PROJECT_DIR$/streamlinecloud-node" />

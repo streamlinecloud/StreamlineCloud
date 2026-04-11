@@ -4,6 +4,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
     id("maven-publish")
+    kotlin("jvm") version "2.3.10"
 }
 
 group = "net.streamlinecloud"
@@ -23,6 +24,7 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 publishing {
@@ -68,4 +70,10 @@ tasks.named<ShadowJar>("shadowJar") {
 
 tasks.shadowJar {
     archiveClassifier.set("")
+}
+repositories {
+    mavenCentral()
+}
+kotlin {
+    jvmToolchain(21)
 }

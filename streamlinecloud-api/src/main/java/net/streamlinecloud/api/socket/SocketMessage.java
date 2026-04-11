@@ -9,6 +9,7 @@ import net.streamlinecloud.api.player.StreamlinePlayer;
 
 @Getter
 @RequiredArgsConstructor
+@Deprecated
 public class SocketMessage {
 
     @NonNull

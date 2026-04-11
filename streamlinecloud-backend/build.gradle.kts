@@ -28,11 +28,16 @@ dependencies {
     implementation("org.hibernate.orm:hibernate-community-dialects")
     implementation("org.xerial:sqlite-jdbc:3.51.2.0")
     implementation(project(":streamlinecloud-api"))
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
 
 kotlin {
@@ -49,7 +54,7 @@ tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     archiveFileName.set("streamlinecloud-backend-$branch-$version.jar")
 }
 
-tasks.register("prepareKotlinBuildScriptModel") {
+tasks.register("prepareKotlinIdeaImport") {
     group = "IDE compatibility"
     // no actions needed — exists only so IDE import doesn't fail
 }
