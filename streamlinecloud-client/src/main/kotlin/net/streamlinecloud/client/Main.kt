@@ -1,8 +1,6 @@
 package net.streamlinecloud.net.streamlinecloud.client
 
-import net.streamlinecloud.net.streamlinecloud.client.adapter.GroupAdapter
 import net.streamlinecloud.net.streamlinecloud.client.core.StreamlineApiClient
-import net.streamlinecloud.net.streamlinecloud.client.core.StreamlineSocketClient
 
 suspend fun main() {
 
