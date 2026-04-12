@@ -23,7 +23,8 @@ class ApiKeyAuthFilter(
         "/sessions/setup",
         "/swagger-ui/**",
         "/v3/api-docs/**",
-        "/public/**"
+        "/public/**",
+        "/socket/**"
     )
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {

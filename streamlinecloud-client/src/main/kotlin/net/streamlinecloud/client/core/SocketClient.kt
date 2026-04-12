@@ -6,6 +6,7 @@ import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.net.streamlinecloud.client.adapter.SocketAdapter
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 import kotlin.streams.toList
@@ -23,9 +24,18 @@ class SocketClient(
     val adapters: MutableList<SocketAdapter> = mutableListOf()
     private val subscribedTopics: MutableList<String> = mutableListOf()
 
-    suspend fun connect() {
-        client = StompClient(KtorWebSocketClient())
-        session = client?.connect("$url/socket")
+    suspend fun connect(key: String) {
+
+        try {
+            client = StompClient(KtorWebSocketClient())
+            session = client?.connect(
+                url = "$url/socket",
+                customStompConnectHeaders = mapOf("Authorization" to "Bearer $key")
+            )
+        } catch (e: Exception) {
+            onError(e)
+            return
+        }
 
         onSuccess()
     }
