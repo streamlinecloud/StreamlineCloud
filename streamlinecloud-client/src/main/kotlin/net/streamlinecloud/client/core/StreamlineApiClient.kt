@@ -1,0 +1,59 @@
+package net.streamlinecloud.net.streamlinecloud.client.core
+
+import com.google.gson.Gson
+import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import net.streamlinecloud.api.node.StreamlineNode
+import net.streamlinecloud.net.streamlinecloud.client.adapter.GroupAdapter
+
+class StreamlineApiClient(
+    val url: String,
+    val socketUrl: String,
+    val key: String,
+    private val onError: (String) -> Unit,
+) {
+
+    var connected = false
+    var node: StreamlineNode? = null
+
+    val socketClient: StreamlineSocketClient = StreamlineSocketClient(
+        socketUrl,
+        onSuccess = {
+            println("Socket connected")
+        },
+        onError = {
+            println("Error: $it")
+        },
+        onDisconnect = {
+            println("Disconnected!")
+        }
+    )
+
+    val httpClient: StreamlineHttpClient = StreamlineHttpClient(url, key)
+
+    suspend fun connect() {
+        if (connected) return
+
+        val res: HttpResponse = httpClient.get("/session/info")
+
+        if (res.status.value != 200) {
+            onError("Initial handshake failed with status code " + res.status)
+            return
+        }
+
+        node = Gson().fromJson(res.bodyAsText(), StreamlineNode::class.java)
+
+        println("Connected with node ${node?.uuid} (main=${node?.isMain})")
+
+        connectSocket()
+
+        connected = true
+    }
+
+    private suspend fun connectSocket() {
+        socketClient.connect(key)
+        socketClient.inject(GroupAdapter())
+    }
+
+}

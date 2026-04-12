@@ -52,6 +52,8 @@ class ApiKeyAuthFilter(
             return
         }
 
+        node.key = null
+
         val auth = UsernamePasswordAuthenticationToken(
             node, null,
             listOf(SimpleGrantedAuthority("ROLE_API_USER"))

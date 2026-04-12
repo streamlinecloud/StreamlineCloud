@@ -22,6 +22,12 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("io.ktor:ktor-client-cio:3.1.3")
 
+    implementation("io.ktor:ktor-client-core:3.1.3")
+    implementation("io.ktor:ktor-client-cio:3.1.3")
+    implementation("io.ktor:ktor-client-content-negotiation:3.1.3")
+    implementation("io.ktor:ktor-client-websockets:3.1.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.3")
+
     api(project(":streamlinecloud-api"))
 
     testImplementation(kotlin("test"))

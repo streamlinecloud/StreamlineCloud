@@ -4,6 +4,7 @@ import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.backend.repository.NodeRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,7 +17,7 @@ import java.util.Optional
 import java.util.UUID
 
 @RestController
-@RequestMapping("/sessions")
+@RequestMapping("/session")
 class SessionController(val nodeRepository: NodeRepository) {
 
     @PostMapping("/validate/{uuid}")
@@ -54,6 +55,11 @@ class SessionController(val nodeRepository: NodeRepository) {
             "node_" + generateApiKey(48)
         )))
 
+    }
+
+    @GetMapping("/info")
+    fun info(authentication: Authentication): StreamlineNode? {
+        return authentication.principal as StreamlineNode
     }
 
     @GetMapping("/secret")

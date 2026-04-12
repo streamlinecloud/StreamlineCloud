@@ -1,17 +1,17 @@
 package net.streamlinecloud.net.streamlinecloud.client.core
 
 import com.google.gson.Gson
-import net.streamlinecloud.api.group.StreamlineGroup
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.websocket.WebSockets
 import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.net.streamlinecloud.client.adapter.SocketAdapter
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.headers.StompConnectHeaders
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
-import kotlin.streams.toList
+import java.net.http.HttpClient
 
-class SocketClient(
+class StreamlineSocketClient(
     val url: String,
     private val onSuccess: () -> Unit,
     private val onError: (Throwable) -> Unit,
@@ -27,7 +27,8 @@ class SocketClient(
     suspend fun connect(key: String) {
 
         try {
-            client = StompClient(KtorWebSocketClient())
+            client = StompClient(KtorWebSocketClient(
+            ))
             session = client?.connect(
                 url = "$url/socket",
                 customStompConnectHeaders = mapOf("Authorization" to "Bearer $key")
