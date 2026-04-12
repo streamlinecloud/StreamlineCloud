@@ -56,6 +56,8 @@ class SessionController(val nodeRepository: NodeRepository) {
 
     }
 
+    @GetMapping("/secret")
+    fun secret(): String = "Secret lol"
 
     fun generateApiKey(length: Int = 32): String {
         val random = SecureRandom()

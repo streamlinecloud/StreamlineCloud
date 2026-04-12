@@ -29,10 +29,12 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.51.2.0")
     implementation(project(":streamlinecloud-api"))
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -54,7 +56,7 @@ tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     archiveFileName.set("streamlinecloud-backend-$branch-$version.jar")
 }
 
-tasks.register("prepareKotlinIdeaImport") {
+tasks.register("prepareKotlinBuildScriptModel") {
     group = "IDE compatibility"
     // no actions needed — exists only so IDE import doesn't fail
 }

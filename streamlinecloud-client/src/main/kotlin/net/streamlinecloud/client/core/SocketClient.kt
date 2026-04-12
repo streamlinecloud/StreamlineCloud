@@ -34,7 +34,6 @@ class SocketClient(
         subscribedTopics.add(topic)
 
         session?.subscribeText(topic)?.collect { msg ->
-            println(msg.toString())
             run {
                 adapters.stream().filter { it.topic == topic }.toList().forEach { adapter ->
                     adapter.receive(Gson().fromJson(msg, SocketResponse::class.java))

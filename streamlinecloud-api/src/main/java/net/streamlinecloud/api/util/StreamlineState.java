@@ -6,4 +6,5 @@ public enum StreamlineState {
     SETUP,
     RUNNING,
     STOPPING
+
 }

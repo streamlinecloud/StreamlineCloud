@@ -8,4 +8,6 @@ import java.util.UUID
 
 interface NodeRepository : CrudRepository<StreamlineNode, Long> {
     fun findByUuid(uuid: String): Optional<StreamlineNode>
+
+    fun findByKey(key: String): StreamlineNode?
 }
