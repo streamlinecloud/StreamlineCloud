@@ -36,18 +36,22 @@ class StreamlineApiClient(
     suspend fun connect() {
         if (connected) return
 
-        val res: HttpResponse = httpClient.get("/session/info")
-        if (res.status.value != 200) {
-            onError("Initial handshake failed with status code " + res.status)
-            return
+        try {
+            val res: HttpResponse = httpClient.get("/session/info")
+            if (res.status.value != 200) {
+                onError("Initial handshake failed with status code " + res.status)
+                return
+            }
+
+            node = Gson().fromJson(res.bodyAsText(), StreamlineNode::class.java)
+            println("Connected with node ${node?.uuid} (main=${node?.isMain})")
+
+            connectSocket()
+            connected = true
+
+        } catch (e: Exception) {
+            onError("Cannot connect to the backend: ${e.message}")
         }
-
-        node = Gson().fromJson(res.bodyAsText(), StreamlineNode::class.java)
-        println("Connected with node ${node?.uuid} (main=${node?.isMain})")
-
-        connectSocket()
-
-        connected = true
     }
 
     private suspend fun connectSocket() {
