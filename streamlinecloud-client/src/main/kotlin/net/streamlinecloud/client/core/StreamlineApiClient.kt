@@ -11,6 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.net.streamlinecloud.client.manager.GroupManager
+import kotlin.time.Duration.Companion.milliseconds
 
 class StreamlineApiClient(
     val url: String,
@@ -53,11 +54,10 @@ class StreamlineApiClient(
             println("Connected with node ${node?.uuid} (main=${node?.isMain})")
 
             connectSocket()
-            checkConnectionTask()
             connected = true
 
         } catch (e: Exception) {
-            onError("Cannot connect to the backend: ${e.message}")
+            onError("Connection lost: ${e.message}")
         }
     }
 
@@ -66,18 +66,6 @@ class StreamlineApiClient(
 
         socketClient.connect(key)
         socketClient.inject(groupManager)
-    }
-
-    private suspend fun checkConnectionTask() {
-        CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
-            val res: HttpResponse = httpClient.get("/session/info")
-            if (res.status.value != 200) {
-                onError("Handshake failed with status code " + res.status)
-                reconnect()
-                cancel()
-            }
-            delay(30_000) //30 SEC
-        }
     }
 
     private suspend fun reconnect() {
