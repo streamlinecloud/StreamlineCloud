@@ -68,6 +68,11 @@ class StreamlineApiClient(
         socketClient.inject(groupManager)
     }
 
+    suspend fun disconnect() {
+        socketClient.disconnect()
+        connected = false
+    }
+
     private suspend fun reconnect() {
         println("reconnecting...")
         connected = false
