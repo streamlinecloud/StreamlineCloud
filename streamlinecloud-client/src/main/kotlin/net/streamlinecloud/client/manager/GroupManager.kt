@@ -6,7 +6,6 @@ import net.streamlinecloud.api.group.StreamlineGroup
 import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.client.adapter.SocketAdapter
 import net.streamlinecloud.client.core.StreamlineApiClient
-import java.util.Optional
 
 class GroupManager(
     val apiClient: StreamlineApiClient
@@ -27,5 +26,18 @@ class GroupManager(
 
         groups.removeIf { group -> group.name == new.name }
         groups.add(new)
+    }
+
+    suspend fun create(group: StreamlineGroup) {
+        if (groups.stream().anyMatch { existingGroup -> existingGroup.name == group.name }) return
+        apiClient.httpClient.put("/groups", Gson().toJson(group))
+    }
+
+    suspend fun update(group: StreamlineGroup) {
+        apiClient.httpClient.put("/groups", Gson().toJson(group))
+    }
+
+    fun delete(group: StreamlineGroup) {
+        TODO("NOT YET IMPLEMENTED")
     }
 }
