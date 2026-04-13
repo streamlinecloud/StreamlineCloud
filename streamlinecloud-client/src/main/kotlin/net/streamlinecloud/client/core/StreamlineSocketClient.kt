@@ -58,4 +58,9 @@ class StreamlineSocketClient(
         if (!subscribedTopics.contains(adapter.topic)) subscribe(adapter.topic)
     }
 
+    suspend fun disconnect() {
+        session?.disconnect()
+        onDisconnect()
+    }
+
 }
