@@ -1,6 +1,6 @@
-package net.streamlinecloud.net.streamlinecloud.client
+package net.streamlinecloud.client
 
-import net.streamlinecloud.net.streamlinecloud.client.core.StreamlineApiClient
+import net.streamlinecloud.client.core.StreamlineApiClient
 
 suspend fun main() {
 
@@ -8,7 +8,7 @@ suspend fun main() {
         "http://localhost:8080",
         "ws://localhost:8080",
         "node_i8UPpwKxXVy_B4KSFK1cl4ZI_ZRtXfqOQBPW3nCU3xwWvI0uCJnHPExZ3XQ7nDwV",
-        {msg ->
+        { msg ->
             println(msg)
         }
     ).connect()

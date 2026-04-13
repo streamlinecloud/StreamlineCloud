@@ -1,4 +1,4 @@
-package net.streamlinecloud.net.streamlinecloud.client.adapter
+package net.streamlinecloud.client.adapter
 
 import net.streamlinecloud.api.socket.SocketResponse
 

@@ -1,11 +1,11 @@
-package net.streamlinecloud.net.streamlinecloud.client.manager
+package net.streamlinecloud.client.manager
 
 import com.google.gson.Gson
 import io.ktor.client.statement.bodyAsText
 import net.streamlinecloud.api.group.StreamlineGroup
 import net.streamlinecloud.api.socket.SocketResponse
-import net.streamlinecloud.net.streamlinecloud.client.adapter.SocketAdapter
-import net.streamlinecloud.net.streamlinecloud.client.core.StreamlineApiClient
+import net.streamlinecloud.client.adapter.SocketAdapter
+import net.streamlinecloud.client.core.StreamlineApiClient
 import java.util.Optional
 
 class GroupManager(

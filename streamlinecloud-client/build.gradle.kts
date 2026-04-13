@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "net.streamlinecloud"
+group = "net.streamlinecloud.client"
 val version: String by rootProject
 val branch: String by rootProject
 
@@ -48,7 +48,7 @@ tasks {
 }
 
 tasks.named<ShadowJar>("shadowJar") {
-    group = "net.streamlinecloud"
+    group = "net.streamlinecloud.client"
 
     destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-client"))
     archiveFileName.set("streamlinecloud-client-$branch-$version.jar")

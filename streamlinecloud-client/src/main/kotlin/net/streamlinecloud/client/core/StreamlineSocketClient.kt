@@ -1,15 +1,12 @@
-package net.streamlinecloud.net.streamlinecloud.client.core
+package net.streamlinecloud.client.core
 
 import com.google.gson.Gson
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.websocket.WebSockets
 import net.streamlinecloud.api.socket.SocketResponse
-import net.streamlinecloud.net.streamlinecloud.client.adapter.SocketAdapter
+import net.streamlinecloud.client.adapter.SocketAdapter
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
-import java.net.http.HttpClient
 
 class StreamlineSocketClient(
     val url: String,

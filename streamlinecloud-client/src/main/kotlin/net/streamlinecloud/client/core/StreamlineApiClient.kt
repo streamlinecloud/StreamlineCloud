@@ -1,17 +1,10 @@
-package net.streamlinecloud.net.streamlinecloud.client.core
+package net.streamlinecloud.client.core
 
 import com.google.gson.Gson
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import net.streamlinecloud.api.node.StreamlineNode
-import net.streamlinecloud.net.streamlinecloud.client.manager.GroupManager
-import kotlin.time.Duration.Companion.milliseconds
+import net.streamlinecloud.client.manager.GroupManager
 
 class StreamlineApiClient(
     val url: String,
