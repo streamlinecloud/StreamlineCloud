@@ -42,7 +42,7 @@ public class StreamlineSetup {
                  \\______/ \\________|   \\__|    \\______/ \\__|          \s""");
         StreamlineCloud.logSingle("");
 
-        Cache.i().setConfig(new MainConfig("", 5378, "lobby"));
+        Cache.i().setConfig(new MainConfig("", "lobby"));
         Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/server").mkdirs());
 
         this.questions = Arrays.asList(questions);

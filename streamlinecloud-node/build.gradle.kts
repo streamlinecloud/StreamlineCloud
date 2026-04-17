@@ -35,6 +35,7 @@ dependencies {
     implementation("commons-io:commons-io:2.16.1")
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("org.json:json:20231013")
+    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
 
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
@@ -43,6 +44,8 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:1.18.32")
 
     implementation(project(":streamlinecloud-api"))
+    implementation(project(":streamlinecloud-client"))
+
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
@@ -97,6 +100,10 @@ tasks.named<ShadowJar>("shadowJar") {
 
     destinationDirectory.set(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-node"))
     archiveFileName.set("streamlinecloud-node-$branch-$version.jar")
+
+    manifest {
+        attributes["Main-Class"] = "net.streamlinecloud.main.CloudLauncher"
+    }
 }
 
 tasks.register("updateAndStartTest") {
@@ -110,11 +117,11 @@ tasks.register("startTest") {
     group = "Testing"
     description = "Starts or resumes a StreamlineCloud main instance for testing."
 
-    dependsOn("compile")
+    dependsOn("shadowJar")
 
     doLast {
         val rootDir = rootProject.layout.projectDirectory.asFile
-        val buildDir = File(rootDir, "finished_builds/streamlinecloud-main")
+        val buildDir = File(rootDir, "finished_builds/streamlinecloud-node")
         val testSystemRoot = File(rootDir, "testSystem")
         val testDir = File(testSystemRoot, "main")
 
@@ -187,7 +194,7 @@ tasks.register("rebuildTest") {
     group = "Testing"
     description = "Deletes and recreates the test system environment."
 
-    dependsOn("makeMainProject")
+    dependsOn("shadowJar")
 
     doLast {
         val rootDir = rootProject.layout.projectDirectory.asFile
@@ -206,7 +213,7 @@ tasks.register("rebuildTest") {
 tasks.register<Copy>("updateTest") {
     group = "Testing"
     description = "Builds the project and updates the test system environment."
-    dependsOn("makeMainProject")
+    dependsOn("shadowJar")
 
     println("Copying StreamlineCloud-MAIN")
 

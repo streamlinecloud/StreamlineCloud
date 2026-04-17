@@ -54,7 +54,8 @@ public class MainConfig {
 
     @Getter @Setter
     public static class NetworkConfig {
-        int backendPort;
+        String backendUrl = "http://localhost:8080";
+        String backendSocketUrl = "ws://localhost:8080";
         List<LoadBalancer> loadBalancers = new ArrayList<>();
     }
 
@@ -71,10 +72,9 @@ public class MainConfig {
         return gson.fromJson(json, MainConfig.class);
     }
 
-    public MainConfig(String defaultJavaPath, int backendPort, String fallbackGroup) {
+    public MainConfig(String defaultJavaPath, String fallbackGroup) {
         this.language = "lang/en.json";
         this.defaultJavaPath = defaultJavaPath;
-        this.network.backendPort = backendPort;
         this.fallback.fallbackGroup = fallbackGroup;
     }
 

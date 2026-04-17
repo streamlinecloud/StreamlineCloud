@@ -1,8 +1,11 @@
 package net.streamlinecloud.main;
 
 import io.javalin.util.JavalinBindException;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.util.StreamlineState;
+import net.streamlinecloud.client.core.StreamlineApiClient;
 import net.streamlinecloud.main.command.*;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.config.StreamlineConfig;
@@ -44,6 +47,7 @@ public class CloudMain {
     @Getter
     private static CloudMain instance;
     private final CloudTerminal terminal;
+    private final StreamlineApiClient apiClient;
     List<CloudCommand> commandMap = new ArrayList<>();
 
     @SneakyThrows
@@ -97,13 +101,13 @@ public class CloudMain {
         SoftwareManager.getInstance().setConfig(new StreamlineConfig(new SoftwareConfig(), cache.homeFile + "/data/software/software.json"));
         SoftwareManager.getInstance().getConfig().init();
 
-        try {
+        /*try {
             BackEndMain.startBE();
         } catch (JavalinBindException ignored) {
             StreamlineCloud.log("sc.error.portAlreadyInUse", new ReplacePaket[]{new ReplacePaket("%0", Cache.i().getConfig().getNetwork().getBackendPort() + "")});
             StreamlineCloud.shutDown();
             return;
-        }
+        }*/
 
         new RunningServerManager();
 
@@ -119,8 +123,19 @@ public class CloudMain {
                     new WhitelistQuestion(),
                     new DefaultSetupQuestion()
             });
+            apiClient = null;
             return;
         }
+
+        apiClient = new StreamlineApiClient(
+                Cache.i().getConfig().getNetwork().getBackendUrl(),
+                Cache.i().getConfig().getNetwork().getBackendSocketUrl(),
+                "node_i8UPpwKxXVy_B4KSFK1cl4ZI_ZRtXfqOQBPW3nCU3xwWvI0uCJnHPExZ3XQ7nDwV",
+                error -> {
+                    StreamlineCloud.logError("Client Error: " + error);
+                    return Unit.INSTANCE;
+                }
+        );
 
         if (Cache.i().getConfig().getWebsocket().isUseWebSocket()) {
             Cache.i().setWebSocketClient(new RemoteSocket());
