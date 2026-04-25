@@ -6,7 +6,6 @@ import net.streamlinecloud.main.backend.controller.PlayerController;
 import net.streamlinecloud.main.backend.controller.ServerController;
 import net.streamlinecloud.main.backend.controller.UtilController;
 import net.streamlinecloud.main.backend.socket.ServerSocket;
-import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import io.javalin.Javalin;
 

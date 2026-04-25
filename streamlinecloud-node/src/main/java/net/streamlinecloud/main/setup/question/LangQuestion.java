@@ -3,7 +3,6 @@ package net.streamlinecloud.main.setup.question;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.backend.LoadBalancer;
-import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.setup.SetupQuestion;
 import net.streamlinecloud.main.utils.Cache;
 

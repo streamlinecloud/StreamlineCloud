@@ -3,10 +3,10 @@ package net.streamlinecloud.main.core.group;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamlinecloud.api.server.ServerRuntime;
+import net.streamlinecloud.api.terminal.ReplacePaket;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.core.server.RunningServerManager;
-import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
 

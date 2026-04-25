@@ -1,8 +1,6 @@
 package net.streamlinecloud.main;
 
-import io.javalin.util.JavalinBindException;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.client.core.StreamlineApiClient;
@@ -18,8 +16,6 @@ import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.lang.CloudLanguage;
-import net.streamlinecloud.main.backend.BackEndMain;
-import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.setup.SetupQuestion;
 import net.streamlinecloud.main.setup.StreamlineSetup;
 import net.streamlinecloud.main.setup.question.DefaultSetupQuestion;

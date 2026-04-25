@@ -2,11 +2,11 @@ package net.streamlinecloud.main.setup.question;
 
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.software.StreamlineSoftware;
+import net.streamlinecloud.api.terminal.ReplacePaket;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
-import net.streamlinecloud.main.lang.ReplacePaket;
 import net.streamlinecloud.main.setup.SetupQuestion;
 import net.streamlinecloud.main.utils.Cache;
 

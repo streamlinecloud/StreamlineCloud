@@ -1,24 +1,12 @@
 package net.streamlinecloud.main.setup;
 
-import net.streamlinecloud.api.server.ServerRuntime;
-import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.api.util.StreamlineState;
-import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.MainConfig;
-import net.streamlinecloud.main.backend.LoadBalancer;
-import net.streamlinecloud.main.core.group.CloudGroup;
-import net.streamlinecloud.main.core.software.SoftwareManager;
-import net.streamlinecloud.main.lang.ReplacePaket;
-import net.streamlinecloud.main.setup.question.LangQuestion;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class StreamlineSetup {
