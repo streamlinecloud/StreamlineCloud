@@ -70,7 +70,7 @@ public class CloudTerminalRunner extends Thread {
                 }
 
             } catch (EndOfFileException e) {
-                StreamlineCloud.logError("(Terminal) End of file reached.");
+                StreamlineCloud.getLogger().error("(Terminal) End of file reached.");
 
             }
 
@@ -120,7 +120,7 @@ public class CloudTerminalRunner extends Thread {
         this.restricted = restricted;
 
         if (!restricted) {
-            getTerminal().getSavedLogs().forEach(StreamlineCloud::logSingle);
+            getTerminal().getSavedLogs().forEach(NodeLogger::logSingle);
             getTerminal().getSavedLogs().removeAll(getTerminal().getSavedLogs());
         }
     }

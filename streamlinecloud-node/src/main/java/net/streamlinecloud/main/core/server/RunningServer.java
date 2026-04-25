@@ -18,6 +18,7 @@ import net.streamlinecloud.main.backend.LoadBalancer;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
+import net.streamlinecloud.main.terminal.NodeLogger;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
 import lombok.Getter;
@@ -136,7 +137,7 @@ public class RunningServer extends StreamlineServer {
             if (!eula.exists()) Files.createFile(eula.toPath());
             Files.writeString(eula.toPath(), "eula=true");
         } catch (IOException e) {
-            StreamlineCloud.logError(e.getMessage());
+            StreamlineCloud.getLogger().error(e.getMessage());
         }
 
         //Copy Templates
@@ -222,7 +223,7 @@ public class RunningServer extends StreamlineServer {
         }
 
         if (!deployPlugin()) {
-            StreamlineCloud.logError("Failed to deploy plugin: " + file.getAbsolutePath());
+            StreamlineCloud.getLogger().error("Failed to deploy plugin: " + file.getAbsolutePath());
             return;
         }
 
@@ -278,7 +279,7 @@ public class RunningServer extends StreamlineServer {
                                             new IncommingServerMessageEvent(getName(), getUuid(), getGroup(), getServerState(), isStaticServer(), getPort(), line)
                                     );
                                     if (!incomingEvent.isCancelled()) {
-                                        StreamlineCloud.logSingle(getName() + " " + line);
+                                        StreamlineCloud.log(getName() + " " + line);
                                     }
                                 }
                             }
@@ -290,7 +291,7 @@ public class RunningServer extends StreamlineServer {
                     process.waitFor();
 
                 } catch (Exception e) {
-                    if (!getServerState().equals(ServerState.STOPPING)) StreamlineCloud.printError("Failed to start server", e);
+                    if (!getServerState().equals(ServerState.STOPPING)) NodeLogger.printError("Failed to start server", e);
                 } finally {
                     task();
                 }
@@ -316,10 +317,10 @@ public class RunningServer extends StreamlineServer {
             file.mkdirs();
             Files.copy(Objects.requireNonNull(Utils.getResourceFile(pluginFileName, "")).toPath(), Path.of(file + "/streamlinecloud-mc.jar"));
         } catch (IOException e) {
-            StreamlineCloud.logError(e.getMessage());
+            StreamlineCloud.getLogger().error(e.getMessage());
             return false;
         } catch (NullPointerException e) {
-            StreamlineCloud.logError("We could not find the StreamlineCloudMC plugin");
+            StreamlineCloud.getLogger().error("We could not find the StreamlineCloudMC plugin");
             return false;
         }
         return true;
@@ -360,7 +361,7 @@ public class RunningServer extends StreamlineServer {
             if (StreamlineCloud.isPortAvailable(port)) return port;
             attempts++;
         }
-        StreamlineCloud.logError("Failed to find a free port after " + attempts + " attempts. Using port: " + port);
+        StreamlineCloud.getLogger().error("Failed to find a free port after " + attempts + " attempts. Using port: " + port);
         throw new TooManyAttemptsException(attempts, this.getClass());
     }
 
@@ -444,7 +445,7 @@ public class RunningServer extends StreamlineServer {
 
     public void enableScreen() {
         for (String log : getLogs()) {
-            StreamlineCloud.logSingle(log);
+            StreamlineCloud.log(log);
         }
         setOutput(true);
         CloudMain.getInstance().getTerminal().getRunner().setScreenIndicator(getName());

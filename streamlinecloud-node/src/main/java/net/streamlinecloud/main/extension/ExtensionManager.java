@@ -58,7 +58,7 @@ public class ExtensionManager {
                 }
             }
         } catch (IOException e) {
-            StreamlineCloud.logError(e.getMessage());
+            StreamlineCloud.getLogger().error(e.getMessage());
         }
 
         return null;
@@ -89,7 +89,7 @@ public class ExtensionManager {
             try {
                 streamlineExtension.initialize(eventManager, commandManager, dataFolder);
             } catch (Exception e) {
-                StreamlineCloud.logError("Failed to enable " + extensionList.get(streamlineExtension).name + " - " +  e.getMessage());
+                StreamlineCloud.getLogger().error("Failed to enable " + extensionList.get(streamlineExtension).name + " - " +  e.getMessage());
                 streamlineExtension.disable();
             }
         }

@@ -64,7 +64,7 @@ public class GroupsController {
             context.result(gson.toJson(streamlineServers));
             context.status(200);
         } catch (Exception e) {
-            StreamlineCloud.logError(e.getMessage());
+            StreamlineCloud.getLogger().error(e.getMessage());
         }
     }
 

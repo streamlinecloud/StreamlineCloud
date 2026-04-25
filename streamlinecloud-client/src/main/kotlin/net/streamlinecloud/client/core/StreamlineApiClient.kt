@@ -4,12 +4,14 @@ import com.google.gson.Gson
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import net.streamlinecloud.api.node.StreamlineNode
+import net.streamlinecloud.api.terminal.StreamlineLogger
 import net.streamlinecloud.client.manager.GroupManager
 
 class StreamlineApiClient(
     val url: String,
     val socketUrl: String,
     val key: String,
+    val logger: StreamlineLogger,
     private val onError: (String) -> Unit,
 ) {
 

@@ -223,7 +223,7 @@ public class GroupsCommand extends CloudCommand {
                                 try {
                                     priority = Integer.parseInt(prioritySub);
                                 } catch (NumberFormatException e) {
-                                    StreamlineCloud.logError("sc.command.groups.priority.nan");
+                                    StreamlineCloud.getLogger().error("sc.command.groups.priority.nan");
                                 }
                                 group.setPriority(priority);
                                 StreamlineCloud.log("sc.command.groups.priority.success");

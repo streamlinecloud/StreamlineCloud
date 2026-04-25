@@ -132,7 +132,7 @@ public class MainConfig {
                 }
             }
         } else {
-            StreamlineCloud.logImportant("No groups exists: groups help");
+            StreamlineCloud.getLogger().error("Currently, there aren't any groups. Go an and create one: groups help");
         }
     }
 
@@ -157,7 +157,7 @@ public class MainConfig {
         try {
             Files.writeString(config.toPath(), json);
         } catch (IOException e) {
-            StreamlineCloud.logError(e.getMessage());
+            StreamlineCloud.getLogger().error(e.getMessage());
         }
     }
 }

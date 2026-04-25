@@ -3,6 +3,7 @@ package net.streamlinecloud.main.setup;
 import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.MainConfig;
+import net.streamlinecloud.main.terminal.NodeLogger;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
 
@@ -17,9 +18,9 @@ public class StreamlineSetup {
     public StreamlineSetup(SetupQuestion[] questions) {
         Cache.i().setStreamlineState(StreamlineState.SETUP);
 
-        StreamlineCloud.logSingle("");
-        StreamlineCloud.logSingle("StreamlineCloud");
-        StreamlineCloud.logSingle("""
+        NodeLogger.logSingle("");
+        NodeLogger.logSingle("StreamlineCloud");
+        NodeLogger.logSingle("""
                  $$$$$$\\  $$$$$$$$\\ $$$$$$$$\\ $$\\   $$\\ $$$$$$$\\       \s
                 $$  __$$\\ $$  _____|\\__$$  __|$$ |  $$ |$$  __$$\\      \s
                 $$ /  \\__|$$ |         $$ |   $$ |  $$ |$$ |  $$ |     \s
@@ -28,7 +29,7 @@ public class StreamlineSetup {
                 $$\\   $$ |$$ |         $$ |   $$ |  $$ |$$ |           \s
                 \\$$$$$$  |$$$$$$$$\\    $$ |   \\$$$$$$  |$$ |           \s
                  \\______/ \\________|   \\__|    \\______/ \\__|          \s""");
-        StreamlineCloud.logSingle("");
+        NodeLogger.logSingle("");
 
         Cache.i().setConfig(new MainConfig("", "lobby"));
         Utils.runMkdir(new File(Cache.i().homeFile + "/templates/default/server").mkdirs());

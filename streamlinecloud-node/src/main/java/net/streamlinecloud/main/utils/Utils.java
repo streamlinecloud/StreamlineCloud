@@ -60,7 +60,7 @@ public class Utils {
 
 
     public static void runMkdir(boolean result) {
-        if (Cache.i().isFirstLaunch() && !result) StreamlineCloud.logDebug("StreamlineCloud has failed to create a file. This could be a permission or file system error");
+        if (Cache.i().isFirstLaunch() && !result) StreamlineCloud.getLogger().debug("StreamlineCloud has failed to create a file. This could be a permission or file system error");
 
     }
 
@@ -93,12 +93,12 @@ public class Utils {
 
                 return tempFile;
             } catch (IOException e) {
-                StreamlineCloud.logError(e.getMessage());
+                StreamlineCloud.getLogger().error(e.getMessage());
             } finally {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    StreamlineCloud.logError(e.getMessage());
+                    StreamlineCloud.getLogger().error(e.getMessage());
                 }
             }
         }
@@ -124,7 +124,7 @@ public class Utils {
                                 try {
                                     Files.createDirectories(destinationPath);
                                 } catch (IOException e) {
-                                    StreamlineCloud.logError(e.getMessage());
+                                    StreamlineCloud.getLogger().error(e.getMessage());
                                 }
                             } else {
                                 if (!copiedFiles.contains(destinationPath.toString())) {
@@ -133,13 +133,13 @@ public class Utils {
                                         Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
                                         copiedFiles.add(destinationPath.toString());
                                     } catch (IOException e) {
-                                        StreamlineCloud.logError(e.getMessage());
+                                        StreamlineCloud.getLogger().error(e.getMessage());
                                     }
                                 }
                             }
                         });
             } catch (IOException e) {
-                StreamlineCloud.logError(e.getMessage());
+                StreamlineCloud.getLogger().error(e.getMessage());
             }
 
         }
@@ -167,7 +167,7 @@ public class Utils {
 
 
         } catch (IOException e) {
-            StreamlineCloud.logError(e.getMessage());
+            StreamlineCloud.getLogger().error(e.getMessage());
         }
     }
 

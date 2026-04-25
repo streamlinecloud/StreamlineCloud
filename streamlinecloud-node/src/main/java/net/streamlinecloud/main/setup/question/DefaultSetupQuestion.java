@@ -23,7 +23,7 @@ public class DefaultSetupQuestion extends SetupQuestion {
                 CloudGroupManager groupManager = CloudGroupManager.getInstance();
 
                 Cache.i().getConfig().setDefaultSoftwareName(software.getName());
-                StreamlineCloud.logSingle("");
+                StreamlineCloud.log("");
                 StreamlineCloud.log("sc.setup.downloaded", new ReplacePaket[]{new ReplacePaket("%0", software.getName()), new ReplacePaket("%1", proxySoftware.getName())});
 
                 CloudGroup lobby = new CloudGroup(

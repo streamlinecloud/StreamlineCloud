@@ -23,6 +23,7 @@ import net.streamlinecloud.main.setup.question.EulaQuestion;
 import net.streamlinecloud.main.setup.question.LangQuestion;
 import net.streamlinecloud.main.setup.question.WhitelistQuestion;
 import net.streamlinecloud.main.terminal.CloudTerminal;
+import net.streamlinecloud.main.terminal.NodeLogger;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -74,14 +75,14 @@ public class CloudMain {
         instance = this;
         terminal = new CloudTerminal();
 
-        StreamlineCloud.logSingle("§RED" + StreamlineCloud.streamlineBanner());
-        StreamlineCloud.logSingle("");
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDA streamlined Minecraft network");
-        StreamlineCloud.logSingle("");
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDVersion: §AQUA" + MainBuildConfig.VERSION);
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + Settings.authors);
-        StreamlineCloud.logSingle("§DARK_GRAY-> §REDWebsite: §AQUA" + Settings.website);
-        StreamlineCloud.logSingle("");
+        NodeLogger.logSingle("§RED" + StreamlineCloud.streamlineBanner());
+        NodeLogger.logSingle("");
+        NodeLogger.logSingle("§DARK_GRAY-> §REDA streamlined Minecraft network");
+        NodeLogger.logSingle("");
+        NodeLogger.logSingle("§DARK_GRAY-> §REDVersion: §AQUA" + MainBuildConfig.VERSION);
+        NodeLogger.logSingle("§DARK_GRAY-> §REDDeveloped by: §AQUA" + Settings.authors);
+        NodeLogger.logSingle("§DARK_GRAY-> §REDWebsite: §AQUA" + Settings.website);
+        NodeLogger.logSingle("");
 
         Settings.name = "§REDStreamlineCloud §8-> §RED";
         StreamlineCloud.log("Starting StreamlineCloud");
@@ -127,8 +128,9 @@ public class CloudMain {
                 Cache.i().getConfig().getNetwork().getBackendUrl(),
                 Cache.i().getConfig().getNetwork().getBackendSocketUrl(),
                 "node_i8UPpwKxXVy_B4KSFK1cl4ZI_ZRtXfqOQBPW3nCU3xwWvI0uCJnHPExZ3XQ7nDwV",
+                StreamlineCloud.getLogger(),
                 error -> {
-                    StreamlineCloud.logError("Client Error: " + error);
+                    StreamlineCloud.getLogger().error("Client Error: " + error);
                     return Unit.INSTANCE;
                 }
         );
@@ -139,7 +141,7 @@ public class CloudMain {
 
         String playerSpreading = Cache.i().getConfig().getFallback().getFallbackPlayerSpreading();
         if (!(playerSpreading.equals("SPLIT") || playerSpreading.equals("BUNDLE") || playerSpreading.equals("RANDOM"))) {
-            StreamlineCloud.logError("The config option '" + playerSpreading + "' for fallbackPlayerSpreading is invalid. Set it to 'SPLIT' or 'BUNDLE'");
+            StreamlineCloud.getLogger().error("The config option '" + playerSpreading + "' for fallbackPlayerSpreading is invalid. Set it to 'SPLIT' or 'BUNDLE'");
             StreamlineCloud.log("Changed config value fallbackPlayerSpreading to 'RANDOM'");
             Cache.i().getConfig().getFallback().setFallbackPlayerSpreading("RANDOM");
         }

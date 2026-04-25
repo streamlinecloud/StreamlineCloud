@@ -47,7 +47,7 @@ public class AuthMiddleware {
                 }
 
             } catch (Exception e) {
-                StreamlineCloud.logError(e.getMessage());
+                StreamlineCloud.getLogger().error(e.getMessage());
             }
         });
     }

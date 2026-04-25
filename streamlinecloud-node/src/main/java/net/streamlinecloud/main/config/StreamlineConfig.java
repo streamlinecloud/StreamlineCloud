@@ -47,7 +47,7 @@ public class StreamlineConfig {
         try {
             Files.writeString(config.toPath(), json);
         } catch (IOException e) {
-            StreamlineCloud.logError(e.getMessage());
+            StreamlineCloud.getLogger().error(e.getMessage());
         }
     }
 }
