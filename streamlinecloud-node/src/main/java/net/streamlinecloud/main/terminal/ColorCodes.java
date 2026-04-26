@@ -23,7 +23,7 @@ public enum ColorCodes {
     YELLOW("yellow", 14, Ansi.ansi().a(Ansi.Attribute.RESET).fgRgb(255, 255, 85).toString()), // 14
     WHITE("white", 15, Ansi.ansi().reset().fg(Ansi.Color.WHITE).bold().toString()),    // 15
     OBFUSCATED("obfuscated", 16, Ansi.ansi().a(Ansi.Attribute.BLINK_SLOW).toString()), // 16
-    BOLD("bold", 17, Ansi.ansi().a(Ansi.Attribute.UNDERLINE_DOUBLE).toString()),       // 17
+    BOLD("bold", 17, Ansi.ansi().a(Ansi.Attribute.INTENSITY_BOLD).toString()),       // 17
     STRIKETHROUGH("strikethrough", 18, Ansi.ansi().a(Ansi.Attribute.STRIKETHROUGH_ON).toString()), // 18
     UNDERLINE("underline", 19, Ansi.ansi().a(Ansi.Attribute.UNDERLINE).toString()),    // 19
     ITALIC("italic", 20, Ansi.ansi().a(Ansi.Attribute.ITALIC).toString()),             // 20
