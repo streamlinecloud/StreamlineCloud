@@ -62,7 +62,6 @@ public class CloudMain {
 
         System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
-        Utils.runMkdir(new File(cache.homeFile + "/groups").mkdirs());
         Utils.runMkdir(new File(cache.homeFile + "/data/software").mkdirs());
         Utils.runMkdir(new File(cache.homeFile + "/extensions").mkdir());
         Utils.runMkdir(new File(cache.homeFile + "/static").mkdir());
