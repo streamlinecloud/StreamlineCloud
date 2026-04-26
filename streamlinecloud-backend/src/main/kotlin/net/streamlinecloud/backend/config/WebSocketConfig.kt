@@ -1,7 +1,7 @@
 package net.streamlinecloud.backend.config
 
-import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.backend.repository.NodeRepository
+import net.streamlinecloud.backend.service.ActiveSessionService
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
@@ -22,7 +22,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 class WebSocketConfig(
-    private val nodeRepository: NodeRepository
+    private val nodeRepository: NodeRepository,
+    private val sessionservice: ActiveSessionService
 ) : WebSocketMessageBrokerConfigurer {
 
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
@@ -39,25 +40,38 @@ class WebSocketConfig(
             override fun preSend(message: Message<*>, channel: MessageChannel): Message<*> {
                 val accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor::class.java)
 
-                if (accessor?.command == StompCommand.CONNECT) {
-                    val authHeader = accessor.getFirstNativeHeader("Authorization")
+                when (accessor?.command) {
+                    StompCommand.CONNECT -> {
+                        val authHeader = accessor.getFirstNativeHeader("Authorization")
+                        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                            throw MessageDeliveryException("Missing or invalid Authorization header")
+                        }
 
-                    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                        throw MessageDeliveryException("Missing or invalid Authorization header")
+                        val token = authHeader.removePrefix("Bearer ").trim()
+                        val node = nodeRepository.findByKey(token)
+                            ?: throw MessageDeliveryException("Invalid API key")
+
+                        if (sessionservice.activeSessions.containsKey(token)) {
+                            throw MessageDeliveryException("This node is already connected")
+                        }
+
+                        sessionservice.activeSessions[token] = accessor.sessionId ?: ""
+                        accessor.user = UsernamePasswordAuthenticationToken(
+                            node, null,
+                            listOf(SimpleGrantedAuthority("ROLE_API_USER"))
+                        )
                     }
 
-                    val token = authHeader.removePrefix("Bearer ").trim()
-                    val node = nodeRepository.findByKey(token) ?: throw MessageDeliveryException("Invalid API key")
+                    StompCommand.DISCONNECT -> {
+                        val sessionId = accessor.sessionId
+                        sessionservice.activeSessions.entries.removeIf { it.value == sessionId }
+                    }
 
-                    accessor.user = UsernamePasswordAuthenticationToken(
-                        node, null,
-                        listOf(SimpleGrantedAuthority("ROLE_API_USER"))
-                    )
+                    else -> {}
                 }
 
                 return message
             }
         })
     }
-
 }

@@ -2,6 +2,7 @@ package net.streamlinecloud.backend.controller
 
 import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.backend.repository.NodeRepository
+import net.streamlinecloud.backend.service.ActiveSessionService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -18,7 +19,10 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/session")
-class SessionController(val nodeRepository: NodeRepository) {
+class SessionController(
+    val nodeRepository: NodeRepository,
+    val sessionService: ActiveSessionService
+) {
 
     @PostMapping("/validate/{uuid}")
     fun validate(
@@ -58,8 +62,13 @@ class SessionController(val nodeRepository: NodeRepository) {
     }
 
     @GetMapping("/info")
-    fun info(authentication: Authentication): StreamlineNode? {
-        return authentication.principal as StreamlineNode
+    fun info(authentication: Authentication): ResponseEntity<StreamlineNode>? {
+        val node: StreamlineNode = authentication.principal as StreamlineNode
+
+        if (sessionService.activeSessions.containsKey(nodeRepository.findByUuid(node.uuid).get().key))
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/secret")

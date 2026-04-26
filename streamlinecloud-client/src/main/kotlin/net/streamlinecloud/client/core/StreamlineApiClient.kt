@@ -27,7 +27,7 @@ class StreamlineApiClient(
             logger.info("Backend connection established")
         },
         onError = {
-            logger.info("Backend connection error: $it")
+            logger.info("Backend connection error: ${it.message}")
         },
         onDisconnect = {
             logger.warning("Disconnected from backend")
