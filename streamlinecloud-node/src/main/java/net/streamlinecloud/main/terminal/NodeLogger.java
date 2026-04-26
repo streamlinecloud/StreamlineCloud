@@ -48,22 +48,22 @@ public class NodeLogger implements StreamlineLogger {
 
     @Override
     public void warning(String message) {
-        logIntern("WARNING -> §YELLOW" + message, new ReplacePaket[]{});
+        logIntern("§BOLD" + message, "§YELLOWWARNING", new ReplacePaket[]{});
     }
 
     @Override
     public void warning(String message, ReplacePaket[] pakets) {
-        logIntern("WARNING -> §YELLOW" + message, pakets);
+        logIntern("§BOLD" + message, "§YELLOWWARNING", pakets);
     }
 
     @Override
     public void error(String message) {
-        logIntern("ERROR -> §DARK_RED" + message, new ReplacePaket[]{});
+        logIntern("§BOLD" + message, "§DARK_REDERROR", new ReplacePaket[]{});
     }
 
     @Override
     public void error(String message, ReplacePaket[] pakets) {
-        logIntern("ERROR -> §DARK_RED" + message, pakets);
+        logIntern("§BLOD" + message, "DARK_REDERROR", pakets);
     }
 
     @Override
@@ -73,7 +73,6 @@ public class NodeLogger implements StreamlineLogger {
         }
     }
 
-
     public static void logImportant(String msg) {
 
         logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{});
@@ -81,8 +80,11 @@ public class NodeLogger implements StreamlineLogger {
         logIntern(Settings.name + "§DARK_RED || IMPORTANT ||", new ReplacePaket[]{});
     }
 
-
     private static void logIntern(String msg, ReplacePaket[] pakets) {
+        logIntern(msg, "§AQUAINFO", pakets);
+
+    }
+    private static void logIntern(String msg, String prefix, ReplacePaket[] pakets) {
 
         Date now = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd.MM-HH:mm:ss");
@@ -109,7 +111,7 @@ public class NodeLogger implements StreamlineLogger {
 
         String s;
 
-        s = "§8| §RED" + formattedDate + " §8-> §RED" + msg + "§RED";
+        s = "§8| §RED" + formattedDate + " " + prefix + " §8-> §RED" + msg + "§RED";
 
         for (ReplacePaket p : pakets) {
             s = s.replace(p.getTarget(), p.getValue());
