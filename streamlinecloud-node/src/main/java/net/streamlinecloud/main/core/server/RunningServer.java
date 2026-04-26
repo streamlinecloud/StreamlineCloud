@@ -2,6 +2,7 @@ package net.streamlinecloud.main.core.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.rest.RconData;
 import net.streamlinecloud.api.exception.TooManyAttemptsException;
 import net.streamlinecloud.api.extension.event.server.*;
@@ -15,8 +16,6 @@ import net.streamlinecloud.api.terminal.ReplacePaket;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.backend.LoadBalancer;
-import net.streamlinecloud.main.core.group.CloudGroup;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.terminal.NodeLogger;
 import net.streamlinecloud.main.utils.Cache;
@@ -72,9 +71,6 @@ public class RunningServer extends StreamlineServer {
 
     public void start(File javaExec) throws IOException {
 
-        if (getGroup() == null)
-            setGroup(CloudGroupManager.getInstance().getDefaultGroup().getName());
-
         if (getGroupDirect().getAutoRestartMinutes() != -1)
             setStopTime(System.currentTimeMillis() + getGroupDirect().getAutoRestartMinutes() * 60 * 1000L);
 
@@ -115,7 +111,7 @@ public class RunningServer extends StreamlineServer {
         Cache.i().getServerSocket().sendUpdate(this);
 
         File file;
-        CloudGroup group = getGroupDirect();
+        StreamlineGroup group = getGroupDirect();
         ServerStartEvent serverStartEvent = eventManager.callEvent(new ServerStartEvent(
                 getName(),
                 getUuid(),
@@ -142,7 +138,7 @@ public class RunningServer extends StreamlineServer {
 
         //Copy Templates
         List<String> t = new ArrayList<>();
-        CloudGroup g = CloudGroupManager.getInstance().getGroupByName(getGroup());
+        StreamlineGroup g = StreamlineCloud.getGroupManager().getGroup(getGroup());
 
         assert g != null;
         customTemplates.addAll(g.getTemplates());
@@ -465,8 +461,8 @@ public class RunningServer extends StreamlineServer {
         StreamlineCloud.log("sc.server.screen.disabled", new ReplacePaket[]{new ReplacePaket("%1", getName())});
     }
 
-    public CloudGroup getGroupDirect() {
-        return CloudGroupManager.getInstance().getGroupByName(getGroup());
+    public StreamlineGroup getGroupDirect() {
+        return StreamlineCloud.getGroupManager().getGroup(getGroup());
     }
 
     private void executeCommand(String command, OutputStream outputStream) {

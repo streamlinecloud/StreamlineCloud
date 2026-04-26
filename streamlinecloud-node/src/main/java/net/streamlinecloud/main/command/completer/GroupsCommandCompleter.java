@@ -2,10 +2,8 @@ package net.streamlinecloud.main.command.completer;
 
 import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareConfig;
 import net.streamlinecloud.main.core.software.SoftwareManager;
-import net.streamlinecloud.main.utils.Cache;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
@@ -30,7 +28,7 @@ public class GroupsCommandCompleter implements Completer {
                 if (words.get(1).equals("create")) {
                     list.add(new Candidate("", "<name>", null, null, null, null, true));
                 } else if (words.get(1).equals("group") || words.get(1).equals("delete")) {
-                    CloudGroupManager.getInstance().getActiveGroups().forEach(group -> {
+                    StreamlineCloud.getGroupManager().getGroups().forEach(group -> {
                         if (!group.getName().equals("WITHOUT")) list.add(new Candidate(group.getName()));
                     });
                 }

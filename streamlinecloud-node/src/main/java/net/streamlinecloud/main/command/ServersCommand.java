@@ -1,9 +1,9 @@
 package net.streamlinecloud.main.command;
 
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
@@ -41,7 +41,7 @@ public class ServersCommand extends CloudCommand {
 
                 if (args.length == 3) {
 
-                    CloudGroup group = CloudGroupManager.getInstance().getGroupByName(args[2]);
+                    StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(args[2]);
 
                     if (group == null) {
                         StreamlineCloud.log("The group " + args[2] + " doesn't exist. Starting a new server with the default template named " + args[2] + "...");
@@ -56,7 +56,8 @@ public class ServersCommand extends CloudCommand {
                         return;
                     }
 
-                    RunningServerManager.getInstance().startServerByGroup(group, "User (start command)");
+                    //TODO: Use the new server manager
+                    //RunningServerManager.getInstance().startServerByGroup(group, "User (start command)");
 
                 }  else {
                     StreamlineCloud.log("sc.command.server.start.enterName");

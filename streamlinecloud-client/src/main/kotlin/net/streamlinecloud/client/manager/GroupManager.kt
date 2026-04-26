@@ -2,6 +2,7 @@ package net.streamlinecloud.client.manager
 
 import com.google.gson.Gson
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.runBlocking
 import net.streamlinecloud.api.group.StreamlineGroup
 import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.client.adapter.SocketAdapter
@@ -25,6 +26,14 @@ class GroupManager(
         Gson().fromJson(apiClient.httpClient.get("/groups").bodyAsText(), List::class.java).forEach { group ->
             this.groups.add(Gson().fromJson(group.toString(), StreamlineGroup::class.java))
         }
+        if (groups.isEmpty()) apiClient.logger.info("Currently, there aren't any groups. Go an and create one: groups create");
+    }
+
+    /**
+     * @return All [StreamlineGroup]'s existing in the current cluster
+     */
+    fun getGroups(): List<StreamlineGroup> {
+        return groups.toList()
     }
 
     /**
@@ -42,10 +51,12 @@ class GroupManager(
      * @param group A new CloudGroup instance
      * @return True if created successfully, false otherwise
      */
-    suspend fun create(group: StreamlineGroup): Boolean {
-        if (groupExists(group.name)) return false
-        apiClient.httpClient.put("/groups", Gson().toJson(group))
-        return true
+    fun create(group: StreamlineGroup): Boolean {
+        return runBlocking {
+            if (groupExists(group.name)) return@runBlocking false
+            apiClient.httpClient.put("/groups", Gson().toJson(group))
+            true
+        }
     }
 
     /**
@@ -54,10 +65,12 @@ class GroupManager(
      * @param group The group with the old name and the updated data
      * @return True if updated successfully, false otherwise
      */
-    suspend fun update(group: StreamlineGroup): Boolean {
-        if (!groupExists(group.name)) return false
-        apiClient.httpClient.put("/groups", Gson().toJson(group))
-        return true
+    fun update(group: StreamlineGroup): Boolean {
+        return runBlocking {
+            if (!groupExists(group.name)) return@runBlocking false
+            apiClient.httpClient.put("/groups", Gson().toJson(group))
+            true
+        }
     }
 
     fun delete(group: StreamlineGroup) {

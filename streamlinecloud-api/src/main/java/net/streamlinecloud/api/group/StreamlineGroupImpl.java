@@ -48,4 +48,14 @@ public interface StreamlineGroupImpl {
      * @return The priority as int. lesser important (low int) -> higher important (high int)
      */
     int getPriority();
+
+    /**
+     * @return The priority as int. lesser important (low int) -> higher important (high int)
+     */
+    int getMinimumHeap();
+
+    /**
+     * @return The priority as int. lesser important (low int) -> higher important (high int)
+     */
+    int getMaximumHeap();
 }

@@ -3,9 +3,9 @@ package net.streamlinecloud.main.setup.question;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.software.StreamlineSoftware;
 import net.streamlinecloud.api.terminal.ReplacePaket;
+import net.streamlinecloud.client.manager.GroupManager;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.software.SoftwareManager;
 import net.streamlinecloud.main.setup.SetupQuestion;
 import net.streamlinecloud.main.utils.Cache;
@@ -20,7 +20,7 @@ public class DefaultSetupQuestion extends SetupQuestion {
 
                 StreamlineSoftware software = SoftwareManager.getInstance().add(SoftwareManager.getInstance().getLatestSoftware("paper"));
                 StreamlineSoftware proxySoftware = SoftwareManager.getInstance().add(SoftwareManager.getInstance().getLatestSoftware("velocity"));
-                CloudGroupManager groupManager = CloudGroupManager.getInstance();
+                GroupManager groupManager = StreamlineCloud.getGroupManager();
 
                 Cache.i().getConfig().setDefaultSoftwareName(software.getName());
                 StreamlineCloud.log("");

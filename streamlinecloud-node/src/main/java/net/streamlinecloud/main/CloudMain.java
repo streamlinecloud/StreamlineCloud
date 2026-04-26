@@ -9,7 +9,6 @@ import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.config.StreamlineConfig;
 import net.streamlinecloud.main.backend.LoadBalancer;
 import net.streamlinecloud.main.backend.socket.RemoteSocket;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.core.software.SoftwareConfig;
 import net.streamlinecloud.main.core.software.SoftwareManager;
@@ -86,8 +85,6 @@ public class CloudMain {
 
         Settings.name = "§REDStreamlineCloud §8-> §RED";
         StreamlineCloud.log("Starting StreamlineCloud");
-
-        new CloudGroupManager();
 
         MainConfig.init();
 
@@ -171,9 +168,6 @@ public class CloudMain {
         registerCommand(new LoadBalancerCommand());
         registerCommand(new SendToScreenCommand());
         registerCommand(new ExitCommand());
-
-        if (Cache.i().getConfig() != null) CloudGroupManager.getInstance().setDefaultGroup(new CloudGroup("WITHOUT", 0, new ArrayList<>(), ServerRuntime.SERVER, Cache.i().getConfig().getDefaultSoftwareName()));
-        CloudGroupManager.getInstance().getActiveGroups().add(CloudGroupManager.getInstance().getDefaultGroup());
 
         Cache.i().setStreamlineState(StreamlineState.RUNNING);
 

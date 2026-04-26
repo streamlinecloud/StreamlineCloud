@@ -5,11 +5,9 @@ import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.terminal.ReplacePaket;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Utils;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +52,7 @@ public class GroupsCommand extends CloudCommand {
                         return;
                     }
 
-                    CloudGroup group = new CloudGroup(
+                    StreamlineGroup group = new CloudGroup(
                             name,
                             1,
                             new ArrayList<>(),
@@ -62,7 +60,7 @@ public class GroupsCommand extends CloudCommand {
                             args[4]);
                     group.setStaticGroup(staticGroup);
 
-                    if (CloudGroupManager.getInstance().create(group))
+                    if (StreamlineCloud.getGroupManager().create(group))
                         StreamlineCloud.log("sc.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
                     else StreamlineCloud.log("sc.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
 
@@ -75,11 +73,11 @@ public class GroupsCommand extends CloudCommand {
 
                 if (args.length == 3) {
 
-                    CloudGroup group = CloudGroupManager.getInstance().getGroupByName(args[2]);
+                    StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(args[2]);
 
                     if (group != null) {
 
-                        group.delete();
+                        StreamlineCloud.getGroupManager().delete(group);
                         StreamlineCloud.log("sc.command.groups.delete.deleted", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
 
                     } else {
@@ -113,14 +111,9 @@ public class GroupsCommand extends CloudCommand {
 
                 if (args[2] != null) {
 
-                    CloudGroup group = CloudGroupManager.getInstance().getGroupByName(args[2]);
+                    StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(args[2]);
 
                     if (group != null) {
-
-                        if (group.getName().equals(CloudGroupManager.getInstance().getDefaultGroup().getName())) {
-                            StreamlineCloud.log("Nice try!");
-                            return;
-                        }
 
                         HashMap<String, Object> fields = new HashMap<>();
 
@@ -190,11 +183,7 @@ public class GroupsCommand extends CloudCommand {
                                     group.getTemplates().add(args[5]);
                                     StreamlineCloud.log("sc.command.groups.templateAdded", new ReplacePaket[]{new ReplacePaket("%0", args[5]), new ReplacePaket("%1", group.getName())});
 
-                                    try {
-                                        group.save();
-                                    } catch (IOException e) {
-                                        StreamlineCloud.log(e.getMessage());
-                                    }
+                                    StreamlineCloud.getGroupManager().update(group);
 
                                 }
                             }
@@ -231,11 +220,7 @@ public class GroupsCommand extends CloudCommand {
                             }
                         }
 
-                        try {
-                            group.save();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        StreamlineCloud.getGroupManager().update(group);
 
                     } else {
 

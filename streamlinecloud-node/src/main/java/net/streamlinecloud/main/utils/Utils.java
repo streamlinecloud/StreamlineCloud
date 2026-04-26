@@ -2,7 +2,6 @@ package net.streamlinecloud.main.utils;
 
 import net.streamlinecloud.main.CloudLauncher;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import org.apache.commons.io.FileUtils;
 import org.simpleyaml.configuration.file.YamlFile;
 
@@ -68,10 +67,11 @@ public class Utils {
         AtomicInteger online = new AtomicInteger();
         AtomicInteger max = new AtomicInteger();
 
-        CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName("proxy")).forEach(server -> {
+        //TODO: Use the new function in the new server manager, when implemented
+        /*CloudGroupManager.getInstance().getGroupOnlineServers(CloudGroupManager.getInstance().getGroupByName("proxy")).forEach(server -> {
             online.set(online.get() + server.getOnlinePlayers().size());
             max.set(max.get() + server.getMaxOnlineCount());
-        });
+        });*/
 
         return new Integer[]{online.get(), max.get()};
     }

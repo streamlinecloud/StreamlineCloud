@@ -1,11 +1,11 @@
 package net.streamlinecloud.main.core.server;
 
 import lombok.Getter;
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.core.group.CloudGroup;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Utils;
 import org.jetbrains.annotations.Nullable;
@@ -105,8 +105,9 @@ public class RunningServerManager {
             if (puffer + online >= max) return;
             int neededServers = (int) Math.ceil((double) (online + puffer) / fallbackSize);
 
-            CloudGroup fallbackGroup = CloudGroupManager.getInstance().getGroupByName(config.getFallbackGroup());
-            List<RunningServer> fallbackServers = CloudGroupManager.getInstance().getGroupOnlineServers(fallbackGroup);
+            StreamlineGroup fallbackGroup = StreamlineCloud.getGroupManager().getGroup(config.getFallbackGroup());
+            //TODO: Implement, when the new server manager is finished
+            /*List<RunningServer> fallbackServers = CloudGroupManager.getInstance().getGroupOnlineServers(fallbackGroup);
 
             if (neededServers > fallbackServers.size()) {
                 StreamlineCloud.log("DynamicFallbackControl is starting a fallback server... (needed: " + neededServers + ", online: " + fallbackServers.size() + ")");
@@ -121,7 +122,7 @@ public class RunningServerManager {
                         .orElse(null);
 
                 target.stop();
-            }
+            }*/
         };
 
         scheduler.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
@@ -188,7 +189,7 @@ public class RunningServerManager {
      * @param group The target group
      */
     private void startServersIfNeeded(CloudGroup group) {
-        List<RunningServer> allServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(group));
+        /*List<RunningServer> allServers = new ArrayList<>(CloudGroupManager.getInstance().getGroupOnlineServers(group));
 
         for (RunningServer s : RunningServerManager.getInstance().getServersWaitingForStart()) {
             if (s.getGroupDirect().equals(group)) {
@@ -198,7 +199,7 @@ public class RunningServerManager {
 
         if (allServers.size() < group.getMinOnlineCount()) {
             startServerByGroup(group, "Autostart (based on group min online count)");
-        }
+        }*/
     }
 
     /**
@@ -213,7 +214,7 @@ public class RunningServerManager {
         PriorityQueue<CloudGroup> groups = new PriorityQueue<>(
                 Comparator.comparingInt(CloudGroup::getPriority).reversed()
         );
-        groups.addAll(CloudGroupManager.getInstance().getActiveGroups());
+        //groups.addAll(CloudGroupManager.getInstance().getActiveGroups());
 
         for (CloudGroup group : groups) {
             startServersIfNeeded(group);
@@ -235,14 +236,15 @@ public class RunningServerManager {
 
     public int calculateServerNumber(CloudGroup g) {
 
-        ArrayList<Integer> usedNumbers = new ArrayList<>();
+        /*ArrayList<Integer> usedNumbers = new ArrayList<>();
         for (RunningServer server : CloudGroupManager.getInstance().getGroupOnlineServers(g)) {
             usedNumbers.add(Integer.valueOf(server.getName().split("-")[1]));
         }
 
         for (int i = 1; true; i++) {
             if (!usedNumbers.contains(i)) return i;
-        }
+        }*/
+        return 1;
 
     }
 

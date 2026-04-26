@@ -8,7 +8,6 @@ import net.streamlinecloud.main.core.group.CloudGroup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.utils.Cache;
 import net.streamlinecloud.main.utils.Settings;
 import net.streamlinecloud.main.utils.Utils;
@@ -124,31 +123,6 @@ public class MainConfig {
 
         Cache.i().setDisabledColors(Cache.i().getConfig().advanced.disableColors);
         Cache.i().setUseLegacyColor(Cache.i().getConfig().advanced.useLegacyColor);
-
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    CloudGroupManager.getInstance().getActiveGroups().add(readGroup(file.getName()));
-                }
-            }
-        } else {
-            StreamlineCloud.getLogger().error("Currently, there aren't any groups. Go an and create one: groups help");
-        }
-    }
-
-    public static CloudGroup readGroup(String fileName) {
-
-        File file = new File(Cache.i().homeFile + "/groups/" + fileName);
-        CloudGroup group;
-
-        try {
-            String json = FileUtils.readFileToString(file, Charset.defaultCharset());
-            group = new Gson().fromJson(json, CloudGroup.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return group;
-
     }
 
     public static void saveConfig() {

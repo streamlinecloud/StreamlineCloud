@@ -11,7 +11,6 @@ import net.streamlinecloud.api.server.StreamlineServerSerializer;
 import net.streamlinecloud.api.socket.SocketMessage;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.backend.BackEndMain;
-import net.streamlinecloud.main.core.group.CloudGroupManager;
 import net.streamlinecloud.main.core.server.RunningServer;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.utils.Cache;
@@ -84,7 +83,7 @@ public class ServerSocket {
                     case SUBSCRIBE_GROUP -> {
 
                         List<StreamlineGroup> s = subscribedStartingServers.get(ctx.sessionId());
-                        s.add(CloudGroupManager.getInstance().getGroupByName(message.getContent()));
+                        //s.add(CloudGroupManager.getInstance().getGroupByName(message.getContent()));
                         subscribedStartingServers.replace(ctx.sessionId(), s);
 
                     }
