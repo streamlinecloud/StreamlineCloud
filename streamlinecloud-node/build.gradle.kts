@@ -131,12 +131,12 @@ tasks.register("startTest") {
                 ?.filter { it.extension == "jar" }
                 ?.maxByOrNull { it.lastModified() }
                 ?: throw GradleException("Cannot start StreamlineCloud: no JAR found in ${buildDir.path}")
-            latestJar.copyTo(File(testDir, "streamlinecloud_test.jar"))
+            latestJar.copyTo(File(testDir, "streamlinecloud-test.jar"))
         }
 
-        val jarFile = File(testDir, "streamlinecloud_test.jar")
+        val jarFile = File(testDir, "streamlinecloud-test.jar")
         if (!jarFile.exists()) {
-            throw GradleException("No streamlinecloud_test.jar found in ${testDir.path}")
+            throw GradleException("No streamlinecloud-test.jar found in ${testDir.path}")
         }
 
         val os = System.getProperty("os.name").lowercase()
@@ -215,14 +215,14 @@ tasks.register<Copy>("updateTest") {
     description = "Builds the project and updates the test system environment."
     dependsOn("shadowJar")
 
-    println("Copying StreamlineCloud-MAIN")
+    println("Copying StreamlineCloud-NODE")
 
     val destResources = project.layout.projectDirectory.file("../testSystem/main")
 
-    from(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-main/streamlinecloud_MAIN-$branch-$version.jar"))
+    from(project.rootProject.projectDir.resolve("finished_builds/streamlinecloud-node/streamlinecloud-node-$branch-$version.jar"))
     into(destResources)
 
-    rename { "streamlinecloud_test.jar" }
+    rename { "streamlinecloud-test.jar" }
 
     doLast {
         println("Copied ${destResources.asFile.absolutePath}")

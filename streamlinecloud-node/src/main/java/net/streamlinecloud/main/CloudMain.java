@@ -130,10 +130,14 @@ public class CloudMain {
                 "node_i8UPpwKxXVy_B4KSFK1cl4ZI_ZRtXfqOQBPW3nCU3xwWvI0uCJnHPExZ3XQ7nDwV",
                 StreamlineCloud.getLogger(),
                 error -> {
-                    StreamlineCloud.getLogger().error("Client Error: " + error);
+                    StreamlineCloud.getLogger().error("Backend connection error: " + error + " - make sure your backend is online, reachable and that your credentials are correct!");
+                    StreamlineCloud.shutDown();
                     return Unit.INSTANCE;
                 }
         );
+        new Thread(apiClient::connect).start();
+
+        StreamlineCloud.injectClient(apiClient);
 
         if (Cache.i().getConfig().getWebsocket().isUseWebSocket()) {
             Cache.i().setWebSocketClient(new RemoteSocket());

@@ -1,43 +1,51 @@
 package net.streamlinecloud.main;
 
-import net.streamlinecloud.api.extension.event.console.ConsoleMessageEvent;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.server.ServerState;
 import net.streamlinecloud.api.terminal.ReplacePaket;
 import net.streamlinecloud.api.terminal.StreamlineLogger;
 import net.streamlinecloud.api.util.StreamlineState;
+import net.streamlinecloud.client.core.StreamlineApiClient;
+import net.streamlinecloud.client.manager.GroupManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.server.RunningServerManager;
-import net.streamlinecloud.main.lang.LangManager;
 import net.streamlinecloud.main.terminal.NodeLogger;
 import net.streamlinecloud.main.utils.*;
 import net.streamlinecloud.main.backend.BackEndMain;
 import net.streamlinecloud.main.core.server.RunningServer;
-import net.streamlinecloud.main.terminal.Color;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.jline.reader.LineReader;
-import org.jline.reader.PrintAboveWriter;
 
 import java.io.*;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static net.streamlinecloud.main.extension.ExtensionManager.eventManager;
-
+/**
+ * A utility class that provides convenient api functions
+ */
 @Getter
 public class StreamlineCloud {
 
     private static final List<Integer> generatedPorts = new ArrayList<>();
     private static final Random random = new Random();
 
+    private static boolean clientInjected = false;
+
+    @Getter
+    private static GroupManager groupManager;
+
     @Getter
     private static StreamlineLogger logger = new NodeLogger();
 
+    public static void injectClient(StreamlineApiClient client) {
+        if (clientInjected) return;
+        groupManager = client.getGroupManager();
 
+        clientInjected = true;
+    }
 
     public static int generateUniquePort() {
 

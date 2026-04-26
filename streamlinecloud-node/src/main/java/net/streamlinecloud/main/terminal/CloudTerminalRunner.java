@@ -6,7 +6,6 @@ import net.streamlinecloud.api.extension.event.console.ConsoleInputEvent;
 import net.streamlinecloud.api.extension.event.console.ExecuteCommandEvent;
 import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.extension.ExtensionManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import net.streamlinecloud.main.utils.Cache;

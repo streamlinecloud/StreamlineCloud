@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.command;
 
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.terminal.ReplacePaket;
 import net.streamlinecloud.main.StreamlineCloud;
@@ -98,8 +99,8 @@ public class GroupsCommand extends CloudCommand {
 
                 StreamlineCloud.log("sc.command.groups.list.title");
 
-                for (CloudGroup g : CloudGroupManager.getInstance().getActiveGroups()) {
-                    StreamlineCloud.log(g.getName() + " - online: " + CloudGroupManager.getInstance().getGroupOnlineServers(g).size() + " - minOnline: " + g.getMinOnlineCount());
+                for (StreamlineGroup g : StreamlineCloud.getGroupManager().getGroups()) {
+                    StreamlineCloud.log(g.getName() + " - online: " + /*CloudGroupManager.getInstance().getGroupOnlineServers(g).size() + */ " - minOnline: " + g.getMinOnlineCount());
                 }
 
                 break;

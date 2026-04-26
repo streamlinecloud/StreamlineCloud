@@ -47,12 +47,7 @@ class WebSocketConfig(
                     }
 
                     val token = authHeader.removePrefix("Bearer ").trim()
-                    println(token)
-                    val node = nodeRepository.findByKey(token)
-
-                    if (node == null) {
-                        throw MessageDeliveryException("Invalid API key")
-                    }
+                    val node = nodeRepository.findByKey(token) ?: throw MessageDeliveryException("Invalid API key")
 
                     accessor.user = UsernamePasswordAuthenticationToken(
                         node, null,
