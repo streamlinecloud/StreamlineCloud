@@ -21,4 +21,9 @@ class GroupService(
         return updated
     }
 
+    fun delete(group: StreamlineGroup) {
+        groupRepository.delete(group)
+        groupSocket.sendToAll(SocketResponse(group, this.javaClass.name, SocketResponseType.DELETE))
+    }
+
 }

@@ -5,6 +5,7 @@ import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking
 import net.streamlinecloud.api.group.StreamlineGroup
 import net.streamlinecloud.api.socket.SocketResponse
+import net.streamlinecloud.api.socket.SocketResponseType
 import net.streamlinecloud.client.adapter.SocketAdapter
 import net.streamlinecloud.client.core.StreamlineApiClient
 
@@ -42,8 +43,15 @@ class GroupManager(
     override fun receive(response: SocketResponse) {
         val new: StreamlineGroup = Gson().fromJson(response.content.toString(), StreamlineGroup::class.java)
 
-        groups.removeIf { group -> group.name == new.name }
-        groups.add(new)
+        if (response.responseType == SocketResponseType.UPDATE) {
+            groups.removeIf { group -> group.name == new.name }
+            groups.add(new)
+
+        } else if (response.responseType == SocketResponseType.DELETE) {
+            groups.removeIf { group -> group.name == new.name }
+
+        }
+
     }
 
     /**
@@ -74,7 +82,9 @@ class GroupManager(
     }
 
     fun delete(group: StreamlineGroup) {
-        TODO("NOT YET IMPLEMENTED")
+        return runBlocking {
+            apiClient.httpClient.delete("/groups", Gson().toJson(group))
+        }
     }
 
     /**

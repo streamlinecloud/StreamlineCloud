@@ -38,6 +38,6 @@ class StreamlineHttpClient(
     suspend fun put(path: String, body: Any): HttpResponse =
         client.put("$url$path") { setBody(body) }
 
-    suspend fun delete(path: String): HttpResponse =
-        client.delete("$url$path")
+    suspend fun delete(path: String, body: Any): HttpResponse =
+        client.delete("$url$path") { setBody(body) }
 }

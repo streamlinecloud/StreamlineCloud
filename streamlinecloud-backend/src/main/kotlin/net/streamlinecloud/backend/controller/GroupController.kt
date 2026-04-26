@@ -6,10 +6,12 @@ import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.backend.repository.GroupRepository
 import net.streamlinecloud.backend.service.GroupService
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -31,6 +33,12 @@ class GroupController (
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody group: StreamlineGroup): StreamlineGroup = groupService.update(group)
+
+    @DeleteMapping
+    fun delete(@RequestBody group: StreamlineGroup): ResponseEntity<Void> {
+        groupService.delete(group)
+        return ResponseEntity(HttpStatus.OK)
+    }
 
     /*@MessageMapping("")
     @SendTo("/groups/subscribe")
