@@ -92,9 +92,6 @@ class SessionController(
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/secret")
-    fun secret(): String = "Secret lol"
-
     fun generateApiKey(length: Int = 32): String {
         val random = SecureRandom()
         val bytes = ByteArray(length)
