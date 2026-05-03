@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -16,6 +17,10 @@ import java.security.SecureRandom
 import java.util.Base64
 import java.util.Optional
 import java.util.UUID
+
+/*
+ * Responsible for the current session (and its node if present)
+ */
 
 @RestController
 @RequestMapping("/session")
@@ -39,11 +44,13 @@ class SessionController(
         if (node.get().key != key)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        return ResponseEntity.ok(StreamlineNode(
-            node.get().uuid,
-            node.get().isMain,
-            null
-        ));
+        return ResponseEntity.ok(
+            StreamlineNode(
+                node.get().uuid,
+                node.get().isMain,
+                null
+            )
+        );
 
     }
 
@@ -53,11 +60,15 @@ class SessionController(
         if (!nodeRepository.findAll().toList().isEmpty())
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-        return ResponseEntity.ok(nodeRepository.save(StreamlineNode(
-            UUID.randomUUID().toString(),
-            true,
-            "node_" + generateApiKey(48)
-        )))
+        return ResponseEntity.ok(
+            nodeRepository.save(
+                StreamlineNode(
+                    UUID.randomUUID().toString(),
+                    true,
+                    "node_" + generateApiKey(48)
+                )
+            )
+        )
 
     }
 
@@ -69,6 +80,16 @@ class SessionController(
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PutMapping("/templates")
+    fun templates(
+        authentication: Authentication,
+        @RequestBody templates: List<String>
+    ): ResponseEntity<Void> {
+        val node: StreamlineNode = authentication.principal as StreamlineNode
+        sessionService.templates.set(nodeRepository.findByUuid(node.uuid).get().key, templates)
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/secret")

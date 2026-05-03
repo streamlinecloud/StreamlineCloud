@@ -9,4 +9,11 @@ class ActiveSessionService {
     //key -> sessionId
     val activeSessions = ConcurrentHashMap<String, String>()
 
+    //key -> templates
+    val templates = ConcurrentHashMap<String, List<String>>()
+
+    fun getSessionIdByKey(key: String): String? {
+        return activeSessions[key]
+    }
+
 }
