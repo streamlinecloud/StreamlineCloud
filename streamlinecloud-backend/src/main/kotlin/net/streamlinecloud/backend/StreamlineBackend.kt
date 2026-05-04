@@ -3,6 +3,8 @@ package net.streamlinecloud.backend
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.persistence.autoconfigure.EntityScan
 import org.springframework.boot.runApplication
+import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration
+import org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @EntityScan(
@@ -16,7 +18,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
         "net.streamlinecloud.backend.repository"
     ]
 )
-@SpringBootApplication
+@SpringBootApplication(exclude = [
+    UserDetailsServiceAutoConfiguration::class,
+])
 class StreamlinecloudBackendApplication
 
 fun main(args: Array<String>) {
