@@ -23,7 +23,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 class WebSocketConfig(
     private val nodeRepository: NodeRepository,
-    private val sessionservice: ActiveSessionService
+    private val sessionService: ActiveSessionService
 ) : WebSocketMessageBrokerConfigurer {
 
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
@@ -51,11 +51,11 @@ class WebSocketConfig(
                         val node = nodeRepository.findByKey(token)
                             ?: throw MessageDeliveryException("Invalid API key")
 
-                        if (sessionservice.activeSessions.containsKey(token)) {
+                        if (sessionService.activeSessions.containsKey(token)) {
                             throw MessageDeliveryException("This node is already connected")
                         }
 
-                        sessionservice.activeSessions[token] = accessor.sessionId ?: ""
+                        sessionService.activeSessions[token] = accessor.sessionId ?: ""
                         accessor.user = UsernamePasswordAuthenticationToken(
                             node, null,
                             listOf(SimpleGrantedAuthority("ROLE_API_USER"))
@@ -64,7 +64,7 @@ class WebSocketConfig(
 
                     StompCommand.DISCONNECT -> {
                         val sessionId = accessor.sessionId
-                        sessionservice.activeSessions.entries.removeIf { it.value == sessionId }
+                        sessionService.activeSessions.entries.removeIf { it.value == sessionId }
                     }
 
                     else -> {}

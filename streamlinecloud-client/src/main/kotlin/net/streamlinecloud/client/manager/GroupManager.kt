@@ -11,7 +11,7 @@ import net.streamlinecloud.client.core.StreamlineApiClient
 
 /**
  * An api class for managing all [StreamlineGroup]'s existing in the connected cluster.
- * Changes are updatet in real time due to the socket connection.
+ * Changes are updated in real time due to the socket connection.
  *
  * **Important:** This is not the place where the data is saved. This class only mirrors the data and sends the changes to the backend.
  */
