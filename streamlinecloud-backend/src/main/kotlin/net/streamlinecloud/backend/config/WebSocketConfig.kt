@@ -1,7 +1,8 @@
 package net.streamlinecloud.backend.config
 
-import net.streamlinecloud.backend.repository.NodeRepository
+import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.backend.service.ActiveSessionService
+import net.streamlinecloud.backend.service.NodeService
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
@@ -22,8 +23,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 class WebSocketConfig(
-    private val nodeRepository: NodeRepository,
-    private val sessionService: ActiveSessionService
+    val nodeService: NodeService,
+    val sessionService: ActiveSessionService
 ) : WebSocketMessageBrokerConfigurer {
 
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
@@ -48,8 +49,12 @@ class WebSocketConfig(
                         }
 
                         val token = authHeader.removePrefix("Bearer ").trim()
-                        val node = nodeRepository.findByKey(token)
+
+                        val uuid: String = nodeService.getUuidByKey(token)
                             ?: throw MessageDeliveryException("Invalid API key")
+
+                        val node: StreamlineNode = nodeService.getByUuid(uuid)
+                            ?: throw MessageDeliveryException("Key valid, no node found")
 
                         if (sessionService.activeSessions.containsKey(token)) {
                             throw MessageDeliveryException("This node is already connected")

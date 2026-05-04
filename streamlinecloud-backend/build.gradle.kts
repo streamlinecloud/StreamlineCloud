@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.spring")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
+    kotlin("plugin.jpa")
 }
 
 group = "net.streamlinecloud"
@@ -40,6 +41,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation(kotlin("stdlib"))
 }
 
 kotlin {

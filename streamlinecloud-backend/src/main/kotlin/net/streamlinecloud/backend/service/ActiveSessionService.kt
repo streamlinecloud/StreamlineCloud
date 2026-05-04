@@ -6,10 +6,10 @@ import java.util.concurrent.ConcurrentHashMap
 @Service
 class ActiveSessionService {
 
-    //key -> sessionId
+    //nodeUuid -> sessionId
     val activeSessions = ConcurrentHashMap<String, String>()
 
-    //key -> templates
+    //nodeUuid -> templates
     val templates = ConcurrentHashMap<String, List<String>>()
 
     fun getSessionIdByKey(key: String): String? {

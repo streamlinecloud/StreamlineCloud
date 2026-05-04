@@ -17,7 +17,8 @@ public class StreamlineNode {
 
     @Id
     String uuid;
-    boolean main;
-    String key;
+    String displayname;
+    boolean worker;
+    boolean admin;
 
 }

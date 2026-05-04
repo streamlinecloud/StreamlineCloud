@@ -7,7 +7,6 @@ import java.util.Optional
 
 interface NodeRepository : JpaRepository<StreamlineNode, Long> {
 
-    fun findByUuid(uuid: String): Optional<StreamlineNode>
+    fun findByUuid(uuid: String): StreamlineNode?
 
-    fun findByKey(key: String?): StreamlineNode?
 }

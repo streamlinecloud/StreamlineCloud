@@ -1,10 +1,11 @@
 package net.streamlinecloud.backend.config
 
+import io.swagger.v3.core.util.Json
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import net.streamlinecloud.api.node.StreamlineNode
-import net.streamlinecloud.backend.repository.NodeRepository
+import net.streamlinecloud.backend.service.NodeService
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -15,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class ApiKeyAuthFilter(
-    private val nodeRepository: NodeRepository
+    val nodeService: NodeService
 ) : OncePerRequestFilter() {
 
     val publicPaths = listOf(
@@ -45,13 +46,17 @@ class ApiKeyAuthFilter(
 
         val token = authHeader.removePrefix("Bearer ").trim()
 
-        val node: StreamlineNode? = nodeRepository.findByKey(token)
-        if (node == null) {
+        val uuid: String? = nodeService.getUuidByKey(token)
+        if (uuid == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
             return
         }
 
-        node.key = null
+        val node: StreamlineNode? = nodeService.getByUuid(uuid)
+        if (node == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+            return
+        }
 
         val auth = UsernamePasswordAuthenticationToken(
             node, null,

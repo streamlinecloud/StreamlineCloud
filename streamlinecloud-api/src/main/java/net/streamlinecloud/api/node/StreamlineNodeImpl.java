@@ -16,8 +16,8 @@ public interface StreamlineNodeImpl {
     boolean isMain();
 
     /**
-     * @return Returns the api key for the node.
-     * The key saved by the backend is hashed.
+     * @return The displayname
+     * Only for convenience. This does not work as an identifier.
      */
-    String getKey();
+    String getDisplayname();
 }
