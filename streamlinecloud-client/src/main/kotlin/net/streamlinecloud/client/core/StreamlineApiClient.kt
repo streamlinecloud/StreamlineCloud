@@ -48,7 +48,7 @@ class StreamlineApiClient(
                 }
 
                 node = Gson().fromJson(res.bodyAsText(), StreamlineNode::class.java)
-                logger.debug("Connected with node ${node?.uuid} (main=${node?.isMain})")
+                logger.debug("Connected with node ${node?.uuid} (admin=${node?.isAdmin}) (worker=${node?.isWorker})")
 
                 connectSocket()
                 connected = true
