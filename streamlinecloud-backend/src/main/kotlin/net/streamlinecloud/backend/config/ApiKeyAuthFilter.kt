@@ -19,8 +19,7 @@ class ApiKeyAuthFilter(
 ) : OncePerRequestFilter() {
 
     val publicPaths = listOf(
-        "/sessions/validate",
-        "/sessions/setup",
+        "/session/setup",
         "/swagger-ui/**",
         "/v3/api-docs/**",
         "/public/**",
