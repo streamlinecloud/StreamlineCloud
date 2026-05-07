@@ -1,5 +1,6 @@
 package net.streamlinecloud.backend.controller
 
+import net.streamlinecloud.backend.service.ActiveSessionService
 import net.streamlinecloud.backend.service.NodeService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController()
 @RequestMapping("/nodes")
 class NodeController(
-    private val nodeService: NodeService
+    val nodeService: NodeService
 ) {
 
     @GetMapping
-    fun getAll() = nodeService.getAll()
+    fun getAll() = nodeService.getAllWithOnlineInf()
 
 }

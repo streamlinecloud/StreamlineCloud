@@ -60,7 +60,7 @@ class WebSocketConfig(
                             throw MessageDeliveryException("This node is already connected")
                         }
 
-                        sessionService.activeSessions[token] = accessor.sessionId ?: ""
+                        sessionService.activeSessions[node.uuid] = accessor.sessionId ?: ""
                         accessor.user = UsernamePasswordAuthenticationToken(
                             node, null,
                             listOf(SimpleGrantedAuthority("ROLE_API_USER"))

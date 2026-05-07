@@ -3,6 +3,7 @@ package net.streamlinecloud.api.node;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,8 @@ public class StreamlineNode {
     String displayname;
     boolean worker;
     boolean admin;
+
+    @Transient
+    String status = "UNKNOWN";
 
 }

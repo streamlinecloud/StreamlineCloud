@@ -13,11 +13,20 @@ import java.util.UUID
 
 @Service
 class NodeService(
-    private val nodeRepository: NodeRepository,
-    private val credentialRepository: CredentialRepository
+    val nodeRepository: NodeRepository,
+    val credentialRepository: CredentialRepository,
+    val sessionService: ActiveSessionService
 ) {
 
     fun getAll(): List<StreamlineNode> = nodeRepository.findAll();
+
+    fun getAllWithOnlineInf(): List<StreamlineNode> {
+        val nodes: List<StreamlineNode> = nodeRepository.findAll();
+        nodes.forEach { node -> node.status = if (isOnline(node)) "ONLINE" else "OFFLINE"}
+        return nodes
+    }
+
+    fun isOnline(node: StreamlineNode) = sessionService.activeSessions.containsKey(node.uuid)
 
     fun setKey(nodeId: String, key: String) {
         credentialRepository.save(Credential(nodeId, key.hash()))
@@ -47,7 +56,8 @@ class NodeService(
                 uuid,
                 "Main Node",
                 isWorker,
-                isAdmin
+                isAdmin,
+                ""
             )
         )
 
