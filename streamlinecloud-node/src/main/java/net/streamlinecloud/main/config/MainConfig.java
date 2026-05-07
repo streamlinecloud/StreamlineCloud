@@ -48,6 +48,7 @@ public class MainConfig {
     public static class NetworkConfig {
         String backendUrl = "http://localhost:8080";
         String backendSocketUrl = "ws://localhost:8080";
+        String backendAccessKey = "";
         List<LoadBalancer> loadBalancers = new ArrayList<>();
     }
 

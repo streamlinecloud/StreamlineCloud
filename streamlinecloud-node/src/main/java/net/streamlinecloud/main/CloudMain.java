@@ -120,10 +120,10 @@ public class CloudMain {
         apiClient = new StreamlineApiClient(
                 Cache.i().getConfig().getNetwork().getBackendUrl(),
                 Cache.i().getConfig().getNetwork().getBackendSocketUrl(),
-                "node_av8No0WL4AHbFxRmTyJzQLiQpVQ2yYt9cnInWb5AhFa4m1NGSvDhisyKxVEqbQ10",
+                Cache.i().getConfig().getNetwork().getBackendAccessKey(),
                 StreamlineCloud.getLogger(),
                 error -> {
-                    StreamlineCloud.getLogger().error("Backend connection error: " + error + " - make sure your backend is online, reachable and that your credentials are correct!");
+                    StreamlineCloud.getLogger().error("Backend connection error: " + error + "- make sure your backend is online, reachable and that your credentials are correct. Check out the NetworkConfig part in your data/config.json!");
                     StreamlineCloud.shutDown();
                     return Unit.INSTANCE;
                 }
