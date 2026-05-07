@@ -5,7 +5,6 @@ import io.javalin.Javalin;
 import net.streamlinecloud.api.rest.RconData;
 import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.main.config.MainConfig;
-import net.streamlinecloud.main.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.backend.socket.ServerSocket;
 import net.streamlinecloud.main.extension.ExtensionManager;
 import lombok.Getter;
@@ -37,7 +36,6 @@ public class Cache {
     public boolean firstLaunch = false;
     public StreamlineState streamlineState;
     public Gson gson = new Gson().newBuilder().create();
-    public RemoteSocket webSocketClient = null;
     public ExtensionManager pluginManager = new ExtensionManager();
     public boolean disabledColors = false;
     public boolean useLegacyColor = false;

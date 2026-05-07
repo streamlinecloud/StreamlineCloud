@@ -121,11 +121,6 @@ public class NodeLogger implements StreamlineLogger {
 
         if (consoleMessageEvent.isCancelled()) return;
 
-
-        if (Cache.i().getWebSocketClient() != null && Cache.i().getWebSocketClient().getClient().isOpen()) {
-            Cache.i().getWebSocketClient().getClient().send("MESSAGE streamline/output " + Color.translate(s));
-        }
-
         CloudMain.getInstance().getTerminal().log(s);
 
 

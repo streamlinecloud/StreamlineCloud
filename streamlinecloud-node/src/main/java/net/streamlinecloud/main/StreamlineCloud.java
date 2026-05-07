@@ -126,8 +126,6 @@ public class StreamlineCloud {
 
         Cache.i().getPluginManager().executeStop();
 
-        if (Cache.i().getWebSocketClient() != null) Cache.i().getWebSocketClient().getClient().close();
-
         BackEndMain.stop();
 
         if (Cache.i().isFirstLaunch()) {

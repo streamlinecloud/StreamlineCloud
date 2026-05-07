@@ -7,7 +7,6 @@ import net.streamlinecloud.main.command.*;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.config.StreamlineConfig;
 import net.streamlinecloud.main.backend.LoadBalancer;
-import net.streamlinecloud.main.backend.socket.RemoteSocket;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.core.software.SoftwareConfig;
 import net.streamlinecloud.main.core.software.SoftwareManager;
@@ -121,7 +120,7 @@ public class CloudMain {
         apiClient = new StreamlineApiClient(
                 Cache.i().getConfig().getNetwork().getBackendUrl(),
                 Cache.i().getConfig().getNetwork().getBackendSocketUrl(),
-                "node_i8UPpwKxXVy_B4KSFK1cl4ZI_ZRtXfqOQBPW3nCU3xwWvI0uCJnHPExZ3XQ7nDwV",
+                "node_av8No0WL4AHbFxRmTyJzQLiQpVQ2yYt9cnInWb5AhFa4m1NGSvDhisyKxVEqbQ10",
                 StreamlineCloud.getLogger(),
                 error -> {
                     StreamlineCloud.getLogger().error("Backend connection error: " + error + " - make sure your backend is online, reachable and that your credentials are correct!");
@@ -132,10 +131,6 @@ public class CloudMain {
         new Thread(apiClient::connect).start();
 
         StreamlineCloud.injectClient(apiClient);
-
-        if (Cache.i().getConfig().getWebsocket().isUseWebSocket()) {
-            Cache.i().setWebSocketClient(new RemoteSocket());
-        }
 
         String playerSpreading = Cache.i().getConfig().getFallback().getFallbackPlayerSpreading();
         if (!(playerSpreading.equals("SPLIT") || playerSpreading.equals("BUNDLE") || playerSpreading.equals("RANDOM"))) {

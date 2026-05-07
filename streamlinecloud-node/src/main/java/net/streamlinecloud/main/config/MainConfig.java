@@ -28,7 +28,6 @@ public class MainConfig {
     String velocitySecret = "/templates/default/proxy/forwarding.secret";
     FallbackConfig fallback = new FallbackConfig();
     WhitelistConfigurationPacket whitelist = new WhitelistConfigurationPacket(false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-    WebSocketConfig websocket = new WebSocketConfig();
     NetworkConfig network = new NetworkConfig();
     AdvancedConfig advanced = new AdvancedConfig();
 
@@ -43,12 +42,6 @@ public class MainConfig {
         boolean dynamicFallbackControl = false;
         int dynamicFallbackPuffer = 20;
         String _info = "dynamicFallbackControl starts and stopps the fallbacks based on the network player count. You can set fallbackPlayerSpreading to SPLIT, BUNDLE, RANDOM";
-    }
-
-    @Getter @Setter
-    public static class WebSocketConfig {
-        boolean useWebSocket = false;
-        String websocketUrl = "http://localhost:3000";
     }
 
     @Getter @Setter
