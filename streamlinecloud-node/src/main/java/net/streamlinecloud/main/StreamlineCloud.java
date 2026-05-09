@@ -10,6 +10,7 @@ import net.streamlinecloud.client.manager.GroupManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.NodeLogger;
+import net.streamlinecloud.main.terminal.command.CommandManager;
 import net.streamlinecloud.main.utils.*;
 import net.streamlinecloud.main.backend.BackEndMain;
 import net.streamlinecloud.main.core.server.RunningServer;
@@ -36,6 +37,9 @@ public class StreamlineCloud {
 
     @Getter
     private static GroupManager groupManager;
+
+    @Getter
+    private static CommandManager commandManager = new CommandManager();
 
     @Getter
     private static StreamlineLogger logger = new NodeLogger();

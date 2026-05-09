@@ -8,6 +8,7 @@ import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.extension.ExtensionManager;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
+import net.streamlinecloud.main.terminal.command.StreamlineCommand;
 import net.streamlinecloud.main.utils.Cache;
 import lombok.SneakyThrows;
 import org.jline.reader.EndOfFileException;
@@ -79,6 +80,14 @@ public class CloudTerminalRunner extends Thread {
 
     @SneakyThrows
     public static void executeCommand(String[] args) {
+        for (StreamlineCommand command : StreamlineCloud.getCommandManager().getCommandMap()) {
+
+            if (command.getName().equals(args[0])) {
+                command.run(Arrays.copyOfRange(args, 1, args.length));
+            }
+
+        }
+
         for (CloudCommand cloudCommand : CloudMain.getInstance().getCommandMap()) {
             if (cloudCommand.name().equals(args[0])) {
                 executeCommand(cloudCommand, args);
