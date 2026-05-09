@@ -161,6 +161,8 @@ public class CloudMain {
         registerCommand(new SendToScreenCommand());
         registerCommand(new ExitCommand());
 
+        StreamlineCloud.getCommandManager().getCommandMap().add(new NodesCommand());
+
         Cache.i().setStreamlineState(StreamlineState.RUNNING);
 
     }
