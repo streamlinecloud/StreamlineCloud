@@ -8,7 +8,7 @@ import org.jline.reader.ParsedLine;
 
 import java.util.List;
 
-public class LoadBalancerCommandCompleter implements Completer {
+public class  LoadBalancerCommandCompleter implements Completer {
 
     @Override
     public void complete(LineReader lineReader, ParsedLine parsedLine, List<Candidate> list) {

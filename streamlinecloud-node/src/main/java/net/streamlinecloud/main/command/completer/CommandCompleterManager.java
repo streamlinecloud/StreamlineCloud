@@ -1,6 +1,8 @@
 package net.streamlinecloud.main.command.completer;
 
+import lombok.Getter;
 import net.streamlinecloud.main.CloudMain;
+import net.streamlinecloud.main.StreamlineCloud;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
@@ -10,11 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainCommandCompleter implements Completer {
+@Getter
+public class CommandCompleterManager implements Completer {
 
-    private final Map<String, Completer> completers = new HashMap<>();
+    @Getter
+    public static CommandCompleterManager instance;
 
-    public MainCommandCompleter() {
+    final Map<String, Completer> completers = new HashMap<>();
+
+    public CommandCompleterManager() {
+        instance = this;
+
         completers.put("servers", new ServersCommandCompleter());
         completers.put("s", new ServersCommandCompleter());
 
@@ -48,12 +56,12 @@ public class MainCommandCompleter implements Completer {
         if (completer != null) {
             completer.complete(lineReader, parsedLine, list);
         } else {
-            CloudMain.getInstance().getCommandMap().forEach(cmd -> {
-                list.add(new Candidate(cmd.name(), cmd.name(), "command", cmd.description(), null, null, true));
+            StreamlineCloud.getCommandManager().getCommandMap().forEach(cmd -> {
+                list.add(new Candidate(cmd.getName(), cmd.getName(), "command", cmd.getDescription(), null, null, true));
 
-                if (cmd.aliases() != null) {
-                    for (String alias : cmd.aliases()) {
-                        list.add(new Candidate(cmd.name(), alias, "command", "[" + cmd.name() + "] " + cmd.description(), null, null, true));
+                if (cmd.getAliases() != null) {
+                    for (String alias : cmd.getAliases()) {
+                        list.add(new Candidate(cmd.getName(), alias, "command", "[" + cmd.getName() + "] " + cmd.getDescription(), null, null, true));
                     }
                 }
             });

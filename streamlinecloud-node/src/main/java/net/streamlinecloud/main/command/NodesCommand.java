@@ -8,7 +8,7 @@ public class NodesCommand extends StreamlineCommand {
 
     public NodesCommand() {
         super(
-                "nodes",
+                "nodes", "Manage all nodes connected to your cluster",
                 new StreamlineCommandTree().add(
                         new StreamlineSubcommand("list", (vars, logger) -> {
                             logger.info("Nodes list");
@@ -26,6 +26,7 @@ public class NodesCommand extends StreamlineCommand {
                         })
                 )
         );
+        addCompleter();
     }
 
 }

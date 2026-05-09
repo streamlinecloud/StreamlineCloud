@@ -88,16 +88,16 @@ public class CloudTerminalRunner extends Thread {
 
         }
 
-        for (CloudCommand cloudCommand : CloudMain.getInstance().getCommandMap()) {
-            if (cloudCommand.name().equals(args[0])) {
-                executeCommand(cloudCommand, args);
+        for (StreamlineCommand command : StreamlineCloud.getCommandManager().getCommandMap()) {
+            if (command.getName().equals(args[0])) {
+                executeCommand(command, args);
 
             }
 
-            if (cloudCommand.aliases() != null) {
-                for (String alias : cloudCommand.aliases()) {
+            if (command.getAliases() != null) {
+                for (String alias : command.getAliases()) {
                     if (alias.equals(args[0])) {
-                        executeCommand(cloudCommand, args);
+                        executeCommand(command, args);
 
                     }
                 }
@@ -113,9 +113,9 @@ public class CloudTerminalRunner extends Thread {
 
     }
 
-    public static void executeCommand(CloudCommand command, String[] args) {
+    public static void executeCommand(StreamlineCommand command, String[] args) {
         try {
-            command.execute(args);
+            command.run(args);
 
         } catch (Exception e) {
             StreamlineCloud.log("An error occurred while executing this a command. Enable debugs for more details.");

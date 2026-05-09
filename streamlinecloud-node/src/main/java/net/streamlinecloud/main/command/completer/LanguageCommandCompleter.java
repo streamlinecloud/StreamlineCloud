@@ -1,7 +1,6 @@
 package net.streamlinecloud.main.command.completer;
 
 import net.streamlinecloud.main.lang.LangManager;
-import net.streamlinecloud.main.utils.Cache;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;

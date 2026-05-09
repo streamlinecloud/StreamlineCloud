@@ -4,6 +4,7 @@ import kotlin.Unit;
 import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.client.core.StreamlineApiClient;
 import net.streamlinecloud.main.command.*;
+import net.streamlinecloud.main.command.completer.CommandCompleterManager;
 import net.streamlinecloud.main.config.MainConfig;
 import net.streamlinecloud.main.config.StreamlineConfig;
 import net.streamlinecloud.main.backend.LoadBalancer;
@@ -66,6 +67,9 @@ public class CloudMain {
         Utils.runMkdir(new File(cache.homeFile + "/templates").mkdir());
 
         new LangManager();
+        new CommandCompleterManager();
+
+        StreamlineCloud.getCommandManager().getCommandMap().add(new NodesCommand());
 
         instance = this;
         terminal = new CloudTerminal();
@@ -160,8 +164,6 @@ public class CloudMain {
         registerCommand(new LoadBalancerCommand());
         registerCommand(new SendToScreenCommand());
         registerCommand(new ExitCommand());
-
-        StreamlineCloud.getCommandManager().getCommandMap().add(new NodesCommand());
 
         Cache.i().setStreamlineState(StreamlineState.RUNNING);
 

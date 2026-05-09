@@ -3,6 +3,8 @@ package net.streamlinecloud.main.terminal.command;
 import lombok.*;
 import net.streamlinecloud.api.terminal.StreamlineLogger;
 import net.streamlinecloud.main.StreamlineCloud;
+import net.streamlinecloud.main.command.completer.CommandCompleterManager;
+import org.jline.reader.Completer;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,14 +16,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class StreamlineCommand {
 
     @NonNull
-    String name;
+    String name, description;
 
     @NonNull
     StreamlineCommandTree commandTree;
 
+    String[] aliases = new String[]{};
+
     StreamlineLogger logger = StreamlineCloud.getLogger();
 
+    String defaultSubCommand = "help";
+
     public void run(String[] args) {
+
+        if (args.length == 0) args = defaultSubCommand.split(" ");
 
         StringBuilder commandFromUser = new StringBuilder();
         for (String arg : args) commandFromUser.append(arg).append(" ");
@@ -29,21 +37,22 @@ public class StreamlineCommand {
         HashMap<String, Object> context = new HashMap<>();
         AtomicBoolean abort = new AtomicBoolean(false);
 
-        commandTree.checks.forEach((command, execute) -> {
+        for (String command : commandTree.checks.keySet()) {
+            SubcommandCheckExecute execute = commandTree.checks.get(command);
             if (abort.get()) return;
             if (checkPath(command, commandFromUser.toString())) {
                 context.putAll(execute.execute(getVariables(args), logger));
                 if ((Boolean) context.get("abort")) abort.set(true);
             }
-        });
+        }
 
         if (abort.get()) return;
 
-        commandTree.tree.forEach(((subCommand) -> {
+        for (StreamlineSubcommand subCommand : commandTree.tree) {
             if (checkPath(subCommand.getName(), commandFromUser.toString())) {
                 subCommand.execute.execute(getVariables(args), logger);
             }
-        }));
+        }
 
     }
 
@@ -81,6 +90,14 @@ public class StreamlineCommand {
         HashMap<String, Object> map = new HashMap<>();
         map.put("abort", true);
         return map;
+    }
+
+    public void addCompleter() {
+        CommandCompleterManager.getInstance().getCompleters().put(getName(), new StreamlineCommandCompleter(this));
+    }
+
+    public void addCompleter(Completer completer) {
+        CommandCompleterManager.getInstance().getCompleters().put(getName(), completer);
     }
 
 }

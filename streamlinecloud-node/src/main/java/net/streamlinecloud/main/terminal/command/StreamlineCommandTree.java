@@ -9,6 +9,17 @@ public class StreamlineCommandTree {
     List<StreamlineSubcommand> tree = new ArrayList<>();
     HashMap<String, SubcommandCheckExecute> checks = new HashMap<>();
 
+    public StreamlineCommandTree() {
+        tree.add(
+                new StreamlineSubcommand("help", ((variables, logger) -> {
+                    logger.info("Usage:");
+                    for (StreamlineSubcommand command : tree) {
+                        logger.info(" - " + command.getName());
+                    }
+                }))
+        );
+    }
+
     public StreamlineCommandTree add(StreamlineSubcommand streamlineSubcommand) {
         streamlineSubcommand.setCommandTree(this);
         tree.add(streamlineSubcommand);

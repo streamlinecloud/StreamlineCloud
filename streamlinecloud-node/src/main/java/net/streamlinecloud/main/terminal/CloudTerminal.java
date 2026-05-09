@@ -1,7 +1,7 @@
 package net.streamlinecloud.main.terminal;
 
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.command.completer.MainCommandCompleter;
+import net.streamlinecloud.main.command.completer.CommandCompleterManager;
 import lombok.Getter;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -52,7 +52,7 @@ CloudTerminal {
                     .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
                     .option(LineReader.Option.AUTO_GROUP, true)
                     .option(LineReader.Option.AUTO_LIST, true)
-                    .completer(new MainCommandCompleter())
+                    .completer(CommandCompleterManager.getInstance())
                     .build();
 
             lineReader.variable(LineReader.BELL_STYLE, "none");
