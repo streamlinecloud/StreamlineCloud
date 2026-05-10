@@ -1,8 +1,15 @@
 package net.streamlinecloud.main.command;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import net.streamlinecloud.api.node.StreamlineNode;
+import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.command.StreamlineCommand;
 import net.streamlinecloud.main.terminal.command.StreamlineCommandTree;
 import net.streamlinecloud.main.terminal.command.StreamlineSubcommand;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class NodesCommand extends StreamlineCommand {
 
@@ -11,7 +18,14 @@ public class NodesCommand extends StreamlineCommand {
                 "nodes", "Manage all nodes connected to your cluster",
                 new StreamlineCommandTree().add(
                         new StreamlineSubcommand("list", (vars, logger) -> {
-                            logger.info("Nodes list");
+                            for (StreamlineNode node : fetchNodes()) {
+                                if (node.isWorker()) logger.info(
+                                        "- " + node.getDisplayname()
+                                                + " (" + node.getUuid() + ") - "
+                                                + node.getStatus()
+                                                + (node.isAdmin() ? " - ADMIN" : "")
+                                );
+                            }
                         })
                 ).add(
                         new StreamlineSubcommand("setName %name", (vars, logger) -> {
@@ -27,6 +41,14 @@ public class NodesCommand extends StreamlineCommand {
                 )
         );
         addCompleter();
+        setDefaultSubCommand("list");
+    }
+
+    public static List<StreamlineNode> fetchNodes() {
+        String json = StreamlineCloud.getHttpClient().fetchGetResponse("/nodes");
+        Type type = new TypeToken<List<StreamlineNode>>() {
+        }.getType();
+        return new Gson().fromJson(json, type);
     }
 
 }

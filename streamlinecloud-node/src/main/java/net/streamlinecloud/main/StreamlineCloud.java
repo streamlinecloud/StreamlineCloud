@@ -6,6 +6,7 @@ import net.streamlinecloud.api.terminal.ReplacePaket;
 import net.streamlinecloud.api.terminal.StreamlineLogger;
 import net.streamlinecloud.api.util.StreamlineState;
 import net.streamlinecloud.client.core.StreamlineApiClient;
+import net.streamlinecloud.client.core.StreamlineHttpClient;
 import net.streamlinecloud.client.manager.GroupManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.core.server.RunningServerManager;
@@ -39,6 +40,9 @@ public class StreamlineCloud {
     private static GroupManager groupManager;
 
     @Getter
+    private static StreamlineHttpClient httpClient;
+
+    @Getter
     private static CommandManager commandManager = new CommandManager();
 
     @Getter
@@ -47,6 +51,7 @@ public class StreamlineCloud {
     public static void injectClient(StreamlineApiClient client) {
         if (clientInjected) return;
         groupManager = client.getGroupManager();
+        httpClient = client.getHttpClient();
 
         clientInjected = true;
     }
