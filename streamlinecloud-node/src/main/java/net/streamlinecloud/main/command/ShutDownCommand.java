@@ -1,18 +1,21 @@
 package net.streamlinecloud.main.command;
 
 import net.streamlinecloud.main.StreamlineCloud;
-import net.streamlinecloud.main.terminal.api.CloudCommand;
+import net.streamlinecloud.main.terminal.command.StreamlineCommand;
+import net.streamlinecloud.main.terminal.command.StreamlineCommandTree;
+import net.streamlinecloud.main.terminal.command.StreamlineSubcommand;
 
-public class ShutDownCommand extends CloudCommand {
+public class ShutDownCommand extends StreamlineCommand {
 
     public ShutDownCommand() {
-        setName("shutdown");
+        super("shutdown", "Exit StreamlineCloud", new StreamlineCommandTree()
+                .add(new StreamlineSubcommand("execute", ((variables, logger) -> {
+                    StreamlineCloud.shutDown();
+                })))
+        );
         setAliases(new String[]{"adminwars", "stop"});
+        setDefaultSubCommand("execute");
         setDescription("Exit StreamlineCloud");
     }
 
-    @Override
-    public void execute(String[] args) {
-        StreamlineCloud.shutDown();
-    }
 }

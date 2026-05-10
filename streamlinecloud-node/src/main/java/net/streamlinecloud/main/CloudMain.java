@@ -69,8 +69,6 @@ public class CloudMain {
         new LangManager();
         new CommandCompleterManager();
 
-        StreamlineCloud.getCommandManager().getCommandMap().add(new NodesCommand());
-
         instance = this;
         terminal = new CloudTerminal();
 
@@ -147,8 +145,10 @@ public class CloudMain {
 
         RunningServerManager.getInstance().startServersIfNeeded();
 
+        StreamlineCloud.getCommandManager().getCommandMap().add(new NodesCommand());
+        StreamlineCloud.getCommandManager().getCommandMap().add(new ShutDownCommand());
+
         registerCommand(new HelpCommand());
-        registerCommand(new ShutDownCommand());
         registerCommand(new GroupsCommand());
         registerCommand(new ServersCommand());
         registerCommand(new TemplatesCommand());
