@@ -23,7 +23,13 @@ public class StreamlineCommandCompleter implements Completer {
         for (StreamlineSubcommand subCommand : command.commandTree.tree) {
             String current = words.getLast();
             if (words.indexOf(current) - 1 >= subCommand.getName().split(" ").length) continue;
-            String completion = subCommand.getName().split(" ")[words.indexOf(current) - 1];
+            String completion = "";
+            try {
+                completion = subCommand.getName().split(" ")[words.indexOf(current) - 1];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                lineReader.getBuffer().write(' ');
+                lineReader.callWidget(LineReader.COMPLETE_PREFIX);
+            }
 
             if (completion.startsWith("%")) list.add(new Candidate("", "<" + completion.split("%")[1] + ">", null, null, null, null, true));
             else list.add(new Candidate(completion));
