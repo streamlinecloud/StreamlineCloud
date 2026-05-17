@@ -6,8 +6,7 @@ import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.command.completer.CommandCompleterManager;
 import org.jline.reader.Completer;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Getter
@@ -37,6 +36,26 @@ public class StreamlineCommand {
         HashMap<String, Object> context = new HashMap<>();
         AtomicBoolean abort = new AtomicBoolean(false);
 
+        context.put("abort", false);
+
+        CommandAndChecks commandAndChecks = findCommandAndChecks(commandFromUser.toString());
+        StreamlineSubcommand subcommand = commandAndChecks.subcommand;
+        List<SubcommandCheckExecute> checks = commandAndChecks.checks;
+
+        System.out.println("COMD: " + subcommand.name);
+
+        for (SubcommandCheckExecute check : checks) {
+            context.putAll(check.execute(getVariables(args), logger));
+            if ((Boolean) context.get("abort")) abort.set(true);
+        }
+
+        HashMap<String, Object> finalContext = new HashMap<>(context);
+        finalContext.putAll(getVariables(args));
+
+        subcommand.execute.execute(finalContext, logger);
+
+        /*
+
         for (String command : commandTree.checks.keySet()) {
             SubcommandCheckExecute execute = commandTree.checks.get(command);
             if (abort.get()) return;
@@ -49,10 +68,15 @@ public class StreamlineCommand {
         if (abort.get()) return;
 
         for (StreamlineSubcommand subCommand : commandTree.tree) {
-            if (checkPath(subCommand.getName(), commandFromUser.toString())) {
-                subCommand.execute.execute(getVariables(args), logger);
+            if (checkPathExact(subCommand.getName(), commandFromUser.toString())) {
+                HashMap<String, Object> finalContext = new HashMap<>(context);
+                finalContext.putAll(getVariables(args));
+
+                subCommand.execute.execute(finalContext, logger);
             }
         }
+
+        */
 
     }
 
@@ -63,6 +87,19 @@ public class StreamlineCommand {
 
         for (String sub : tree.split(" ")) {
             if (!sub.startsWith("%")) if (!command.split(" ")[i].equals(sub)) return  false;
+            i++;
+        }
+
+        return true;
+    }
+
+    public boolean checkPathExact(String tree, String command) {
+        int i = 0;
+
+        for (String sub : command.split(" ")) {
+            System.out.println(tree + " - " + sub);
+            if (tree.split(" ").length <= i) continue;
+            if (!tree.split(" ")[i].startsWith("%")) if (!tree.split(" ")[i].equals(sub)) return  false;
             i++;
         }
 
@@ -86,9 +123,47 @@ public class StreamlineCommand {
         return vars;
     }
 
+    /**
+     * @param command Command args
+     * @return Returns the SubCommand and all checks related to the given command args
+     */
+    public CommandAndChecks findCommandAndChecks(String command) {
+        StreamlineSubcommand subcommand = null;
+        String[] args = command.split(" ");
+
+        for (StreamlineSubcommand subcommandInTree : commandTree.tree) {
+            String[] treeArgs = subcommandInTree.name.split(" ");
+
+            if (treeArgs.length != args.length) continue;
+            for (String treeArg : treeArgs) {
+                if (!treeArg.equals(args[Arrays.asList(treeArgs).indexOf(treeArg)])) continue;
+            }
+
+            subcommand = subcommandInTree;
+        }
+        
+        if (subcommand == null) return new CommandAndChecks(null, null);
+        List<SubcommandCheckExecute> checks = new ArrayList<>();
+
+        for (String name : commandTree.checks.keySet()) {
+            if (command.startsWith(name)) checks.add(commandTree.checks.get(name));
+        }
+
+        return new CommandAndChecks(subcommand, checks);
+        
+    }
+
+    record CommandAndChecks(StreamlineSubcommand subcommand, List<SubcommandCheckExecute> checks) {}
+
     public static HashMap<String, Object> abort() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("abort", true);
+        return map;
+    }
+
+    public static HashMap<String, Object> data(String key, Object val) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(key, val);
         return map;
     }
 

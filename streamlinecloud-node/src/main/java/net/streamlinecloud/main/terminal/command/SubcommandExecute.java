@@ -6,6 +6,6 @@ import java.util.HashMap;
 
 public interface SubcommandExecute {
 
-    void execute(HashMap<String, String> variables, StreamlineLogger logger);
+    void execute(HashMap<String, Object> variables, StreamlineLogger logger);
 
 }

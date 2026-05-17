@@ -24,6 +24,7 @@ import net.streamlinecloud.main.terminal.NodeLogger;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import net.streamlinecloud.main.terminal.command.StreamlineCommand;
 import net.streamlinecloud.main.utils.*;
 import net.streamlinecloud.main.utils.MainBuildConfig;
 import org.apache.commons.io.FileUtils;
@@ -145,11 +146,12 @@ public class CloudMain {
 
         RunningServerManager.getInstance().startServersIfNeeded();
 
-        StreamlineCloud.getCommandManager().getCommandMap().add(new NodesCommand());
-        StreamlineCloud.getCommandManager().getCommandMap().add(new ShutDownCommand());
+        List<StreamlineCommand> commandMap = StreamlineCloud.getCommandManager().getCommandMap();
+        commandMap.add(new ShutDownCommand());
+        commandMap.add(new GroupsCommand());
+        commandMap.add(new NodesCommand());
 
         registerCommand(new HelpCommand());
-        registerCommand(new GroupsCommand());
         registerCommand(new ServersCommand());
         registerCommand(new TemplatesCommand());
         registerCommand(new VersionCommand());

@@ -3,9 +3,14 @@ package net.streamlinecloud.main.command;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.terminal.ReplacePaket;
+import net.streamlinecloud.api.terminal.StreamlineLogger;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.core.group.CloudGroup;
 import net.streamlinecloud.main.terminal.api.CloudCommand;
+import net.streamlinecloud.main.terminal.command.StreamlineCommand;
+import net.streamlinecloud.main.terminal.command.StreamlineCommandTree;
+import net.streamlinecloud.main.terminal.command.StreamlineSubcommand;
+import net.streamlinecloud.main.terminal.command.SubcommandCheckExecute;
 import net.streamlinecloud.main.utils.Utils;
 
 import java.lang.reflect.Field;
@@ -13,15 +18,95 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GroupsCommand extends CloudCommand {
+public class GroupsCommand extends StreamlineCommand {
 
     public GroupsCommand() {
-        setName("groups");
+        super("groups", "Manage all groups", new StreamlineCommandTree()
+                .add(new StreamlineSubcommand("list", ((variables, logger) -> {
+                    logger.info("sc.command.groups.list.title");
+
+                    for (StreamlineGroup g : StreamlineCloud.getGroupManager().getGroups()) {
+                        logger.info(g.getName() + " - online: " + /*CloudGroupManager.getInstance().getGroupOnlineServers(g).size() + */ " - minOnline: " + g.getMinOnlineCount());
+                    }
+
+                }))).add(new StreamlineSubcommand("create %name %type:server/poroxy %software %static:true/false", ((variables, logger) -> {
+                            boolean staticGroup = variables.get("static:true/false").equals("true");
+
+                            String name = variables.get("name").toString();
+                            String runtimeS = variables.get("type:server/poroxy").toString();
+                            ServerRuntime runtime;
+
+                            if (runtimeS.equalsIgnoreCase("SERVER")) {
+                                runtime = ServerRuntime.SERVER;
+                            } else if (runtimeS.equalsIgnoreCase("PROXY")) {
+                                runtime = ServerRuntime.PROXY;
+
+                            } else {
+                                logger.info("sc.command.groups.crate.enterValidRuntime");
+                                return;
+                            }
+
+                            StreamlineGroup group = new CloudGroup(
+                                    name,
+                                    1,
+                                    new ArrayList<>(),
+                                    runtime,
+                                    variables.get("software").toString());
+                            group.setStaticGroup(staticGroup);
+
+                            if (StreamlineCloud.getGroupManager().create(group))
+                                logger.info("sc.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
+                            else
+                                logger.info("sc.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
+
+                        }))
+
+                ).addCheck("group %name", ((variables, logger) -> {
+                    StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(variables.get("name"));
+                    if (group == null) {
+                        logger.info("Group does not exist");
+                        return abort();
+                    }
+                    return data("group", group);
+
+                })).add(new StreamlineSubcommand("group %name", ((variables, logger) -> {
+                    StreamlineGroup group = (StreamlineGroup) variables.get("group");
+                    HashMap<String, Object> fields = new HashMap<>();
+
+                    for (Field field : Utils.getAllFields(group.getClass())) {
+                        field.setAccessible(true);
+                        Object value = null;
+                        try {
+                            value = field.get(group);
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                        fields.put(field.getName(), value);
+                    }
+
+                    StreamlineCloud.log("Information about " + group.getName());
+                    fields.forEach((k, v) -> StreamlineCloud.log(k + ": " + v));
+                }))).add(new StreamlineSubcommand("group %name delete", ((variables, logger) -> {
+
+                    StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(variables.get("name").toString());
+
+                    if (group != null) {
+
+                        StreamlineCloud.getGroupManager().delete(group);
+                        StreamlineCloud.log("sc.command.groups.delete.deleted", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
+
+                    } else {
+
+                        StreamlineCloud.log("sc.command.groups.notFound", new ReplacePaket[]{new ReplacePaket("%1", variables.get("name").toString())});
+
+                    }
+
+                }))));
+        setDefaultSubCommand("list");
         setAliases(new String[]{"g"});
-        setDescription("Manage cloud groups");
+        addCompleter();
     }
 
-    @Override
     public void execute(String[] args) {
 
         if (args.length == 1) {
@@ -34,72 +119,11 @@ public class GroupsCommand extends CloudCommand {
         switch (sub) {
             case "create":
 
-                if (args.length == 5 || args.length == 6) {
-
-                    boolean staticGroup = (args.length == 6) && args[5].equals("--static");
-
-                    String name = args[2];
-                    String runtimeS = args[3];
-                    ServerRuntime runtime;
-
-                    if (runtimeS.equalsIgnoreCase("SERVER")) {
-                        runtime = ServerRuntime.SERVER;
-                    } else if (runtimeS.equalsIgnoreCase("PROXY")) {
-                        runtime = ServerRuntime.PROXY;
-
-                    } else {
-                        StreamlineCloud.log("sc.command.groups.crate.enterValidRuntime");
-                        return;
-                    }
-
-                    StreamlineGroup group = new CloudGroup(
-                            name,
-                            1,
-                            new ArrayList<>(),
-                            runtime,
-                            args[4]);
-                    group.setStaticGroup(staticGroup);
-
-                    if (StreamlineCloud.getGroupManager().create(group))
-                        StreamlineCloud.log("sc.command.groups.create.created", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
-                    else StreamlineCloud.log("sc.command.groups.create.cantSave", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
-
-                } else {
-                    StreamlineCloud.log("syntax: - groups create <name> <server/proxy> <software> (optional: --static)");
-                }
-
                 break;
             case "delete":
 
-                if (args.length == 3) {
-
-                    StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(args[2]);
-
-                    if (group != null) {
-
-                        StreamlineCloud.getGroupManager().delete(group);
-                        StreamlineCloud.log("sc.command.groups.delete.deleted", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
-
-                    } else {
-
-                        StreamlineCloud.log("sc.command.groups.notFound", new ReplacePaket[]{new ReplacePaket("%1", args[2])});
-
-                    }
-
-                } else {
-
-                    StreamlineCloud.log("sc.command.groups.enterGroup");
-
-                }
-
                 break;
             case "list":
-
-                StreamlineCloud.log("sc.command.groups.list.title");
-
-                for (StreamlineGroup g : StreamlineCloud.getGroupManager().getGroups()) {
-                    StreamlineCloud.log(g.getName() + " - online: " + /*CloudGroupManager.getInstance().getGroupOnlineServers(g).size() + */ " - minOnline: " + g.getMinOnlineCount());
-                }
 
                 break;
             case "group":
@@ -115,24 +139,7 @@ public class GroupsCommand extends CloudCommand {
 
                     if (group != null) {
 
-                        HashMap<String, Object> fields = new HashMap<>();
 
-                        for (Field field : Utils.getAllFields(group.getClass())) {
-                            field.setAccessible(true);
-                            Object value = null;
-                            try {
-                                value = field.get(group);
-                            } catch (IllegalAccessException e) {
-                                throw new RuntimeException(e);
-                            }
-                            fields.put(field.getName(), value);
-                        }
-
-                        if (args.length == 3) {
-                            StreamlineCloud.log("Information about " + group.getName());
-                            fields.forEach((k, v) -> StreamlineCloud.log(k + ": " + v));
-                            return;
-                        }
 
                         String groupSub = args[3];
 
@@ -148,10 +155,10 @@ public class GroupsCommand extends CloudCommand {
 
                                     default:
 
-                                        if (!fields.containsKey(setSub)) {
+                                        /*if (!fields.containsKey(setSub)) {
                                             StreamlineCloud.log("Please enter a valid variable");
                                             return;
-                                        }
+                                        }*/
 
                                         if (args.length != 6) {
                                             StreamlineCloud.log("Please enter a value");
