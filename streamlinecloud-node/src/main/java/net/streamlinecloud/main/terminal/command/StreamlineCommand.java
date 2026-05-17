@@ -29,18 +29,24 @@ public class StreamlineCommand {
     public void run(String[] args) {
 
         if (args.length == 0) args = defaultSubCommand.split(" ");
+        args = Arrays.stream(args).skip(1).toArray(String[]::new);
 
-        StringBuilder commandFromUser = new StringBuilder();
-        for (String arg : args) commandFromUser.append(arg).append(" ");
+        if (args.length == 0) args = new String[]{defaultSubCommand};
 
         HashMap<String, Object> context = new HashMap<>();
         AtomicBoolean abort = new AtomicBoolean(false);
 
         context.put("abort", false);
+        System.out.println("INP: " + args.toString());
 
-        CommandAndChecks commandAndChecks = findCommandAndChecks(commandFromUser.toString());
+        CommandAndChecks commandAndChecks = findCommandAndChecks(args);
         StreamlineSubcommand subcommand = commandAndChecks.subcommand;
         List<SubcommandCheckExecute> checks = commandAndChecks.checks;
+
+        if (subcommand == null) {
+            logger.info("This subcommand does not exist. Use the 'help' subcommand for more information.");
+            return;
+        }
 
         System.out.println("COMD: " + subcommand.name);
 
@@ -48,6 +54,8 @@ public class StreamlineCommand {
             context.putAll(check.execute(getVariables(args), logger));
             if ((Boolean) context.get("abort")) abort.set(true);
         }
+
+        if (abort.get()) return;
 
         HashMap<String, Object> finalContext = new HashMap<>(context);
         finalContext.putAll(getVariables(args));
@@ -124,29 +132,29 @@ public class StreamlineCommand {
     }
 
     /**
-     * @param command Command args
+     * @param args Command args
      * @return Returns the SubCommand and all checks related to the given command args
      */
-    public CommandAndChecks findCommandAndChecks(String command) {
+    public CommandAndChecks findCommandAndChecks(String[] args) {
         StreamlineSubcommand subcommand = null;
-        String[] args = command.split(" ");
 
         for (StreamlineSubcommand subcommandInTree : commandTree.tree) {
             String[] treeArgs = subcommandInTree.name.split(" ");
+            boolean match = true;
 
             if (treeArgs.length != args.length) continue;
             for (String treeArg : treeArgs) {
-                if (!treeArg.equals(args[Arrays.asList(treeArgs).indexOf(treeArg)])) continue;
+                if (!treeArg.equals(args[Arrays.asList(treeArgs).indexOf(treeArg)]) && !treeArg.startsWith("%")) match = false;
             }
 
-            subcommand = subcommandInTree;
+            if (match) subcommand = subcommandInTree;
         }
         
         if (subcommand == null) return new CommandAndChecks(null, null);
         List<SubcommandCheckExecute> checks = new ArrayList<>();
 
         for (String name : commandTree.checks.keySet()) {
-            if (command.startsWith(name)) checks.add(commandTree.checks.get(name));
+            if (subcommand.name.startsWith(name)) checks.add(commandTree.checks.get(name));
         }
 
         return new CommandAndChecks(subcommand, checks);
