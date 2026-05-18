@@ -8,6 +8,7 @@ public class StreamlineCommandTree {
 
     List<StreamlineSubcommand> tree = new ArrayList<>();
     HashMap<String, SubcommandCheckExecute> checks = new HashMap<>();
+    HashMap<String, SubcommandCompleter> completers = new HashMap<>();
 
     public StreamlineCommandTree() {
         tree.add(
@@ -28,6 +29,11 @@ public class StreamlineCommandTree {
 
     public StreamlineCommandTree addCheck(String command, SubcommandCheckExecute execute) {
         checks.put(command, execute);
+        return this;
+    }
+
+    public StreamlineCommandTree addCompleter(String path, SubcommandCompleter completer) {
+        completers.put(path, completer);
         return this;
     }
 

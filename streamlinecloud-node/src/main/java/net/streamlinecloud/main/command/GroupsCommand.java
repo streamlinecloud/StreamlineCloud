@@ -61,6 +61,9 @@ public class GroupsCommand extends StreamlineCommand {
 
                         }))
 
+                ).addCompleter("group %name",
+                        () -> StreamlineCloud.getGroupManager().getGroups().stream().map(StreamlineGroup::getName).toList()
+
                 ).addCheck("group %name", ((variables, logger) -> {
                     StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(variables.get("name"));
                     if (group == null) {
