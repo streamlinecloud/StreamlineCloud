@@ -77,10 +77,9 @@ public class StreamlineCommandCompleter implements Completer {
             for (StreamlineSubcommand subcommand : subcommands) {
                 if (subcommand.getName().split(" ").length < args.size()) continue;
                 String treeArg = subcommand.getName().split(" ")[args.indexOf(arg)];
+                if (arg.isEmpty()) continue;
                 if (!treeArg.equals(arg) && !treeArg.startsWith("%")) {
                     toRemove.add(subcommand);
-                    //TODO: Fix removal of args after var
-                    command.logger.info("REMOVING:" + subcommand.getName());
                 }
             }
         }
