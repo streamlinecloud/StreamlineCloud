@@ -21,7 +21,10 @@ public class StreamlineCommandCompleter implements Completer {
     public void complete(LineReader lineReader, ParsedLine parsedLine, List<Candidate> list) {
         List<String> words = parsedLine.words();
 
-        findCompletions(words.toArray(new String[0])).forEach(s -> list.add(new Candidate(s)));
+        findCompletions(words.toArray(new String[0])).forEach(s -> {
+            if (!s.startsWith("%")) list.add(new Candidate(s));
+            else list.add(new Candidate("", s, null, null, null, null, true));
+        });
     }
 
     /**
@@ -31,19 +34,29 @@ public class StreamlineCommandCompleter implements Completer {
     List<String> findCompletions(String[] args) {
         List<String> commands = new ArrayList<>();
 
-        command.logger.info("Completing " + Arrays.toString(args));
-
         if (!args[args.length - 1].startsWith("%")) {
-            findSubcommands(args).forEach(subcommand -> {
+            for (StreamlineSubcommand subcommand : findSubcommands(args)) {
                 try {
-                    commands.add(subcommand.getName().split(" ")[args.length - 2]);
-                } catch (ArrayIndexOutOfBoundsException ignored) {}
-            });
+                    String completion = subcommand.getName().split(" ")[args.length - 2];
+                    boolean customFound = false;
+                    if (completion.startsWith("%")) {
+                        for (String completerPath : command.commandTree.completers.keySet()) {
+
+                            if (subcommand.getName().startsWith(completerPath)) {
+                                commands.addAll(command.commandTree.completers.get(completerPath).complete());
+                                customFound = true;
+                            }
+                        }
+                    }
+
+                    if (!customFound) commands.add(completion);
+
+                } catch (ArrayIndexOutOfBoundsException ignored) {
+                }
+            }
         }
 
-        for (StreamlineSubcommand command : command.commandTree.tree) {
-
-        }
+        if (commands.size() > 1) commands.removeFirst();
 
         return commands;
     }
@@ -66,6 +79,8 @@ public class StreamlineCommandCompleter implements Completer {
                 String treeArg = subcommand.getName().split(" ")[args.indexOf(arg)];
                 if (!treeArg.equals(arg) && !treeArg.startsWith("%")) {
                     toRemove.add(subcommand);
+                    //TODO: Fix removal of args after var
+                    command.logger.info("REMOVING:" + subcommand.getName());
                 }
             }
         }
