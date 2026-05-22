@@ -42,7 +42,7 @@ public class StreamlineCommandCompleter implements Completer {
                     if (completion.startsWith("%")) {
                         for (String completerPath : command.commandTree.completers.keySet()) {
 
-                            if (subcommand.getName().startsWith(completerPath)) {
+                            if (subcommand.getName().startsWith(completerPath) && args.length - 1 == completerPath.split(" ").length) {
                                 commands.addAll(command.commandTree.completers.get(completerPath).complete());
                                 customFound = true;
                             }
@@ -55,8 +55,6 @@ public class StreamlineCommandCompleter implements Completer {
                 }
             }
         }
-
-        if (commands.size() > 1) commands.removeFirst();
 
         return commands;
     }
