@@ -47,4 +47,14 @@ class StreamlineHttpClient(
 
     suspend fun delete(path: String, body: Any): HttpResponse =
         client.delete("$url$path") { setBody(body) }
+
+    fun runBlockingGet(path: String): String =
+        runBlocking {
+            get("$url$path").bodyAsText()
+        }
+
+    fun runBlockingPut(path: String, body: Any): String =
+        runBlocking {
+            put("$url$path", body).bodyAsText()
+        }
 }

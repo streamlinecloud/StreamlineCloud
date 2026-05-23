@@ -3,6 +3,8 @@ package net.streamlinecloud.main.command;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.streamlinecloud.api.node.StreamlineNode;
+import net.streamlinecloud.client.core.StreamlineApiClient;
+import net.streamlinecloud.main.CloudMain;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.terminal.command.StreamlineCommand;
 import net.streamlinecloud.main.terminal.command.StreamlineCommandTree;
@@ -26,6 +28,13 @@ public class NodesCommand extends StreamlineCommand {
                                                 + (node.isAdmin() ? " - ADMIN" : "")
                                 );
                             }
+
+                            StreamlineNode node = CloudMain.getInstance().getApiClient().getNode();
+                            logger.info("Information about the current connection: ");
+                            logger.info("Name: " + node.getDisplayname() +
+                                            "; Admin: " + node.isAdmin() +
+                                            "; Worker: " + node.isWorker() +
+                                    "; Assigned templates: " + node.getUuid() + ";");
                         })
                 ).add(
                         new StreamlineSubcommand("setName %name", (vars, logger) -> {

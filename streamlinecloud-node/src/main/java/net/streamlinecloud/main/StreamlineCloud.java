@@ -9,6 +9,7 @@ import net.streamlinecloud.client.core.StreamlineApiClient;
 import net.streamlinecloud.client.core.StreamlineHttpClient;
 import net.streamlinecloud.client.manager.GroupManager;
 import net.streamlinecloud.main.core.group.CloudGroup;
+import net.streamlinecloud.main.core.group.GroupTemplatesManager;
 import net.streamlinecloud.main.core.server.RunningServerManager;
 import net.streamlinecloud.main.terminal.NodeLogger;
 import net.streamlinecloud.main.terminal.command.CommandManager;
@@ -41,6 +42,9 @@ public class StreamlineCloud {
 
     @Getter
     private static StreamlineHttpClient httpClient;
+
+    @Getter
+    private static GroupTemplatesManager groupTemplatesManager = new GroupTemplatesManager();
 
     @Getter
     private static CommandManager commandManager = new CommandManager();
