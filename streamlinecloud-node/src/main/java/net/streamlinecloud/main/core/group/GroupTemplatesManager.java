@@ -6,6 +6,7 @@ import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.main.StreamlineCloud;
 import net.streamlinecloud.main.utils.Cache;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +26,19 @@ public class GroupTemplatesManager {
     }
 
     /**
-     * TODO: Scans for local templates and uploads the information to the backend.
+     * Scans for local templates and uploads the information to the backend.
      */
     public void update() {
+        localTemplates.clear();
+
+        for (StreamlineGroup group : StreamlineCloud.getGroupManager().getGroups()) {
+            boolean addAll = true;
+            for (String template : group.getTemplates())
+                if (!new File(templatesPath + "/" + template).exists()) addAll = false;
+
+            if (addAll) localTemplates.addAll(group.getTemplates());
+        }
+
         upload();
     }
 
