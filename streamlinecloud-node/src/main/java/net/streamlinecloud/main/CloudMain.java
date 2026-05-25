@@ -134,6 +134,7 @@ public class CloudMain {
         new Thread(apiClient::connect).start();
 
         StreamlineCloud.injectClient(apiClient);
+        StreamlineCloud.getGroupTemplatesManager().update();
 
         String playerSpreading = Cache.i().getConfig().getFallback().getFallbackPlayerSpreading();
         if (!(playerSpreading.equals("SPLIT") || playerSpreading.equals("BUNDLE") || playerSpreading.equals("RANDOM"))) {

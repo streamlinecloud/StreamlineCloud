@@ -2,6 +2,7 @@ package net.streamlinecloud.main.command;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.node.StreamlineNode;
 import net.streamlinecloud.client.core.StreamlineApiClient;
 import net.streamlinecloud.main.CloudMain;
@@ -34,7 +35,9 @@ public class NodesCommand extends StreamlineCommand {
                             logger.info("Name: " + node.getDisplayname() +
                                             "; Admin: " + node.isAdmin() +
                                             "; Worker: " + node.isWorker() +
-                                    "; Assigned templates: " + node.getUuid() + ";");
+                                    "; Assigned groups: " +
+                                    new Gson().toJson(StreamlineCloud.getGroupTemplatesManager().getLocalGroups().stream().map(StreamlineGroup::getName).toList())
+                                    + ";");
                         })
                 ).add(
                         new StreamlineSubcommand("setName %name", (vars, logger) -> {

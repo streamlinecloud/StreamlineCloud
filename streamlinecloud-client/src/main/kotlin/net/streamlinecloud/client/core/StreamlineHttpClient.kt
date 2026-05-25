@@ -50,11 +50,11 @@ class StreamlineHttpClient(
 
     fun runBlockingGet(path: String): String =
         runBlocking {
-            get("$url$path").bodyAsText()
+            get(path).bodyAsText()
         }
 
     fun runBlockingPut(path: String, body: Any): String =
         runBlocking {
-            put("$url$path", body).bodyAsText()
+            put(path, body).bodyAsText()
         }
 }
