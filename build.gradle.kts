@@ -21,7 +21,6 @@ allprojects {
 }
 
 dependencies {
-
 }
 
 tasks.register("compileAll") {

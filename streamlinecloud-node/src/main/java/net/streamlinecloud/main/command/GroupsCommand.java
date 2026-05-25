@@ -1,5 +1,6 @@
 package net.streamlinecloud.main.command;
 
+import com.google.gson.Gson;
 import net.streamlinecloud.api.group.StreamlineGroup;
 import net.streamlinecloud.api.server.ServerRuntime;
 import net.streamlinecloud.api.terminal.ReplacePaket;
@@ -90,22 +91,17 @@ public class GroupsCommand extends StreamlineCommand {
                     }
 
                     StreamlineCloud.log("Information about " + group.getName());
-                    fields.forEach((k, v) -> StreamlineCloud.log(k + ": " + v));
+                    fields.forEach((k, v) -> {
+                        if (v instanceof List) StreamlineCloud.log(k + ": " + new Gson().toJson(v));
+                        else StreamlineCloud.log(k + ": " + v);
+                    });
                 })))
                 .add(new StreamlineSubcommand("group %name delete", ((variables, logger) -> {
 
                     StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(variables.get("name").toString());
 
-                    if (group != null) {
-
-                        StreamlineCloud.getGroupManager().delete(group);
-                        StreamlineCloud.log("sc.command.groups.delete.deleted", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
-
-                    } else {
-
-                        StreamlineCloud.log("sc.command.groups.notFound", new ReplacePaket[]{new ReplacePaket("%1", variables.get("name").toString())});
-
-                    }
+                    StreamlineCloud.getGroupManager().delete(group);
+                    StreamlineCloud.log("sc.command.groups.delete.deleted", new ReplacePaket[]{new ReplacePaket("%1", group.getName())});
 
                 })))
                 .addCompleter("group %name set %field", () -> classFields)
@@ -133,6 +129,14 @@ public class GroupsCommand extends StreamlineCommand {
                     StreamlineCloud.getGroupManager().update(group);
 
                     logger.info("Set " + field + " to " + value);
+
+                })))
+                .add(new StreamlineSubcommand("group %name addTemplate %path", ((variables, logger) -> {
+
+                    StreamlineGroup group = (StreamlineGroup) variables.get("group");
+                    group.getTemplates().add((String) variables.get("path"));
+
+                    StreamlineCloud.getGroupManager().update(group);
 
                 }))));
         setDefaultSubCommand("list");

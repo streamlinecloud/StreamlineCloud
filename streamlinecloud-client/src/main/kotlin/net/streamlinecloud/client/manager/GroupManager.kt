@@ -1,6 +1,7 @@
 package net.streamlinecloud.client.manager
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking
 import net.streamlinecloud.api.group.StreamlineGroup
@@ -24,9 +25,9 @@ class GroupManager(
     private val groups: MutableList<StreamlineGroup> = mutableListOf()
 
     suspend fun init() {
-        Gson().fromJson(apiClient.httpClient.get("/groups").bodyAsText(), List::class.java).forEach { group ->
-            this.groups.add(Gson().fromJson(group.toString(), StreamlineGroup::class.java))
-        }
+        val groupListType = object : TypeToken<List<StreamlineGroup>>() {}.type
+        val groups: List<StreamlineGroup> = Gson().fromJson(apiClient.httpClient.get("/groups").bodyAsText(), groupListType)
+        this.groups.addAll(groups)
         if (groups.isEmpty()) apiClient.logger.info("Currently, there aren't any groups. Go an and create one: groups create");
     }
 
@@ -38,11 +39,12 @@ class GroupManager(
     }
 
     /**
-     * An internal function used to r receive new data
+     * An internal function used to receive new data
      */
     override fun receive(response: SocketResponse) {
-        val new: StreamlineGroup = Gson().fromJson(response.content.toString(), StreamlineGroup::class.java)
-
+        val gson = Gson()
+        val contentJson: String = gson.toJson(response.content)
+        val new: StreamlineGroup = gson.fromJson(contentJson, object : TypeToken<StreamlineGroup>() {}.type)
         if (response.responseType == SocketResponseType.UPDATE) {
             groups.removeIf { group -> group.name == new.name }
             groups.add(new)

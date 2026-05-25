@@ -1,5 +1,6 @@
 package net.streamlinecloud.api.group;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -18,6 +19,7 @@ public class StreamlineGroup implements StreamlineGroupImpl {
     @Id
     String name;
     String javaExec;
+    @Convert(converter = StringListConverter.class)
     List<String> templates;
     String softwareName;
     ServerRuntime runtime;
