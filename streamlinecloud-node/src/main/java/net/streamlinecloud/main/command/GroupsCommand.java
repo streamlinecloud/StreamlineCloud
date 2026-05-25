@@ -132,11 +132,29 @@ public class GroupsCommand extends StreamlineCommand {
 
                 })))
                 .add(new StreamlineSubcommand("group %name addTemplate %path", ((variables, logger) -> {
-
                     StreamlineGroup group = (StreamlineGroup) variables.get("group");
+                    if (group.getTemplates().contains((String) variables.get("path"))){
+                        logger.info("Template already added");
+                        return;
+                    }
+
                     group.getTemplates().add((String) variables.get("path"));
 
                     StreamlineCloud.getGroupManager().update(group);
+                    StreamlineCloud.getGroupTemplatesManager().update();
+
+                    logger.info("Template added");
+
+                })))
+                .add(new StreamlineSubcommand("group %name removeTemplate %path", ((variables, logger) -> {
+                    StreamlineGroup group = (StreamlineGroup) variables.get("group");
+                    boolean success = group.getTemplates().remove((String) variables.get("path"));
+
+                    StreamlineCloud.getGroupManager().update(group);
+                    StreamlineCloud.getGroupTemplatesManager().update();
+
+                    if (success) logger.info("Template removed");
+                    else logger.info("Template does not exist");
 
                 }))));
         setDefaultSubCommand("list");
@@ -144,108 +162,4 @@ public class GroupsCommand extends StreamlineCommand {
         addCompleter();
     }
 
-    public void execute(String[] args) {
-
-        if (args.length == 1) {
-            sendHelp();
-            return;
-        }
-
-        String sub = args[1];
-
-        switch (sub) {
-            case "create":
-
-                break;
-            case "delete":
-
-                break;
-            case "list":
-
-                break;
-            case "group":
-
-                if (args.length == 2) {
-                    StreamlineCloud.log("sc.command.groups.enterGroup");
-                    return;
-                }
-
-                if (args[2] != null) {
-
-                    StreamlineGroup group = StreamlineCloud.getGroupManager().getGroup(args[2]);
-
-                    if (group != null) {
-
-
-
-                        String groupSub = args[3];
-
-                        switch (groupSub) {
-                            case "add" -> {
-
-                                String addSub = args[4];
-
-                                if (addSub.equals("template") || addSub.equals("t")) {
-
-                                    group.getTemplates().add(args[5]);
-                                    StreamlineCloud.log("sc.command.groups.templateAdded", new ReplacePaket[]{new ReplacePaket("%0", args[5]), new ReplacePaket("%1", group.getName())});
-
-                                    StreamlineCloud.getGroupManager().update(group);
-
-                                }
-                            }
-                            case "list" -> {
-
-                                String listSub = args[4];
-
-                                if (listSub.equals("templates")) {
-
-                                    if (group.getTemplates().isEmpty()) {
-                                        StreamlineCloud.log("sc.command.groups.list.templates.empty");
-                                    } else {
-                                        StreamlineCloud.log("sc.command.groups.list.templates.title",
-                                                new ReplacePaket[]{new ReplacePaket("%0", group.getName())});
-                                    }
-
-                                    for (String template : group.getTemplates()) {
-                                        StreamlineCloud.log("TEMPLATE: " + template);
-                                    }
-
-                                }
-                            }
-                        }
-
-                        StreamlineCloud.getGroupManager().update(group);
-
-                    } else {
-
-                        StreamlineCloud.log("sc.command.groups.notFound", new ReplacePaket[]{new ReplacePaket("%1", args[2])});
-
-                    }
-
-                } else {
-                    StreamlineCloud.log("error");
-                }
-
-                break;
-        }
-
-        if (args[1].equals("help")) {
-            StreamlineCloud.log("Basics");
-            StreamlineCloud.log("- groups create <name> <server/proxy> <software> (optional: --static)");
-            StreamlineCloud.log("- groups delete <name>");
-            StreamlineCloud.log("Set data:");
-            StreamlineCloud.log("- groups group <name> set minOnlineCount <int>");
-            StreamlineCloud.log("- groups group <name> set minOnlineSoftware <string>");
-            StreamlineCloud.log("- groups group <name> add template <string>");
-            StreamlineCloud.log("- groups group <name> list templates");
-            StreamlineCloud.log("Utils");
-            StreamlineCloud.log("- listAvailableSoftware");
-        }
-    }
-
-    public void sendHelp() {
-        StreamlineCloud.log("Unknown Subcommand");
-        StreamlineCloud.log("-> groups help");
-    }
 }
