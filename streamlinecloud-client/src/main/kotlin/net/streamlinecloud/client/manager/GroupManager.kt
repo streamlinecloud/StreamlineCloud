@@ -42,6 +42,8 @@ class GroupManager(
      * An internal function used to receive new data
      */
     override fun receive(response: SocketResponse) {
+        if (!response.sender.equals("GroupService")) return
+
         val gson = Gson()
         val contentJson: String = gson.toJson(response.content)
         val new: StreamlineGroup = gson.fromJson(contentJson, object : TypeToken<StreamlineGroup>() {}.type)
