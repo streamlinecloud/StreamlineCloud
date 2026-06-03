@@ -112,7 +112,6 @@ public class CloudTerminalRunner extends Thread {
         } catch (Exception e) {
             StreamlineCloud.log("An error occurred while executing this command. Enable debugs for more details.");
             if (Cache.i().isDebugMode()) e.printStackTrace();
-            e.printStackTrace();
 
         }
     }
