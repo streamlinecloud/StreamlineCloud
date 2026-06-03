@@ -54,13 +54,13 @@ public class GroupTemplatesManager {
      */
     public List<StreamlineGroup> getLocalGroups() {
         List<StreamlineGroup> groups = new ArrayList<>(StreamlineCloud.getGroupManager().getGroups());
+        List<StreamlineGroup> toRemove = new ArrayList<>();
 
-        for (StreamlineGroup group : groups) {
-            for (String template : group.getTemplates()) {
-                if (localTemplates.contains(template)) groups.remove(group);
-            }
-        }
+        for (StreamlineGroup group : groups)
+            for (String template : group.getTemplates())
+                if (!localTemplates.contains(template)) toRemove.add(group);
 
+        groups.removeAll(toRemove);
         return groups;
     }
 
