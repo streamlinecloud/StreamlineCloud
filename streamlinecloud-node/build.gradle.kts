@@ -147,7 +147,7 @@ tasks.register("startTest") {
                 logger.quiet("Testing for Windows...")
                 listOf(
                     "cmd", "/c",
-                    "start", "cmd", "/k", "\"\"$javaPath\" -jar \"${jarFile.absolutePath}\"\""
+                    "start", "cmd", "/k", "\"\"$javaPath\" -jar \"${jarFile.absolutePath}\"\" -debug"
                 )
 
             }
@@ -159,7 +159,7 @@ tasks.register("startTest") {
                     ?: error("No supported terminal found! Install one of: ${terminals.joinToString()}")
                 listOf(
                     "bash", "-c",
-                    "$terminal -e 'bash -c \"\\\"$javaPath\\\" -jar \\\"${jarFile.absolutePath}\\\"; exec bash\"'"
+                    "$terminal -e 'bash -c \"\\\"$javaPath\\\" -jar \\\"${jarFile.absolutePath}\\\" -debug; exec bash\"'"
                 )
             }
 
@@ -170,7 +170,7 @@ tasks.register("startTest") {
                 commandFile.writeText("""
         #!/bin/bash
         cd "${testDir.absolutePath}"
-        "${javaPath}" -jar "${jarFile.absolutePath}"
+        "${javaPath}" -jar "${jarFile.absolutePath} -debug"
         exec /bin/bash
     """.trimIndent())
                 commandFile.setExecutable(true)
