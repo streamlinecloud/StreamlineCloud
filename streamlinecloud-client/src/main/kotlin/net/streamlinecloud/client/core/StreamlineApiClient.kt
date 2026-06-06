@@ -24,6 +24,7 @@ class StreamlineApiClient(
     val socketClient: StreamlineSocketClient = StreamlineSocketClient(
         socketUrl,
         onSuccess = {
+            connected = true
             logger.info("Backend connection established")
         },
         onError = {
@@ -51,7 +52,6 @@ class StreamlineApiClient(
                 logger.debug("Connected with node ${node?.uuid} (admin=${node?.isAdmin}) (worker=${node?.isWorker})")
 
                 connectSocket()
-                connected = true
 
             } catch (e: Exception) {
                 onError("Connection lost: ${e.message}")

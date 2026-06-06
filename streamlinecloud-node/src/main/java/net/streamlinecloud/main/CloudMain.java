@@ -133,6 +133,7 @@ public class CloudMain {
         );
         new Thread(apiClient::connect).start();
 
+        while (!apiClient.getConnected()) Thread.sleep(200);;
         StreamlineCloud.injectClient(apiClient);
         StreamlineCloud.getGroupTemplatesManager().update();
 
