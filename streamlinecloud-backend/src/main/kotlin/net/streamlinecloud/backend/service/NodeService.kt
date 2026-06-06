@@ -1,9 +1,11 @@
 package net.streamlinecloud.backend.service
 
+import net.streamlinecloud.api.group.StreamlineGroup
 import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.backend.entity.Credential
 import net.streamlinecloud.backend.repository.CredentialRepository
 import net.streamlinecloud.backend.repository.NodeRepository
+import org.hibernate.Session
 import org.springframework.stereotype.Service
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -81,6 +83,22 @@ class NodeService(
         return Base64.getUrlEncoder()
             .withoutPadding()
             .encodeToString(bytes)
+    }
+
+    /**
+     * @return All node(s) that can start a server of the specified group based on the templates.
+     */
+    fun findSuitableNodesForGroup(group: StreamlineGroup): List<StreamlineNode> {
+        val suitableNodes: MutableList<StreamlineNode> = ArrayList()
+
+        for (node in getAll()) {
+            var add = true
+            for (template in group.templates)
+                sessionService.templates[node.uuid]?.contains(template)?.let { if (!it) add = false }
+            if (add) suitableNodes.add(node)
+        }
+
+        return suitableNodes
     }
 
 }
