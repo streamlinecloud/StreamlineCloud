@@ -14,6 +14,7 @@ public class StreamlineServer implements StreamlineServerDataImpl, StaticStreaml
 
     String name = "unknown";
     String ip = "localhost";
+    String nodeUuid = "000a0000-a00a-00a0-a000-000000000000";
 
     int port = 1;
     int maxOnlineCount = -1;
