@@ -5,7 +5,9 @@ import lombok.Setter;
 import net.streamlinecloud.api.server.impl.StaticStreamlineServerDataImpl;
 import net.streamlinecloud.api.server.impl.StreamlineServerDataImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -21,6 +23,7 @@ public class StreamlineServer implements StreamlineServerDataImpl, StaticStreaml
     long stopTime = -1;
 
     HashMap<UUID, String> onlinePlayers = new HashMap<>();
+    List<String> additionalTemplates = new ArrayList<>(); /* NOT SERIALIZED */
     ServerUseState serverUseState = ServerUseState.UNKNOWN;
     ServerState serverState = ServerState.PREPARING;
     String group = "WITHOUT";
