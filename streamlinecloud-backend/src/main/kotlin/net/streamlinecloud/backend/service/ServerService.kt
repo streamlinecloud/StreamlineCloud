@@ -1,5 +1,6 @@
 package net.streamlinecloud.backend.service
 
+import net.streamlinecloud.api.group.StreamlineGroup
 import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.api.server.StreamlineServer
 import net.streamlinecloud.api.socket.SocketResponse
@@ -15,8 +16,7 @@ class ServerService(
     private val serverSocket: ServerSocket,
 ) {
 
-    var onlineServers: MutableList<StreamlineServer> =
-        ArrayList<StreamlineServer>()
+    var onlineServers: MutableList<StreamlineServer> = ArrayList()
 
     //TODO: Re-implement restart feature
     var restartingServers: HashMap<StreamlineServer?, StreamlineServer?> =
@@ -49,5 +49,13 @@ class ServerService(
         serverSocket.sendToAll(SocketResponse(server, this.javaClass.name, SocketResponseType.UPDATE))
         return server
     }
+
+    fun getServersByGroup(group: StreamlineGroup): List<StreamlineServer> =
+        onlineServers.stream().filter{ streamlineServer -> streamlineServer.group.equals(group.name) }.toList()
+
+    fun startServer(server: StreamlineServer) {
+        println("server start for " + server.group)
+    }
+
 
 }
