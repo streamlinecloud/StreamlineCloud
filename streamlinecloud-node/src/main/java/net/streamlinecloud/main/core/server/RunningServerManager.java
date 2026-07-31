@@ -47,7 +47,7 @@ public class RunningServerManager {
 
             try {
 
-                startServersIfNeeded();
+                //startServersIfNeeded();
                 startNextServer();
 
                 if (getServersWaitingForStart().isEmpty() && firstStartup) firstStartup = false;
@@ -202,24 +202,7 @@ public class RunningServerManager {
         }*/
     }
 
-    /**
-     * Executes {@link #startServersIfNeeded(CloudGroup)} for every active group.
-     * Groups are processed by priority.
-     */
-    public void startServersIfNeeded() {
-        if (!RunningServerManager.getInstance().getServersWaitingForStart().isEmpty()) {
-            return;
-        }
 
-        PriorityQueue<CloudGroup> groups = new PriorityQueue<>(
-                Comparator.comparingInt(CloudGroup::getPriority).reversed()
-        );
-        //groups.addAll(CloudGroupManager.getInstance().getActiveGroups());
-
-        for (CloudGroup group : groups) {
-            startServersIfNeeded(group);
-        }
-    }
 
     public String startServerByGroup(CloudGroup cloudGroup, String startedBy) {
         return startServerByGroup(cloudGroup, new ArrayList<>(), startedBy);

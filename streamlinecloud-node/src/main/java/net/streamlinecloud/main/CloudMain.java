@@ -146,7 +146,7 @@ public class CloudMain {
 
         for (LoadBalancer loadBalancer : Cache.i().getConfig().getNetwork().getLoadBalancers()) loadBalancer.start();
 
-        RunningServerManager.getInstance().startServersIfNeeded();
+        //RunningServerManager.getInstance().startServersIfNeeded();
 
         List<StreamlineCommand> commandMap = StreamlineCloud.getCommandManager().getCommandMap();
         commandMap.add(new ShutDownCommand());
