@@ -1,18 +1,14 @@
 package net.streamlinecloud.api.server;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import net.streamlinecloud.api.group.StreamlineGroup;
 
 /**
  * Helps to build a StreamlineServer instance ready to pass to the startServer function
  */
 
-@RequiredArgsConstructor
 public class StreamlineServerBuilder {
 
-    @NonNull
-    StreamlineServer server;
+    StreamlineServer server = new StreamlineServer();
 
     public StreamlineServerBuilder setGroup(StreamlineGroup group) {
         server.setGroup(group.getName());
