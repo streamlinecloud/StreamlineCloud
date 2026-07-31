@@ -5,7 +5,9 @@ import org.springframework.boot.persistence.autoconfigure.EntityScan
 import org.springframework.boot.runApplication
 import org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.scheduling.annotation.EnableScheduling
 
+@EnableScheduling
 @EntityScan(
     basePackages = [
         "net.streamlinecloud.backend.entity",
