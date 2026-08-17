@@ -11,10 +11,9 @@ finished_builds/*
 /testSystem/
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/*
+!.idea/runConfigurations/
+!.idea/dictionaries/
 *.iws
 *.iml
 *.ipr
