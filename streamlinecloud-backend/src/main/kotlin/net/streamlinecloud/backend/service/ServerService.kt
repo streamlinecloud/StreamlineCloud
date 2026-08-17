@@ -16,7 +16,7 @@ class ServerService(
     private val serverSocket: ServerSocket,
 ) {
 
-    var onlineServers: MutableList<StreamlineServer> = ArrayList()
+    var runningServers: MutableList<StreamlineServer> = ArrayList()
 
     //TODO: Re-implement restart feature
     var restartingServers: HashMap<StreamlineServer?, StreamlineServer?> =
@@ -38,20 +38,20 @@ class ServerService(
      * @return The number of online servers that are online on the given node
      */
     fun getNodeOnlineCount(node: StreamlineNode): Int =
-        onlineServers.count { server -> server.nodeUuid.equals(node.uuid) }
+        runningServers.count { server -> server.nodeUuid.equals(node.uuid) }
 
     /**
      * Adds a new server or updates an existing one
      */
     fun update(server: StreamlineServer): StreamlineServer {
-        onlineServers.removeIf { it.nodeUuid.equals(server.nodeUuid) }
-        onlineServers.add(server)
+        runningServers.removeIf { it.nodeUuid.equals(server.nodeUuid) }
+        runningServers.add(server)
         serverSocket.sendToAll(SocketResponse(server, this.javaClass.name, SocketResponseType.UPDATE))
         return server
     }
 
     fun getServersByGroup(group: StreamlineGroup): List<StreamlineServer> =
-        onlineServers.stream().filter{ streamlineServer -> streamlineServer.group.equals(group.name) }.toList()
+        runningServers.stream().filter{ streamlineServer -> streamlineServer.group.equals(group.name) }.toList()
 
     fun startServer(server: StreamlineServer) {
         println("server start for " + server.group)
