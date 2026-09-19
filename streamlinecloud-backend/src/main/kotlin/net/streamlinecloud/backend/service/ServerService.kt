@@ -24,15 +24,16 @@ class ServerService(
 
     /**
      * @return The node with the fewest servers online.
+     * Has to be in the ServerService because it uses the runningServers List.
      */
-    fun findNodeWithLeastServersOnline(nodes: List<StreamlineNode>): StreamlineNode =
+    fun findNodeWithFewestServersOnline(nodes: List<StreamlineNode>): StreamlineNode =
         nodes.stream().min(Comparator.comparingInt{ node -> getNodeOnlineCount(node)}).get()
 
     /**
-     * Runs findNodeWithLeastServersOnline() but with every online node.
+     * Runs findNodeWithFewestServersOnline() but with every online node.
      */
-    fun findNodeWithLeastServersOnline(): StreamlineNode =
-        findNodeWithLeastServersOnline(nodeService.getAll())
+    fun findNodeWithFewestServersOnline(): StreamlineNode =
+        findNodeWithFewestServersOnline(nodeService.getAll())
 
     /**
      * @return The number of online servers that are online on the given node

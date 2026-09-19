@@ -1,7 +1,5 @@
 package net.streamlinecloud.backend.service
 
-import net.streamlinecloud.api.group.StreamlineGroup
-import net.streamlinecloud.api.node.StreamlineNode
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
@@ -14,7 +12,10 @@ class ActiveSessionService {
     //nodeUuid -> templates
     val templates = ConcurrentHashMap<String, List<String>>()
 
-    fun getSessionIdByKey(key: String): String? {
+    //sessionId -> onlineServers
+    val servers = ConcurrentHashMap<String, List<String>>()
+
+    fun getSessionId(key: String): String? {
         return activeSessions[key]
     }
 
