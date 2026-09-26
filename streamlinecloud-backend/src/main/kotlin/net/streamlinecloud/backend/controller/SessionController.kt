@@ -42,7 +42,7 @@ class SessionController(
     fun info(authentication: Authentication): ResponseEntity<StreamlineNode>? {
         val node: StreamlineNode = authentication.principal as StreamlineNode
 
-        if (sessionService.activeSessions.containsKey(node.uuid))
+        if (sessionService.getSession(node.uuid) != null)
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
         return ResponseEntity.status(HttpStatus.OK).body(node);
@@ -54,7 +54,7 @@ class SessionController(
         @RequestBody templates: List<String>
     ): ResponseEntity<Void> {
         val node: StreamlineNode = authentication.principal as StreamlineNode
-        sessionService.templates.set(node.uuid, templates)
+        sessionService.setTemplates(node.uuid, templates)
         return ResponseEntity.ok().build();
     }
 

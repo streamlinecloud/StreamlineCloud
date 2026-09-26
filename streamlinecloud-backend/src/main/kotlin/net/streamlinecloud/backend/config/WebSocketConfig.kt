@@ -1,6 +1,7 @@
 package net.streamlinecloud.backend.config
 
 import net.streamlinecloud.api.node.StreamlineNode
+import net.streamlinecloud.api.session.ActiveBackendSession
 import net.streamlinecloud.backend.service.ActiveSessionService
 import net.streamlinecloud.backend.service.NodeService
 import org.springframework.context.annotation.Configuration
@@ -56,11 +57,11 @@ class WebSocketConfig(
                         val node: StreamlineNode = nodeService.getByUuid(uuid)
                             ?: throw MessageDeliveryException("Key valid, no node found")
 
-                        if (sessionService.activeSessions.containsKey(token)) {
+                        if (sessionService.getSession(node.uuid) != null) {
                             throw MessageDeliveryException("This node is already connected")
                         }
 
-                        sessionService.activeSessions[node.uuid] = accessor.sessionId ?: ""
+                        sessionService.activeSessions.add(ActiveBackendSession(accessor.sessionId.toString()))
                         accessor.user = UsernamePasswordAuthenticationToken(
                             node, null,
                             listOf(SimpleGrantedAuthority("ROLE_API_USER"))
@@ -69,7 +70,7 @@ class WebSocketConfig(
 
                     StompCommand.DISCONNECT -> {
                         val sessionId = accessor.sessionId
-                        sessionService.activeSessions.entries.removeIf { it.value == sessionId }
+                        sessionService.activeSessions.removeIf { it.childId == sessionId }
                     }
 
                     else -> {}

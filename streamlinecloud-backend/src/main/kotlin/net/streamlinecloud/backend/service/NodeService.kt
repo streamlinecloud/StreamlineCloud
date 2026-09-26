@@ -28,7 +28,7 @@ class NodeService(
         return nodes
     }
 
-    fun isOnline(node: StreamlineNode) = sessionService.activeSessions.containsKey(node.uuid)
+    fun isOnline(node: StreamlineNode) = sessionService.getSession(node.uuid) != null
 
     fun setKey(nodeId: String, key: String) {
         credentialRepository.save(Credential(nodeId, key.hash()))

@@ -1,12 +1,15 @@
 package net.streamlinecloud.api.session;
 
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Getter @Setter
 @RequiredArgsConstructor
 public class ActiveBackendSession {
 
