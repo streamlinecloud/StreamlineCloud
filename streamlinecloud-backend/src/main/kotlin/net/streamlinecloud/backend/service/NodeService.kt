@@ -93,6 +93,7 @@ class NodeService(
 
         for (node in getAll()) {
             var add = true
+            //TODO: FIX: Recode SessionService
             for (template in group.templates)
                 sessionService.templates[node.uuid]?.contains(template)?.let { if (!it) add = false }
             if (add) suitableNodes.add(node)

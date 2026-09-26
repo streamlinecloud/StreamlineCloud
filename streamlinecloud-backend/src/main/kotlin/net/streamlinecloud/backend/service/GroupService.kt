@@ -26,4 +26,7 @@ class GroupService(
         groupSocket.sendToAll(SocketResponse(group, this.javaClass.name, SocketResponseType.DELETE))
     }
 
+    fun getByName(name: String): StreamlineGroup =
+        groupRepository.findByName(name);
+
 }

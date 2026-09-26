@@ -3,4 +3,8 @@ package net.streamlinecloud.backend.repository
 import net.streamlinecloud.api.group.StreamlineGroup
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface GroupRepository : JpaRepository<StreamlineGroup, Long>
+interface GroupRepository : JpaRepository<StreamlineGroup, Long> {
+
+    fun findByName(name: String): StreamlineGroup
+
+}

@@ -7,6 +7,7 @@ import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.api.socket.SocketResponseType
 import net.streamlinecloud.backend.socket.ServerSocket
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ServerService(
@@ -26,13 +27,13 @@ class ServerService(
      * @return The node with the fewest servers online.
      * Has to be in the ServerService because it uses the runningServers List.
      */
-    fun findNodeWithFewestServersOnline(nodes: List<StreamlineNode>): StreamlineNode =
-        nodes.stream().min(Comparator.comparingInt{ node -> getNodeOnlineCount(node)}).get()
+    fun findNodeWithFewestServersOnline(nodes: List<StreamlineNode>): StreamlineNode? =
+        nodes.stream().min(Comparator.comparingInt{ node -> getNodeOnlineCount(node)}).getOrNull()
 
     /**
      * Runs findNodeWithFewestServersOnline() but with every online node.
      */
-    fun findNodeWithFewestServersOnline(): StreamlineNode =
+    fun findNodeWithFewestServersOnline(): StreamlineNode? =
         findNodeWithFewestServersOnline(nodeService.getAll())
 
     /**
@@ -55,7 +56,12 @@ class ServerService(
         runningServers.stream().filter{ streamlineServer -> streamlineServer.group.equals(group.name) }.toList()
 
     fun startServer(server: StreamlineServer) {
-        println("server start for " + server.group)
+        val node: StreamlineNode? = findNodeWithFewestServersOnline(nodeService.findSuitableNodesForGroup(groupService.getByName(server.group)))
+        if (node == null) {
+            println("Unable to find suitable node for group " + server.group)
+        } else {
+            println("server start for " + server.group + " node: " + node.displayname)
+        }
     }
 
 
