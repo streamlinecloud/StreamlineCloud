@@ -93,9 +93,11 @@ class NodeService(
 
         for (node in getAll()) {
             var add = true
-            //TODO: FIX: Recode SessionService
+            val templates = sessionService.getSession(node.uuid)?.templates?.toList()
+
+            if (templates.isNullOrEmpty()) continue
             for (template in group.templates)
-                sessionService.templates[node.uuid]?.contains(template)?.let { if (!it) add = false }
+                templates.contains(template).let { if (!it) add = false }
             if (add) suitableNodes.add(node)
         }
 

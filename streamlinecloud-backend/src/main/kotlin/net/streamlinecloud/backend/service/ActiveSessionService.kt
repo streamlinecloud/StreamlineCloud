@@ -9,15 +9,6 @@ class ActiveSessionService {
 
     val activeSessions = ArrayList<ActiveBackendSession>()
 
-    //nodeUuid -> sessionId
-    val oldActiveSessions = ConcurrentHashMap<String, String>()
-
-    //nodeUuid -> templates
-    val templates = ConcurrentHashMap<String, List<String>>()
-
-    //sessionId -> onlineServers
-    val servers = ConcurrentHashMap<String, List<String>>()
-
     fun getSession(key: String): ActiveBackendSession? {
         return activeSessions.find { session -> session.childId == key }
     }
