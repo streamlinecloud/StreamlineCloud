@@ -58,8 +58,9 @@ class ServerService(
     fun startServer(server: StreamlineServer) {
         val node: StreamlineNode? = findNodeWithFewestServersOnline(nodeService.findSuitableNodesForGroup(groupService.getByName(server.group)))
         if (node == null) {
-            println("Unable to find suitable node for group " + server.group)
+            activeSessionService.groupsWithoutSuitableNode.add(server.group)
         } else {
+            activeSessionService.groupsWithoutSuitableNode.remove(server.group)
             println("server start for " + server.group + " node: " + node.displayname)
         }
     }
