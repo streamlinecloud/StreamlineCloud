@@ -152,11 +152,11 @@ public class CloudMain {
         commandMap.add(new ShutDownCommand());
         commandMap.add(new GroupsCommand());
         commandMap.add(new NodesCommand());
+        commandMap.add(new VersionCommand());
 
         registerCommand(new HelpCommand());
         registerCommand(new ServersCommand());
         registerCommand(new TemplatesCommand());
-        registerCommand(new VersionCommand());
         registerCommand(new ShortcutsCommand());
         registerCommand(new LanguageCommand());
         registerCommand(new UptimeCommand());
