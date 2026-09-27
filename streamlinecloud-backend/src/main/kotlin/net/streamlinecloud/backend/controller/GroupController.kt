@@ -1,6 +1,7 @@
 package net.streamlinecloud.backend.controller
 
 import net.streamlinecloud.api.group.StreamlineGroup
+import net.streamlinecloud.backend.service.ActiveSessionService
 import net.streamlinecloud.backend.service.GroupService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/groups")
 class GroupController (
-    private val groupService: GroupService
+    private val groupService: GroupService,
+    private val activeSessionService: ActiveSessionService
 ) {
 
     @GetMapping
@@ -31,6 +33,10 @@ class GroupController (
         groupService.delete(group)
         return ResponseEntity(HttpStatus.OK)
     }
+
+    @GetMapping("/without-suitable-node")
+    @ResponseStatus(HttpStatus.OK)
+    fun withoutSuitableNode() = activeSessionService.groupsWithoutSuitableNode
 
     /*@MessageMapping("")
     @SendTo("/groups/subscribe")
