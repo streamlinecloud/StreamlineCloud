@@ -19,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
+import java.util.UUID
 
 
 @Configuration
@@ -61,7 +62,7 @@ class WebSocketConfig(
                             throw MessageDeliveryException("This node is already connected")
                         }
 
-                        sessionService.activeSessions.add(ActiveBackendSession(node.uuid))
+                        sessionService.activeSessions.add(ActiveBackendSession( accessor.sessionId.toString(), node.uuid))
                         accessor.user = UsernamePasswordAuthenticationToken(
                             node, null,
                             listOf(SimpleGrantedAuthority("ROLE_API_USER"))
@@ -70,7 +71,7 @@ class WebSocketConfig(
 
                     StompCommand.DISCONNECT -> {
                         val sessionId = accessor.sessionId
-                        sessionService.activeSessions.removeIf { it.childId == sessionId }
+                        sessionService.activeSessions.removeIf { it.sessionId == sessionId }
                     }
 
                     else -> {}
@@ -81,3 +82,4 @@ class WebSocketConfig(
         })
     }
 }
+

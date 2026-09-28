@@ -13,7 +13,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ActiveBackendSession {
 
-    UUID uuid = UUID.randomUUID();
+    /**
+     * The id of the socket session
+     */
+    @NonNull
+    String sessionId;
 
     /**
      * The object attached to the session could be a node or a user.
