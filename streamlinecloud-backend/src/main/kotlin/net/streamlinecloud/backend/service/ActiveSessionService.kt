@@ -61,8 +61,6 @@ class ActiveSessionService {
             activeSessions.remove(session)
             logger.debug("Removed dead session: ${session.sessionId} with last heartbeat: ${session.lastHeartbeat}")
         }
-
-        if (deadSessions.isEmpty()) logger.info("No dead sessions found. Active sessions: ${activeSessions.size}")
     }
 
 }
