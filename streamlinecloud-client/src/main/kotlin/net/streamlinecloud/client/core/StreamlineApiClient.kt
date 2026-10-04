@@ -3,10 +3,18 @@ package net.streamlinecloud.client.core
 import com.google.gson.Gson
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.api.terminal.StreamlineLogger
 import net.streamlinecloud.client.manager.GroupManager
+import net.streamlinecloud.client.manager.HeartbeatManager
+import kotlin.time.Duration.Companion.milliseconds
 
 class StreamlineApiClient(
     val url: String,
@@ -16,22 +24,27 @@ class StreamlineApiClient(
     private val onError: (String) -> Unit,
 ) {
 
+    private var heartbeatJob: Job? = null
+
     var connected = false
     var node: StreamlineNode? = null
 
     val groupManager: GroupManager = GroupManager(this)
+    val heartbeatManager: HeartbeatManager = HeartbeatManager(this)
 
     val socketClient: StreamlineSocketClient = StreamlineSocketClient(
         socketUrl,
         onSuccess = {
             connected = true
             logger.info("Backend connection established")
+            startHeartbeatJob()
         },
         onError = {
             logger.info("Backend connection error: ${it.message}")
         },
         onDisconnect = {
             logger.warning("Disconnected from backend")
+            stopHeartbeatJob()
         }
     )
 
@@ -64,9 +77,11 @@ class StreamlineApiClient(
 
         socketClient.connect(key)
         socketClient.inject(groupManager)
+        socketClient.inject(heartbeatManager)
     }
 
     suspend fun disconnect() {
+        stopHeartbeatJob()
         socketClient.disconnect()
         connected = false
     }
@@ -77,6 +92,25 @@ class StreamlineApiClient(
         socketClient.disconnect()
 
         connect()
+    }
+
+    private fun startHeartbeatJob() {
+
+        logger.debug("Starting heartbeat job")
+
+        heartbeatJob?.cancel()
+        heartbeatJob = CoroutineScope(Dispatchers.Default).launch {
+            while (isActive) {
+                delay(2_000.milliseconds)
+                if (connected) heartbeatManager.updateHeartbeat()
+            }
+        }
+    }
+
+    private fun stopHeartbeatJob() {
+        logger.debug("Stopping heartbeat job")
+        heartbeatJob?.cancel()
+        heartbeatJob = null
     }
 
 }

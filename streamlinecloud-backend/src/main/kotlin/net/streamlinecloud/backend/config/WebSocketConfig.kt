@@ -4,6 +4,7 @@ import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.api.session.ActiveBackendSession
 import net.streamlinecloud.backend.service.ActiveSessionService
 import net.streamlinecloud.backend.service.NodeService
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
@@ -14,6 +15,9 @@ import org.springframework.messaging.simp.stomp.StompCommand
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
 import org.springframework.messaging.support.ChannelInterceptor
 import org.springframework.messaging.support.MessageHeaderAccessor
+import org.springframework.scheduling.TaskScheduler
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
@@ -29,14 +33,27 @@ class WebSocketConfig(
     val sessionService: ActiveSessionService
 ) : WebSocketMessageBrokerConfigurer {
 
+    @Bean
+    fun stompHeartbeatScheduler(): TaskScheduler {
+        val scheduler: ThreadPoolTaskScheduler = ThreadPoolTaskScheduler()
+
+        scheduler.poolSize = 1
+        scheduler.setThreadNamePrefix("stomp-heartbeat-")
+
+        return scheduler
+    }
+
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
         config.enableSimpleBroker("/topic")
+            .setHeartbeatValue(longArrayOf(10_000, 10_000))
+            .setTaskScheduler(stompHeartbeatScheduler())
         config.setApplicationDestinationPrefixes("/app")
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/socket")
     }
+
 
     override fun configureClientInboundChannel(registration: ChannelRegistration) {
         registration.interceptors(object : ChannelInterceptor {
@@ -67,12 +84,15 @@ class WebSocketConfig(
                             node, null,
                             listOf(SimpleGrantedAuthority("ROLE_API_USER"))
                         )
+
                     }
 
                     StompCommand.DISCONNECT -> {
                         val sessionId = accessor.sessionId
                         sessionService.activeSessions.removeIf { it.sessionId == sessionId }
                     }
+
+
 
                     else -> {}
                 }
@@ -81,5 +101,8 @@ class WebSocketConfig(
             }
         })
     }
+
+
+
 }
 
