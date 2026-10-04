@@ -24,8 +24,6 @@ class StreamlineApiClient(
     private val onError: (String) -> Unit,
 ) {
 
-    private var heartbeatJob: Job? = null
-
     var connected = false
     var node: StreamlineNode? = null
 
@@ -37,14 +35,14 @@ class StreamlineApiClient(
         onSuccess = {
             connected = true
             logger.info("Backend connection established")
-            startHeartbeatJob()
+            heartbeatManager.startHeartbeatJob()
         },
         onError = {
             logger.info("Backend connection error: ${it.message}")
         },
         onDisconnect = {
             logger.warning("Disconnected from backend")
-            stopHeartbeatJob()
+            heartbeatManager.stopHeartbeatJob()
         }
     )
 
@@ -81,7 +79,7 @@ class StreamlineApiClient(
     }
 
     suspend fun disconnect() {
-        stopHeartbeatJob()
+        heartbeatManager.stopHeartbeatJob()
         socketClient.disconnect()
         connected = false
     }
@@ -92,25 +90,6 @@ class StreamlineApiClient(
         socketClient.disconnect()
 
         connect()
-    }
-
-    private fun startHeartbeatJob() {
-
-        logger.debug("Starting heartbeat job")
-
-        heartbeatJob?.cancel()
-        heartbeatJob = CoroutineScope(Dispatchers.Default).launch {
-            while (isActive) {
-                delay(2_000.milliseconds)
-                if (connected) heartbeatManager.updateHeartbeat()
-            }
-        }
-    }
-
-    private fun stopHeartbeatJob() {
-        logger.debug("Stopping heartbeat job")
-        heartbeatJob?.cancel()
-        heartbeatJob = null
     }
 
 }
