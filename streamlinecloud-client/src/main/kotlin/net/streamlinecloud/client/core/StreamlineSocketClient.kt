@@ -1,10 +1,12 @@
 package net.streamlinecloud.client.core
 
 import com.google.gson.Gson
+import net.streamlinecloud.api.socket.SocketRequest
 import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.client.adapter.SocketAdapter
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.sendText
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.ktor.KtorWebSocketClient
 
@@ -36,6 +38,10 @@ class StreamlineSocketClient(
         }
 
         onSuccess()
+    }
+
+    suspend fun send(topic: String, request: SocketRequest?) {
+        session?.sendText("/app${topic}", request?.let { Gson().toJson(it) } ?: "")
     }
 
     private suspend fun subscribe(topic: String) {
