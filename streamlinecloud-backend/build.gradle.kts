@@ -51,6 +51,18 @@ kotlin {
     }
 }
 
+tasks.processResources {
+    filesMatching("application.properties") {
+        expand(
+            mapOf(
+                "version" to (project.findProperty("version") ?: "undefined"),
+                "branch" to (project.findProperty("branch") ?: "undefined"),
+                "author" to (project.findProperty("author") ?: "undefined"),
+            )
+        )
+    }
+}
+
 tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     group = "net.streamlinecloud"
 

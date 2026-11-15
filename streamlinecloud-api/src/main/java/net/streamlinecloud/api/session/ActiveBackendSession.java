@@ -36,5 +36,10 @@ public class ActiveBackendSession {
      */
     List<String> onlineServers = new ArrayList<>();
 
+    /**
+     * The last time the node sent a heartbeat to the server.
+     */
+    long lastHeartbeat = System.currentTimeMillis();
+
 
 }

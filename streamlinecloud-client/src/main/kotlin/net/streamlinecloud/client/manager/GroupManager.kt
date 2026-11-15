@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.runBlocking
 import net.streamlinecloud.api.group.StreamlineGroup
+import net.streamlinecloud.api.socket.SocketRequest
 import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.api.socket.SocketResponseType
 import net.streamlinecloud.client.adapter.SocketAdapter
@@ -56,6 +57,10 @@ class GroupManager(
 
         }
 
+    }
+
+    override suspend fun send(request: SocketRequest?) {
+        TODO("Not yet implemented")
     }
 
     /**
