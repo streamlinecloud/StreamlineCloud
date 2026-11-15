@@ -1,5 +1,8 @@
 package net.streamlinecloud.backend.controller
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import net.streamlinecloud.api.node.StreamlineNode
 import net.streamlinecloud.backend.entity.Credential
 import net.streamlinecloud.backend.repository.NodeRepository
@@ -26,7 +29,12 @@ class SessionController(
     val sessionService: ActiveSessionService
 ) {
 
-    @GetMapping("/setup")
+    @Operation(summary = "Generates a session with administration privileges", description = "Can only be executed once and if no other session exists")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "Initial session created"),
+        ApiResponse(responseCode = "403", description = "Forbidden, a session already exists")
+    )
+    @GetMapping("/setup-autoconfigure")
     fun register(): ResponseEntity<Credential> {
 
         if (!nodeRepository.findAll().toList().isEmpty())
@@ -38,6 +46,7 @@ class SessionController(
 
     }
 
+    @Operation(summary = "Provides information about the current session")
     @GetMapping("/info")
     fun info(authentication: Authentication): ResponseEntity<StreamlineNode>? {
         val node: StreamlineNode = authentication.principal as StreamlineNode
