@@ -34,7 +34,7 @@ dependencies {
     implementation("me.tongfei:progressbar:0.10.1")
     implementation("commons-io:commons-io:2.16.1")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.6.3")
-    implementation("org.json:json:20231013")
+    implementation("org.json:json:20260719")
     implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
 
     compileOnly("org.projectlombok:lombok:1.18.32")
