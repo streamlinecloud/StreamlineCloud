@@ -89,7 +89,7 @@ class WebSocketConfig(
 
                     StompCommand.DISCONNECT -> {
                         val sessionId = accessor.sessionId
-                        sessionService.activeSessions.removeIf { it.sessionId == sessionId }
+                        sessionService.activeSessions.removeIf { it.socketSessionId == sessionId }
                     }
 
 

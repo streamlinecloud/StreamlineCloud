@@ -2,11 +2,13 @@ package net.streamlinecloud.backend.service
 
 import net.streamlinecloud.api.group.StreamlineGroup
 import net.streamlinecloud.api.node.StreamlineNode
+import net.streamlinecloud.api.server.ServerState
 import net.streamlinecloud.api.server.StreamlineServer
 import net.streamlinecloud.api.socket.SocketResponse
 import net.streamlinecloud.api.socket.SocketResponseType
 import net.streamlinecloud.backend.socket.ServerSocket
 import org.springframework.stereotype.Service
+import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -61,9 +63,13 @@ class ServerService(
             activeSessionService.groupsWithoutSuitableNode.add(server.group)
         } else {
             activeSessionService.groupsWithoutSuitableNode.remove(server.group)
-            println("server start for " + server.group + " node: " + node.displayname)
+
+            server.nodeUuid = node.uuid
+            server.serverState = ServerState.PREPARING
+            runningServers.add(server)
+
+            println("Server " + server.name + " prepared (group:  " + server.group + " node: " + node.displayname + ")")
         }
     }
-
 
 }

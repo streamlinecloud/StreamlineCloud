@@ -27,7 +27,7 @@ class HeartbeatSocket(
             sessionService.updateHeartbeat(sessionId)
             logger.debug("Received heartbeat from $sessionId new heartbeat timestamp: ${sessionService.getHeartbeat(sessionId)}")
         } else {
-            logger.warn("Received heartbeat with null sessionId")
+            logger.warn("Received heartbeat with null socketSessionId")
         }
 
     }

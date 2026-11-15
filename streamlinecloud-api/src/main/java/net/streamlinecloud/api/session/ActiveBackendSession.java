@@ -7,8 +7,10 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+/**
+ * A session associated with a node that is currently connected to the backend
+ */
 @Getter @Setter
 @RequiredArgsConstructor
 public class ActiveBackendSession {
@@ -17,7 +19,7 @@ public class ActiveBackendSession {
      * The id of the socket session
      */
     @NonNull
-    String sessionId;
+    String socketSessionId;
 
     /**
      * The object attached to the session could be a node or a user.

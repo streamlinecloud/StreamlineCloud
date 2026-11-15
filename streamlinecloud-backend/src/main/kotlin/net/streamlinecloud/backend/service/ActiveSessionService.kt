@@ -27,7 +27,7 @@ class ActiveSessionService {
      * @return The session with the given session ID, or null if no such session exists
      */
     fun getSessionBySessionId(sessionId: String): ActiveBackendSession? {
-        return activeSessions.find { session -> session.sessionId == sessionId }
+        return activeSessions.find { session -> session.socketSessionId == sessionId }
     }
 
     fun setTemplates(key: String, template: List<String>) {
@@ -59,7 +59,7 @@ class ActiveSessionService {
         }
         deadSessions.forEach { session ->
             activeSessions.remove(session)
-            logger.debug("Removed dead session: ${session.sessionId} with last heartbeat: ${session.lastHeartbeat}")
+            logger.debug("Removed dead session: ${session.socketSessionId} with last heartbeat: ${session.lastHeartbeat}")
         }
     }
 
